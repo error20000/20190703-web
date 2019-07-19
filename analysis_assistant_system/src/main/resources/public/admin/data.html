@@ -24,7 +24,7 @@
 			<el-col :span="24">
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
-			    <el-form :inline="true" :model="filters" style="float: right;">
+			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 					<el-form-item>
 						  <el-input v-model="filters.sn" placeholder="请输入序列号" clearable></el-input>
 					</el-form-item>
@@ -62,7 +62,7 @@
 	    <el-tabs v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled>
 				<!-- list -->
-				<el-table :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
+				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="Pid" prop="pid" width="120">
 					</el-table-column>
 					<el-table-column label="序列号" prop="sn" >

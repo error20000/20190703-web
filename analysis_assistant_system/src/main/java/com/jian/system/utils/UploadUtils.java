@@ -2,6 +2,7 @@ package com.jian.system.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class UploadUtils {
 			return ResultTools.custom(Tips.ERROR212).toJSONString();
 		}
 		//上传
-		Map<String, Object> res = upload(fileName, in, outDir);
+		Map<String, Object> res = upload(fileName, in, outDir, false);
 		if(res == null){
 			return  ResultTools.custom(Tips.ERROR0).toJSONString();
 		}
@@ -123,25 +124,35 @@ public class UploadUtils {
 	 * @param outDir	文件输出的目录（需要“/”结尾）。
 	 * @return	map 文件相关信息，如文件大小、后缀、上传名称、上传路径。
 	 */
-	public static Map<String, Object> upload(String fileName, InputStream in, String outDir){
+	public static Map<String, Object> upload(String fileName, InputStream in, String outDir, boolean isOriginName){
 		
 		//生成输出文件
 		String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-		
-		int random = new Random().nextInt(10000);
-		String str = random+"";
-		for (int i = 0; i <  4 - str.length(); i++) {
-			str = "0" + str;
-		}
-		String outFileName = DateTools.formatDate("yyyyMMddHHmmssSSS") + str + "."+ suffix;
-		String outFilePath = outDir + DateTools.formatDate("yyyyMMdd") + "/" + outFileName;
-		String basePath = Tools.isNullOrEmpty(baseConfig.upload_path) ? App.rootPath + "upload/" : baseConfig.upload_path;
+
+		String basePath = Tools.isNullOrEmpty(baseConfig.out_static_path) ? App.rootPath + "static/" : baseConfig.out_static_path;
 		basePath = basePath.endsWith("/") ? basePath : basePath + "/";
+		String outFilePath = "upload/" + outDir + DateTools.formatDate("yyyyMMdd") + "/";
+		
+		String outFileName = "";
+		if(isOriginName){
+			outFileName = fileName.substring(0, fileName.lastIndexOf(".")) + "."+ suffix;
+			File test = new File(basePath + outFilePath + outFileName);
+			outFileName = rename(test, 0);
+		}else{
+			int random = new Random().nextInt(10000);
+			String str = random+"";
+			for (int i = 0; i <  4 - str.length(); i++) {
+				str = "0" + str;
+			}
+			outFileName = DateTools.formatDate("yyyyMMddHHmmssSSS") + str + "."+ suffix;
+		}
+		
+		outFilePath = outFilePath + outFileName;
+		
 		
 		//上传
 		Map<String, Object> res = null;
 		try {
-			res = new HashMap<>();
 			File outFile = new File(basePath + outFilePath);
 			File pfile = outFile.getParentFile();
 			if(!pfile.exists()){
@@ -159,6 +170,7 @@ public class UploadUtils {
 			out.close();
 			out.flush();
 			//返回结果
+			res = new HashMap<>();
 			res.put("type", suffix);
 			res.put("size", size);
 			res.put("name", outFileName);
@@ -168,5 +180,37 @@ public class UploadUtils {
 		}
 		
 		return res;
+	}
+	
+
+	//查询
+	private static String rename(File file, int index){
+		String fname = file.getName();
+		String tname = fname.substring(0, fname.lastIndexOf(".")).toLowerCase();
+		String suffix = fname.substring(fname.lastIndexOf(".") + 1).toLowerCase();
+		File parent = file.getParentFile();
+		String[] str = parent.list(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String name) {
+				name = name.toLowerCase();
+				return name.startsWith(tname) && name.endsWith(suffix);
+			}
+			
+		});
+		for (String string : str) {
+			string = string.toLowerCase();
+			if(string.startsWith(tname) && string.endsWith(suffix)){
+				//查找最大值
+				String[] tstr = string.substring(0, string.lastIndexOf(".")).replace(tname, "").split("\\(");
+				int tindex= tstr.length > 1 ? Tools.parseInt(tstr[1].replace(")", "")) : 0;
+				index = Math.max(index, tindex);
+			}
+		}
+		if(!file.exists() && index == 0){
+			return file.getName();
+		}
+		index = index + 1;
+		return fname.substring(0, fname.lastIndexOf(".")) + "("+index+")" + fname.substring(fname.lastIndexOf("."));
 	}
 }

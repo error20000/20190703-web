@@ -19,7 +19,7 @@ public class Config {
 	
 	//静态资源
 	@Value("${out_static_path}")
-	public String upload_path; //文件上传地址
+	public String out_static_path; //文件上传地址
 	@Value("${logs_path}")
 	public String logs_path; //日志地址
 	

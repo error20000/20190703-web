@@ -17,10 +17,16 @@ public interface UserMapper {
 	@Update({
 		" insert into ",
 		" \"tBase_User\" (",
-		" \"sUser_ID\", \"sUser_UserName\", \"sUser_PassWord\"",
+		" \"sUser_ID\", \"sUser_UserName\", \"sUser_PassWord\", ",
+		" \"sUser_Nick\", \"lUser_StatusFlag\", \"sUser_GroupID\", ",
+		" \"sUser_QQ\", \"sUser_Email\", \"sUser_Phone\", ",
+		" \"sUser_ThirdID\" ",
 		" ) ",
 		" values( ",
-		" #{sUser_ID}, #{sUser_UserName}, #{sUser_PassWord} ",
+		" #{sUser_ID}, #{sUser_UserName}, #{sUser_PassWord}, ",
+		" #{sUser_Nick}, #{lUser_StatusFlag}, #{sUser_GroupID}, ",
+		" #{sUser_QQ}, #{sUser_Email}, #{sUser_Phone}, ",
+		" #{sUser_ThirdID} ",
 		" )",
 	})
 	int insert(User obj);
@@ -28,26 +34,39 @@ public interface UserMapper {
 	//TODO ----------------------------------------------------------------------delete
 	@Delete({
         " delete from \"tBase_User\" ",
-        " where \"sUser_ID\" = #{sUserID} "
+        " where \"sUser_ID\" = #{sUser_ID} "
     })
-    int deleteById(String sUserID);
+	int deleteById(String sUser_ID);
 
 	//TODO ----------------------------------------------------------------------update
     @Update({        
     	"update \"tBase_User\" set ",  
     	" \"sUser_UserName\" = #{sUser_UserName}, ",      
-    	" \"sUser_PassWord\" = #{sUser_PassWord} ",
-    	" where \"sUser_ID\" = #{sUserID} "
+    	" \"sUser_Nick\" = #{sUser_Nick},  ",  
+    	" \"lUser_StatusFlag\" = #{lUser_StatusFlag},  ",  
+    	" \"sUser_GroupID\" = #{sUser_GroupID},  ",  
+    	" \"sUser_QQ\" = #{sUser_QQ},  ",  
+    	" \"sUser_Email\" = #{sUser_Email},  ",  
+    	" \"sUser_Phone\" = #{sUser_Phone},  ",  
+    	" \"sUser_ThirdID\" = #{sUser_ThirdID} ",
+    	" where \"sUser_ID\" = #{sUser_ID} "
     	})    
     int update(User obj);
+    
+    @Update({        
+    	"update \"tBase_User\" set ",  
+    	" \"sUser_PassWord\" = #{sUser_PassWord} ",     
+    	" where \"sUser_ID\" = #{sUser_ID} "
+    	})    
+    int updatePwd(User obj);
 
 	//TODO ----------------------------------------------------------------------select
 	@Select({
     	" select * ",
     	" from \"tBase_User\" ",
-    	" where  \"sUser_ID\" = #{sUserID} "
+    	" where  \"sUser_ID\" = #{sUser_ID} "
     })
-    User selectById(String sUserID);
+    User selectById(String sUser_ID);
 	
     @Select({
     	" select * ",
@@ -61,4 +80,8 @@ public interface UserMapper {
     	" from \"tBase_User\" "
     })
     List<User> selectAll();
+
+	//TODO ----------------------------------------------------------------------custom
+    
+    
 }

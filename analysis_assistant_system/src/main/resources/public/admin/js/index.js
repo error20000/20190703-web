@@ -50,14 +50,22 @@ new Vue({
 			
 			switch (Number(index)) {
 			case 1:
-				url = 'beacon.html';
+				url = 'nfc.html';
 				break;
 			case 2:
-				url = 'data.html';
+				url = 'store.html';
 				break;
 			case 3:
+				url = 'beacon.html';
 				break;
 			case 4:
+				url = 'map.html';
+				break;
+			case 5:
+				url = 'count.html';
+				break;
+			case 6:
+				url = 'sys.html';
 				break;
 				
 			default:

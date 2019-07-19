@@ -23,11 +23,17 @@ public class UserTest {
 		User user = service.selectOne();
 		System.out.println(user.getsUser_UserName());
 		System.out.println(user.getsUser_PassWord());
+		System.out.println(user.getlUser_StatusFlag());
 	}
 
 	@Test
 	public void insert() {
-		int res = service.insert("22", "33333", "44444444");
+		User user = new User();
+		user.setsUser_ID("3333333");
+		user.setsUser_UserName("3333333");
+		user.setsUser_PassWord("3333333");
+		user.setlUser_StatusFlag(1);
+		int res = service.insert(user);
 		System.out.println(res);
 	}
 	
