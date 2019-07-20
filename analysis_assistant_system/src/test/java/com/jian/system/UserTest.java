@@ -1,5 +1,7 @@
 package com.jian.system;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jian.system.entity.User;
 import com.jian.system.service.UserService;
+import com.jian.tools.core.MapTools;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { App.class })
@@ -35,6 +38,16 @@ public class UserTest {
 		user.setlUser_StatusFlag(1);
 		int res = service.insert(user);
 		System.out.println(res);
+	}
+	
+	@Test
+	public void selectList() {
+		List<User> list = service.selectList(MapTools.custom().put("sUser_ID", "22").put("sUser_UserName", "33333").build());
+		for (User user : list) {
+			System.out.println(user.getsUser_UserName());
+			System.out.println(user.getsUser_PassWord());
+			System.out.println(user.getlUser_StatusFlag());
+		}
 	}
 	
 }

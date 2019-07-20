@@ -1,9 +1,7 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/beacon/findPage";
-var addUrl = baseUrl + "api/beacon/add";
-var modUrl = baseUrl + "api/beacon/update";
-var delUrl = baseUrl + "api/beacon/delete";
+var queryUrl = baseUrl + "api/data/findPage";
+var excelUrl = baseUrl + "api/data/excel";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -15,9 +13,8 @@ var myvue = new Vue({
 	    		activeTab: 'table',
 				filters: {
 					user: '',
-					alarm: '',
-					connected: '',
-					status: ''
+					start: '',
+					end: ''
 				},
 				list: [],
 				total: 0,
@@ -26,23 +23,6 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
-				connectedOptions: [
-					{value: "Y", label: "曾连接"},
-					{value: "N", label: "未连接"},
-				],
-				statusOptions: [
-					{value: "Y", label: "正常"},
-					{value: "N", label: "异常"},
-				],
-				alarmOptions: [
-					{value: "0", label: "正常"},
-					{value: "1", label: "距离S1报警"},
-					{value: "2", label: "距离S2报警"},
-					{value: "3", label: "距离S3报警"},
-					{value: "4", label: "距离S4报警"},
-					{value: "5", label: "角度AX报警"},
-					{value: "6", label: "角度AY报警"},
-				],
 
 				//add
 				addFormVisible: false,
@@ -53,11 +33,6 @@ var myvue = new Vue({
 		                { required: true, message: '请输入序列号.', trigger: 'blur' },
 		              ]
 				},
-				//edit
-				editFormVisible: false,
-				editLoading: false,
-				editForm: {},
-				editFormRules: {},
 				
 				user: ''
 			}
@@ -80,31 +55,22 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
-				this.list=[{
-					sAid_ID: "1",
-					sAid_Name: "1",
-					lAid_Lat: "1",
-					lAid_Lng: "1",
-					sAid_Station: "1",
-					sAid_Type: "1",
-					sAid_Icon: "",
-					dAid_CreateDate: "",
-					dAid_DelDate: "",
-					sAid_Lighting: "",
-					sAid_Mark: ""
+				this.list = [{
+					sNfc_ID: "11",
+					sNfc_NO: "11",
+					sNfc_Name: "11",
+					dNfc_CreateDate: ""
 				},{
-					sAid_ID: "2",
-					sAid_Name: "2",
-					lAid_Lat: "2",
-					lAid_Lng: "2",
-					sAid_Station: "2",
-					sAid_Type: "2",
-					sAid_Icon: "",
-					dAid_CreateDate: "",
-					dAid_DelDate: "",
-					sAid_Lighting: "",
-					sAid_Mark: ""
-				}]
+					sNfc_ID: "22",
+					sNfc_NO: "22",
+					sNfc_Name: "22",
+					dNfc_CreateDate: ""
+				},{
+					sNfc_ID: "33",
+					sNfc_NO: "33",
+					sNfc_Name: "33",
+					dNfc_CreateDate: ""
+				}];
 				this.total = this.list.length;
 				return;
 				
@@ -130,15 +96,6 @@ var myvue = new Vue({
 						}*/
 					});
 				});
-			},
-			//reset
-			reset: function(){
-				this.filters = {
-					user: '',
-					connected: '',
-					status: ''
-				};
-				this.getList();
 			},
 			//add
 			handleAdd: function(){
@@ -173,50 +130,25 @@ var myvue = new Vue({
 					}
 				});
 			},
-			handleDel: function(index, row){
-				this.$confirm('确定删除该条记录吗? ', '提示', {
-					type: 'warning'
-				}).then(() => {
-					var self = this;
-					this.listLoading = true;
-					ajaxReq(delUrl, {pid: row.pid }, function(res){
-						self.listLoading = false;
-						self.handleResOperate(res, function(){
-							self.getList();
-						});
-					});
-					
-				}).catch(() => {
-				});
+			//reset
+			reset: function(){
+				this.filters = {
+					user: '',
+					start: '',
+					end: ''
+				};
+				this.getList();
 			},
-			//edit
-			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-			},
-			editClose: function () {
-				this.editFormVisible = false;
-				this.editLoading = false;
-				this.$refs.editForm.resetFields();
-			},
-			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗?', '提示', {}).then(() => {
-							var self = this;
-							this.editLoading = true;
-							var params = Object.assign({}, this.editForm);
-							ajaxReq(modUrl, params, function(res){
-								self.editLoading = false;
-								self.handleResOperate(res, function(){
-									self.editFormVisible = false;
-									self.getList();
-								});
-							});
-							
-						});
+			getExcel: function(){
+				this.query();
+				var params = "";
+				for ( var key in this.filters) {
+					if(this.filters[key]){
+						params += "&"+key+"="+this.filters[key];
 					}
-				});
+				}
+				params += "&userId="+this.user.pid;
+				parent.window.open(excelUrl+(params ? "?"+params.substring(1) : ""));
 			},
 			
 			selsChange: function (sels) {
@@ -229,9 +161,6 @@ var myvue = new Vue({
 			},
 			handleResQuery: function(res, success, failed){
 				this.handleRes(false, res, success, failed);
-			},
-			handleResOperate: function(res, success, failed){
-				this.handleRes(true, res, success, failed);
 			},
 			handleRes: function(show, res, success, failed){
 				if(res.code > 0){

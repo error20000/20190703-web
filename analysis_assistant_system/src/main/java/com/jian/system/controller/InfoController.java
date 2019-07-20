@@ -37,8 +37,8 @@ import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 import com.jian.tools.core.cache.CacheObject;
 
-@Controller
-@RequestMapping("/api/info")
+//@Controller
+//@RequestMapping("/api/info")
 @API(name="活动")
 public class InfoController extends BaseController<Info> {
 

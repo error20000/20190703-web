@@ -6,61 +6,62 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jian.system.dao.BaseMapper;
 import com.jian.system.dao.UserMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.User;
 
 @Service
-public class UserService {
+public class BaseService<M extends BaseMapper<T>, T> {
 
 	@Autowired
-	protected UserMapper baseMapper;
+	protected M baseMapper;
 
 	//TODO ----------------------------------------------------------------------insert
 
 	@TargetDataSource
-	public int insert(User user) {
-		return baseMapper.insert(user);
+	public int insert(T obj) {
+		return baseMapper.insert(obj);
 	}
 	
 	//TODO ----------------------------------------------------------------------delete
 
 	@TargetDataSource
-	public int deleteById(String sUser_ID) {
-		return baseMapper.deleteById(sUser_ID);
+	public int deleteById(String id) {
+		return baseMapper.deleteById(id);
 	}
 
 	//TODO ----------------------------------------------------------------------update
 
 	@TargetDataSource
-	public int update(User user) {
-		return baseMapper.update(user);
+	public int update(T obj) {
+		return baseMapper.update(obj);
 	}
 
 	@TargetDataSource
-	public int updatePwd(User user) {
-		return baseMapper.updatePwd(user);
+	public int updatePwd(T obj) {
+		return baseMapper.updatePwd(obj);
 	}
 
 	//TODO ----------------------------------------------------------------------select
 
 	@TargetDataSource
-	public User selectOne() {
+	public T selectOne() {
 		return baseMapper.selectOne();
 	}
 
 	@TargetDataSource
-	public User selectById(String sUser_ID) {
-		return baseMapper.selectById(sUser_ID);
+	public T selectById(String id) {
+		return baseMapper.selectById(id);
 	}
 
 	@TargetDataSource
-	public List<User> selectAll() {
+	public List<T> selectAll() {
 		return baseMapper.selectAll();
 	}
 
 	@TargetDataSource
-	public List<User> selectList(Map<String, Object> condition) {
+	public List<T> selectList(Map<String, Object> condition) {
 		return baseMapper.selectList("tBase_User",condition);
 	}
 

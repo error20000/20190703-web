@@ -80,30 +80,29 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+
 				this.list=[{
-					sAid_ID: "1",
-					sAid_Name: "1",
-					lAid_Lat: "1",
-					lAid_Lng: "1",
-					sAid_Station: "1",
-					sAid_Type: "1",
-					sAid_Icon: "",
-					dAid_CreateDate: "",
-					dAid_DelDate: "",
-					sAid_Lighting: "",
-					sAid_Mark: ""
+					sStoreType_ID: "1",
+					sStoreType_Name: "1",
+					sStoreType_Address: "1",
+					lStoreType_Lat: "1",
+					lStoreType_Lng: "1",
+					sStoreType_Station: "1",
+					
+					sStore_Name2: "1",
+					sStore_Name3: "1",
+					sStore_Name4: "1"
 				},{
-					sAid_ID: "2",
-					sAid_Name: "2",
-					lAid_Lat: "2",
-					lAid_Lng: "2",
-					sAid_Station: "2",
-					sAid_Type: "2",
-					sAid_Icon: "",
-					dAid_CreateDate: "",
-					dAid_DelDate: "",
-					sAid_Lighting: "",
-					sAid_Mark: ""
+					sStoreType_ID: "12",
+					sStoreType_Name: "12",
+					sStoreType_Address: "12",
+					lStoreType_Lat: "12",
+					lStoreType_Lng: "12",
+					sStoreType_Station: "12",
+					
+					sStore_Name2: "12",
+					sStore_Name3: "12",
+					sStore_Name4: "12"
 				}]
 				this.total = this.list.length;
 				return;

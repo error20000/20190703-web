@@ -1,20 +1,20 @@
 package com.jian.system.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jian.system.dao.UserMapper;
+import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.Aid;
 import com.jian.system.entity.User;
 
 @Service
-public class UserService {
+public class AidService {
 
 	@Autowired
-	protected UserMapper baseMapper;
+	protected AidMapper baseMapper;
 
 	//TODO ----------------------------------------------------------------------insert
 
@@ -45,23 +45,13 @@ public class UserService {
 	//TODO ----------------------------------------------------------------------select
 
 	@TargetDataSource
-	public User selectOne() {
-		return baseMapper.selectOne();
-	}
-
-	@TargetDataSource
 	public User selectById(String sUser_ID) {
 		return baseMapper.selectById(sUser_ID);
 	}
 
 	@TargetDataSource
-	public List<User> selectAll() {
+	public List<Aid> selectAll() {
 		return baseMapper.selectAll();
-	}
-
-	@TargetDataSource
-	public List<User> selectList(Map<String, Object> condition) {
-		return baseMapper.selectList("tBase_User",condition);
 	}
 
 	//TODO ----------------------------------------------------------------------custom
