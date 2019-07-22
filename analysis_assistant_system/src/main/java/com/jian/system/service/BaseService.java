@@ -6,13 +6,15 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jian.annotation.Table;
 import com.jian.system.dao.BaseMapper;
 import com.jian.system.dao.UserMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.User;
+import com.jian.system.utils.Utils;
 
 @Service
-public class BaseService<M extends BaseMapper<T>, T> {
+public class BaseService<T, M extends BaseMapper<T>> {
 
 	@Autowired
 	protected M baseMapper;
@@ -62,11 +64,23 @@ public class BaseService<M extends BaseMapper<T>, T> {
 
 	@TargetDataSource
 	public List<T> selectList(Map<String, Object> condition) {
-		return baseMapper.selectList("tBase_User",condition);
+		String tableName =  getTableName();
+		System.out.println(tableName);
+		return baseMapper.selectList(tableName, condition);
 	}
 
-	//TODO ----------------------------------------------------------------------custom
+	//TODO ----------------------------------------------------------------------Tools
 	
-	
+	//获取泛型注解的table name。
+	private String getTableName(){
+		String tableName = "";
+		Class<?> clss = Utils.getObejctClass(getClass());
+		if(clss != null){
+			if(clss.isAnnotationPresent(Table.class)){
+				tableName = clss.getAnnotation(Table.class).value();
+			}
+		}
+		return tableName;
+	}
 
 }

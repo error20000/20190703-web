@@ -130,6 +130,61 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//edit
+			handleEdit: function (index, row) {
+				this.editFormVisible = true;
+				this.editForm = Object.assign({}, row);
+			},
+			editClose: function () {
+				this.editFormVisible = false;
+				this.editLoading = false;
+				this.$refs.editForm.resetFields();
+			},
+			editSubmit: function () {
+				this.$refs.editForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.editLoading = true;
+							var params = Object.assign({}, this.editForm);
+							ajaxReq(modUrl, params, function(res){
+								self.editLoading = false;
+								self.handleResOperate(res, function(){
+									self.editFormVisible = false;
+									self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
+			//del
+			handleDel: function(index, row){
+				this.$confirm('确定删除该条记录吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					ajaxReq(delUrl, {pid: row.pid }, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
+			},
+			//view
+			handleView: function(index, row){
+				
+			},
+			//bind
+			handleBind: function(index, row){
+				
+			},
+			
 			//reset
 			reset: function(){
 				this.filters = {

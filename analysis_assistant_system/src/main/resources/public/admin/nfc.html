@@ -49,13 +49,13 @@
 					    </el-date-picker>
 					</el-form-item> -->
 					<el-form-item>
-						<el-button type="primary" @click="query" icon="fa fa-search">&nbsp;&nbsp;查询</el-button>
-						<el-button @click="reset" icon="fa fa-recycle">&nbsp;&nbsp;重置</el-button>
+						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
+						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" @click="getExcel">导入</el-button>
-						<el-button type="primary" @click="getExcel">导出</el-button>
+						<el-button type="primary" title="导入" @click="getExcel" icon="fas fa-file-import"></el-button>
+						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button size="mini" type="primary" @click="handleAdd">新增</el-button>
+						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -77,11 +77,27 @@
 					</el-table-column>
 					<el-table-column label="创建时间" prop="dNfc_CreateDate" >
 					</el-table-column>
-					<el-table-column fixed="right" label="操作" width="280">
+					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
-							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">查看绑定</el-button>
-							<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+							<el-dropdown>
+							  <el-button type="primary" size="mini">
+							   	<i class="fas fa-cog"></i>
+							  </el-button>
+							  <el-dropdown-menu slot="dropdown">
+							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
+							    	<i class="fas fa-edit"></i>&nbsp;编辑
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)">
+							    	<i class="fas fa-eye"></i>&nbsp;查看绑定
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)">
+							    	<i class="fas fa-link"></i>&nbsp;绑定
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
+							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
+							    </el-dropdown-item>
+							  </el-dropdown-menu>
+							</el-dropdown>
 						</template>
 					</el-table-column>
 				</el-table>
