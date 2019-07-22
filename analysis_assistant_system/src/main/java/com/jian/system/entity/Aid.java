@@ -35,6 +35,8 @@ public class Aid extends Base<Aid> {
 	private String sAid_Lighting;
 	@Excel(name="航标设置", sort=0, length="64", isNull=1 )
 	private String sAid_Mark;
+	@Excel(name="NFC标签ID", sort=0, length="32", isNull=1 )
+	private String sAid_NfcID;
 	
 	
 	public String getsAid_ID() {
@@ -108,6 +110,12 @@ public class Aid extends Base<Aid> {
 	}
 	public void setsAid_Mark(String sAid_Mark) {
 		this.sAid_Mark = sAid_Mark;
+	}
+	public String getsAid_NfcID() {
+		return sAid_NfcID;
+	}
+	public void setsAid_NfcID(String sAid_NfcID) {
+		this.sAid_NfcID = sAid_NfcID;
 	}
 	
 }

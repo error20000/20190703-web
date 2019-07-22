@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 19/07/2019 19:57:44
+ Date: 22/07/2019 18:52:51
 */
 
 
@@ -31,7 +31,8 @@ CREATE TABLE "AASYSTEM"."tBase_Aid" (
   "dAid_CreateDate" DATE ,
   "dAid_DelDate" DATE ,
   "sAid_Lighting" NVARCHAR2(64) ,
-  "sAid_Mark" NVARCHAR2(64) 
+  "sAid_Mark" NVARCHAR2(64) ,
+  "sAid_NfcID" NVARCHAR2(32) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -57,6 +58,32 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."dAid_CreateDate" IS '始建时间';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."dAid_DelDate" IS '撤除时间';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."sAid_Lighting" IS '灯质明灭';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."sAid_Mark" IS '航标设置';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."sAid_NfcID" IS 'NFC标签ID';
+
+-- ----------------------------
+-- Table structure for tBase_AidEquip
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_AidEquip";
+CREATE TABLE "AASYSTEM"."tBase_AidEquip" (
+  "sAidEquip_ID" NVARCHAR2(32) NOT NULL ,
+  "sAidEquip_AidID" NVARCHAR2(32) ,
+  "sAidEquip_EquipID" NVARCHAR2(32) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_AidEquip"."sAidEquip_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_AidEquip"."sAidEquip_AidID" IS '航标ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_AidEquip"."sAidEquip_EquipID" IS '器材ID';
 
 -- ----------------------------
 -- Table structure for tBase_Dict
@@ -117,6 +144,80 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."sDictType_NO" IS '字典分类编
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."sDictType_Name" IS '字典分类名称';
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."dDictType_CreateDate" IS '创建日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."sDictType_UserID" IS '创建人ID';
+
+-- ----------------------------
+-- Table structure for tBase_Equip
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_Equip";
+CREATE TABLE "AASYSTEM"."tBase_Equip" (
+  "sEquip_ID" NVARCHAR2(32) NOT NULL ,
+  "sEquip_Name" NVARCHAR2(64) ,
+  "sEquip_StoreLv1" NVARCHAR2(32) ,
+  "sEquip_StoreLv2" NVARCHAR2(32) ,
+  "sEquip_StoreLv3" NVARCHAR2(32) ,
+  "sEquip_StoreLv4" NVARCHAR2(32) ,
+  "sEquip_Type" NVARCHAR2(64) ,
+  "lEquip_StatusFlag" NUMBER ,
+  "sEquip_NfcID" NVARCHAR2(32) ,
+  "sEquip_AidID" NVARCHAR2(32) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_Name" IS '器材名称';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv1" IS '一级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv2" IS '二级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv3" IS '三级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv4" IS '四级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_Type" IS '器材类型';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."lEquip_StatusFlag" IS '器材状态';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_NfcID" IS 'NFC标签ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_AidID" IS '航标ID';
+
+-- ----------------------------
+-- Table structure for tBase_EquipLog
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_EquipLog";
+CREATE TABLE "AASYSTEM"."tBase_EquipLog" (
+  "sELog_ID" NVARCHAR2(32) NOT NULL ,
+  "sELog_Type" NVARCHAR2(64) ,
+  "dELog_CreateDate" DATE ,
+  "sELog_UserID" NVARCHAR2(32) ,
+  "sELog_EquipID" NVARCHAR2(32) ,
+  "sELog_Describe" NVARCHAR2(255) ,
+  "sELog_Remarks" NVARCHAR2(255) ,
+  "sELog_IP" NVARCHAR2(255) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_Type" IS '日志类型';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."dELog_CreateDate" IS '日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_UserID" IS '操作员ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_EquipID" IS '器材ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_Describe" IS '日志描述';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_Remarks" IS '日志备注';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_IP" IS '操作员IP';
 
 -- ----------------------------
 -- Table structure for tBase_Group
@@ -229,13 +330,83 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_MenuInterface"."sInterface_Menu" IS '接口�
 COMMENT ON COLUMN "AASYSTEM"."tBase_MenuInterface"."lInterface_StatusFlag" IS '状态 0：禁用，1：启用';
 
 -- ----------------------------
+-- Table structure for tBase_Message
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_Message";
+CREATE TABLE "AASYSTEM"."tBase_Message" (
+  "sMsg_ID" NVARCHAR2(32) NOT NULL ,
+  "sMsg_Type" NVARCHAR2(64) ,
+  "dMsg_CreateDate" DATE ,
+  "sMsg_ToUserID" NVARCHAR2(32) ,
+  "sMsg_EquipID" NVARCHAR2(32) ,
+  "sMsg_Describe" NVARCHAR2(255) ,
+  "sMsg_Remarks" NVARCHAR2(255) ,
+  "dMsg_UpdateDate" DATE ,
+  "sMsg_UserID" NVARCHAR2(32) ,
+  "sMsg_AidID" NVARCHAR2(32) ,
+  "sMsg_IP" NVARCHAR2(255) ,
+  "sMsg_FromUserID" NVARCHAR2(32) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Type" IS '消息类型';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."dMsg_CreateDate" IS '消息日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_ToUserID" IS '接收消息人员ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_EquipID" IS '器材ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Describe" IS '消息描述';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Remarks" IS '消息备注';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."dMsg_UpdateDate" IS '消息更新日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_UserID" IS '操作员ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_AidID" IS '航标ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_IP" IS '操作员IP';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_FromUserID" IS '产生消息人员ID';
+
+-- ----------------------------
+-- Table structure for tBase_Nfc
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_Nfc";
+CREATE TABLE "AASYSTEM"."tBase_Nfc" (
+  "sNfc_ID" NVARCHAR2(32) NOT NULL ,
+  "sNfc_Name" NVARCHAR2(64) ,
+  "sNfc_NO" NVARCHAR2(64) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_Nfc"."sNfc_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Nfc"."sNfc_Name" IS '名称';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Nfc"."sNfc_NO" IS '编码';
+
+-- ----------------------------
 -- Table structure for tBase_Store
 -- ----------------------------
 DROP TABLE "AASYSTEM"."tBase_Store";
 CREATE TABLE "AASYSTEM"."tBase_Store" (
   "sStore_ID" NVARCHAR2(32) NOT NULL ,
   "sStore_Name" NVARCHAR2(64) ,
-  "sStore_Parent" NVARCHAR2(32) 
+  "sStore_Level1" NVARCHAR2(32) ,
+  "sStore_Level2" NVARCHAR2(32) ,
+  "sStore_Level3" NVARCHAR2(32) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -251,7 +422,9 @@ DISABLE ROW MOVEMENT
 ;
 COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_Name" IS '仓库名称';
-COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_Parent" IS '父级ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_Level1" IS '一级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_Level2" IS '二级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Store"."sStore_Level3" IS '三级仓库';
 
 -- ----------------------------
 -- Table structure for tBase_StoreType
@@ -364,6 +537,31 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_User"."dUser_CreateDate" IS '创建日期';
 INSERT INTO "AASYSTEM"."tBase_User" VALUES ('22', '33333', '44444444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
+-- Table structure for tBase_UserAid
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_UserAid";
+CREATE TABLE "AASYSTEM"."tBase_UserAid" (
+  "sUserAid_ID" NVARCHAR2(32) NOT NULL ,
+  "sUserAid_UserID" NVARCHAR2(32) ,
+  "sUserAid_AidID" NVARCHAR2(32) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_UserAid"."sUserAid_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_UserAid"."sUserAid_UserID" IS '用户ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_UserAid"."sUserAid_AidID" IS '航标ID';
+
+-- ----------------------------
 -- Table structure for tBase_UserLog
 -- ----------------------------
 DROP TABLE "AASYSTEM"."tBase_UserLog";
@@ -424,7 +622,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_UserMenu"."sUserMenu_MenuID" IS '菜单ID';
 -- ----------------------------
 DROP TABLE "AASYSTEM"."tEquip_Energy";
 CREATE TABLE "AASYSTEM"."tEquip_Energy" (
-  "sEnergy_ID" NVARCHAR2(32) NOT NULL ,
+  "sEquip_ID" NVARCHAR2(32) NOT NULL ,
   "sEnergy_Name" NVARCHAR2(64) ,
   "sEnergy_NO" NVARCHAR2(64) ,
   "sEnergy_Brand" NVARCHAR2(64) ,
@@ -446,7 +644,7 @@ PARALLEL 1
 NOCACHE
 DISABLE ROW MOVEMENT
 ;
-COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEnergy_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEquip_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEnergy_Name" IS '名称';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEnergy_NO" IS '编码';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEnergy_Brand" IS '品牌';
@@ -461,7 +659,7 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_Energy"."sEnergy_Connect" IS '连接方式'
 -- ----------------------------
 DROP TABLE "AASYSTEM"."tEquip_Lighting";
 CREATE TABLE "AASYSTEM"."tEquip_Lighting" (
-  "sLighting_ID" NVARCHAR2(32) NOT NULL ,
+  "sEquip_ID" NVARCHAR2(32) NOT NULL ,
   "sLighting_Name" NVARCHAR2(64) ,
   "sLighting_NO" NVARCHAR2(64) ,
   "sLighting_Brand" NVARCHAR2(64) ,
@@ -485,7 +683,7 @@ PARALLEL 1
 NOCACHE
 DISABLE ROW MOVEMENT
 ;
-COMMENT ON COLUMN "AASYSTEM"."tEquip_Lighting"."sLighting_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_Lighting"."sEquip_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lighting"."sLighting_Name" IS '灯器名称';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lighting"."sLighting_NO" IS '灯器编码';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lighting"."sLighting_Brand" IS '品牌';
@@ -510,6 +708,19 @@ ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0012859" CHECK ("sAid_ID
 ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0012860" CHECK ("sAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
+-- Primary Key structure for table tBase_AidEquip
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012908" PRIMARY KEY ("sAidEquip_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_AidEquip
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012904" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012905" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012906" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012907" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
 -- Primary Key structure for table tBase_Dict
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Dict" ADD CONSTRAINT "SYS_C0012842" PRIMARY KEY ("sDict_ID");
@@ -530,6 +741,33 @@ ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0012843" PRIMARY KE
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0012658" CHECK ("sDictType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0012833" CHECK ("sDictType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Primary Key structure for table tBase_Equip
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012881" PRIMARY KEY ("sEquip_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_Equip
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012877" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012878" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012879" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012880" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Primary Key structure for table tBase_EquipLog
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012888" PRIMARY KEY ("sELog_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_EquipLog
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012883" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012884" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012885" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012886" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012887" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_Group
@@ -590,6 +828,35 @@ ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0012662" CHECK
 ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0012837" CHECK ("sInterface_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
+-- Primary Key structure for table tBase_Message
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012916" PRIMARY KEY ("sMsg_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_Message
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012910" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012911" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012912" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012913" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012914" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012915" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Primary Key structure for table tBase_Nfc
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012897" PRIMARY KEY ("sNfc_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_Nfc
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012892" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012893" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012894" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012895" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012896" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
 -- Primary Key structure for table tBase_Store
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Store" ADD CONSTRAINT "SYS_C0012857" PRIMARY KEY ("sStore_ID");
@@ -635,6 +902,32 @@ ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0012666" CHECK ("sUser_
 ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0012839" CHECK ("sUser_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
+-- Primary Key structure for table tBase_UserAid
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0012902" PRIMARY KEY ("sUserAid_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_UserAid
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0012899" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0012900" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0012901" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Indexes structure for table tBase_UserAid
+-- ----------------------------
+CREATE INDEX "AASYSTEM"."UserMenu_Index01_copy1"
+  ON "AASYSTEM"."tBase_UserAid" ("sUserAid_UserID" ASC)
+  LOGGING
+  TABLESPACE "USERS"
+  VISIBLE
+PCTFREE 10
+INITRANS 2
+STORAGE (
+  BUFFER_POOL DEFAULT
+);
+
+-- ----------------------------
 -- Primary Key structure for table tBase_UserLog
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_UserLog" ADD CONSTRAINT "SYS_C0012850" PRIMARY KEY ("sLog_ID");
@@ -673,26 +966,26 @@ STORAGE (
 -- ----------------------------
 -- Primary Key structure for table tEquip_Energy
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012872" PRIMARY KEY ("sEnergy_ID");
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012872" PRIMARY KEY ("sEquip_ID");
 
 -- ----------------------------
 -- Checks structure for table tEquip_Energy
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012669" CHECK ("sEnergy_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012868" CHECK ("sEnergy_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012869" CHECK ("sEnergy_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012870" CHECK ("sEnergy_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012871" CHECK ("sEnergy_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012669" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012868" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012869" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012870" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Energy" ADD CONSTRAINT "SYS_C0012871" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Lighting
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012866" PRIMARY KEY ("sLighting_ID");
+ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012866" PRIMARY KEY ("sEquip_ID");
 
 -- ----------------------------
 -- Checks structure for table tEquip_Lighting
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012670" CHECK ("sLighting_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012863" CHECK ("sLighting_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012864" CHECK ("sLighting_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012865" CHECK ("sLighting_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012670" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012863" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012864" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Lighting" ADD CONSTRAINT "SYS_C0012865" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
