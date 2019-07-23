@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -16,94 +17,226 @@ import com.jian.system.entity.User;
 public interface BaseMapper<T> {
 
 	//TODO ----------------------------------------------------------------------insert
-	@Update({
+	
+	@Insert({
+    	"<script>",
 		" insert into ",
-		" \"tBase_User\" (",
-		" \"sUser_ID\", \"sUser_UserName\", \"sUser_PassWord\", ",
-		" \"sUser_Nick\", \"lUser_StatusFlag\", \"sUser_GroupID\", ",
-		" \"sUser_QQ\", \"sUser_Email\", \"sUser_Phone\", ",
-		" \"sUser_ThirdID\" ",
+    	" \"${tableName}\"(",
+    	"	<foreach collection=\"obj.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	" 		<if test=\" obj[item] != null \"> ",
+	    " 			\"${item}\" ",	
+    	"       </if>",
+    	"	</foreach>", 
 		" ) ",
 		" values( ",
-		" #{sUser_ID}, #{sUser_UserName}, #{sUser_PassWord}, ",
-		" #{sUser_Nick}, #{lUser_StatusFlag}, #{sUser_GroupID}, ",
-		" #{sUser_QQ}, #{sUser_Email}, #{sUser_Phone}, ",
-		" #{sUser_ThirdID} ",
+    	"	<foreach collection=\"obj.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	" 		<if test=\" obj[item] != null \"> ",
+    	" 			#{obj[${item}]}",	
+    	"       </if>",
+    	"	</foreach>",
 		" )",
+    	"</script>"
 	})
-	public int insert(T obj);
-
+	public int insert(@Param("tableName") String tableName, @Param("obj") Map<String, Object> obj);
+	
+	/*@Insert({
+		"<script>",
+		" insert into ",
+		" \"${tableName}\"(",
+		"	<foreach collection=\"obj.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+		" 		<if test=\" obj[item] != null \"> ",
+	    " 			\"${item}\" ",	
+		"       </if>",
+		"	</foreach>", 
+		" ) ",
+		" values ",
+		"	<foreach collection=\"list\" item=\"map\"  index=\"i\" separator=\"union all\">",
+		" 		(select ",
+		"			<foreach collection=\"map.keys\" item=\"item\"  index=\"j\" separator=\",\">",
+		" 				<if test=\" map[item] != null \"> ",
+		" 					#{map.${item}}",	
+		"   		    </if>",
+		"			</foreach>",
+		" 		from dual )",
+		"	</foreach>",
+		"</script>"
+	})
+	public int batchInsert(@Param("tableName") String tableName, @Param("obj") Map<String, Object> obj, @Param("list") List<Map<String, Object>> list);
+	*/
+	
+	@Insert({
+		"<script>",
+		" insert all ",
+		"	<foreach collection=\"list\" item=\"map\"  index=\"i\" separator=\" \">",
+		" 		into \"${tableName}\"( ",
+		"			<foreach collection=\"map.keys\" item=\"item\"  index=\"j\" separator=\",\">",
+		" 				<if test=\" map[item] != null \"> ",
+	    " 					\"${item}\" ",	
+		"   		    </if>",
+		"			</foreach>",
+		" 		) ",
+		" 		values (",
+		"			<foreach collection=\"map.keys\" item=\"item\"  index=\"j\" separator=\",\">",
+		" 				<if test=\" map[item] != null \"> ",
+		" 					#{map.${item}}",	
+		"   		    </if>",
+		"			</foreach>",
+		" 		)",
+		"	</foreach>",
+		"	select 1 from dual ",
+		"</script>"
+	})
+	public int batchInsert(@Param("tableName") String tableName, @Param("list") List<Map<String, Object>> list);
+	
+	
 	//TODO ----------------------------------------------------------------------delete
 	@Delete({
-        " delete from \"tBase_User\" ",
-        " where \"sUser_ID\" = #{sUser_ID} "
+    	"<script>",
+        " delete from \"${tableName}\" ",
+        " where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+    	"</script>"
     })
-	public int deleteById(String sUser_ID);
+	public int delete(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition);
 
 	//TODO ----------------------------------------------------------------------update
-    @Update({        
-    	"update \"tBase_User\" set ",  
-    	" \"sUser_UserName\" = #{sUser_UserName}, ",      
-    	" \"sUser_Nick\" = #{sUser_Nick},  ",  
-    	" \"lUser_StatusFlag\" = #{lUser_StatusFlag},  ",  
-    	" \"sUser_GroupID\" = #{sUser_GroupID},  ",  
-    	" \"sUser_QQ\" = #{sUser_QQ},  ",  
-    	" \"sUser_Email\" = #{sUser_Email},  ",  
-    	" \"sUser_Phone\" = #{sUser_Phone},  ",  
-    	" \"sUser_ThirdID\" = #{sUser_ThirdID} ",
-    	" where \"sUser_ID\" = #{sUser_ID} "
-    })    
-    public int update(T obj);
-    
-    @Update({        
-    	"update \"tBase_User\" set ",  
-    	" \"sUser_PassWord\" = #{sUser_PassWord} ",     
-    	" where \"sUser_ID\" = #{sUser_ID} "
-    })    
-    public int updatePwd(T obj);
-
-	//TODO ----------------------------------------------------------------------select
-	@Select({
-    	" select * ",
-    	" from \"tBase_User\" ",
-    	" where  \"sUser_ID\" = #{sUser_ID} "
-    })
-	public T selectById(String sUser_ID);
 	
-    @Select({
-    	" select * ",
-    	" from \"tBase_User\" ",
-    	" where  rownum <= 1 "
-    })
-	public T selectOne();
-
-    @Select({
-    	" select * ",
-    	" from \"tBase_User\" "
-    })
-	public List<T> selectAll();
-    
-
-    @Select({
+    @Update({        
     	"<script>",
-    	" select * ",
-    	" from \"${tableName}\" ",
+    	"update \"${tableName}\" ",  
+    	" set ", 
+    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 		<if test=\" vmap[item] != null \"> ",
+    	" 			\"${item}\" = #{vmap[${item}]} ",
+    	"       </if>",   
+    	"	</foreach>",
     	" where ",
-    	"<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
-    	" \"${item}\" = #{map[${item}]}",	
-    	"</foreach>",
-    	 "</script>"
-    })
+    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	" 		\"${item}\" = #{map[${item}]} ",
+    	"	</foreach>",
+    	"</script>"
+    })    
+    public int update(@Param("tableName") String tableName, @Param("vmap") Map<String, Object> value, @Param("map") Map<String, Object> condition);
+
+    @Update({        
+    	"<script>",
+    	"update \"${tableName}\" ",  
+    	" set ", 
+    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 		<if test=\" vmap[item] != null \"> ",
+    	" 			\"${item}\" = #{vmap[${item}]} ",
+    	"       </if>",   
+    	"	</foreach>",
+    	" where ",
+    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	" 		\"${item}\" = #{map[${item}]} ",
+    	"	</foreach>",
+    	"</script>"
+    })    
+    public int batchUpdate(@Param("tableName") String tableName, @Param("vmap") Map<String, Object> value, @Param("map") Map<String, Object> condition);
+    
+	//TODO ----------------------------------------------------------------------select
+    
+	@Select({
+		"<script>",
+		" select * ",
+		" from \"${tableName}\" ",
+		" where rownum <![CDATA[<=]]> 1 and ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"</script>"
+	})
+	public T selectOne(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition);
+	
+	@Select({
+		"<script>",
+		" select ",
+		"	<foreach collection=\"columns\" item=\"item\"  index=\"i\" separator=\",\">",
+		" 		\"${item}\" ",	
+		"	</foreach>",
+		" from \"${tableName}\" ",
+		" where rownum <![CDATA[<=]]> 1 and ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"</script>"
+	})
+	public Map<String, Object> selectOneMap(@Param("tableName") String tableName, @Param("columns") List<String> columns, @Param("map") Map<String, Object> condition);
+    
+	@Select({
+		" select * ",
+		" from \"${tableName}\" "
+	})
+	public List<T> selectAll(@Param("tableName") String tableName);
+	
+	@Select({
+		"<script>",
+		" select * ",
+		" from \"${tableName}\" ",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"</script>"
+	})
 	public List<T> selectList(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition);
+	
+	@Select({
+		"<script>",
+		" select ",
+		"	<foreach collection=\"columns\" item=\"item\"  index=\"i\" separator=\",\">",
+		" 		\"${item}\" ",	
+		"	</foreach>",
+		" from \"${tableName}\" ",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"</script>"
+	})
+	public List<Map<String, Object>> selectListMap(@Param("tableName") String tableName, @Param("columns") List<String> columns, @Param("map") Map<String, Object> condition);
 
-
-  /*  @Insert("<script>" +
-            "    insert into LOB_LEVEL_LOG (ID, ROLEID, ROLENAME, GROUPID, USERID, ROLELEVEL, CHANNEL, DAYTIME, LOGTIME)" +
-            "    <foreach collection=\"list\" item=\"item\" index=\"index\" separator=\"union all\" >" +
-            "      (select #{item.id}, #{item.roleid}, #{item.rolename}, #{item.groupid}, #{item.userid}, #{item.rolelevel}, #{item.channel}, #{item.daytime}, #{item.logtime} from dual)" +
-            "    </foreach>" +
-            "</script>")*/
-	//TODO ----------------------------------------------------------------------custom
+	@Select({
+		"<script>",
+		" select * ",
+		" from \"${tableName}\" ",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
+		" minus  ",
+		" select * ",
+		" from \"${tableName}\" ",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"	 and rownum <![CDATA[<=]]> ${start}",
+		"</script>"
+	})
+	public List<T> selectPage(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition, @Param("start") int start, @Param("rows") int rows);
+	
+	//TODO ----------------------------------------------------------------------size
     
-    
+	@Select({
+		"<script>",
+		" select count(*) ",
+		" from \"${tableName}\" ",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]}",	
+		"	</foreach>",
+		"</script>"
+	})
+	public long size(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition);
+	
+	@Select({
+		" select count(*) ",
+		" from \"${tableName}\" "
+	})
+	public long sizeAll(@Param("tableName") String tableName);
 }
