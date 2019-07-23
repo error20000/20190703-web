@@ -35,8 +35,12 @@ public class Message extends Base<Message> {
 	private String sMsg_IP;
 	@Excel(name="产生消息人员ID", sort=0, length="32", isNull=1 )
 	private String sMsg_FromUserID;
+	@Excel(name="消息自定义标签", sort=0, length="64", isNull=1 )
+	private String sMsg_Label;
+	@Excel(name="消息重要级别	", sort=0, length="64", isNull=1 )
+	private int lMsg_Level = Integer.MAX_VALUE;
 	
-	
+
 	public String getsMsg_ID() {
 		return sMsg_ID;
 	}
@@ -108,6 +112,18 @@ public class Message extends Base<Message> {
 	}
 	public void setsMsg_FromUserID(String sMsg_FromUserID) {
 		this.sMsg_FromUserID = sMsg_FromUserID;
+	}
+	public String getsMsg_Label() {
+		return sMsg_Label;
+	}
+	public void setsMsg_Label(String sMsg_Label) {
+		this.sMsg_Label = sMsg_Label;
+	}
+	public int getlMsg_Level() {
+		return lMsg_Level;
+	}
+	public void setlMsg_Level(int lMsg_Level) {
+		this.lMsg_Level = lMsg_Level;
 	}
 	
 }

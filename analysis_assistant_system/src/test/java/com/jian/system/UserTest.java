@@ -119,6 +119,16 @@ public class UserTest {
 	}
 	
 	@Test
+	public void selectList2() {
+		List<User> list = service.selectList(null);
+		for (User user : list) {
+			System.out.println(user.getsUser_UserName());
+			System.out.println(user.getsUser_PassWord());
+			System.out.println(user.getlUser_StatusFlag());
+		}
+	}
+	
+	@Test
 	public void selectListMap() {
 		List<String> columns = new ArrayList<String>();
 		columns.add("sUser_UserName");

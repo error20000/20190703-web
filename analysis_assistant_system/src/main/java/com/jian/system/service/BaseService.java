@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.jian.annotation.Table;
 import com.jian.system.dao.BaseMapper;
-import com.jian.system.dao.UserMapper;
 import com.jian.system.datasource.TargetDataSource;
-import com.jian.system.entity.User;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.Tools;
 
-@Service
+
 public class BaseService<T, M extends BaseMapper<T>> {
 
 	@Autowired
@@ -131,7 +128,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	//TODO ----------------------------------------------------------------------Tools
 	
 	//获取泛型注解的table name。
-	private String getTableName(){
+	public String getTableName(){
 		String tableName = "";
 		Class<?> clss = Utils.getObejctClass(getClass());
 		if(clss != null){
@@ -142,7 +139,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 		return tableName;
 	}
 
-	private List<String> getPrimaryKeys(){
+	public List<String> getPrimaryKeys(){
 		Class<?> clss = Utils.getObejctClass(getClass());
 		if(clss == null){
 			return new ArrayList<String>();

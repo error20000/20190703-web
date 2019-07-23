@@ -1,7 +1,11 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/data/findPage";
-var excelUrl = baseUrl + "api/data/excel";
+var addUrl = baseUrl + "api/nfc/add";
+var modUrl = baseUrl + "api/nfc/update";
+var delUrl = baseUrl + "api/nfc/delete";
+var queryUrl = baseUrl + "api/nfc/findPage";
+var excelUrl = baseUrl + "api/nfc/excel";
+var importUrl = baseUrl + "api/nfc/import";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -29,7 +33,7 @@ var myvue = new Vue({
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-		              sn: [
+					sNfc_NO: [
 		                { required: true, message: '请输入序列号.', trigger: 'blur' },
 		              ]
 				},
@@ -55,25 +59,6 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
-				this.list = [{
-					sNfc_ID: "11",
-					sNfc_NO: "11",
-					sNfc_Name: "11",
-					dNfc_CreateDate: ""
-				},{
-					sNfc_ID: "22",
-					sNfc_NO: "22",
-					sNfc_Name: "22",
-					dNfc_CreateDate: ""
-				},{
-					sNfc_ID: "33",
-					sNfc_NO: "33",
-					sNfc_Name: "33",
-					dNfc_CreateDate: ""
-				}];
-				this.total = this.list.length;
-				return;
-				
 				var self = this;
 				var params = {
 					page: this.page,
@@ -101,10 +86,8 @@ var myvue = new Vue({
 			handleAdd: function(){
 				this.addFormVisible = true;
 				this.addForm = {
-						name: '',
-						sn: '',
-						connected: 'N',
-						status: 'N'
+						sNfc_Name: '',
+						sNfc_NO: ''
 				};
 			},
 			addClose: function () {
@@ -216,6 +199,9 @@ var myvue = new Vue({
 			},
 			handleResQuery: function(res, success, failed){
 				this.handleRes(false, res, success, failed);
+			},
+			handleResOperate: function(res, success, failed){
+				this.handleRes(true, res, success, failed);
 			},
 			handleRes: function(show, res, success, failed){
 				if(res.code > 0){
