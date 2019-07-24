@@ -7,6 +7,11 @@ var queryUrl = baseUrl + "api/nfc/findPage";
 var oneUrl = baseUrl + "api/nfc/findOne";
 var excelUrl = baseUrl + "api/nfc/excel";
 var importUrl = baseUrl + "api/nfc/import";
+var viewBindUrl = baseUrl + "api/nfc/viewBind";
+var aidUnbindUrl = baseUrl + "api/aid/unbind";
+var aidBindUrl = baseUrl + "api/aid/bind";
+var equipUnbindUrl = baseUrl + "api/equip/unbind";
+var equipBindUrl = baseUrl + "api/equip/bind";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -47,6 +52,24 @@ var myvue = new Vue({
 		                { required: true, message: '请输入NFC编码', trigger: 'blur' },
 		              ]
 				},
+				//view
+				viewFormVisible: false,
+				viewForm: {
+					nfc: {},
+					type: "",
+					aid: {},
+					equip: {}
+				},
+				
+				bindTypeOptions: [
+					{name: '器材', value: 'equip'},
+					{name: '航标', value: 'aid'},
+				],
+				bindIdOptions: [],
+				bindFormVisible: false,
+				bindLoading: false,
+				bindForm: {},
+				bindFormRules: {},
 				
 				user: ''
 			}
@@ -130,8 +153,10 @@ var myvue = new Vue({
 				};
 				var self = this;
 				ajaxReq(oneUrl, params, function(res){
-					self.editFormVisible = true;
-					self.editForm = Object.assign({}, res.data);
+					self.handleResQuery(res, function(){
+						self.editFormVisible = true;
+						self.editForm = Object.assign({}, res.data)
+					});
 				});
 
 				//this.editFormVisible = true;
@@ -168,7 +193,7 @@ var myvue = new Vue({
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {pid: row.pid }, function(res){
+					ajaxReq(delUrl, {sNfc_ID: row.sNfc_ID }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -180,11 +205,111 @@ var myvue = new Vue({
 			},
 			//view
 			handleView: function(index, row){
-				
+				var self = this;
+				ajaxReq(viewBindUrl, {sNfc_ID: row.sNfc_ID }, function(res){
+					self.handleResQuery(res, function(){
+						self.viewFormVisible = true;
+						self.viewForm = Object.assign({}, res.data);
+					});
+				});
 			},
 			//bind
+			bindTypeChange: function(){
+				var type = this.bindForm.type;
+				var self = this;
+				switch (type) {
+				case 'equip':
+					ajaxReq(equipUnbindUrl, {}, function(res){
+						self.handleResQuery(res, function(){
+							self.bindIdOptions = [];
+							for (var i = 0; i < res.data.length; i++) {
+								self.bindIdOptions.push({name: res.data[i].sEquip_Name, value: res.data[i].sEquip_ID});
+							}
+						});
+					});
+					break;
+				case 'aid':
+					ajaxReq(aidUnbindUrl, {}, function(res){
+						self.handleResQuery(res, function(){
+							self.bindIdOptions = [];
+							for (var i = 0; i < res.data.length; i++) {
+								self.bindIdOptions.push({name: res.data[i].sAid_Name, value: res.data[i].sAid_ID});
+							}
+						});
+					});
+					break;
+
+				default:
+					break;
+				}
+			},
 			handleBind: function(index, row){
-				
+				var self = this;
+				/*ajaxReq(viewBindUrl, {sNfc_ID: row.sNfc_ID }, function(res){
+					self.handleResQuery(res, function(){
+						if(!res.data.type){
+							self.bindFormVisible = true;
+							self.bindForm = {
+									sNfc_ID: row.sNfc_ID,
+									type: '',
+									id: ''
+							};
+						}
+					});
+				});*/
+
+				ajaxReq(oneUrl, {sNfc_ID: row.sNfc_ID }, function(res){
+					self.handleResQuery(res, function(){
+						if(!res.data.lNfc_StatusFlag){
+							self.bindFormVisible = true;
+							self.bindForm = {
+									sNfc_ID: row.sNfc_ID,
+									type: '',
+									id: ''
+							};
+						}
+					});
+				});
+			},
+			bindClose: function () {
+				this.bindFormVisible = false;
+				this.bindLoading = false;
+				this.$refs.bindForm.resetFields();
+			},
+			bindSubmit: function () {
+				this.$refs.bindForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.bindLoading = true;
+							var params = Object.assign({}, this.bindForm);
+							var type = this.bindForm.type;
+							switch (type) {
+							case 'equip':
+								ajaxReq(equipBindUrl, params, function(res){
+									self.bindLoading = false;
+									self.handleResOperate(res, function(){
+										self.bindFormVisible = false;
+										self.getList();
+									});
+								});
+								break;
+							case 'aid':
+								ajaxReq(aidBindUrl, params, function(res){
+									self.bindLoading = false;
+									self.handleResOperate(res, function(){
+										self.bindFormVisible = false;
+										self.getList();
+									});
+								});
+								break;
+
+							default:
+								break;
+							}
+						});
+					}
+				});
 			},
 			
 			//reset

@@ -1,5 +1,8 @@
 package com.jian.system.entity;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jian.annotation.Excel;
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.Table;
@@ -15,7 +18,13 @@ public class Nfc extends Base<Nfc> {
 	private String sNfc_Name;
 	@Excel(name="编码", sort=0, length="64", isNull=1 )
 	private String sNfc_NO;
-	
+	@Excel(name="状态 0：未使用，1：已使用", sort=0, length="", isNull=1 )
+	private int lNfc_StatusFlag;
+	@Excel(name="创建日期", sort=0, length="", isNull=1 )
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date dNfc_CreateDate;
+
+
 	
 	public String getsNfc_ID() {
 		return sNfc_ID;
@@ -34,6 +43,18 @@ public class Nfc extends Base<Nfc> {
 	}
 	public void setsNfc_NO(String sNfc_NO) {
 		this.sNfc_NO = sNfc_NO;
+	}
+	public int getlNfc_StatusFlag() {
+		return lNfc_StatusFlag;
+	}
+	public void setlNfc_StatusFlag(int lNfc_StatusFlag) {
+		this.lNfc_StatusFlag = lNfc_StatusFlag;
+	}
+	public Date getdNfc_CreateDate() {
+		return dNfc_CreateDate;
+	}
+	public void setdNfc_CreateDate(Date dNfc_CreateDate) {
+		this.dNfc_CreateDate = dNfc_CreateDate;
 	}
 	
 }

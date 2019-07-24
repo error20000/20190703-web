@@ -28,7 +28,7 @@ public class Aid extends Base<Aid> {
 	@Excel(name="航标图标", sort=0, length="255", isNull=1 )
 	private String sAid_Icon;
 	@Excel(name="始建时间", sort=0, length="", isNull=1 )
-	private Date dAid_CreateDate;
+	private Date dAid_BuildDate;
 	@Excel(name="撤除时间", sort=0, length="", isNull=1 )
 	private Date dAid_DelDate;
 	@Excel(name="灯质明灭", sort=0, length="64", isNull=1 )
@@ -37,6 +37,8 @@ public class Aid extends Base<Aid> {
 	private String sAid_Mark;
 	@Excel(name="NFC标签ID", sort=0, length="32", isNull=1 )
 	private String sAid_NfcID;
+	@Excel(name="创建日期", sort=0, length="", isNull=1 )
+	private Date dAid_CreateDate;
 	
 	
 	public String getsAid_ID() {
@@ -116,6 +118,12 @@ public class Aid extends Base<Aid> {
 	}
 	public void setsAid_NfcID(String sAid_NfcID) {
 		this.sAid_NfcID = sAid_NfcID;
+	}
+	public Date getdAid_BuildDate() {
+		return dAid_BuildDate;
+	}
+	public void setdAid_BuildDate(Date dAid_BuildDate) {
+		this.dAid_BuildDate = dAid_BuildDate;
 	}
 	
 }

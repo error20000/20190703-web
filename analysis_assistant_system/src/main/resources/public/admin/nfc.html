@@ -77,6 +77,8 @@
 					</el-table-column>
 					<el-table-column label="创建时间" prop="dNfc_CreateDate" >
 					</el-table-column>
+					<el-table-column label="状态" prop="lNfc_StatusFlag" :formatter="(r,c) => { return r.lNfc_StatusFlag ? '已使用': '未使用';}">
+					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
 							<el-dropdown>
@@ -87,10 +89,10 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)">
+							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? false : true ">
 							    	<i class="fas fa-eye"></i>&nbsp;查看绑定
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)">
+							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? true : false ">
 							    	<i class="fas fa-link"></i>&nbsp;绑定
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
@@ -140,6 +142,67 @@
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="editClose">取消</el-button>
 				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!-- bind -->
+		<el-dialog title="绑定" :visible.sync="bindFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="bindForm" :rules="bindFormRules" ref="bindForm" :inline="true">
+				<el-form-item label="绑定到" prop="bindForm">
+					<el-select v-model="bindForm.type" placeholder="请选择" @change="bindTypeChange">
+						<el-option
+					      v-for="item in bindTypeOptions"
+					      :key="item.value"
+					      :label="item.name"
+					      :value="item.value">
+						</el-option>
+					 </el-select>
+				</el-form-item>
+				<el-form-item prop="id" v-show="bindForm.type != ''">
+					<el-select v-model="bindForm.id" filterable placeholder="请选择">
+						<el-option
+					      v-for="item in bindIdOptions"
+					      :key="item.value"
+					      :label="item.name"
+					      :value="item.value">
+						</el-option>
+					 </el-select>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="bindClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="bindSubmit" :loading="bindLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!--viewBind-->
+		<el-dialog title="查看绑定" :visible.sync="viewFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="viewForm" label-width="100px" ref="viewForm">
+				<el-form-item label="NFC名称" prop="sNfc_Name">
+					<div v-html="viewForm.nfc.sNfc_Name"></div>
+				</el-form-item>
+				<el-form-item label="NFC编码" prop="sNfc_NO">
+					<div v-html="viewForm.nfc.sNfc_NO"></div>
+				</el-form-item>
+				<template v-if="viewForm.type == 'aid'">
+					<el-form-item label="航标名称" prop="sAid_Name">
+						<div v-html="viewForm.aid.sAid_Name"></div>
+					</el-form-item>
+					<el-form-item label="航标编码" prop="sAid_ID">
+						<div v-html="viewForm.aid.sAid_ID"></div>
+					</el-form-item>
+				</template>
+				<template v-if="viewForm.type == 'equip'">
+					<el-form-item label="器材名称" prop="sEquip_Name">
+						<div v-html="viewForm.equip.sEquip_Name"></div>
+					</el-form-item>
+					<el-form-item label="器材ID" prop="sEquip_ID">
+						<div v-html="viewForm.equip.sEquip_ID"></div>
+					</el-form-item>
+				</template>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="viewFormVisible = false">关闭</el-button>
 			</div>
 		</el-dialog>
 		
