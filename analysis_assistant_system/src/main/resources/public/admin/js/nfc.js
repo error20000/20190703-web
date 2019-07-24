@@ -4,6 +4,7 @@ var addUrl = baseUrl + "api/nfc/add";
 var modUrl = baseUrl + "api/nfc/update";
 var delUrl = baseUrl + "api/nfc/delete";
 var queryUrl = baseUrl + "api/nfc/findPage";
+var oneUrl = baseUrl + "api/nfc/findOne";
 var excelUrl = baseUrl + "api/nfc/excel";
 var importUrl = baseUrl + "api/nfc/import";
 
@@ -34,7 +35,16 @@ var myvue = new Vue({
 				addForm: {},
 				addFormRules: {
 					sNfc_NO: [
-		                { required: true, message: '请输入序列号.', trigger: 'blur' },
+		                { required: true, message: '请输入NFC编码', trigger: 'blur' },
+		              ]
+				},
+				//edit
+				editFormVisible: false,
+				editLoading: false,
+				editForm: {},
+				editFormRules: {
+					sNfc_NO: [
+		                { required: true, message: '请输入NFC编码', trigger: 'blur' },
 		              ]
 				},
 				
@@ -115,8 +125,17 @@ var myvue = new Vue({
 			},
 			//edit
 			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
+				var params = {
+						sNfc_ID: row.sNfc_ID
+				};
+				var self = this;
+				ajaxReq(oneUrl, params, function(res){
+					self.editFormVisible = true;
+					self.editForm = Object.assign({}, res.data);
+				});
+
+				//this.editFormVisible = true;
+				//this.editForm = Object.assign({}, row);
 			},
 			editClose: function () {
 				this.editFormVisible = false;

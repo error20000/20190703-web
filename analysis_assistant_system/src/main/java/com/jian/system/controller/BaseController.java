@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jian.annotation.Excel;
-import com.jian.system.dao.BaseMapper;
 import com.jian.system.service.BaseService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
@@ -26,11 +25,10 @@ import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
 
-public class BaseController<T, S extends BaseService> {
+public class BaseController<T, S extends BaseService<T, ?>> {
 	
 	@Autowired
 	public S service;
-	
 	
     public String add(HttpServletRequest req) {
 		try {
@@ -53,6 +51,7 @@ public class BaseController<T, S extends BaseService> {
 		Map<String, Object> vMap = null;
 		
 		//参数
+		Map<String, Object> setValues = Tools.getReqParamsToMap(req, getObejctClass());
 		List<String> pkeys = Utils.getPrimaryKeys(getObejctClass());//获取主键
 		if(pkeys == null || pkeys.isEmpty()){
 			return ResultTools.custom(Tips.ERROR206).toJSONString();
@@ -65,8 +64,8 @@ public class BaseController<T, S extends BaseService> {
 				return ResultTools.custom(Tips.ERROR206, str).toJSONString();
 			}
 			condition.put(str, strv);
+			setValues.remove(str);
 		}
-		Map<String, Object> setValues = Tools.getReqParamsToMap(req, getObejctClass());
 		//保存
 		int res = service.update(setValues, condition);
 		if(res > 0){

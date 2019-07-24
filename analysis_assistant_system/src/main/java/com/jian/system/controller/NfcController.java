@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.VerifyAuth;
+import com.jian.system.annotation.VerifyLogin;
+import com.jian.system.annotation.VerifySign;
 import com.jian.system.entity.Nfc;
 import com.jian.system.service.NfcService;
 
@@ -18,11 +21,13 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 
 	
 
-	//TODO -------------------------------------------------------------------------------- 基本方法
+	//TODO -------------------------------------------------------------------------------- 后台管理
 	
 	@Override
 	@PostMapping("/add")
-    @ResponseBody
+    @ResponseBody	
+	@VerifyLogin
+	@VerifyAuth
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -30,6 +35,8 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	@Override
 	@PostMapping("/update")
     @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -38,6 +45,8 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	@Override
 	@PostMapping("/delete")
     @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -45,18 +54,55 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	@Override
 	@PostMapping("/findPage")
     @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
+	}
+
+	@Override
+	@PostMapping("/findOne")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String findOne(HttpServletRequest req) {
+		return super.findOne(req);
 	}
 	
 	@Override
 	@PostMapping("/findAll")
     @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
 
-	//TODO -------------------------------------------------------------------------------- 自定义方法
+	@PostMapping("/viewBind")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String viewBind(HttpServletRequest req) {
+		return service.viewBind(req);
+	}
+
+	@PostMapping("/bind")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String bind(HttpServletRequest req) {
+		return service.bind(req);
+	}
+
+	@PostMapping("/unused")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String unused(HttpServletRequest req) {
+		return service.unused(req);
+	}
+	
+	//TODO -------------------------------------------------------------------------------- 前端接口
 
 	
 }

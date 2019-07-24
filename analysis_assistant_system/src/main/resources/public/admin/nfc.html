@@ -114,11 +114,11 @@
 		<!-- add -->
 		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="addForm" :rules="addFormRules" ref="addForm" label-width="80px">
-				<el-form-item label="NFC名称" prop="name">
-					<el-input type="text" v-model="addForm.name"></el-input>
+				<el-form-item label="NFC名称" prop="sNfc_Name">
+					<el-input type="text" v-model="addForm.sNfc_Name"></el-input>
 				</el-form-item>
-				<el-form-item label="NFC编码" prop="sn">
-					<el-input type="text" v-model="addForm.sn"></el-input>
+				<el-form-item label="NFC编码" prop="sNfc_NO">
+					<el-input type="text" v-model="addForm.sNfc_NO"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -126,6 +126,23 @@
 				<el-button size="mini" type="primary" @click="addSubmit" :loading="addLoading">提交</el-button>
 			</div>
 		</el-dialog>
+		
+		<!-- edit -->
+		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="editForm" :rules="editFormRules" ref="editForm" label-width="80px">
+				<el-form-item label="NFC名称" prop="sNfc_Name">
+					<el-input type="text" v-model="editForm.sNfc_Name"></el-input>
+				</el-form-item>
+				<el-form-item label="NFC编码" prop="sNfc_NO">
+					<el-input type="text" v-model="editForm.sNfc_NO"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="editClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
 	</section>
   </div>
 </body>

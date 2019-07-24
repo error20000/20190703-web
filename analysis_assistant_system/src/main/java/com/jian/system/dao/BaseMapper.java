@@ -107,13 +107,13 @@ public interface BaseMapper<T> {
     	"<script>",
     	"update \"${tableName}\" ",  
     	" set ", 
-    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\",\">",
     	" 		<if test=\" vmap[item] != null \"> ",
     	" 			\"${item}\" = #{vmap[${item}]} ",
     	"       </if>",   
     	"	</foreach>",
     	" where ",
-    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
     	" 		\"${item}\" = #{map[${item}]} ",
     	"	</foreach>",
     	"</script>"
@@ -124,13 +124,13 @@ public interface BaseMapper<T> {
     	"<script>",
     	"update \"${tableName}\" ",  
     	" set ", 
-    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\",\">",
     	" 		<if test=\" vmap[item] != null \"> ",
     	" 			\"${item}\" = #{vmap[${item}]} ",
     	"       </if>",   
     	"	</foreach>",
     	" where ",
-    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
     	" 		\"${item}\" = #{map[${item}]} ",
     	"	</foreach>",
     	"</script>"
@@ -236,17 +236,27 @@ public interface BaseMapper<T> {
 		" select * ",
 		" from \"${tableName}\" ",
 		" where ",
-		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
-		" 		\"${item}\" = #{map[${item}]}",	
-		"	</foreach>",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
 		" select * ",
 		" from \"${tableName}\" ",
 		" where ",
-		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
-		" 		\"${item}\" = #{map[${item}]}",	
-		"	</foreach>",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${start}",
 		"</script>"
 	})
@@ -276,4 +286,6 @@ public interface BaseMapper<T> {
 		" from \"${tableName}\" "
 	})
 	public long sizeAll(@Param("tableName") String tableName);
+	
+	
 }

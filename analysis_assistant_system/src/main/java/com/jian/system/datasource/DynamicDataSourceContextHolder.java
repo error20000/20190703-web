@@ -14,7 +14,7 @@ public class DynamicDataSourceContextHolder {
 	public static List<String> dataSourceIds = new ArrayList<>();
 
 	public static void setDataSourceType(String dataSourceType) {
-		logger.info("切换至{}数据源", dataSourceType);
+		logger.debug("切换至{}数据源", dataSourceType);
 		contextHolder.set(dataSourceType);
 	}
 
