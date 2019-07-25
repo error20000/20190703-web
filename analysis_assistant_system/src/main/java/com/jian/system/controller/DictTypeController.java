@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jian.annotation.API;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
-import com.jian.system.entity.User;
-import com.jian.system.service.UserService;
+import com.jian.system.entity.DictType;
+import com.jian.system.service.DictTypeService;
 
 
 @Controller
-@RequestMapping("/api/user")
-@API(name="用户管理")
-public class UserController extends BaseController<User, UserService> {
+@RequestMapping("/api/dictType")
+@API(name="字典分类管理")
+public class DictTypeController extends BaseController<DictType, DictTypeService> {
 
 
 	//TODO -------------------------------------------------------------------------------- 后台管理

@@ -15,6 +15,7 @@ import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Nfc;
+import com.jian.system.entity.User;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
@@ -75,12 +76,13 @@ public class NfcService extends BaseService<Nfc, NfcMapper> {
 		return baseMapper.unbind();
 	}
 
+	@Override
 	@Transactional
 	@TargetDataSource
-	public int delete(Map<String, Object> condition) {
+	public int delete(Map<String, Object> condition, User user) {
 		aidService.rebind(String.valueOf(condition.get("sNfc_ID")));
 		equipService.rebind(String.valueOf(condition.get("sNfc_ID")));
-		return super.delete(condition);
+		return super.delete(condition, user);
 	}
 
 	

@@ -29,7 +29,7 @@ public class UserTest {
 		user.setsUser_UserName("3333333");
 		user.setsUser_PassWord("3333333");
 		user.setlUser_StatusFlag(1);
-		int res = service.insert(user);
+		int res = service.insert(user, null);
 		System.out.println(res);
 	}
 
@@ -48,13 +48,13 @@ public class UserTest {
 		user.setsUser_PassWord("555552");
 		user.setlUser_StatusFlag(1);
 		list.add(user);
-		int res = service.batchInsert(list);
+		int res = service.batchInsert(list, null);
 		System.out.println(res);
 	}
 	
 	@Test
 	public void delete() {
-		int res = service.delete(MapTools.custom().put("sUser_UserName", "3333333").build());
+		int res = service.delete(MapTools.custom().put("sUser_UserName", "3333333").build(), null);
 		System.out.println(res);
 	}
 
@@ -65,7 +65,7 @@ public class UserTest {
 		user.setsUser_UserName("333333344");
 		user.setsUser_PassWord("333333344");
 		user.setlUser_StatusFlag(0);
-		int res = service.update(user);
+		int res = service.update(user, null);
 		System.out.println(res);
 	}
 	
@@ -76,7 +76,7 @@ public class UserTest {
 		user.setsUser_UserName("333333344");
 		user.setsUser_PassWord("333333344");
 		user.setlUser_StatusFlag(0);
-		int res = service.update(MapTools.custom().put("sUser_ID", "333333344").build(), MapTools.custom().put("sUser_UserName", "333333344").build());
+		int res = service.update(MapTools.custom().put("sUser_ID", "333333344").build(), MapTools.custom().put("sUser_UserName", "333333344").build(), null);
 		System.out.println(res);
 	}
 	

@@ -16,6 +16,7 @@ import com.jian.annotation.Table;
 import com.jian.system.config.Config;
 import com.jian.system.dao.BaseMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.User;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.DateTools;
 import com.jian.tools.core.Tools;
@@ -31,7 +32,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	//TODO ----------------------------------------------------------------------insert
 
 	@TargetDataSource
-	public int insert(T obj) {
+	public int insert(T obj, User user) {
 		fillPrimaryKey(obj);
 		fillDate(config.autoFillDateForAdd, obj);
 		String tableName =  getTableName();
@@ -39,7 +40,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	}
 	
 	@TargetDataSource
-	public int batchInsert(List<T> objs) {
+	public int batchInsert(List<T> objs, User user) {
 		String tableName =  getTableName();
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for (T t : objs) {
@@ -53,7 +54,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	//TODO ----------------------------------------------------------------------delete
 
 	@TargetDataSource
-	public int delete(Map<String, Object> condition) {
+	public int delete(Map<String, Object> condition, User user) {
 		String tableName =  getTableName();
 		condition = condition.isEmpty() ? null : condition;
 		return baseMapper.delete(tableName, condition);
@@ -62,7 +63,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	//TODO ----------------------------------------------------------------------update
 
 	@TargetDataSource
-	public int update(T obj) {
+	public int update(T obj, User user) {
 		List<String> pkeys = getPrimaryKeys();
 		Map<String, Object> value = Tools.parseObjectToMap(obj);
 		Map<String, Object> condition = new HashMap<String, Object>();
@@ -72,11 +73,11 @@ public class BaseService<T, M extends BaseMapper<T>> {
 		}
 		condition = condition.isEmpty() ? null : condition;
 		value = value.isEmpty() ? null : value;
-		return update(value, condition);
+		return update(value, condition, user);
 	}
 
 	@TargetDataSource
-	public int update(Map<String, Object> value, Map<String, Object> condition) {
+	public int update(Map<String, Object> value, Map<String, Object> condition, User user) {
 		fillDate(config.autoFillDateForModify, value);
 		String tableName =  getTableName();
 		condition = condition.isEmpty() ? null : condition;

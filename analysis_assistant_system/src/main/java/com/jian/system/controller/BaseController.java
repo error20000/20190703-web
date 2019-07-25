@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jian.annotation.Excel;
+import com.jian.system.entity.User;
 import com.jian.system.service.BaseService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
@@ -30,10 +31,15 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 	@Autowired
 	public S service;
 	
+	public User getLoginUser(HttpServletRequest req) {
+		User user = (User) req.getSession().getAttribute("login_user");
+		return user;
+	}
+	
     public String add(HttpServletRequest req) {
 		try {
 			T obj = Tools.getReqParamsToObject(req, getObejctClass().newInstance());
-			int res = service.insert(obj);
+			int res = service.insert(obj, getLoginUser(req));
 			if(res > 0){
 				return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 			}else{
@@ -67,7 +73,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 			setValues.remove(str);
 		}
 		//保存
-		int res = service.update(setValues, condition);
+		int res = service.update(setValues, condition, getLoginUser(req));
 		if(res > 0){
 			return ResultTools.custom(Tips.ERROR1).toJSONString();
 		}else{
@@ -96,7 +102,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 			condition.put(str, strv);
 		}
 		//保存
-		int res = service.delete(condition);
+		int res = service.delete(condition, getLoginUser(req));
 		if(res > 0){
 			return ResultTools.custom(Tips.ERROR1).toJSONString();
 		}else{
@@ -113,7 +119,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 			return ResultTools.custom(Tips.ERROR211, "删除条件").toJSONString();
 		}
 		//保存
-		int res = service.delete(condition);
+		int res = service.delete(condition, getLoginUser(req));
 		if(res > 0){
 			return ResultTools.custom(Tips.ERROR1).toJSONString();
 		}else{

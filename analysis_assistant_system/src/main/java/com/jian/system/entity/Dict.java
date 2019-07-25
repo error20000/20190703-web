@@ -23,8 +23,12 @@ public class Dict extends Base<Dict> {
 	private String sDict_UserID;
 	@Excel(name="字典分类编码", sort=0, length="64", isNull=1 )
 	private String sDict_DictTypeNO;
+	@Excel(name="更新日期", sort=0, length="", isNull=1 )
+	private Date dDict_UpdateDate;
+	@Excel(name="更新人ID", sort=0, length="32", isNull=1 )
+	private String sDict_UpdateUserID;
 	
-	
+
 	public String getsDict_ID() {
 		return sDict_ID;
 	}
@@ -60,6 +64,18 @@ public class Dict extends Base<Dict> {
 	}
 	public void setsDict_DictTypeNO(String sDict_DictTypeNO) {
 		this.sDict_DictTypeNO = sDict_DictTypeNO;
+	}
+	public Date getdDict_UpdateDate() {
+		return dDict_UpdateDate;
+	}
+	public void setdDict_UpdateDate(Date dDict_UpdateDate) {
+		this.dDict_UpdateDate = dDict_UpdateDate;
+	}
+	public String getsDict_UpdateUserID() {
+		return sDict_UpdateUserID;
+	}
+	public void setsDict_UpdateUserID(String sDict_UpdateUserID) {
+		this.sDict_UpdateUserID = sDict_UpdateUserID;
 	}
 	
 	

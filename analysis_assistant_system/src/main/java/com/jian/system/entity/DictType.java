@@ -21,8 +21,12 @@ public class DictType extends Base<DictType> {
 	private Date dDictType_CreateDate;
 	@Excel(name="创建人ID", sort=0, length="32", isNull=1 )
 	private String sDictType_UserID;
+	@Excel(name="更新日期", sort=0, length="", isNull=1 )
+	private Date dDictType_UpdateDate;
+	@Excel(name="更新人ID", sort=0, length="32", isNull=1 )
+	private String sDictType_UpdateUserID;
 	
-	
+
 	public String getsDictType_ID() {
 		return sDictType_ID;
 	}
@@ -52,6 +56,18 @@ public class DictType extends Base<DictType> {
 	}
 	public void setsDictType_UserID(String sDictType_UserID) {
 		this.sDictType_UserID = sDictType_UserID;
+	}
+	public Date getdDictType_UpdateDate() {
+		return dDictType_UpdateDate;
+	}
+	public void setdDictType_UpdateDate(Date dDictType_UpdateDate) {
+		this.dDictType_UpdateDate = dDictType_UpdateDate;
+	}
+	public String getsDictType_UpdateUserID() {
+		return sDictType_UpdateUserID;
+	}
+	public void setsDictType_UpdateUserID(String sDictType_UpdateUserID) {
+		this.sDictType_UpdateUserID = sDictType_UpdateUserID;
 	}
 	
 	

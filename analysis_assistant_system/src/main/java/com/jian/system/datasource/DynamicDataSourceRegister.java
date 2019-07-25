@@ -90,6 +90,7 @@ public class DynamicDataSourceRegister implements ImportBeanDefinitionRegistrar,
                 Class<? extends DataSource> clazz = getDataSourceType(typeStr);
         		DataSource dataSource = bind(clazz, dataSourceProperties);
         		targetDataSources.put(name, dataSource);
+                defaultDataSource = targetDataSources.get(str[0]); //设置默认数据源
         	    DynamicDataSourceContextHolder.dataSourceIds.add(name);
                 logger.info("注册数据源{}成功", name);
             }
