@@ -1,5 +1,8 @@
 package com.jian.system.entity;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jian.annotation.Excel;
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.Table;
@@ -29,6 +32,9 @@ public class Equip extends Base<Equip> {
 	private String sEquip_NfcID;
 	@Excel(name="航标ID", sort=0, length="32", isNull=1 )
 	private String sEquip_AidID;
+	@Excel(name="创建日期", sort=0, length="", isNull=1 )
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	private Date dEquip_CreateDate;
 	
 	
 	public String getsEquip_ID() {
@@ -90,6 +96,12 @@ public class Equip extends Base<Equip> {
 	}
 	public void setsEquip_AidID(String sEquip_AidID) {
 		this.sEquip_AidID = sEquip_AidID;
+	}
+	public Date getdEquip_CreateDate() {
+		return dEquip_CreateDate;
+	}
+	public void setdEquip_CreateDate(Date dEquip_CreateDate) {
+		this.dEquip_CreateDate = dEquip_CreateDate;
 	}
 	
 }

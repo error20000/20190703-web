@@ -26,36 +26,36 @@
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 					<el-form-item>
-						  <el-input v-model="filters.sn" placeholder="请输入航标编码" clearable></el-input>
+						  <el-input v-model="filters.sAid_NO" placeholder="请输入航标编码" clearable></el-input>
 					</el-form-item>
 					<el-form-item>
-					    <el-select v-model="filters.status" placeholder="航标种类">
+					    <el-select v-model="filters.sAid_Type" placeholder="航标种类">
 						    <el-option
-						      v-for="item in statusOptions"
+						      v-for="item in aidTypeOptions"
 						      :key="item.value"
-						      :label="item.label"
+						      :label="item.name"
 						      :value="item.value">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
 					<el-form-item>
-					    <el-select v-model="filters.status" placeholder="归属航标站">
+					    <el-select v-model="filters.sAid_Station" placeholder="归属航标站">
 						    <el-option
-						      v-for="item in statusOptions"
+						      v-for="item in stationOptions"
 						      :key="item.value"
-						      :label="item.label"
+						      :label="item.name"
 						      :value="item.value">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary" @click="query" icon="fa fa-search">&nbsp;&nbsp;查询</el-button>
-						<el-button @click="reset" icon="fa fa-recycle">&nbsp;&nbsp;重置</el-button>
+						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
+						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" @click="query">导入</el-button>
-						<el-button type="primary" @click="query">导出</el-button>
+						<el-button type="primary" title="导入" @click="getImport" icon="fas fa-file-import"></el-button>
+						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" @click="handleAdd">新增</el-button>
+						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -75,6 +75,8 @@
 					</el-table-column>
 					<el-table-column label="航标名称" prop="sAid_Name" fixed="left">
 					</el-table-column>
+					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
+					</el-table-column>
 					<el-table-column label="纬度" prop="lAid_Lat" >
 					</el-table-column>
 					<el-table-column label="经度" prop="lAid_Lng" >
@@ -89,15 +91,33 @@
 					</el-table-column>
 					<el-table-column label="航标设置" prop="sAid_Mark">
 					</el-table-column>
+					<el-table-column label="创建日期" prop="dAid_CreateDate">
+					</el-table-column>
 					<el-table-column label="始建时间" prop="dAid_CreateDate">
 					</el-table-column>
 					<el-table-column label="撤除时间" prop="dAid_DelDate">
 					</el-table-column>
-					<el-table-column fixed="right" label="操作" width="280">
+					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
-							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">器材</el-button>
-							<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+							<el-dropdown>
+							  <el-button type="primary" size="mini">
+							   	<i class="fas fa-cog"></i>
+							  </el-button>
+							  <el-dropdown-menu slot="dropdown">
+							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
+							    	<i class="fas fa-edit"></i>&nbsp;编辑
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? false : true ">
+							    	<i class="fas fa-unlink"></i>&nbsp;解绑
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? true : false ">
+							    	<i class="fas fa-link"></i>&nbsp;绑定
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
+							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
+							    </el-dropdown-item>
+							  </el-dropdown-menu>
+							</el-dropdown>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -129,26 +149,42 @@
 			  </el-form-item>
 			  <el-form-item label="归属航标站">
 			    <el-select v-model="addForm.sAid_Station" placeholder="请选归属航标站">
-			      <el-option label="区域一" value="shanghai"></el-option>
-			      <el-option label="区域二" value="beijing"></el-option>
+				    <el-option
+				      v-for="item in stationOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="航标种类">
 			    <el-select v-model="addForm.sAid_Type" placeholder="请选航标种类">
-			      <el-option label="区域一" value="shanghai"></el-option>
-			      <el-option label="区域二" value="beijing"></el-option>
+				    <el-option
+				      v-for="item in aidTypeOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="灯质明灭">
 			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
-			      <el-option label="区域一" value="shanghai"></el-option>
-			      <el-option label="区域二" value="beijing"></el-option>
+				    <el-option
+				      v-for="item in lightOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="航标设置">
 			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
-			      <el-option label="区域一" value="shanghai"></el-option>
-			      <el-option label="区域二" value="beijing"></el-option>
+				    <el-option
+				      v-for="item in markOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
 			    </el-select>
 			  </el-form-item>
 			</el-form>
@@ -174,6 +210,26 @@
 			</div>
 		</el-dialog>
 		
+		<!-- bind -->
+		<el-dialog title="绑定" :visible.sync="bindFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="bindForm" :rules="bindFormRules" ref="bindForm" :inline="true">
+				<el-form-item label="绑定到" prop="sNfc_ID">
+					<el-select v-model="bindForm.sNfc_ID" placeholder="请选择NFC标签" >
+						<el-option
+					      v-for="item in nfcOptions"
+					      :key="item.value"
+					      :label="item.name"
+					      :value="item.value">
+						</el-option>
+					 </el-select>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="bindClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="bindSubmit" :loading="bindLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
 	</section>
   </div>
 </body>
@@ -181,5 +237,5 @@
   <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
   <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/global.js"></script>
-  <script type="text/javascript" src="js/beacon.js"></script>
+  <script type="text/javascript" src="js/aid.js"></script>
 </html>

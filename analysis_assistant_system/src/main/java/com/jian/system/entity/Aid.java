@@ -2,6 +2,7 @@ package com.jian.system.entity;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jian.annotation.Excel;
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.Table;
@@ -28,8 +29,10 @@ public class Aid extends Base<Aid> {
 	@Excel(name="航标图标", sort=0, length="255", isNull=1 )
 	private String sAid_Icon;
 	@Excel(name="始建时间", sort=0, length="", isNull=1 )
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dAid_BuildDate;
 	@Excel(name="撤除时间", sort=0, length="", isNull=1 )
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dAid_DelDate;
 	@Excel(name="灯质明灭", sort=0, length="64", isNull=1 )
 	private String sAid_Lighting;
@@ -38,6 +41,7 @@ public class Aid extends Base<Aid> {
 	@Excel(name="NFC标签ID", sort=0, length="32", isNull=1 )
 	private String sAid_NfcID;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dAid_CreateDate;
 	
 	

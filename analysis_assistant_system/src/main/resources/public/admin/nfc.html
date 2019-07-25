@@ -24,35 +24,25 @@
 			<el-col :span="24">
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
-				<!-- <el-col :span="2" :offset="1">
-					<el-button size="mini" type="primary" @click="query">新增</el-button>
-				</el-col> -->
 			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 					<el-form-item>
 						  <el-input v-model="filters.sNfc_NO" placeholder="请输入NFC编码" clearable></el-input>
 					</el-form-item>
-					<!-- <el-form-item>
-						<el-date-picker
-					      v-model="filters.start"
-					      type="datetime"
-					      value-format="yyyy-MM-dd HH:mm:ss"
-					      placeholder="接收开始时间">
-					    </el-date-picker>
-					</el-form-item>
 					<el-form-item>
-						<el-date-picker
-					      v-model="filters.end"
-					      type="datetime"
-					      :default-time="'23:59:59'"
-					      value-format="yyyy-MM-dd HH:mm:ss"
-					      placeholder="接收结束时间">
-					    </el-date-picker>
-					</el-form-item> -->
+						<el-select v-model="filters.lNfc_StatusFlag" placeholder="请选择状态">
+							<el-option
+						      v-for="item in statusOptions"
+						      :key="item.value"
+						      :label="item.name"
+						      :value="item.value">
+							</el-option>
+						 </el-select>
+					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="导入" @click="getExcel" icon="fas fa-file-import"></el-button>
+						<el-button type="primary" title="导入" @click="getImport" icon="fas fa-file-import"></el-button>
 						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus"></el-button>
@@ -148,7 +138,7 @@
 		<!-- bind -->
 		<el-dialog title="绑定" :visible.sync="bindFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="bindForm" :rules="bindFormRules" ref="bindForm" :inline="true">
-				<el-form-item label="绑定到" prop="bindForm">
+				<el-form-item label="绑定到" prop="type">
 					<el-select v-model="bindForm.type" placeholder="请选择" @change="bindTypeChange">
 						<el-option
 					      v-for="item in bindTypeOptions"

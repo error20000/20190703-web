@@ -86,12 +86,30 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		return super.findAll(req);
 	}
 
-	@PostMapping("/viewBind")
+	@PostMapping("/delBind")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	public String viewBind(HttpServletRequest req) {
-		return service.viewBind(req);
+	public String delBind(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sNfc_ID = Tools.getReqParamSafe(req, "sNfc_ID");
+		String id = Tools.getReqParamSafe(req, "id");
+		vMap = Tools.verifyParam("sNfc_ID", sNfc_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("id", id, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		int res = service.delBind(id, sNfc_ID);
+		if(res == 0) {
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
+		}else {
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}
 	}
 
 	@PostMapping("/bind")

@@ -56,7 +56,7 @@ new Vue({
 				url = 'store.html';
 				break;
 			case 3:
-				url = 'beacon.html';
+				url = 'aid.html';
 				break;
 			case 4:
 				url = 'map.html';

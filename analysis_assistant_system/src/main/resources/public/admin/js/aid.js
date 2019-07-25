@@ -1,17 +1,16 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var addUrl = baseUrl + "api/nfc/add";
-var modUrl = baseUrl + "api/nfc/update";
-var delUrl = baseUrl + "api/nfc/delete";
-var queryUrl = baseUrl + "api/nfc/findPage";
-var oneUrl = baseUrl + "api/nfc/findOne";
-var excelUrl = baseUrl + "api/nfc/excel";
-var importUrl = baseUrl + "api/nfc/import";
-var viewBindUrl = baseUrl + "api/nfc/viewBind";
-var aidUnbindUrl = baseUrl + "api/aid/unbind";
-var aidBindUrl = baseUrl + "api/aid/bind";
-var equipUnbindUrl = baseUrl + "api/equip/unbind";
-var equipBindUrl = baseUrl + "api/equip/bind";
+var queryUrl = baseUrl + "api/aid/findPage";
+var addUrl = baseUrl + "api/aid/add";
+var modUrl = baseUrl + "api/aid/update";
+var delUrl = baseUrl + "api/aid/delete";
+var oneUrl = baseUrl + "api/aid/findOne";
+var excelUrl = baseUrl + "api/aid/excel";
+var importUrl = baseUrl + "api/aid/import";
+var nfcUrl = baseUrl + "api/nfc/unbind";
+var bindUrl = baseUrl + "api/aid/bind";
+var delBindUrl = baseUrl + "api/aid/delBind";
+var dictUrl = baseUrl + "api/dict/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -22,8 +21,10 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					sNfc_NO: '',
-					lNfc_StatusFlag: ''
+					user: '',
+					alarm: '',
+					connected: '',
+					status: ''
 				},
 				list: [],
 				total: 0,
@@ -32,18 +33,23 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
-				statusOptions: [
-					{name: '未使用', value: '0'},
-					{name: '已使用', value: '1'}
-				],
+				
+				aidTypeDictNo: '',
+				aidTypeOptions: [],
+				stationDictNo: '',
+				stationOptions: [],
+				lightDictNo: '',
+				lightOptions: [],
+				markDictNo: '',
+				markOptions: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-					sNfc_NO: [
-		                { required: true, message: '请输入NFC编码', trigger: 'blur' },
+					sAid_NO: [
+		                { required: true, message: '请输入编号.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -51,28 +57,20 @@ var myvue = new Vue({
 				editLoading: false,
 				editForm: {},
 				editFormRules: {
-					sNfc_NO: [
-		                { required: true, message: '请输入NFC编码', trigger: 'blur' },
+					sAid_NO: [
+		                { required: true, message: '请输入编号.', trigger: 'blur' },
 		              ]
 				},
-				//view
-				viewFormVisible: false,
-				viewForm: {
-					nfc: {},
-					type: "",
-					aid: {},
-					equip: {}
-				},
-				
-				bindTypeOptions: [
-					{name: '器材', value: 'equip'},
-					{name: '航标', value: 'aid'}
-				],
-				bindIdOptions: [],
+				//bind
+				nfcOptions: [],
 				bindFormVisible: false,
 				bindLoading: false,
 				bindForm: {},
-				bindFormRules: {},
+				bindFormRules: {
+					sNfc_ID: [
+		                { required: true, message: '请选择NFC标签.', trigger: 'blur' },
+			        ]
+				},
 				
 				user: ''
 			}
@@ -80,6 +78,106 @@ var myvue = new Vue({
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			aidTypeFormatter: function(row){
+				var name = row.sAid_Type;
+				for (var i = 0; i < this.aidTypeOptions.length; i++) {
+					var item = this.aidTypeOptions[i];
+					if(row.sAid_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			stationFormatter: function(row){
+				var name = row.sAid_Station;
+				for (var i = 0; i < this.stationOptions.length; i++) {
+					var item = this.stationOptions[i];
+					if(row.sAid_Station == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			lightFormatter: function(row){
+				var name = row.sAid_Lighting;
+				for (var i = 0; i < this.lightOptions.length; i++) {
+					var item = this.lightOptions[i];
+					if(row.sAid_Lighting == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			markFormatter: function(row){
+				var name = row.sAid_Mark;
+				for (var i = 0; i < this.markOptions.length; i++) {
+					var item = this.markOptions[i];
+					if(row.sAid_Mark == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleAidTypeOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleStationOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLightOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleMarkOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
 			},
 			handleSizeChange: function (val) {
 				this.rows = val;
@@ -118,13 +216,19 @@ var myvue = new Vue({
 					});
 				});
 			},
+			//reset
+			reset: function(){
+				this.filters = {
+					user: '',
+					connected: '',
+					status: ''
+				};
+				this.getList();
+			},
 			//add
 			handleAdd: function(){
 				this.addFormVisible = true;
-				this.addForm = {
-						sNfc_Name: '',
-						sNfc_NO: ''
-				};
+				this.addForm = {};
 			},
 			addClose: function () {
 				this.addFormVisible = false;
@@ -149,10 +253,29 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//del
+			handleDel: function(index, row){
+				this.$confirm('确定删除该条记录吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					ajaxReq(delUrl, {sAid_ID: row.sAid_ID }, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
+			},
 			//edit
 			handleEdit: function (index, row) {
+				//this.editFormVisible = true;
+				//this.editForm = Object.assign({}, row);
 				var params = {
-						sNfc_ID: row.sNfc_ID
+						sAid_ID: row.sAid_ID
 				};
 				var self = this;
 				ajaxReq(oneUrl, params, function(res){
@@ -161,9 +284,6 @@ var myvue = new Vue({
 						self.editForm = Object.assign({}, res.data)
 					});
 				});
-
-				//this.editFormVisible = true;
-				//this.editForm = Object.assign({}, row);
 			},
 			editClose: function () {
 				this.editFormVisible = false;
@@ -189,14 +309,18 @@ var myvue = new Vue({
 					}
 				});
 			},
-			//del
-			handleDel: function(index, row){
-				this.$confirm('确定删除该条记录吗? ', '提示', {
+			//bind
+			handleDelBind: function(index, row){
+				this.$confirm('确定解除绑定吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {sNfc_ID: row.sNfc_ID }, function(res){
+					var params = {
+							sNfc_ID: row.sAid_NfcID,
+							id: row.sAid_ID
+					};
+					ajaxReq(delBindUrl, params, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -206,71 +330,20 @@ var myvue = new Vue({
 				}).catch(() => {
 				});
 			},
-			//view
-			handleView: function(index, row){
-				var self = this;
-				ajaxReq(viewBindUrl, {sNfc_ID: row.sNfc_ID }, function(res){
-					self.handleResQuery(res, function(){
-						self.viewFormVisible = true;
-						self.viewForm = Object.assign({}, res.data);
-					});
-				});
-			},
-			//bind
-			bindTypeChange: function(){
-				var type = this.bindForm.type;
-				var self = this;
-				switch (type) {
-				case 'equip':
-					ajaxReq(equipUnbindUrl, {}, function(res){
-						self.handleResQuery(res, function(){
-							self.bindIdOptions = [];
-							for (var i = 0; i < res.data.length; i++) {
-								self.bindIdOptions.push({name: res.data[i].sEquip_Name, value: res.data[i].sEquip_ID});
-							}
-						});
-					});
-					break;
-				case 'aid':
-					ajaxReq(aidUnbindUrl, {}, function(res){
-						self.handleResQuery(res, function(){
-							self.bindIdOptions = [];
-							for (var i = 0; i < res.data.length; i++) {
-								self.bindIdOptions.push({name: res.data[i].sAid_Name, value: res.data[i].sAid_ID});
-							}
-						});
-					});
-					break;
-
-				default:
-					break;
-				}
-			},
 			handleBind: function(index, row){
+				this.nfcOptions = [];
 				var self = this;
-				/*ajaxReq(viewBindUrl, {sNfc_ID: row.sNfc_ID }, function(res){
+				ajaxReq(nfcUrl, {}, function(res){
 					self.handleResQuery(res, function(){
-						if(!res.data.type){
-							self.bindFormVisible = true;
-							self.bindForm = {
-									sNfc_ID: row.sNfc_ID,
-									type: '',
-									id: ''
-							};
+						for (var i = 0; i < res.data.length; i++) {
+							self.nfcOptions.push({name: res.data[i].sNfc_Name, value: res.data[i].sNfc_ID});
 						}
-					});
-				});*/
-
-				ajaxReq(oneUrl, {sNfc_ID: row.sNfc_ID }, function(res){
-					self.handleResQuery(res, function(){
-						if(!res.data.lNfc_StatusFlag){
-							self.bindFormVisible = true;
-							self.bindForm = {
-									sNfc_ID: row.sNfc_ID,
-									type: '',
-									id: ''
-							};
-						}
+						self.bindFormVisible = true;
+						self.bindForm = {
+								sNfc_ID: '',
+								type: 'aid',
+								id: row.sAid_ID
+						};
 					});
 				});
 			},
@@ -286,54 +359,22 @@ var myvue = new Vue({
 							var self = this;
 							this.bindLoading = true;
 							var params = Object.assign({}, this.bindForm);
-							var type = this.bindForm.type;
-							switch (type) {
-							case 'equip':
-								ajaxReq(equipBindUrl, params, function(res){
-									self.bindLoading = false;
-									self.handleResOperate(res, function(){
-										self.bindFormVisible = false;
-										self.getList();
-									});
+							ajaxReq(bindUrl, params, function(res){
+								self.bindLoading = false;
+								self.handleResOperate(res, function(){
+									self.bindFormVisible = false;
+									self.getList();
 								});
-								break;
-							case 'aid':
-								ajaxReq(aidBindUrl, params, function(res){
-									self.bindLoading = false;
-									self.handleResOperate(res, function(){
-										self.bindFormVisible = false;
-										self.getList();
-									});
-								});
-								break;
-
-							default:
-								break;
-							}
+							});
 						});
 					}
 				});
 			},
-			
-			//reset
-			reset: function(){
-				this.filters = {
-					sNfc_NO: '',
-					lNfc_StatusFlag: ''
-				};
-				this.getList();
-			},
+			//excel
 			getExcel: function(){
-				this.query();
-				var params = "";
-				for ( var key in this.filters) {
-					if(this.filters[key]){
-						params += "&"+key+"="+this.filters[key];
-					}
-				}
-				params += "&userId="+this.user.pid;
-				parent.window.open(excelUrl+(params ? "?"+params.substring(1) : ""));
+				
 			},
+			//import
 			getImport: function(){
 				
 			},
@@ -394,6 +435,10 @@ var myvue = new Vue({
 	  			return;
 	  		}
 			this.preloading = true;
+			this.handleAidTypeOptions();
+			this.handleStationOptions();
+			this.handleLightOptions();
+			this.handleMarkOptions();
 			this.getList();
 		}
 	  });

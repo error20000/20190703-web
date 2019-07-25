@@ -39,13 +39,13 @@ public class NfcService extends BaseService<Nfc, NfcMapper> {
 		Nfc nfc = this.selectOne(MapTools.custom().put("sNfc_ID", sNfc_ID).build());
 		Map<String, Object> res = MapTools.custom().put("nfc", nfc).build();
 		Aid aid = aidService.selectOne(MapTools.custom().put("sAid_NfcID", sNfc_ID).build());
-		if(aid != null) {
+		if(aid != null) { //航标
 			res.put("aid", aid);
 			res.put("type", "aid");
 			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 		}
 		Equip equip = equipService.selectOne(MapTools.custom().put("sEquip_NfcID", sNfc_ID).build());
-		if(equip != null) {
+		if(equip != null) { //器材
 			res.put("equip", equip);
 			res.put("type", "equip");
 			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
@@ -80,8 +80,8 @@ public class NfcService extends BaseService<Nfc, NfcMapper> {
 	@Transactional
 	@TargetDataSource
 	public int delete(Map<String, Object> condition, User user) {
-		aidService.rebind(String.valueOf(condition.get("sNfc_ID")));
-		equipService.rebind(String.valueOf(condition.get("sNfc_ID")));
+		aidService.rebind(String.valueOf(condition.get("sNfc_ID"))); //解除绑定
+		equipService.rebind(String.valueOf(condition.get("sNfc_ID"))); //解除绑定
 		return super.delete(condition, user);
 	}
 

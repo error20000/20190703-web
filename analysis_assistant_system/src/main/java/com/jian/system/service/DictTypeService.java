@@ -1,6 +1,7 @@
 package com.jian.system.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import com.jian.tools.core.Tools;
 public class DictTypeService extends BaseService<DictType, DictTypeMapper> {
 
 	@Override
+	@TargetDataSource
 	public int insert(DictType obj, User user) {
 		String tableName =  getTableName();
 		//判断用户
@@ -39,22 +41,44 @@ public class DictTypeService extends BaseService<DictType, DictTypeMapper> {
 		return baseMapper.insert(tableName, Tools.parseObjectToMap(obj));
 	}
 
-	@Override
-	public int batchInsert(List<DictType> objs, User user) {
-		// TODO Auto-generated method stub
-		return super.batchInsert(objs, user);
-	}
 
 	@Override
+	@TargetDataSource
 	public int update(DictType obj, User user) {
-		// TODO Auto-generated method stub
-		return super.update(obj, user);
+		List<String> pkeys = getPrimaryKeys();
+		Map<String, Object> value = Tools.parseObjectToMap(obj);
+		Map<String, Object> condition = new HashMap<String, Object>();
+		for (String string : pkeys) {
+			condition.put(string, value.get(string));
+			value.remove(string);
+		}
+		condition = condition.isEmpty() ? null : condition;
+		value = value.isEmpty() ? null : value;
+		return update(value, condition, user);
 	}
 
 	@Override
+	@TargetDataSource
 	public int update(Map<String, Object> value, Map<String, Object> condition, User user) {
-		// TODO Auto-generated method stub
-		return super.update(value, condition, user);
+		String tableName =  getTableName();
+		//判断用户
+		if(user == null) {
+			throw new ServiceException(Tips.ERROR101, "user is null");
+		}
+		//判断重复
+		String sDictType_NO = (String) value.get("sDictType_NO");
+		if(!Tools.isNullOrEmpty(sDictType_NO)) {
+			DictType old = baseMapper.selectOne(tableName, condition);
+			DictType test = baseMapper.selectOne(tableName, MapTools.custom().put("sDictType_NO", sDictType_NO).build());
+			if(test != null && !test.getsDictType_NO().equals(old.getsDictType_NO())) {
+				throw new ServiceException(Tips.ERROR105, sDictType_NO);
+			}
+		}
+		
+		//保存
+		value.put("dDictType_UpdateDate", new Date());
+		value.put("sDictType_UpdateUserID", user.getsUser_ID());
+		return baseMapper.update(tableName, value, condition);
 	}
 
 
