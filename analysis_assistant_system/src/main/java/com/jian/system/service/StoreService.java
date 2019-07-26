@@ -14,6 +14,7 @@ import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
+import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
@@ -24,19 +25,112 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	private StoreTypeService typeService;
 	
 	@TargetDataSource
-	public int add(String level, StoreType type, Store obj, User user) {
+	public int add(String level, String name, StoreType type, Store obj, User user) {
 		if(Tools.isNullOrEmpty(level)) {
 			throw new ServiceException(Tips.ERROR101, "level is null.");
 		}
 		int res = 0;
 		switch (level) {
 		case "1": //一级
-			res =typeService.insert(type, user);
+			//判断重复
+			StoreType test = typeService.selectOne(MapTools.custom().put("sStoreType_Name", name).build());
+			if(test != null) {
+				throw new ServiceException(Tips.ERROR105, name);
+			}
+			type.setsStoreType_Name(name);
+			res = typeService.insert(type, user);
 			break;
 
 		default:
-			res =super.insert(obj, user);
+			String parent = !Tools.isNullOrEmpty(obj.getsStore_Level3())
+					? obj.getsStore_Level3() : !Tools.isNullOrEmpty(obj.getsStore_Level2())
+					? obj.getsStore_Level2() : !Tools.isNullOrEmpty(obj.getsStore_Level1()) 
+					? obj.getsStore_Level1() : "";
+			//判断重复
+			Store test2 = super.selectOne(MapTools.custom().put("sStore_Name", name).put("sStore_Parent", parent).build());
+			if(test2 != null) {
+				throw new ServiceException(Tips.ERROR105, name);
+			}
+			obj.setsStore_Name(name);
+			obj.setsStore_Parent(parent);
+			res = super.insert(obj, user);
 			break;
+		}
+		return res;
+	}
+	
+	@TargetDataSource
+	public int modify(String level, String name, StoreType type, Store obj, User user) {
+		if(Tools.isNullOrEmpty(level)) {
+			throw new ServiceException(Tips.ERROR101, "level is null.");
+		}
+		int res = 0;
+		switch (level) {
+		case "1": //一级
+			//判断重复
+			StoreType test = typeService.selectOne(MapTools.custom().put("sStoreType_Name", name).build());
+			if(test != null && !test.getsStoreType_ID().equals(type.getsStoreType_ID())) {
+				throw new ServiceException(Tips.ERROR105, name);
+			}
+			type.setsStoreType_Name(name);
+			res = typeService.update(type, user);
+			break;
+
+		default:
+			String parent = !Tools.isNullOrEmpty(obj.getsStore_Level3())
+					? obj.getsStore_Level3() : !Tools.isNullOrEmpty(obj.getsStore_Level2())
+					? obj.getsStore_Level2() : !Tools.isNullOrEmpty(obj.getsStore_Level1()) 
+					? obj.getsStore_Level1() : "";
+			//判断重复
+			Store test2 = super.selectOne(MapTools.custom().put("sStore_Name", name).put("sStore_Parent", parent).build());
+			if(test2 != null && !test2.getsStore_ID().equals(obj.getsStore_ID())) {
+				throw new ServiceException(Tips.ERROR105, name);
+			}
+			obj.setsStore_Name(name);
+			obj.setsStore_Parent(parent);
+			res = super.update(obj, user);
+			break;
+		}
+		return res;
+	}
+	
+
+	@TargetDataSource
+	public int delete(String level, String id, User user) {
+		if(Tools.isNullOrEmpty(level)) {
+			throw new ServiceException(Tips.ERROR101, "level is null.");
+		}
+		int res = 0;
+		switch (level) {
+		case "1": //一级
+			res = typeService.delete(MapTools.custom().put("sStoreType_ID", id).build(), user);
+			break;
+
+		default:
+			res = super.delete(MapTools.custom().put("sStore_ID", id).build(), user);
+			break;
+		}
+		return res;
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> storeList(String parent) {
+		
+		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
+		Map<String, Object> node = null;
+		
+		if(Tools.isNullOrEmpty(parent)) {
+			List<StoreType> typeList = typeService.selectAll();
+			for (StoreType type : typeList) {
+				node = Tools.parseObjectToMap(type);
+				res.add(node);
+			}
+		}else {
+			List<Store> list = this.selectList(MapTools.custom().put("sStore_Parent", parent).build());
+			for (Store store : list) {
+				node = Tools.parseObjectToMap(store);
+				res.add(node);
+			}
 		}
 		return res;
 	}
@@ -47,78 +141,30 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		List<StoreType> typeList = typeService.selectAll();
 		List<Store> list = this.selectAll();
 		
-		/*Map<String, List<Store>> temp1 = list.stream()
-		        .collect(Collectors.groupingBy(Store::getsStore_Level1));
-		Map<String, List<Store>> temp2 = list.stream()
-		        .collect(Collectors.groupingBy(Store::getsStore_Level2));
-		Map<String, List<Store>> temp3 = list.stream()
-		        .collect(Collectors.groupingBy(Store::getsStore_Level3));*/
-		
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		Map<String, Object> node = null;
 		for (StoreType type : typeList) {
 			node = Tools.parseObjectToMap(type);
-			//children 1
-			List<Store> children1 = list.stream()
-					.filter(e -> e.getsStore_Level1() != null && e.getsStore_Level1().equals(type.getsStoreType_ID()))
-					.collect(Collectors.toList());
-			if(children1 != null && children1.size() > 0) {
-				List<Map<String, Object>> res1 = new ArrayList<Map<String,Object>>();
-				Map<String, Object> node1 = null;
-				for (Store store1 : children1) {
-					node1 = Tools.parseObjectToMap(store1);
-					//children 2
-					List<Store> children2 = children1.stream()
-							.filter(e -> e.getsStore_Level2() != null && e.getsStore_Level2().equals(store1.getsStore_ID()))
-							.collect(Collectors.toList());
-					if(children2 != null && children2.size() > 0) {
-						List<Map<String, Object>> res2 = new ArrayList<Map<String,Object>>();
-						Map<String, Object> node2 = null;
-						for (Store store2 : children2) {
-							node2 = Tools.parseObjectToMap(store2);
-							//children 3
-							List<Store> children3 = children2.stream()
-									.filter(e -> e.getsStore_Level3() != null && e.getsStore_Level3().equals(store2.getsStore_ID()))
-									.collect(Collectors.toList());
-							if(children3 != null && children3.size() > 0) {
-								List<Map<String, Object>> res3 = new ArrayList<Map<String,Object>>();
-								Map<String, Object> node3 = null;
-								for (Store store3 : children3) {
-									node3 = Tools.parseObjectToMap(store3);
-									res3.add(node3);
-								}
-								node2.put("children", res3); // end 3
-							}
-							res2.add(node2);
-						}
-						node1.put("children", res2); // end 2
-					}
-					res1.add(node1);
-				}
-				node.put("children", res1); // end 1
-			}
+			node.put("children", findChildren(type.getsStoreType_ID(), list));
 			res.add(node);
 		}
 		return res;
 	}
 	
-	/*private List<Map<String, Object>> findChildren(String id, List<Store> list){
+	private List<Map<String, Object>> findChildren(String id, List<Store> list){
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		List<Store> children = list.stream()
-				.filter(e -> e.getsStore_Level1().equals(id))
+				.filter(e -> e.getsStore_Parent().equals(id))
 				.collect(Collectors.toList());
-		if(children != null && children.size() > 0) {
-			Map<String, Object> node = null;
-			for (Store store : children) {
-				node = Tools.parseObjectToMap(store);
-				node.put("children", findChildren(store.getsStore_ID(), children));
-				res.add(node);
+		Map<String, Object> node = null;
+		for (Store store : children) {
+			node = Tools.parseObjectToMap(store);
+			List<Map<String, Object>> temp = findChildren(store.getsStore_ID(), list);
+			if(temp != null && temp.size() > 0) {
+				node.put("children", temp);
 			}
-		}else {
-			for (Store store : list) {
-				res.add(Tools.parseObjectToMap(store));
-			}
+			res.add(node);
 		}
 		return res;
-	}*/
+	}
 }

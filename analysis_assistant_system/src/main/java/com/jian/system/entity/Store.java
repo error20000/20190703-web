@@ -19,6 +19,11 @@ public class Store extends Base<Store> {
 	private String sStore_Level2;
 	@Excel(name="三级仓库", sort=0, length="32", isNull=1 )
 	private String sStore_Level3;
+	@Excel(name="父级ID", sort=0, length="32", isNull=1 )
+	private String sStore_Parent;
+	
+
+	
 	public String getsStore_ID() {
 		return sStore_ID;
 	}
@@ -48,6 +53,12 @@ public class Store extends Base<Store> {
 	}
 	public void setsStore_Level3(String sStore_Level3) {
 		this.sStore_Level3 = sStore_Level3;
+	}
+	public String getsStore_Parent() {
+		return sStore_Parent;
+	}
+	public void setsStore_Parent(String sStore_Parent) {
+		this.sStore_Parent = sStore_Parent;
 	}
 	
 }

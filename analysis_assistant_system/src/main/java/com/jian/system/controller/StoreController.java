@@ -6,7 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,14 +41,19 @@ public class StoreController extends BaseController<Store, StoreService> {
 		Map<String, Object> vMap = null;
 		//参数
 		String level = Tools.getReqParamSafe(req, "level");
+		String name = Tools.getReqParamSafe(req, "name");
 		vMap = Tools.verifyParam("level", level, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("name", name, 0, 0);
 		if(vMap != null){
 			return JsonTools.toJsonString(vMap);
 		}
 		
 		StoreType type = Tools.getReqParamsToObject(req, new StoreType());
 		Store obj = Tools.getReqParamsToObject(req, new Store());
-		int res = service.add(level, type, obj, getLoginUser(req));
+		int res = service.add(level, name, type, obj, getLoginUser(req));
 		if(res > 0){
 			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 		}else{
@@ -63,7 +67,27 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyLogin
 	@VerifyAuth
 	public String update(HttpServletRequest req) {
-		return super.update(req);
+		Map<String, Object> vMap = null;
+		//参数
+		String level = Tools.getReqParamSafe(req, "level");
+		String name = Tools.getReqParamSafe(req, "name");
+		vMap = Tools.verifyParam("level", level, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("name", name, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		StoreType type = Tools.getReqParamsToObject(req, new StoreType());
+		Store obj = Tools.getReqParamsToObject(req, new Store());
+		int res = service.modify(level, name, type, obj, getLoginUser(req));
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).toJSONString();
+		}
 	}
 
 
@@ -73,7 +97,25 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyLogin
 	@VerifyAuth
 	public String delete(HttpServletRequest req) {
-		return super.delete(req);
+		Map<String, Object> vMap = null;
+		//参数
+		String level = Tools.getReqParamSafe(req, "level");
+		String id = Tools.getReqParamSafe(req, "id");
+		vMap = Tools.verifyParam("level", level, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("id", id, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		int res = service.delete(level, id, getLoginUser(req));
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).toJSONString();
+		}
 	}
 
 
@@ -87,7 +129,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	}
 	
 	@Override
-	@GetMapping("/findAll")
+	@PostMapping("/findAll")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -96,6 +138,16 @@ public class StoreController extends BaseController<Store, StoreService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
+	@Override
+	@PostMapping("/findList")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String findList(HttpServletRequest req) {
+		String parent = Tools.getReqParamSafe(req, "parent");
+		List<Map<String, Object>> list = service.storeList(parent);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

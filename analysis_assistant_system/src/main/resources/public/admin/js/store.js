@@ -5,6 +5,7 @@ var addUrl = baseUrl + "api/store/add";
 var modUrl = baseUrl + "api/store/update";
 var delUrl = baseUrl + "api/store/delete";
 var dictUrl = baseUrl + "api/dict/findList";
+var listUrl = baseUrl + "api/store/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -30,21 +31,118 @@ var myvue = new Vue({
 
 				stationDictNo: '',
 				stationOptions: [],
+				lv1Options: [],
+				lv2Options: [],
+				lv3Options: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-		              sn: [
-		                { required: true, message: '请输入序列号.', trigger: 'blur' },
+					level: [
+		                { required: true, message: '请选择仓库级别.', trigger: 'blur' },
+		              ],
+					name: [
+		                { required: true, message: '请输入仓库名称.', trigger: 'blur' },
+		              ],
+		            sStore_Level1: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 2
+		            				|| this.editForm.level && this.editForm.level >= 2){
+		            			if (value === '') {
+		            				callback(new Error('请选所属一级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
+		              ],
+		            sStore_Level2: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 3
+		            				|| this.editForm.level && this.editForm.level >= 3){
+		            			if (value === '') {
+		            				callback(new Error('请选所属二级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
+		              ],
+		            sStore_Level3: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 4
+		            				|| this.editForm.level && this.editForm.level >= 4){
+		            			if (value === '') {
+		            				callback(new Error('请选所属三级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
 		              ]
 				},
 				//edit
 				editFormVisible: false,
 				editLoading: false,
 				editForm: {},
-				editFormRules: {},
+				editFormRules: {
+					level: [
+		                { required: true, message: '请选择仓库级别.', trigger: 'blur' },
+		              ],
+					name: [
+		                { required: true, message: '请输入仓库名称.', trigger: 'blur' },
+		              ],
+		            sStore_Level1: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 2
+		            				|| this.editForm.level && this.editForm.level >= 2){
+		            			if (value === '') {
+		            				callback(new Error('请选所属一级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
+		              ],
+		            sStore_Level2: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 3
+		            				|| this.editForm.level && this.editForm.level >= 3){
+		            			if (value === '') {
+		            				callback(new Error('请选所属二级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
+		              ],
+		            sStore_Level3: [
+		            	{ validator: (rule, value, callback) => {
+		            		if(this.addForm.level && this.addForm.level >= 4
+		            				|| this.editForm.level && this.editForm.level >= 4){
+		            			if (value === '') {
+		            				callback(new Error('请选所属三级仓库.'));
+	            		        }else{
+	            		        	callback();
+	            		        }
+		            		}else{
+		            			callback();
+		            		}
+		            	}, trigger: 'blur' }
+		              ]
+				},
 				
 				user: ''
 			}
@@ -66,14 +164,56 @@ var myvue = new Vue({
 			},
 			handleStationOptions: function(cb){
 				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
+				var params = {sDict_DictTypeNO: this.stationDictNo};
+				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						for (var i = 0; i < res.data.length; i++) {
 							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
 						if(typeof cb == 'function'){
 							cb();
+						}
+					});
+				});
+			},
+			handleLV1Options: function(){
+				var self = this;
+				var params = {};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lv1Options = [];
+						for (var i = 0; i < res.data.length; i++) {
+							self.lv1Options.push({name: res.data[i].sStoreType_Name, value: res.data[i].sStoreType_ID});
+						}
+					});
+				});
+			},
+			handleLV2Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lv2Options = [];
+						self.addForm.sStore_Level2 = "";
+						self.addForm.sStore_Level3 = "";
+						self.editForm.sStore_Level2 = "";
+						self.editForm.sStore_Level3 = "";
+						for (var i = 0; i < res.data.length; i++) {
+							self.lv2Options.push({name: res.data[i].sStore_Name, value: res.data[i].sStore_ID});
+						}
+					});
+				});
+			},
+			handleLV3Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lv3Options = [];
+						self.addForm.sStore_Level3 = "";
+						self.editForm.sStore_Level3 = "";
+						for (var i = 0; i < res.data.length; i++) {
+							self.lv3Options.push({name: res.data[i].sStore_Name, value: res.data[i].sStore_ID});
 						}
 					});
 				});
@@ -93,53 +233,6 @@ var myvue = new Vue({
 			//query
 			getList: function () {
 
-				this.list=[{
-					sStoreType_ID: "1",
-					sStoreType_Name: "1",
-					sStoreType_Address: "1",
-					lStoreType_Lat: "1",
-					lStoreType_Lng: "1",
-					sStoreType_Station: "1",
-					
-					sStore_Name2: "1",
-					sStore_Name3: "1",
-					sStore_Name4: "1",
-					children: [
-						{
-							sStore_ID: "12",
-							sStore_Name: "12",
-							children: [
-								{
-									sStore_ID: "13",
-									sStore_Name: "13",
-									children: [
-										{
-											sStore_ID: "14",
-											sStore_Name: "14",
-										}
-									]
-								}
-							]
-						}
-					]
-				},{
-					sStoreType_ID: "12",
-					sStoreType_Name: "12",
-					sStoreType_Address: "12",
-					lStoreType_Lat: "12",
-					lStoreType_Lng: "12",
-					sStoreType_Station: "12",
-					
-					sStore_Name2: "12",
-					sStore_Name3: "12",
-					sStore_Name4: "12",
-					children: [
-						
-					]
-				}]
-				this.total = this.list.length;
-				return;
-				
 				var self = this;
 				var params = {
 					page: this.page,
@@ -166,20 +259,20 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					user: '',
-					connected: '',
-					status: ''
+					
 				};
 				this.getList();
 			},
 			//add
 			handleAdd: function(){
+				this.handleLV1Options();
 				this.addFormVisible = true;
 				this.addForm = {
+						level: '',
 						name: '',
-						sn: '',
-						connected: 'N',
-						status: 'N'
+						sStore_Level1: '',
+						sStore_Level2: '',
+						sStore_Level3: ''
 				};
 			},
 			addClose: function () {
@@ -205,13 +298,18 @@ var myvue = new Vue({
 					}
 				});
 			},
-			handleDel: function(index, row){
+			//del
+			handleDel: function(index, row, lv){
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {pid: row.pid }, function(res){
+					var params = {
+							level: lv,
+							id: lv == 1 ? row.sStoreType_ID : row.sStore_ID
+					};
+					ajaxReq(delUrl, params, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -221,11 +319,21 @@ var myvue = new Vue({
 				}).catch(() => {
 				});
 			},
-			//edit store
-			handleEdit: function (index, row) {
+			//edit
+			handleEdit: function (index, row, lv) {
+				this.handleLV1Options();
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
-				console.log(row);
+				this.editForm.level = lv+"";
+				switch (lv) {
+				case 1:
+					this.editForm.name = row.sStoreType_Name;
+					break;
+
+				default:
+					this.editForm.name = row.sStore_Name;
+					break;
+				}
 			},
 			editClose: function () {
 				this.editFormVisible = false;
@@ -233,36 +341,6 @@ var myvue = new Vue({
 				this.$refs.editForm.resetFields();
 			},
 			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗?', '提示', {}).then(() => {
-							var self = this;
-							this.editLoading = true;
-							var params = Object.assign({}, this.editForm);
-							ajaxReq(modUrl, params, function(res){
-								self.editLoading = false;
-								self.handleResOperate(res, function(){
-									self.editFormVisible = false;
-									self.getList();
-								});
-							});
-							
-						});
-					}
-				});
-			},
-			//edit store type
-			handleEdit2: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-				console.log(row);
-			},
-			editClose2: function () {
-				this.editFormVisible = false;
-				this.editLoading = false;
-				this.$refs.editForm.resetFields();
-			},
-			editSubmit2: function () {
 				this.$refs.editForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗?', '提示', {}).then(() => {
@@ -329,7 +407,7 @@ var myvue = new Vue({
 				}else{
 					if(show){
 						this.$message({
-							message: '失败',
+							message: '失败，'+res.msg,
 							type: 'warning'
 						});
 					}
