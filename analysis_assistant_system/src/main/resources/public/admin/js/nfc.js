@@ -8,6 +8,7 @@ var oneUrl = baseUrl + "api/nfc/findOne";
 var excelUrl = baseUrl + "api/nfc/excel";
 var importUrl = baseUrl + "api/nfc/import";
 var viewBindUrl = baseUrl + "api/nfc/viewBind";
+var delBindUrl = baseUrl + "api/nfc/delBind";
 var aidUnbindUrl = baseUrl + "api/aid/unbind";
 var aidBindUrl = baseUrl + "api/aid/bind";
 var equipUnbindUrl = baseUrl + "api/equip/unbind";
@@ -217,6 +218,26 @@ var myvue = new Vue({
 				});
 			},
 			//bind
+			handleDelBind: function(index, row){
+				this.$confirm('确定解除绑定吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					var params = {
+							sNfc_ID: row.sNfc_ID,
+							id: ''
+					};
+					ajaxReq(delBindUrl, params, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
+			},
 			bindTypeChange: function(){
 				var type = this.bindForm.type;
 				var self = this;

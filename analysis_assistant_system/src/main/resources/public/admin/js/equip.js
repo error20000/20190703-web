@@ -1,9 +1,15 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/store/findAll";
-var addUrl = baseUrl + "api/store/add";
-var modUrl = baseUrl + "api/store/update";
-var delUrl = baseUrl + "api/store/delete";
+var queryUrl = baseUrl + "api/equip/findPage";
+var addUrl = baseUrl + "api/equip/add";
+var modUrl = baseUrl + "api/equip/update";
+var delUrl = baseUrl + "api/equip/delete";
+var oneUrl = baseUrl + "api/equip/findOne";
+var excelUrl = baseUrl + "api/equip/excel";
+var importUrl = baseUrl + "api/equip/import";
+var nfcUrl = baseUrl + "api/nfc/unbind";
+var bindUrl = baseUrl + "api/equip/bind";
+var delBindUrl = baseUrl + "api/equip/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
@@ -27,24 +33,44 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
-
+				
+				aidTypeDictNo: '',
+				aidTypeOptions: [],
 				stationDictNo: '',
 				stationOptions: [],
+				lightDictNo: '',
+				lightOptions: [],
+				markDictNo: '',
+				markOptions: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-		              sn: [
-		                { required: true, message: '请输入序列号.', trigger: 'blur' },
+					sAid_NO: [
+		                { required: true, message: '请输入编号.', trigger: 'blur' },
 		              ]
 				},
 				//edit
 				editFormVisible: false,
 				editLoading: false,
 				editForm: {},
-				editFormRules: {},
+				editFormRules: {
+					sAid_NO: [
+		                { required: true, message: '请输入编号.', trigger: 'blur' },
+		              ]
+				},
+				//bind
+				nfcOptions: [],
+				bindFormVisible: false,
+				bindLoading: false,
+				bindForm: {},
+				bindFormRules: {
+					sNfc_ID: [
+		                { required: true, message: '请选择NFC标签.', trigger: 'blur' },
+			        ]
+				},
 				
 				user: ''
 			}
@@ -52,6 +78,17 @@ var myvue = new Vue({
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			aidTypeFormatter: function(row){
+				var name = row.sAid_Type;
+				for (var i = 0; i < this.aidTypeOptions.length; i++) {
+					var item = this.aidTypeOptions[i];
+					if(row.sAid_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
 			},
 			stationFormatter: function(row){
 				var name = row.sAid_Station;
@@ -64,6 +101,42 @@ var myvue = new Vue({
 				}
 				return name;
 			},
+			lightFormatter: function(row){
+				var name = row.sAid_Lighting;
+				for (var i = 0; i < this.lightOptions.length; i++) {
+					var item = this.lightOptions[i];
+					if(row.sAid_Lighting == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			markFormatter: function(row){
+				var name = row.sAid_Mark;
+				for (var i = 0; i < this.markOptions.length; i++) {
+					var item = this.markOptions[i];
+					if(row.sAid_Mark == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleAidTypeOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
 			handleStationOptions: function(cb){
 				var self = this;
 				var params = {};
@@ -71,6 +144,34 @@ var myvue = new Vue({
 					self.handleResQuery(res, function(){
 						for (var i = 0; i < res.data.length; i++) {
 							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLightOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleMarkOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
 						if(typeof cb == 'function'){
 							cb();
@@ -92,54 +193,6 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
-
-				this.list=[{
-					sStoreType_ID: "1",
-					sStoreType_Name: "1",
-					sStoreType_Address: "1",
-					lStoreType_Lat: "1",
-					lStoreType_Lng: "1",
-					sStoreType_Station: "1",
-					
-					sStore_Name2: "1",
-					sStore_Name3: "1",
-					sStore_Name4: "1",
-					children: [
-						{
-							sStore_ID: "12",
-							sStore_Name: "12",
-							children: [
-								{
-									sStore_ID: "13",
-									sStore_Name: "13",
-									children: [
-										{
-											sStore_ID: "14",
-											sStore_Name: "14",
-										}
-									]
-								}
-							]
-						}
-					]
-				},{
-					sStoreType_ID: "12",
-					sStoreType_Name: "12",
-					sStoreType_Address: "12",
-					lStoreType_Lat: "12",
-					lStoreType_Lng: "12",
-					sStoreType_Station: "12",
-					
-					sStore_Name2: "12",
-					sStore_Name3: "12",
-					sStore_Name4: "12",
-					children: [
-						
-					]
-				}]
-				this.total = this.list.length;
-				return;
-				
 				var self = this;
 				var params = {
 					page: this.page,
@@ -175,12 +228,7 @@ var myvue = new Vue({
 			//add
 			handleAdd: function(){
 				this.addFormVisible = true;
-				this.addForm = {
-						name: '',
-						sn: '',
-						connected: 'N',
-						status: 'N'
-				};
+				this.addForm = {};
 			},
 			addClose: function () {
 				this.addFormVisible = false;
@@ -205,13 +253,14 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//del
 			handleDel: function(index, row){
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {pid: row.pid }, function(res){
+					ajaxReq(delUrl, {sAid_ID: row.sAid_ID }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -221,11 +270,20 @@ var myvue = new Vue({
 				}).catch(() => {
 				});
 			},
-			//edit store
+			//edit
 			handleEdit: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-				console.log(row);
+				//this.editFormVisible = true;
+				//this.editForm = Object.assign({}, row);
+				var params = {
+						sAid_ID: row.sAid_ID
+				};
+				var self = this;
+				ajaxReq(oneUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.editFormVisible = true;
+						self.editForm = Object.assign({}, res.data)
+					});
+				});
 			},
 			editClose: function () {
 				this.editFormVisible = false;
@@ -251,32 +309,63 @@ var myvue = new Vue({
 					}
 				});
 			},
-			//edit store type
-			handleEdit2: function (index, row) {
-				this.editFormVisible = true;
-				this.editForm = Object.assign({}, row);
-				console.log(row);
+			//bind
+			handleDelBind: function(index, row){
+				this.$confirm('确定解除绑定吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					var params = {
+							sNfc_ID: row.sAid_NfcID,
+							id: row.sAid_ID
+					};
+					ajaxReq(delBindUrl, params, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
 			},
-			editClose2: function () {
-				this.editFormVisible = false;
-				this.editLoading = false;
-				this.$refs.editForm.resetFields();
+			handleBind: function(index, row){
+				this.nfcOptions = [];
+				var self = this;
+				ajaxReq(nfcUrl, {}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.nfcOptions.push({name: res.data[i].sNfc_Name, value: res.data[i].sNfc_ID});
+						}
+						self.bindFormVisible = true;
+						self.bindForm = {
+								sNfc_ID: '',
+								type: 'aid',
+								id: row.sAid_ID
+						};
+					});
+				});
 			},
-			editSubmit2: function () {
-				this.$refs.editForm.validate((valid) => {
+			bindClose: function () {
+				this.bindFormVisible = false;
+				this.bindLoading = false;
+				this.$refs.bindForm.resetFields();
+			},
+			bindSubmit: function () {
+				this.$refs.bindForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗?', '提示', {}).then(() => {
 							var self = this;
-							this.editLoading = true;
-							var params = Object.assign({}, this.editForm);
-							ajaxReq(modUrl, params, function(res){
-								self.editLoading = false;
+							this.bindLoading = true;
+							var params = Object.assign({}, this.bindForm);
+							ajaxReq(bindUrl, params, function(res){
+								self.bindLoading = false;
 								self.handleResOperate(res, function(){
-									self.editFormVisible = false;
+									self.bindFormVisible = false;
 									self.getList();
 								});
 							});
-							
 						});
 					}
 				});
@@ -346,7 +435,10 @@ var myvue = new Vue({
 	  			return;
 	  		}
 			this.preloading = true;
+			this.handleAidTypeOptions();
 			this.handleStationOptions();
+			this.handleLightOptions();
+			this.handleMarkOptions();
 			this.getList();
 		}
 	  });

@@ -26,17 +26,27 @@
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 					<el-form-item>
-						  <el-input v-model="filters.sNfc_NO" placeholder="请输入NFC编码" clearable></el-input>
+						  <el-input v-model="filters.sAid_NO" placeholder="请输入航标编码" clearable></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-select v-model="filters.lNfc_StatusFlag" placeholder="请选择状态">
-							<el-option
-						      v-for="item in statusOptions"
+					    <el-select v-model="filters.sAid_Type" placeholder="航标种类">
+						    <el-option
+						      v-for="item in aidTypeOptions"
 						      :key="item.value"
 						      :label="item.name"
 						      :value="item.value">
-							</el-option>
-						 </el-select>
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sAid_Station" placeholder="归属航标站">
+						    <el-option
+						      v-for="item in stationOptions"
+						      :key="item.value"
+						      :label="item.name"
+						      :value="item.value">
+						    </el-option>
+					    </el-select>
 					</el-form-item>
 					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
@@ -59,15 +69,33 @@
 		    <el-tab-pane label="结果" name="table" disabled>
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sNfc_ID" width="120">
+					<el-table-column label="ID" prop="sAid_ID" width="120" fixed="left">
 					</el-table-column>
-					<el-table-column label="编码" prop="sNfc_NO" >
+					<el-table-column label="航标编码" prop="sAid_NO" fixed="left">
 					</el-table-column>
-					<el-table-column label="名称" prop="sNfc_Name" >
+					<el-table-column label="航标名称" prop="sAid_Name" fixed="left">
 					</el-table-column>
-					<el-table-column label="创建时间" prop="dNfc_CreateDate" >
+					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
 					</el-table-column>
-					<el-table-column label="状态" prop="lNfc_StatusFlag" :formatter="(r,c) => { return r.lNfc_StatusFlag ? '已使用': '未使用';}">
+					<el-table-column label="纬度" prop="lAid_Lat" >
+					</el-table-column>
+					<el-table-column label="经度" prop="lAid_Lng" >
+					</el-table-column>
+					<el-table-column label="归属航标站" prop="sAid_Station" >
+					</el-table-column>
+					<el-table-column label="航标种类" prop="sAid_Type">
+					</el-table-column>
+					<el-table-column label="航标图标" prop="sAid_Icon">
+					</el-table-column>
+					<el-table-column label="灯质明灭" prop="sAid_Lighting">
+					</el-table-column>
+					<el-table-column label="航标设置" prop="sAid_Mark">
+					</el-table-column>
+					<el-table-column label="创建日期" prop="dAid_CreateDate">
+					</el-table-column>
+					<el-table-column label="始建时间" prop="dAid_CreateDate">
+					</el-table-column>
+					<el-table-column label="撤除时间" prop="dAid_DelDate">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
@@ -79,13 +107,10 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? false : true ">
-							    	<i class="fas fa-eye"></i>&nbsp;查看绑定
-							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? false : true ">
+							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? false : true ">
 							    	<i class="fas fa-unlink"></i>&nbsp;解绑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? true : false ">
+							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? true : false ">
 							    	<i class="fas fa-link"></i>&nbsp;绑定
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
@@ -98,7 +123,7 @@
 				</el-table>
 		
 				<!-- page tool -->
-				<el-col size="mini" :span="24" class="toolbar">
+				<el-col :span="24" class="toolbar">
 					<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">Batch remove</el-button> -->
 					<el-pagination layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[10, 20, 50, 100]" :page-size="rows" :total="total" style="float:right;">
 					</el-pagination>
@@ -106,15 +131,62 @@
 			</el-tab-pane>
 		  </el-tabs>
 		
+		
 		<!-- add -->
-		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-			<el-form size="mini" :model="addForm" :rules="addFormRules" ref="addForm" label-width="80px">
-				<el-form-item label="NFC名称" prop="sNfc_Name">
-					<el-input type="text" v-model="addForm.sNfc_Name"></el-input>
-				</el-form-item>
-				<el-form-item label="NFC编码" prop="sNfc_NO">
-					<el-input type="text" v-model="addForm.sNfc_NO"></el-input>
-				</el-form-item>
+		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">	
+			<el-form size="mini" :model="addForm" :rules="addFormRules" ref="addForm" label-width="120px">
+			  <el-form-item label="航标编码">
+			    <el-input v-model="addForm.sAid_NO"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标名称">
+			    <el-input v-model="addForm.sAid_Name"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标纬度">
+			    <el-input v-model="addForm.lAid_Lat"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标经度">
+			    <el-input v-model="addForm.lAid_Lng"></el-input>
+			  </el-form-item>
+			  <el-form-item label="归属航标站">
+			    <el-select v-model="addForm.sAid_Station" placeholder="请选归属航标站">
+				    <el-option
+				      v-for="item in stationOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标种类">
+			    <el-select v-model="addForm.sAid_Type" placeholder="请选航标种类">
+				    <el-option
+				      v-for="item in aidTypeOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="灯质明灭">
+			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
+				    <el-option
+				      v-for="item in lightOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标设置">
+			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
+				    <el-option
+				      v-for="item in markOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="addClose">取消</el-button>
@@ -124,37 +196,27 @@
 		
 		<!-- edit -->
 		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-			<el-form size="mini" :model="editForm" :rules="editFormRules" ref="editForm" label-width="80px">
-				<el-form-item label="NFC名称" prop="sNfc_Name">
-					<el-input type="text" v-model="editForm.sNfc_Name"></el-input>
+			<el-form :model="editForm" :rules="editFormRules" ref="editForm">
+				<el-form-item label="名称" prop="name">
+					<el-input type="text" v-model="editForm.name"></el-input>
 				</el-form-item>
-				<el-form-item label="NFC编码" prop="sNfc_NO">
-					<el-input type="text" v-model="editForm.sNfc_NO"></el-input>
+				<el-form-item label="序列号" prop="sn">
+					<el-input type="text" v-model="editForm.sn" disabled></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button size="mini" @click="editClose">取消</el-button>
-				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+				<el-button @click="editClose">取消</el-button>
+				<el-button type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		
 		<!-- bind -->
 		<el-dialog title="绑定" :visible.sync="bindFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="bindForm" :rules="bindFormRules" ref="bindForm" :inline="true">
-				<el-form-item label="绑定到" prop="type">
-					<el-select v-model="bindForm.type" placeholder="请选择" @change="bindTypeChange">
+				<el-form-item label="绑定到" prop="sNfc_ID">
+					<el-select v-model="bindForm.sNfc_ID" placeholder="请选择NFC标签" >
 						<el-option
-					      v-for="item in bindTypeOptions"
-					      :key="item.value"
-					      :label="item.name"
-					      :value="item.value">
-						</el-option>
-					 </el-select>
-				</el-form-item>
-				<el-form-item prop="id" v-show="bindForm.type != ''">
-					<el-select v-model="bindForm.id" filterable placeholder="请选择">
-						<el-option
-					      v-for="item in bindIdOptions"
+					      v-for="item in nfcOptions"
 					      :key="item.value"
 					      :label="item.name"
 					      :value="item.value">
@@ -168,37 +230,6 @@
 			</div>
 		</el-dialog>
 		
-		<!--viewBind-->
-		<el-dialog title="查看绑定" :visible.sync="viewFormVisible" :close-on-click-modal="false">
-			<el-form size="mini" :model="viewForm" label-width="100px" ref="viewForm">
-				<el-form-item label="NFC名称" prop="sNfc_Name">
-					<div v-html="viewForm.nfc.sNfc_Name"></div>
-				</el-form-item>
-				<el-form-item label="NFC编码" prop="sNfc_NO">
-					<div v-html="viewForm.nfc.sNfc_NO"></div>
-				</el-form-item>
-				<template v-if="viewForm.type == 'aid'">
-					<el-form-item label="航标名称" prop="sAid_Name">
-						<div v-html="viewForm.aid.sAid_Name"></div>
-					</el-form-item>
-					<el-form-item label="航标编码" prop="sAid_ID">
-						<div v-html="viewForm.aid.sAid_ID"></div>
-					</el-form-item>
-				</template>
-				<template v-if="viewForm.type == 'equip'">
-					<el-form-item label="器材名称" prop="sEquip_Name">
-						<div v-html="viewForm.equip.sEquip_Name"></div>
-					</el-form-item>
-					<el-form-item label="器材ID" prop="sEquip_ID">
-						<div v-html="viewForm.equip.sEquip_ID"></div>
-					</el-form-item>
-				</template>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button size="mini" @click="viewFormVisible = false">关闭</el-button>
-			</div>
-		</el-dialog>
-		
 	</section>
   </div>
 </body>
@@ -206,5 +237,5 @@
   <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
   <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/global.js"></script>
-  <script type="text/javascript" src="js/nfc.js"></script>
+  <script type="text/javascript" src="js/equip.js"></script>
 </html>

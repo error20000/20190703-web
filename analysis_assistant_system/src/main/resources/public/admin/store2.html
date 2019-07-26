@@ -6,11 +6,6 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
-  <style>
-  	.el-table__expanded-cell{
-  		padding: 20px 0 20px 50px !important;
-  	}
-  </style>
 </head>
 <body class="animated fadeIn">
   <div id="app">
@@ -84,78 +79,47 @@
 		    <el-tab-pane label="结果" name="table" disabled>
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<!-- 一级仓库  -->
-					<el-table-column type="expand" label="一级">
-						<template slot-scope="props">
-							<!-- 二级仓库  -->
-							<el-table size="mini" :data="props.row.children" highlight-current-row border v-loading="listLoading" style="width: 100%;" class="mytable" >
-								<el-table-column type="expand" label="二级">
-									<template slot-scope="props">
-										<!-- 三级仓库  -->
-										<el-table size="mini" :data="props.row.children" highlight-current-row border v-loading="listLoading" style="width: 100%;" class="mytable" >
-											<el-table-column type="expand" label="三级">
-												<template slot-scope="props">
-													<!-- 四级仓库  -->
-													<el-table size="mini" :data="props.row.children" highlight-current-row border v-loading="listLoading" style="width: 100%;" class="mytable" >
-														<el-table-column label="ID" prop="sStore_ID">
-														</el-table-column>
-														<el-table-column label="仓库名称" prop="sStore_Name">
-														</el-table-column>
-														<el-table-column label="操作" width="180">
-															<template scope="scope">
-																<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-																<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-															</template>
-														</el-table-column>
-													</el-table>
-												</template>
-											</el-table-column>
-											<el-table-column label="ID" prop="sStore_ID">
-											</el-table-column>
-											<el-table-column label="仓库名称" prop="sStore_Name">
-											</el-table-column>
-											<el-table-column label="操作" width="180">
-												<template scope="scope">
-													<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-													<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-												</template>
-											</el-table-column>
-										</el-table>
-									</template>
-								</el-table-column>
-								<el-table-column label="ID" prop="sStore_ID">
-								</el-table-column>
-								<el-table-column label="仓库名称" prop="sStore_Name">
-								</el-table-column>
-								<el-table-column label="操作" width="180">
-									<template scope="scope">
-										<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-										<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
-									</template>
-								</el-table-column>
-							</el-table>
-						</template>
+					<el-table-column label="一级仓库">
+						<el-table-column label="ID" prop="sStoreType_ID" width="120">
+						</el-table-column>
+						<el-table-column label="仓库名称" prop="sStoreType_Name">
+						</el-table-column>
+						<el-table-column label="仓库地址" prop="sStoreType_Address">
+						</el-table-column>
+						<el-table-column label="纬度" prop="lStoreType_Lat" >
+						</el-table-column>
+						<el-table-column label="经度" prop="lStoreType_Lng" >
+						</el-table-column>
+						<el-table-column label="归属航标站" prop="sStoreType_Station" >
+						</el-table-column>
 					</el-table-column>
-					<el-table-column label="ID" prop="sStoreType_ID" width="120">
+					
+					<el-table-column label="二级仓库">
+						<el-table-column label="仓库名称" prop="sStore_Name2">
+						</el-table-column>
 					</el-table-column>
-					<el-table-column label="仓库名称" prop="sStoreType_Name">
+					<el-table-column label="三级仓库">
+						<el-table-column label="仓库名称" prop="sStore_Name3">
+						</el-table-column>
 					</el-table-column>
-					<el-table-column label="仓库地址" prop="sStoreType_Address">
+					<el-table-column label="四级仓库">
+						<el-table-column label="仓库名称" prop="sStore_Name4">
+						</el-table-column>
 					</el-table-column>
-					<el-table-column label="纬度" prop="lStoreType_Lat" >
-					</el-table-column>
-					<el-table-column label="经度" prop="lStoreType_Lng" >
-					</el-table-column>
-					<el-table-column label="归属航标站" prop="sStoreType_Station" >
-					</el-table-column>
-					<el-table-column label="操作" width="180">
+					<el-table-column fixed="right" label="操作" width="180">
 						<template scope="scope">
-							<el-button size="mini" @click="handleEdit2(scope.$index, scope.row)">编辑</el-button>
-							<el-button size="mini" type="danger" @click="handleDel2(scope.$index, scope.row)">删除</el-button>
+							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+							<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
 		
+				<!-- page tool -->
+				<el-col :span="24" class="toolbar">
+					<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">Batch remove</el-button> -->
+					<el-pagination layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[10, 20, 50, 100]" :page-size="rows" :total="total" style="float:right;">
+					</el-pagination>
+				</el-col>
 			</el-tab-pane>
 		  </el-tabs>
 		
@@ -164,11 +128,11 @@
 		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="addForm" :rules="addFormRules" ref="addForm" label-width="80px">
 			  <el-form-item label="仓库级别">
-			    <el-select v-model="addForm.level" placeholder="请选仓库级别">
-			      <el-option label="一级" value="1"></el-option>
-			      <el-option label="二级" value="2"></el-option>
-			      <el-option label="三级" value="3"></el-option>
-			      <el-option label="四级" value="4"></el-option>
+			    <el-select v-model="addForm.sAid_Station" placeholder="请选仓库级别">
+			      <el-option label="一级" value="shanghai"></el-option>
+			      <el-option label="二级" value="beijing"></el-option>
+			      <el-option label="三级" value="beijing"></el-option>
+			      <el-option label="四级" value="beijing"></el-option>
 			    </el-select>
 			  </el-form-item>
 				<el-form-item label="仓库名称" prop="sStore_Name">

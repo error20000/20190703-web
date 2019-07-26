@@ -67,6 +67,9 @@ new Vue({
 			case 6:
 				url = 'sys.html';
 				break;
+			case 7:
+				url = 'equip.html';
+				break;
 				
 			default:
 				break;

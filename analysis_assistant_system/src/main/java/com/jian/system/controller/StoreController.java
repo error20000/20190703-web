@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,18 +14,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jian.annotation.API;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
-import com.jian.system.entity.Nfc;
-import com.jian.system.service.NfcService;
+import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreType;
+import com.jian.system.service.StoreService;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
+
 @Controller
-@RequestMapping("/api/nfc")
-@API(name="NFC管理")
-public class NfcController extends BaseController<Nfc, NfcService> {
+@RequestMapping("/api/store")
+@API(name="仓库管理")
+public class StoreController extends BaseController<Store, StoreService> {
 
 	
 
@@ -36,7 +39,22 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	@VerifyLogin
 	@VerifyAuth
 	public String add(HttpServletRequest req) {
-		return super.add(req);
+		Map<String, Object> vMap = null;
+		//参数
+		String level = Tools.getReqParamSafe(req, "level");
+		vMap = Tools.verifyParam("level", level, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		StoreType type = Tools.getReqParamsToObject(req, new StoreType());
+		Store obj = Tools.getReqParamsToObject(req, new Store());
+		int res = service.add(level, type, obj, getLoginUser(req));
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).toJSONString();
+		}
 	}
 	
 	@Override
@@ -58,14 +76,6 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 		return super.delete(req);
 	}
 
-	@Override
-	@PostMapping("/findPage")
-    @ResponseBody
-	@VerifyLogin
-	@VerifyAuth
-	public String findPage(HttpServletRequest req) {
-		return super.findPage(req);
-	}
 
 	@Override
 	@PostMapping("/findOne")
@@ -77,54 +87,17 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 	
 	@Override
-	@PostMapping("/findAll")
+	@GetMapping("/findAll")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
 	public String findAll(HttpServletRequest req) {
-		return super.findAll(req);
-	}
-
-	@PostMapping("/viewBind")
-    @ResponseBody
-	@VerifyLogin
-	@VerifyAuth
-	public String viewBind(HttpServletRequest req) {
-		return service.viewBind(req);
-	}
-
-	@PostMapping("/delBind")
-    @ResponseBody
-	@VerifyLogin
-	@VerifyAuth
-	public String delBind(HttpServletRequest req) {
-		Map<String, Object> vMap = null;
-		//参数
-		String sNfc_ID = Tools.getReqParamSafe(req, "sNfc_ID");
-		vMap = Tools.verifyParam("sNfc_ID", sNfc_ID, 0, 0);
-		if(vMap != null){
-			return JsonTools.toJsonString(vMap);
-		}
-		
-		int res = service.delBind(sNfc_ID);
-		if(res == 0) {
-			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
-		}else {
-			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
-		}
-	}
-
-
-	@PostMapping("/unbind")
-    @ResponseBody
-	@VerifyLogin
-	@VerifyAuth
-	public String unbind(HttpServletRequest req) {
-		List<Nfc> list = service.unbind();
+		List<Map<String, Object>> list = service.storeTree();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
-	
+
 }

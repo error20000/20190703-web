@@ -61,6 +61,14 @@ public class NfcService extends BaseService<Nfc, NfcMapper> {
 		condition.put("sNfc_ID", sNfc_ID);
 		return baseMapper.update(getTableName(), value, condition);
 	}
+	
+	@Transactional
+	@TargetDataSource
+	public int delBind(String sNfc_ID) {
+		aidService.rebind(sNfc_ID); //解除绑定
+		equipService.rebind(sNfc_ID); //解除绑定
+		return rebind(sNfc_ID);
+	}
 
 	@TargetDataSource
 	public int rebind(String sNfc_ID) {
