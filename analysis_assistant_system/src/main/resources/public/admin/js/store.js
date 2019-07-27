@@ -16,10 +16,6 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					user: '',
-					alarm: '',
-					connected: '',
-					status: ''
 				},
 				list: [],
 				total: 0,
@@ -167,6 +163,7 @@ var myvue = new Vue({
 				var params = {sDict_DictTypeNO: this.stationDictNo};
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
+						self.stationOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
@@ -407,7 +404,7 @@ var myvue = new Vue({
 				}else{
 					if(show){
 						this.$message({
-							message: '失败，'+res.msg,
+							message: '失败：'+res.msg,
 							type: 'warning'
 						});
 					}

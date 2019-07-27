@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 26/07/2019 23:11:37
+ Date: 27/07/2019 12:06:16
 */
 
 
@@ -69,8 +69,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."dAid_CreateDate" IS '创建日期';
 -- ----------------------------
 -- Records of tBase_Aid
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('2', '2', '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('3', '3', '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604617148949594112', '12', '12', '12', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 10:12:41', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604074845818322944', '1', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-25 22:17:46', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
@@ -178,10 +177,11 @@ CREATE TABLE "AASYSTEM"."tBase_Equip" (
   "sEquip_StoreLv3" NVARCHAR2(32) ,
   "sEquip_StoreLv4" NVARCHAR2(32) ,
   "sEquip_Type" NVARCHAR2(64) ,
-  "lEquip_StatusFlag" NUMBER ,
+  "sEquip_Status" NVARCHAR2(64) ,
   "sEquip_NfcID" NVARCHAR2(32) ,
   "sEquip_AidID" NVARCHAR2(32) ,
-  "dEquip_CreateDate" DATE 
+  "dEquip_CreateDate" DATE ,
+  "sEquip_NO" NVARCHAR2(64) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -206,17 +206,18 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv2" IS '二级仓库';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv3" IS '三级仓库';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_StoreLv4" IS '四级仓库';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_Type" IS '器材类型';
-COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."lEquip_StatusFlag" IS '器材状态';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_Status" IS '器材状态';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_NfcID" IS 'NFC标签ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_AidID" IS '航标ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_CreateDate" IS '创建日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_NO" IS '器材编码';
 
 -- ----------------------------
 -- Records of tBase_Equip
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '45', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '78', NULL, NULL, NULL, NULL, NULL, NULL, '603723565073694720', NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '45', NULL, '604613628313731072', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '78', NULL, NULL, NULL, NULL, NULL, NULL, '603723565073694720', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_EquipLog
@@ -503,6 +504,7 @@ INSERT INTO "AASYSTEM"."tBase_Store" VALUES ('1212', '1212', '1', '12', '121', '
 INSERT INTO "AASYSTEM"."tBase_Store" VALUES ('13', '13', '1', NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_Store" VALUES ('131', '131', '1', '13', NULL, '13');
 INSERT INTO "AASYSTEM"."tBase_Store" VALUES ('604445267793543168', '66', '1', '11', NULL, '11');
+INSERT INTO "AASYSTEM"."tBase_Store" VALUES ('604613628313731072', 'ttt', '604434599291912192', NULL, NULL, '604434599291912192');
 
 -- ----------------------------
 -- Table structure for tBase_StoreType

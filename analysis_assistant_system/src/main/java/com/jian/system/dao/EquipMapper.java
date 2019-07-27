@@ -16,4 +16,14 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public List<Equip> unbind();
 	
+	@Select({
+		" select count(*) from \"tBase_Equip\" ",
+		" where ",
+		" 	\"sEquip_StoreLv1\" = #{sStore_ID} or ",
+		" 	\"sEquip_StoreLv2\" = #{sStore_ID} or ",
+		"	\"sEquip_StoreLv3\" = #{sStore_ID} or ",
+		"	\"sEquip_StoreLv4\" = #{sStore_ID} "
+	})
+	public int isStore(String sStore_ID);
+	
 }

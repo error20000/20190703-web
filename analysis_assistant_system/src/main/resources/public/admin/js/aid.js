@@ -50,6 +50,9 @@ var myvue = new Vue({
 				addFormRules: {
 					sAid_NO: [
 		                { required: true, message: '请输入编号.', trigger: 'blur' },
+		              ],
+					sAid_Name: [
+		                { required: true, message: '请输入名称.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -59,6 +62,9 @@ var myvue = new Vue({
 				editFormRules: {
 					sAid_NO: [
 		                { required: true, message: '请输入编号.', trigger: 'blur' },
+		              ],
+					sAid_Name: [
+		                { required: true, message: '请输入名称.', trigger: 'blur' },
 		              ]
 				},
 				//bind
@@ -128,6 +134,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
 					self.handleResQuery(res, function(){
+						self.aidTypeOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
@@ -142,6 +149,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
 					self.handleResQuery(res, function(){
+						self.stationOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
@@ -156,6 +164,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
 					self.handleResQuery(res, function(){
+						self.lightOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
@@ -170,6 +179,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
 					self.handleResQuery(res, function(){
+						self.markOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}

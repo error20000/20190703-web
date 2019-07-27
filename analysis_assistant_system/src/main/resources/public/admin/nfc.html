@@ -79,7 +79,7 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? false : true ">
+							    <el-dropdown-item @click.native="handleView(scope.$index, scope.row)" divided :disabled="scope.row.lNfc_StatusFlag ? false : true ">
 							    	<i class="fas fa-eye"></i>&nbsp;查看绑定
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.lNfc_StatusFlag ? false : true ">

@@ -81,15 +81,15 @@
 					</el-table-column>
 					<el-table-column label="经度" prop="lAid_Lng" >
 					</el-table-column>
-					<el-table-column label="归属航标站" prop="sAid_Station" >
+					<el-table-column label="归属航标站" prop="sAid_Station" :formatter="stationFormatter">
 					</el-table-column>
-					<el-table-column label="航标种类" prop="sAid_Type">
+					<el-table-column label="航标种类" prop="sAid_Type" :formatter="aidTypeFormatter">
 					</el-table-column>
 					<el-table-column label="航标图标" prop="sAid_Icon">
 					</el-table-column>
-					<el-table-column label="灯质明灭" prop="sAid_Lighting">
+					<el-table-column label="灯质明灭" prop="sAid_Lighting" :formatter="lightFormatter">
 					</el-table-column>
-					<el-table-column label="航标设置" prop="sAid_Mark">
+					<el-table-column label="航标设置" prop="sAid_Mark" :formatter="markFormatter">
 					</el-table-column>
 					<el-table-column label="创建日期" prop="dAid_CreateDate">
 					</el-table-column>
@@ -107,7 +107,7 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? false : true ">
+							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" divided :disabled="scope.row.sAid_NfcID ? false : true ">
 							    	<i class="fas fa-unlink"></i>&nbsp;解绑
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? true : false ">
@@ -135,19 +135,19 @@
 		<!-- add -->
 		<el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">	
 			<el-form size="mini" :model="addForm" :rules="addFormRules" ref="addForm" label-width="120px">
-			  <el-form-item label="航标编码">
+			  <el-form-item label="航标编码" prop="sAid_NO">
 			    <el-input v-model="addForm.sAid_NO"></el-input>
 			  </el-form-item>
-			  <el-form-item label="航标名称">
+			  <el-form-item label="航标名称" prop="sAid_Name">
 			    <el-input v-model="addForm.sAid_Name"></el-input>
 			  </el-form-item>
-			  <el-form-item label="航标纬度">
+			  <el-form-item label="航标纬度" prop="lAid_Lat">
 			    <el-input v-model="addForm.lAid_Lat"></el-input>
 			  </el-form-item>
-			  <el-form-item label="航标经度">
+			  <el-form-item label="航标经度" prop="lAid_Lng">
 			    <el-input v-model="addForm.lAid_Lng"></el-input>
 			  </el-form-item>
-			  <el-form-item label="归属航标站">
+			  <el-form-item label="归属航标站" prop="sAid_Station">
 			    <el-select v-model="addForm.sAid_Station" placeholder="请选归属航标站">
 				    <el-option
 				      v-for="item in stationOptions"
@@ -157,7 +157,7 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="航标种类">
+			  <el-form-item label="航标种类" prop="sAid_Type">
 			    <el-select v-model="addForm.sAid_Type" placeholder="请选航标种类">
 				    <el-option
 				      v-for="item in aidTypeOptions"
@@ -167,7 +167,7 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="灯质明灭">
+			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
 			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
@@ -177,7 +177,7 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="航标设置">
+			  <el-form-item label="航标设置" prop="sAid_Mark">
 			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
 				    <el-option
 				      v-for="item in markOptions"
@@ -196,17 +196,63 @@
 		
 		<!-- edit -->
 		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-			<el-form :model="editForm" :rules="editFormRules" ref="editForm">
-				<el-form-item label="名称" prop="name">
-					<el-input type="text" v-model="editForm.name"></el-input>
-				</el-form-item>
-				<el-form-item label="序列号" prop="sn">
-					<el-input type="text" v-model="editForm.sn" disabled></el-input>
-				</el-form-item>
+			<el-form size="mini" :model="editForm" :rules="editFormRules" ref="editForm" label-width="120px">
+				<el-form-item label="航标编码" prop="sAid_NO">
+			    <el-input v-model="editForm.sAid_NO"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标名称" prop="sAid_Name">
+			    <el-input v-model="editForm.sAid_Name"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标纬度" prop="lAid_Lat">
+			    <el-input v-model="editForm.lAid_Lat"></el-input>
+			  </el-form-item>
+			  <el-form-item label="航标经度" prop="lAid_Lng">
+			    <el-input v-model="editForm.lAid_Lng"></el-input>
+			  </el-form-item>
+			  <el-form-item label="归属航标站" prop="sAid_Station">
+			    <el-select v-model="editForm.sAid_Station" placeholder="请选归属航标站">
+				    <el-option
+				      v-for="item in stationOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标种类" prop="sAid_Type">
+			    <el-select v-model="editForm.sAid_Type" placeholder="请选航标种类">
+				    <el-option
+				      v-for="item in aidTypeOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
+			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
+				    <el-option
+				      v-for="item in lightOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标设置" prop="sAid_Mark">
+			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
+				    <el-option
+				      v-for="item in markOptions"
+				      :key="item.value"
+				      :label="item.name"
+				      :value="item.value">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
-				<el-button @click="editClose">取消</el-button>
-				<el-button type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+				<el-button size="mini" @click="editClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

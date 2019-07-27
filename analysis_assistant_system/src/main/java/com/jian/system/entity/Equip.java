@@ -14,6 +14,8 @@ public class Equip extends Base<Equip> {
 	@PrimaryKey
 	@Excel(name="ID", sort=0, length="32", isNull=0 )
 	private String sEquip_ID;
+	@Excel(name="器材编码", sort=0, length="64", isNull=1 )
+	private String sEquip_NO;
 	@Excel(name="器材名称", sort=0, length="64", isNull=1 )
 	private String sEquip_Name;
 	@Excel(name="一级仓库", sort=0, length="32", isNull=1 )
@@ -26,8 +28,8 @@ public class Equip extends Base<Equip> {
 	private String sEquip_StoreLv4;
 	@Excel(name="器材类型", sort=0, length="64", isNull=1 )
 	private String sEquip_Type;
-	@Excel(name="器材状态", sort=0, length="10", isNull=1 )
-	private int lEquip_StatusFlag;
+	@Excel(name="器材状态", sort=0, length="64", isNull=1 )
+	private String sEquip_Status;
 	@Excel(name="NFC标签ID", sort=0, length="32", isNull=1 )
 	private String sEquip_NfcID;
 	@Excel(name="航标ID", sort=0, length="32", isNull=1 )
@@ -79,12 +81,6 @@ public class Equip extends Base<Equip> {
 	public void setsEquip_Type(String sEquip_Type) {
 		this.sEquip_Type = sEquip_Type;
 	}
-	public int getlEquip_StatusFlag() {
-		return lEquip_StatusFlag;
-	}
-	public void setlEquip_StatusFlag(int lEquip_StatusFlag) {
-		this.lEquip_StatusFlag = lEquip_StatusFlag;
-	}
 	public String getsEquip_NfcID() {
 		return sEquip_NfcID;
 	}
@@ -102,6 +98,18 @@ public class Equip extends Base<Equip> {
 	}
 	public void setdEquip_CreateDate(Date dEquip_CreateDate) {
 		this.dEquip_CreateDate = dEquip_CreateDate;
+	}
+	public String getsEquip_NO() {
+		return sEquip_NO;
+	}
+	public void setsEquip_NO(String sEquip_NO) {
+		this.sEquip_NO = sEquip_NO;
+	}
+	public String getsEquip_Status() {
+		return sEquip_Status;
+	}
+	public void setsEquip_Status(String sEquip_Status) {
+		this.sEquip_Status = sEquip_Status;
 	}
 	
 }

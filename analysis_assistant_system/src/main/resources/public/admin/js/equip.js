@@ -11,6 +11,7 @@ var nfcUrl = baseUrl + "api/nfc/unbind";
 var bindUrl = baseUrl + "api/equip/bind";
 var delBindUrl = baseUrl + "api/equip/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
+var storeUrl = baseUrl + "api/store/findAll";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -21,10 +22,9 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					user: '',
-					alarm: '',
-					connected: '',
-					status: ''
+					sEquip_NO: '',
+					store: '',
+					sEquip_Status: ''
 				},
 				list: [],
 				total: 0,
@@ -34,14 +34,14 @@ var myvue = new Vue({
 				sels: [],
 				preloading: false,
 				
-				aidTypeDictNo: '',
-				aidTypeOptions: [],
-				stationDictNo: '',
-				stationOptions: [],
-				lightDictNo: '',
-				lightOptions: [],
-				markDictNo: '',
-				markOptions: [],
+				storeOptions: [],
+				storeProps: {
+		          value: 'sStore_ID',
+		          label: 'sStore_Name',
+		          children: 'children'
+		        },
+				statusDictNo: '',
+				statusOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -79,18 +79,33 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
-			aidTypeFormatter: function(row){
-				var name = row.sAid_Type;
-				for (var i = 0; i < this.aidTypeOptions.length; i++) {
-					var item = this.aidTypeOptions[i];
-					if(row.sAid_Type == item.sDict_NO){
+			statusFormatter: function(row){
+				var name = row.sEquip_Status;
+				for (var i = 0; i < this.statusOptions.length; i++) {
+					var item = this.statusOptions[i];
+					if(row.sEquip_Status == item.sDict_NO){
 						name = item.sDict_Name;
 						break
 					}
 				}
 				return name;
 			},
-			stationFormatter: function(row){
+			handleStatusOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.statusDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.statusOptions = [];
+						for (var i = 0; i < res.data.length; i++) {
+							self.statusOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			storeFormatter: function(row){
 				var name = row.sAid_Station;
 				for (var i = 0; i < this.stationOptions.length; i++) {
 					var item = this.stationOptions[i];
@@ -101,78 +116,12 @@ var myvue = new Vue({
 				}
 				return name;
 			},
-			lightFormatter: function(row){
-				var name = row.sAid_Lighting;
-				for (var i = 0; i < this.lightOptions.length; i++) {
-					var item = this.lightOptions[i];
-					if(row.sAid_Lighting == item.sDict_NO){
-						name = item.sDict_Name;
-						break
-					}
-				}
-				return name;
-			},
-			markFormatter: function(row){
-				var name = row.sAid_Mark;
-				for (var i = 0; i < this.markOptions.length; i++) {
-					var item = this.markOptions[i];
-					if(row.sAid_Mark == item.sDict_NO){
-						name = item.sDict_Name;
-						break
-					}
-				}
-				return name;
-			},
-			handleAidTypeOptions: function(cb){
+			handleStoreOptions: function(cb){
 				var self = this;
 				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
+				ajaxReq(storeUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
-						if(typeof cb == 'function'){
-							cb();
-						}
-					});
-				});
-			},
-			handleStationOptions: function(cb){
-				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
-					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
-						if(typeof cb == 'function'){
-							cb();
-						}
-					});
-				});
-			},
-			handleLightOptions: function(cb){
-				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
-					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
-						if(typeof cb == 'function'){
-							cb();
-						}
-					});
-				});
-			},
-			handleMarkOptions: function(cb){
-				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
-					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.storeOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -200,7 +149,14 @@ var myvue = new Vue({
 				};
 				for ( var key in this.filters) {
 					if(this.filters[key]){
-						params[key] = this.filters[key];
+						if(key == 'store'){
+							this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
+							this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
+							this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
+							this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
+						}else{
+							params[key] = this.filters[key];
+						}
 					}
 				}
 				this.listLoading = true;
@@ -219,9 +175,9 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					user: '',
-					connected: '',
-					status: ''
+					sEquip_NO: '',
+					store: '',
+					lEquip_StatusFlag: ''
 				};
 				this.getList();
 			},
@@ -435,11 +391,8 @@ var myvue = new Vue({
 	  			return;
 	  		}
 			this.preloading = true;
-			this.handleAidTypeOptions();
-			this.handleStationOptions();
-			this.handleLightOptions();
-			this.handleMarkOptions();
-			this.getList();
+			this.handleStatusOptions();
+			this.handleStoreOptions(this.getList);
 		}
 	  });
 	

@@ -23,6 +23,8 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 
 	@Autowired
 	private StoreTypeService typeService;
+	@Autowired
+	private EquipService equipService;
 	
 	@TargetDataSource
 	public int add(String level, String name, StoreType type, Store obj, User user) {
@@ -100,6 +102,10 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		if(Tools.isNullOrEmpty(level)) {
 			throw new ServiceException(Tips.ERROR101, "level is null.");
 		}
+		int test = equipService.isStore(id);
+		if(test > 0) {
+			throw new ServiceException(Tips.ERROR104, "仓库正在使用，不可删除.");
+		}
 		int res = 0;
 		switch (level) {
 		case "1": //一级
@@ -145,6 +151,8 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		Map<String, Object> node = null;
 		for (StoreType type : typeList) {
 			node = Tools.parseObjectToMap(type);
+			node.put("sStore_ID", type.getsStoreType_ID());
+			node.put("sStore_Name", type.getsStoreType_Name());
 			node.put("children", findChildren(type.getsStoreType_ID(), list));
 			res.add(node);
 		}

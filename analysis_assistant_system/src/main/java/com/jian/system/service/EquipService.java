@@ -70,5 +70,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		return baseMapper.delete(tableName, condition); //删除
 	}
+	
+	@TargetDataSource
+	public int isStore(String sStore_ID) {
+		return baseMapper.isStore(sStore_ID);
+	}
 
 }

@@ -26,22 +26,19 @@
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 					<el-form-item>
-						  <el-input v-model="filters.sAid_NO" placeholder="请输入航标编码" clearable></el-input>
+						  <el-input v-model="filters.sEquip_NO" placeholder="请输入器材编码" clearable></el-input>
 					</el-form-item>
 					<el-form-item>
-					    <el-select v-model="filters.sAid_Type" placeholder="航标种类">
-						    <el-option
-						      v-for="item in aidTypeOptions"
-						      :key="item.value"
-						      :label="item.name"
-						      :value="item.value">
-						    </el-option>
-					    </el-select>
+					    <el-cascader v-model="filters.store" placeholder="请选择仓库"
+						    expand-trigger="hover"
+						    :options="storeOptions"
+						    :props="storeProps">
+						  </el-cascader>
 					</el-form-item>
 					<el-form-item>
-					    <el-select v-model="filters.sAid_Station" placeholder="归属航标站">
+					    <el-select v-model="filters.sEquip_Status" placeholder="请选择状态">
 						    <el-option
-						      v-for="item in stationOptions"
+						      v-for="item in statusOptions"
 						      :key="item.value"
 						      :label="item.name"
 						      :value="item.value">
@@ -69,33 +66,29 @@
 		    <el-tab-pane label="结果" name="table" disabled>
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sAid_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sEquip_ID" width="120" fixed="left">
 					</el-table-column>
-					<el-table-column label="航标编码" prop="sAid_NO" fixed="left">
+					<el-table-column label="器材编码" prop="sEquip_NO" fixed="left">
 					</el-table-column>
-					<el-table-column label="航标名称" prop="sAid_Name" fixed="left">
+					<el-table-column label="器材名称" prop="sEquip_Name" fixed="left">
 					</el-table-column>
-					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
+					<el-table-column label="NFC标签" prop="sEquip_NfcID" >
 					</el-table-column>
-					<el-table-column label="纬度" prop="lAid_Lat" >
+					<el-table-column label="状态" prop="sEquip_Status" >
 					</el-table-column>
-					<el-table-column label="经度" prop="lAid_Lng" >
+					<el-table-column label="器材种类" prop="sEquip_Type">
 					</el-table-column>
-					<el-table-column label="归属航标站" prop="sAid_Station" >
+					<el-table-column label="所属航标" prop="sEquip_AidID" >
 					</el-table-column>
-					<el-table-column label="航标种类" prop="sAid_Type">
+					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" >
 					</el-table-column>
-					<el-table-column label="航标图标" prop="sAid_Icon">
+					<el-table-column label="所属仓库二级" prop="sEquip_StoreLv2" >
 					</el-table-column>
-					<el-table-column label="灯质明灭" prop="sAid_Lighting">
+					<el-table-column label="所属仓库三级" prop="sEquip_StoreLv3" >
 					</el-table-column>
-					<el-table-column label="航标设置" prop="sAid_Mark">
+					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" >
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dAid_CreateDate">
-					</el-table-column>
-					<el-table-column label="始建时间" prop="dAid_CreateDate">
-					</el-table-column>
-					<el-table-column label="撤除时间" prop="dAid_DelDate">
+					<el-table-column label="创建日期" prop="dEquip_CreateDate">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
@@ -107,7 +100,7 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? false : true ">
+							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" divided :disabled="scope.row.sAid_NfcID ? false : true ">
 							    	<i class="fas fa-unlink"></i>&nbsp;解绑
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? true : false ">
