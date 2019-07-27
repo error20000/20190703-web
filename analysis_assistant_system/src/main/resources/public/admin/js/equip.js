@@ -42,14 +42,19 @@ var myvue = new Vue({
 		        },
 				statusDictNo: '',
 				statusOptions: [],
+				typeDictNo: '',
+				typeOptions: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-					sAid_NO: [
-		                { required: true, message: '请输入编号.', trigger: 'blur' },
+					sEquip_NO: [
+		                { required: true, message: '请输入编码.', trigger: 'blur' },
+		              ],
+					sEquip_Name: [
+		                { required: true, message: '请输入名称.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -57,8 +62,11 @@ var myvue = new Vue({
 				editLoading: false,
 				editForm: {},
 				editFormRules: {
-					sAid_NO: [
-		                { required: true, message: '请输入编号.', trigger: 'blur' },
+					sEquip_NO: [
+		                { required: true, message: '请输入编码.', trigger: 'blur' },
+		              ],
+					sEquip_Name: [
+		                { required: true, message: '请输入名称.', trigger: 'blur' },
 		              ]
 				},
 				//bind
@@ -98,6 +106,32 @@ var myvue = new Vue({
 						self.statusOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.statusOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			typeFormatter: function(row){
+				var name = row.sEquip_Type;
+				for (var i = 0; i < this.typeOptions.length; i++) {
+					var item = this.typeOptions[i];
+					if(row.sEquip_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.statusDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.typeOptions = [];
+						for (var i = 0; i < res.data.length; i++) {
+							self.typeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
 						}
 						if(typeof cb == 'function'){
 							cb();
@@ -177,7 +211,7 @@ var myvue = new Vue({
 				this.filters = {
 					sEquip_NO: '',
 					store: '',
-					lEquip_StatusFlag: ''
+					sEquip_Status: ''
 				};
 				this.getList();
 			},
@@ -196,6 +230,11 @@ var myvue = new Vue({
 					if (valid) {
 						this.$confirm('确定提交吗?', '提示', {}).then(() => {
 							var params = Object.assign({}, this.addForm);
+							params.sEquip_StoreLv1 = this.addForm.store[0] ? this.addForm.store[0] : " ";
+							params.sEquip_StoreLv2 = this.addForm.store[1] ? this.addForm.store[1] : " ";
+							params.sEquip_StoreLv3 = this.addForm.store[2] ? this.addForm.store[2] : " ";
+							params.sEquip_StoreLv4 = this.addForm.store[3] ? this.addForm.store[3] : " ";
+							delete params.store;
 							var self = this;
 							this.addLoading = true;
 							ajaxReq(addUrl, params, function(res){
@@ -216,7 +255,7 @@ var myvue = new Vue({
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {sAid_ID: row.sAid_ID }, function(res){
+					ajaxReq(delUrl, {sEquip_ID: row.sEquip_ID }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -231,13 +270,19 @@ var myvue = new Vue({
 				//this.editFormVisible = true;
 				//this.editForm = Object.assign({}, row);
 				var params = {
-						sAid_ID: row.sAid_ID
+						sEquip_ID: row.sEquip_ID
 				};
 				var self = this;
 				ajaxReq(oneUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.editFormVisible = true;
-						self.editForm = Object.assign({}, res.data)
+						self.editForm = Object.assign({}, res.data);
+						self.editForm.store = [];
+						self.editForm.store.push(self.editForm.sEquip_StoreLv1); 
+						self.editForm.store.push(self.editForm.sEquip_StoreLv2); 
+						self.editForm.store.push(self.editForm.sEquip_StoreLv3); 
+						self.editForm.store.push(self.editForm.sEquip_StoreLv4); 
+						console.log(self.editForm);
 					});
 				});
 			},
@@ -253,6 +298,11 @@ var myvue = new Vue({
 							var self = this;
 							this.editLoading = true;
 							var params = Object.assign({}, this.editForm);
+							params.sEquip_StoreLv1 = this.editForm.store[0] ? this.editForm.store[0] : " ";
+							params.sEquip_StoreLv2 = this.editForm.store[1] ? this.editForm.store[1] : " ";
+							params.sEquip_StoreLv3 = this.editForm.store[2] ? this.editForm.store[2] : " ";
+							params.sEquip_StoreLv4 = this.editForm.store[3] ? this.editForm.store[3] : " ";
+							delete params.store;
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;
 								self.handleResOperate(res, function(){
@@ -273,8 +323,8 @@ var myvue = new Vue({
 					var self = this;
 					this.listLoading = true;
 					var params = {
-							sNfc_ID: row.sAid_NfcID,
-							id: row.sAid_ID
+							sNfc_ID: row.sEquip_NfcID,
+							id: row.sEquip_ID
 					};
 					ajaxReq(delBindUrl, params, function(res){
 						self.listLoading = false;
@@ -298,7 +348,7 @@ var myvue = new Vue({
 						self.bindForm = {
 								sNfc_ID: '',
 								type: 'aid',
-								id: row.sAid_ID
+								id: row.sEquip_ID
 						};
 					});
 				});
@@ -392,6 +442,7 @@ var myvue = new Vue({
 	  		}
 			this.preloading = true;
 			this.handleStatusOptions();
+			this.handleTypeOptions();
 			this.handleStoreOptions(this.getList);
 		}
 	  });

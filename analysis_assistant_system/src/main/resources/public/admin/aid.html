@@ -91,11 +91,11 @@
 					</el-table-column>
 					<el-table-column label="航标设置" prop="sAid_Mark" :formatter="markFormatter">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dAid_CreateDate">
+					<el-table-column label="创建日期" prop="dAid_CreateDate" :formatter="(r,c) => {return formatDate(r.dAid_CreateDate);}">
 					</el-table-column>
-					<el-table-column label="始建时间" prop="dAid_CreateDate">
+					<el-table-column label="始建时间" prop="dAid_BuildDate" :formatter="(r,c) => {return formatDate(r.dAid_BuildDate);}">
 					</el-table-column>
-					<el-table-column label="撤除时间" prop="dAid_DelDate">
+					<el-table-column label="撤除时间" prop="dAid_DelDate" :formatter="(r,c) => {return formatDate(r.dAid_DelDate);}">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
@@ -148,7 +148,7 @@
 			    <el-input v-model="addForm.lAid_Lng"></el-input>
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
-			    <el-select v-model="addForm.sAid_Station" placeholder="请选归属航标站">
+			    <el-select v-model="addForm.sAid_Station" placeholder="请选择归属航标站">
 				    <el-option
 				      v-for="item in stationOptions"
 				      :key="item.value"
@@ -157,8 +157,24 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
+			  <el-form-item label="始建时间" prop="dAid_BuildDate">
+			    <el-date-picker
+			      v-model="addForm.dAid_BuildDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期时间">
+			    </el-date-picker>
+			  </el-form-item>
+			  <el-form-item label="撤除时间" prop="dAid_DelDate">
+			    <el-date-picker
+			      v-model="addForm.dAid_DelDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期时间">
+			    </el-date-picker>
+			  </el-form-item>
 			  <el-form-item label="航标种类" prop="sAid_Type">
-			    <el-select v-model="addForm.sAid_Type" placeholder="请选航标种类">
+			    <el-select v-model="addForm.sAid_Type" placeholder="请选择航标种类">
 				    <el-option
 				      v-for="item in aidTypeOptions"
 				      :key="item.value"
@@ -168,7 +184,7 @@
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
-			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
+			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
 				      :key="item.value"
@@ -178,7 +194,7 @@
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="航标设置" prop="sAid_Mark">
-			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
+			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标设置">
 				    <el-option
 				      v-for="item in markOptions"
 				      :key="item.value"
@@ -210,7 +226,7 @@
 			    <el-input v-model="editForm.lAid_Lng"></el-input>
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
-			    <el-select v-model="editForm.sAid_Station" placeholder="请选归属航标站">
+			    <el-select v-model="editForm.sAid_Station" placeholder="请选择归属航标站">
 				    <el-option
 				      v-for="item in stationOptions"
 				      :key="item.value"
@@ -219,8 +235,24 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
+			  <el-form-item label="始建时间" prop="dAid_BuildDate">
+			    <el-date-picker
+			      v-model="editForm.dAid_BuildDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期时间">
+			    </el-date-picker>
+			  </el-form-item>
+			  <el-form-item label="撤除时间" prop="dAid_DelDate">
+			    <el-date-picker
+			      v-model="editForm.dAid_DelDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期时间">
+			    </el-date-picker>
+			  </el-form-item>
 			  <el-form-item label="航标种类" prop="sAid_Type">
-			    <el-select v-model="editForm.sAid_Type" placeholder="请选航标种类">
+			    <el-select v-model="editForm.sAid_Type" placeholder="请选择航标种类">
 				    <el-option
 				      v-for="item in aidTypeOptions"
 				      :key="item.value"
@@ -230,7 +262,7 @@
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
-			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选灯质明灭">
+			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
 				      :key="item.value"
@@ -240,7 +272,7 @@
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="航标设置" prop="sAid_Mark">
-			    <el-select v-model="addForm.sAid_Mark" placeholder="请选航标设置">
+			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标设置">
 				    <el-option
 				      v-for="item in markOptions"
 				      :key="item.value"

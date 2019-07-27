@@ -65,7 +65,7 @@
 					</el-table-column>
 					<el-table-column label="名称" prop="sNfc_Name" >
 					</el-table-column>
-					<el-table-column label="创建时间" prop="dNfc_CreateDate" >
+					<el-table-column label="创建时间" prop="dNfc_CreateDate" :formatter="(r,c) => {return formatDate(r.dNfc_CreateDate);}">
 					</el-table-column>
 					<el-table-column label="状态" prop="lNfc_StatusFlag" :formatter="(r,c) => { return r.lNfc_StatusFlag ? '已使用': '未使用';}">
 					</el-table-column>

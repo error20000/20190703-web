@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 27/07/2019 12:06:16
+ Date: 27/07/2019 23:57:11
 */
 
 
@@ -70,6 +70,11 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Aid"."dAid_CreateDate" IS '创建日期';
 -- Records of tBase_Aid
 -- ----------------------------
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604617148949594112', '12', '12', '12', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 10:12:41', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748640124141568', '1', '1', '1', '1', NULL, NULL, NULL, TO_DATE('2019-07-14 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-26 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:55:11', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748743446626304', '123', '123', '123', '123', NULL, NULL, NULL, TO_DATE('2019-07-17 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-26 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:55:36', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748877744046080', '1', '1', '1', '1', NULL, NULL, NULL, TO_DATE('2019-07-21 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-22 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:56:08', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604743636243972096', '11', '11', '11', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 18:35:18', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604745958013534208', '11', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 18:44:32', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604074845818322944', '1', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-25 22:17:46', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
@@ -117,6 +122,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -131,6 +140,11 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Dict"."sDict_UserID" IS '创建人ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Dict"."sDict_DictTypeNO" IS '字典分类编码';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Dict"."dDict_UpdateDate" IS '更新日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Dict"."sDict_UpdateUserID" IS '更新人ID';
+
+-- ----------------------------
+-- Records of tBase_Dict
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('604784066364964864', '123', '123', TO_DATE('2019-07-27 21:15:57', 'SYYYY-MM-DD HH24:MI:SS'), '22', '122', TO_DATE('2019-07-27 21:19:56', 'SYYYY-MM-DD HH24:MI:SS'), '22');
 
 -- ----------------------------
 -- Table structure for tBase_DictType
@@ -151,6 +165,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -164,6 +182,12 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."dDictType_CreateDate" IS '创建�
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."sDictType_UserID" IS '创建人ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."dDictType_UpdateDate" IS '更新日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."sDictType_UpdateUserID" IS '更新人ID';
+
+-- ----------------------------
+-- Records of tBase_DictType
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('604775080299331584', '122', '123', TO_DATE('2019-07-27 20:40:15', 'SYYYY-MM-DD HH24:MI:SS'), '22', TO_DATE('2019-07-27 20:42:39', 'SYYYY-MM-DD HH24:MI:SS'), '22');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('604775718299107328', '12', '12', TO_DATE('2019-07-27 20:42:47', 'SYYYY-MM-DD HH24:MI:SS'), '22', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_Equip
@@ -215,9 +239,11 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_NO" IS '器材编码';
 -- ----------------------------
 -- Records of tBase_Equip
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('604753319549730816', '1212', '1', '12', '604436805260935168', NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 19:13:47', 'SYYYY-MM-DD HH24:MI:SS'), '1212');
 INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '45', NULL, '604613628313731072', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '45', '604434599291912192', '604613628313731072', NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), '12');
 INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '78', NULL, NULL, NULL, NULL, NULL, NULL, '603723565073694720', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('604738763502911488', '1212', '1', '12', '604436805260935168', '123', NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 18:15:56', 'SYYYY-MM-DD HH24:MI:SS'), '1212');
 
 -- ----------------------------
 -- Table structure for tBase_EquipLog
@@ -260,7 +286,8 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_IP" IS '操作员IP';
 DROP TABLE "AASYSTEM"."tBase_Group";
 CREATE TABLE "AASYSTEM"."tBase_Group" (
   "sGroup_ID" NVARCHAR2(32) NOT NULL ,
-  "sGroup_Name" NVARCHAR2(10) 
+  "sGroup_Name" NVARCHAR2(10) ,
+  "lGroup_SysFlag" NUMBER 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -268,6 +295,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -276,6 +307,14 @@ DISABLE ROW MOVEMENT
 ;
 COMMENT ON COLUMN "AASYSTEM"."tBase_Group"."sGroup_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Group"."sGroup_Name" IS '用户组名称';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Group"."lGroup_SysFlag" IS '系统默认  0：否，1：是';
+
+-- ----------------------------
+-- Records of tBase_Group
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Group" VALUES ('604790269384065024', '12', '0');
+INSERT INTO "AASYSTEM"."tBase_Group" VALUES ('604790286601682944', '13', '0');
+INSERT INTO "AASYSTEM"."tBase_Group" VALUES ('1', '超级管理组', '1');
 
 -- ----------------------------
 -- Table structure for tBase_GroupMenu
@@ -452,7 +491,8 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Nfc"."dNfc_CreateDate" IS '创建日期';
 -- ----------------------------
 -- Records of tBase_Nfc
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_Nfc" VALUES ('603723565073694720', 'test', 'test', '1', TO_DATE('2019-07-24 23:01:54', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Nfc" VALUES ('604752194377351168', '123111', '123111', '0', TO_DATE('2019-07-27 19:09:18', 'SYYYY-MM-DD HH24:MI:SS'));
+INSERT INTO "AASYSTEM"."tBase_Nfc" VALUES ('603723565073694720', 'test22', 'test22', '1', TO_DATE('1970-01-01 08:00:02', 'SYYYY-MM-DD HH24:MI:SS'));
 INSERT INTO "AASYSTEM"."tBase_Nfc" VALUES ('604078755886923776', '12', '12', '0', TO_DATE('2019-07-25 22:33:18', 'SYYYY-MM-DD HH24:MI:SS'));
 
 -- ----------------------------
@@ -591,7 +631,8 @@ CREATE TABLE "AASYSTEM"."tBase_User" (
   "sUser_Email" NVARCHAR2(255) ,
   "sUser_Phone" NVARCHAR2(20) ,
   "sUser_ThirdID" NVARCHAR2(32) ,
-  "dUser_CreateDate" DATE 
+  "dUser_CreateDate" DATE ,
+  "sUser_UserID" NVARCHAR2(32) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -620,11 +661,16 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_User"."sUser_Email" IS '邮箱';
 COMMENT ON COLUMN "AASYSTEM"."tBase_User"."sUser_Phone" IS '手机号';
 COMMENT ON COLUMN "AASYSTEM"."tBase_User"."sUser_ThirdID" IS '第三方ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_User"."dUser_CreateDate" IS '创建日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_User"."sUser_UserID" IS '创建人ID';
 
 -- ----------------------------
 -- Records of tBase_User
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_User" VALUES ('22', '33333', '44444444', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604797909992472576', '121', '12', '12', '1', '604790286601682944', '11', '11', '11', '11', TO_DATE('2019-07-27 22:10:58', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604802285633011712', '88', '123', '78', '0', NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 22:28:21', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604799230179016704', '12', '13', '13', '0', NULL, '13', '13', '13', '13', TO_DATE('2019-07-27 22:16:13', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('22', '22', '22', '2222', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_UserAid

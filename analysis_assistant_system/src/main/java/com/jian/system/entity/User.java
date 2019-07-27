@@ -32,7 +32,9 @@ public class User extends Base<User> {
 	@Excel(name="第三方ID", sort=0, length="32", isNull=1 )
 	private String sUser_ThirdID; 
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
-	private Date dUser_CreateDate;
+	private Date dUser_CreateDate;	
+	@Excel(name="创建人ID", sort=0, length="32", isNull=1 )
+	private String sUser_UserID;
 	
 
 	
@@ -101,6 +103,12 @@ public class User extends Base<User> {
 	}
 	public void setdUser_CreateDate(Date dUser_CreateDate) {
 		this.dUser_CreateDate = dUser_CreateDate;
+	}
+	public String getsUser_UserID() {
+		return sUser_UserID;
+	}
+	public void setsUser_UserID(String sUser_UserID) {
+		this.sUser_UserID = sUser_UserID;
 	}
 	
 	

@@ -23,6 +23,9 @@ function ajaxReq(url, param, callback, cp){
 };
 
 function formatDate(d, s){
+	if(!d){
+		return;
+	}
     var date = new Date();
     if(d){
         if(typeof d == 'object'){

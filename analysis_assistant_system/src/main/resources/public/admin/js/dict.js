@@ -1,16 +1,14 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/aid/findPage";
-var addUrl = baseUrl + "api/aid/add";
-var modUrl = baseUrl + "api/aid/update";
-var delUrl = baseUrl + "api/aid/delete";
-var oneUrl = baseUrl + "api/aid/findOne";
-var excelUrl = baseUrl + "api/aid/excel";
-var importUrl = baseUrl + "api/aid/import";
-var nfcUrl = baseUrl + "api/nfc/unbind";
-var bindUrl = baseUrl + "api/aid/bind";
-var delBindUrl = baseUrl + "api/aid/delBind";
-var dictUrl = baseUrl + "api/dict/findList";
+var queryUrl = baseUrl + "api/dict/findPage";
+var addUrl = baseUrl + "api/dict/add";
+var modUrl = baseUrl + "api/dict/update";
+var delUrl = baseUrl + "api/dict/delete";
+var oneUrl = baseUrl + "api/dict/findOne";
+var excelUrl = baseUrl + "api/dict/excel";
+var importUrl = baseUrl + "api/dict/import";
+var userUrl = baseUrl + "api/user/findAll";
+var dictTypeUrl = baseUrl + "api/dictType/findAll";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -21,10 +19,9 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					user: '',
-					alarm: '',
-					connected: '',
-					status: ''
+					sDict_NO: '',
+					sDict_Name: '',
+					sDict_DictTypeNO: ''
 				},
 				list: [],
 				total: 0,
@@ -34,25 +31,19 @@ var myvue = new Vue({
 				sels: [],
 				preloading: false,
 				
-				aidTypeDictNo: '',
-				aidTypeOptions: [],
-				stationDictNo: '',
-				stationOptions: [],
-				lightDictNo: '',
-				lightOptions: [],
-				markDictNo: '',
-				markOptions: [],
+				dictTypeOptions: [],
+				userOptions: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-					sAid_NO: [
+					sDict_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					sAid_Name: [
-		                { required: true, message: '请输入名称.', trigger: 'blur' },
+		            sDict_DictTypeNO: [
+		                { required: true, message: '请选择字典分类.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -60,22 +51,12 @@ var myvue = new Vue({
 				editLoading: false,
 				editForm: {},
 				editFormRules: {
-					sAid_NO: [
+					sDict_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					sAid_Name: [
-		                { required: true, message: '请输入名称.', trigger: 'blur' },
+		            sDict_DictTypeNO: [
+		                { required: true, message: '请选择字典分类.', trigger: 'blur' },
 		              ]
-				},
-				//bind
-				nfcOptions: [],
-				bindFormVisible: false,
-				bindLoading: false,
-				bindForm: {},
-				bindFormRules: {
-					sNfc_ID: [
-		                { required: true, message: '请选择NFC标签.', trigger: 'blur' },
-			        ]
 				},
 				
 				user: ''
@@ -85,103 +66,59 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
-			aidTypeFormatter: function(row){
-				var name = row.sAid_Type;
-				for (var i = 0; i < this.aidTypeOptions.length; i++) {
-					var item = this.aidTypeOptions[i];
-					if(row.sAid_Type == item.value){
-						name = item.name;
+			userAddFormatter: function(row){
+				var name = row.sDict_UserID;
+				for (var i = 0; i < this.userOptions.length; i++) {
+					var item = this.userOptions[i];
+					if(row.sDict_UserID == item.sUser_ID){
+						name = item.sUser_Nick;
 						break
 					}
 				}
 				return name;
 			},
-			stationFormatter: function(row){
-				var name = row.sAid_Station;
-				for (var i = 0; i < this.stationOptions.length; i++) {
-					var item = this.stationOptions[i];
-					if(row.sAid_Station == item.value){
-						name = item.name;
+			userModFormatter: function(row){
+				var name = row.sDict_UpdateUserID;
+				for (var i = 0; i < this.userOptions.length; i++) {
+					var item = this.userOptions[i];
+					if(row.sDict_UpdateUserID == item.sUser_ID){
+						name = item.sUser_Nick;
 						break
 					}
 				}
 				return name;
 			},
-			lightFormatter: function(row){
-				var name = row.sAid_Lighting;
-				for (var i = 0; i < this.lightOptions.length; i++) {
-					var item = this.lightOptions[i];
-					if(row.sAid_Lighting == item.value){
-						name = item.name;
-						break
-					}
-				}
-				return name;
-			},
-			markFormatter: function(row){
-				var name = row.sAid_Mark;
-				for (var i = 0; i < this.markOptions.length; i++) {
-					var item = this.markOptions[i];
-					if(row.sAid_Mark == item.value){
-						name = item.name;
-						break
-					}
-				}
-				return name;
-			},
-			handleAidTypeOptions: function(cb){
+			handleUserOptions: function(cb){
 				var self = this;
 				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
+				ajaxReq(userUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.aidTypeOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.userOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
 					});
 				});
 			},
-			handleStationOptions: function(cb){
-				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
-					self.handleResQuery(res, function(){
-						self.stationOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
-						if(typeof cb == 'function'){
-							cb();
-						}
-					});
-				});
+			dictTypeFormatter: function(row){
+				var name = row.sDict_DictTypeNO;
+				for (var i = 0; i < this.dictTypeOptions.length; i++) {
+					var item = this.dictTypeOptions[i];
+					if(row.sDict_DictTypeNO == item.value){
+						name = item.name;
+						break
+					}
+				}
+				return name;
 			},
-			handleLightOptions: function(cb){
+			handleDictTypeOptions: function(cb){
 				var self = this;
 				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
+				ajaxReq(dictTypeUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.lightOptions = [];
+						self.dictTypeOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
-							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
-						if(typeof cb == 'function'){
-							cb();
-						}
-					});
-				});
-			},
-			handleMarkOptions: function(cb){
-				var self = this;
-				var params = {};
-				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
-					self.handleResQuery(res, function(){
-						self.markOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+							self.dictTypeOptions.push({name: res.data[i].sDictType_Name, value: res.data[i].sDictType_NO});
 						}
 						if(typeof cb == 'function'){
 							cb();
@@ -229,9 +166,9 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					user: '',
-					connected: '',
-					status: ''
+					sDict_NO: '',
+					sDict_Name: '',
+					sDict_DictTypeNO: ''
 				};
 				this.getList();
 			},
@@ -270,7 +207,7 @@ var myvue = new Vue({
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {sAid_ID: row.sAid_ID }, function(res){
+					ajaxReq(delUrl, {sDict_ID: row.sDict_ID }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -285,7 +222,7 @@ var myvue = new Vue({
 				//this.editFormVisible = true;
 				//this.editForm = Object.assign({}, row);
 				var params = {
-						sAid_ID: row.sAid_ID
+					sDict_ID: row.sDict_ID
 				};
 				var self = this;
 				ajaxReq(oneUrl, params, function(res){
@@ -315,67 +252,6 @@ var myvue = new Vue({
 								});
 							});
 							
-						});
-					}
-				});
-			},
-			//bind
-			handleDelBind: function(index, row){
-				this.$confirm('确定解除绑定吗? ', '提示', {
-					type: 'warning'
-				}).then(() => {
-					var self = this;
-					this.listLoading = true;
-					var params = {
-							sNfc_ID: row.sAid_NfcID,
-							id: row.sAid_ID
-					};
-					ajaxReq(delBindUrl, params, function(res){
-						self.listLoading = false;
-						self.handleResOperate(res, function(){
-							self.getList();
-						});
-					});
-					
-				}).catch(() => {
-				});
-			},
-			handleBind: function(index, row){
-				this.nfcOptions = [];
-				var self = this;
-				ajaxReq(nfcUrl, {}, function(res){
-					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.nfcOptions.push({name: res.data[i].sNfc_Name, value: res.data[i].sNfc_ID});
-						}
-						self.bindFormVisible = true;
-						self.bindForm = {
-								sNfc_ID: '',
-								type: 'aid',
-								id: row.sAid_ID
-						};
-					});
-				});
-			},
-			bindClose: function () {
-				this.bindFormVisible = false;
-				this.bindLoading = false;
-				this.$refs.bindForm.resetFields();
-			},
-			bindSubmit: function () {
-				this.$refs.bindForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗?', '提示', {}).then(() => {
-							var self = this;
-							this.bindLoading = true;
-							var params = Object.assign({}, this.bindForm);
-							ajaxReq(bindUrl, params, function(res){
-								self.bindLoading = false;
-								self.handleResOperate(res, function(){
-									self.bindFormVisible = false;
-									self.getList();
-								});
-							});
 						});
 					}
 				});
@@ -428,7 +304,7 @@ var myvue = new Vue({
 				}else{
 					if(show){
 						this.$message({
-							message: '失败',
+							message: '失败：'+res.msg,
 							type: 'warning'
 						});
 					}
@@ -445,10 +321,8 @@ var myvue = new Vue({
 	  			return;
 	  		}
 			this.preloading = true;
-			this.handleAidTypeOptions();
-			this.handleStationOptions();
-			this.handleLightOptions();
-			this.handleMarkOptions();
+			this.handleDictTypeOptions();
+			this.handleUserOptions();
 			this.getList();
 		}
 	  });

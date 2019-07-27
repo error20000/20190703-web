@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
+  <style type="text/css">
+  	.el-submenu__title i {
+  		color: #ffffff !important;
+  	}
+  </style>
 </head>
 <body>
   <div id="app">
@@ -33,7 +38,21 @@
 	              <el-menu-item index="7" >器材管理</el-menu-item> 
 	              <el-menu-item index="4" >地图展示</el-menu-item>
 	              <el-menu-item index="5" >统计分析</el-menu-item>
-	              <el-menu-item index="6" >系统管理</el-menu-item>
+	              <el-submenu index="6">
+				    <template slot="title">系统管理</template>
+				    <el-submenu index="61">
+				      <template slot="title">数据字典</template>
+				      <el-menu-item index="611">字典分类</el-menu-item>
+				      <el-menu-item index="612">字典配置</el-menu-item>
+				    </el-submenu>
+				    <el-menu-item index="62">系统日志</el-menu-item>
+				    <el-menu-item index="63">应用注册</el-menu-item>
+				    <el-submenu index="64">
+				      <template slot="title">用户管理</template>
+				      <el-menu-item index="641">用户组</el-menu-item>
+				      <el-menu-item index="642">用户</el-menu-item>
+				    </el-submenu>
+				  </el-submenu>
 	            </el-menu>
 	          </el-col>
 	          <el-col :span="3" class="userinfo">

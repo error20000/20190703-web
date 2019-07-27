@@ -35,7 +35,6 @@ public class Equip extends Base<Equip> {
 	@Excel(name="航标ID", sort=0, length="32", isNull=1 )
 	private String sEquip_AidID;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dEquip_CreateDate;
 	
 	

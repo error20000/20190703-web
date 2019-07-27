@@ -63,7 +63,7 @@ public class DictTypeService extends BaseService<DictType, DictTypeMapper> {
 		String tableName =  getTableName();
 		//判断用户
 		if(user == null) {
-			throw new ServiceException(Tips.ERROR101, "user is null");
+			throw new ServiceException(Tips.ERROR102, "user is null");
 		}
 		//判断重复
 		String sDictType_NO = (String) value.get("sDictType_NO");

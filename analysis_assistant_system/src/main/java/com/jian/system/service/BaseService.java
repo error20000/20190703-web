@@ -44,8 +44,8 @@ public class BaseService<T, M extends BaseMapper<T>> {
 		String tableName =  getTableName();
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 		for (T t : objs) {
-			fillPrimaryKey(t);
-			fillDate(config.autoFillDateForAdd, t);
+			//fillPrimaryKey(t);
+			//fillDate(config.autoFillDateForAdd, t);
 			list.add(Tools.parseObjectToMap(t));
 		}
 		return baseMapper.batchInsert(tableName, list);

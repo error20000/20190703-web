@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jian.annotation.Excel;
 import com.jian.system.entity.User;
+import com.jian.system.exception.ServiceException;
 import com.jian.system.service.BaseService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
@@ -33,22 +34,28 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 	
 	public User getLoginUser(HttpServletRequest req) {
 		User user = (User) req.getSession().getAttribute("login_user");
+		user = new User();
+		user.setsUser_ID("22");
+		user.setsUser_Nick("33333");
 		return user;
 	}
 	
     public String add(HttpServletRequest req) {
+		T obj = null;
 		try {
-			T obj = Tools.getReqParamsToObject(req, getObejctClass().newInstance());
-			int res = service.insert(obj, getLoginUser(req));
-			if(res > 0){
-				return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
-			}else{
-				return ResultTools.custom(Tips.ERROR0).toJSONString();
-			}
+			obj = Utils.getReqParamsToObject(req, getObejctClass().newInstance());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResultTools.custom(Tips.ERROR0).toJSONString();
+		if(obj == null) {
+			throw new ServiceException(Tips.ERROR100);
+		}
+		int res = service.insert(obj, getLoginUser(req));
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).toJSONString();
+		}
     }
 	
 	
@@ -57,7 +64,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 		Map<String, Object> vMap = null;
 		
 		//参数
-		Map<String, Object> setValues = Tools.getReqParamsToMap(req, getObejctClass());
+		Map<String, Object> setValues = Utils.getReqParamsToMap(req, getObejctClass());
 		List<String> pkeys = Utils.getPrimaryKeys(getObejctClass());//获取主键
 		if(pkeys == null || pkeys.isEmpty()){
 			return ResultTools.custom(Tips.ERROR206).toJSONString();
@@ -114,7 +121,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
     public String deleteBy(HttpServletRequest req) {
 		
 		//参数
-		Map<String, Object> condition = Tools.getReqParamsToMap(req, getObejctClass());
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, getObejctClass());
 		if(condition == null || condition.isEmpty()){
 			return ResultTools.custom(Tips.ERROR211, "删除条件").toJSONString();
 		}
@@ -152,7 +159,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 		}
 		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
 		//参数
-		Map<String, Object> condition = Tools.getReqParamsToMap(req, getObejctClass());
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, getObejctClass());
 		
 		List<T> list = service.selectPage(condition, start, Tools.parseInt(rows));
 		long total = service.size(condition);
@@ -163,7 +170,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
     public String findOne(HttpServletRequest req) {
 		
 		//参数
-		Map<String, Object> condition = Tools.getReqParamsToMap(req, getObejctClass());
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, getObejctClass());
 		if(condition == null || condition.isEmpty()){
 			return ResultTools.custom(Tips.ERROR211, "查询条件").toJSONString();
 		}
@@ -175,7 +182,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
     public String findList(HttpServletRequest req) {
 		
 		//参数
-		Map<String, Object> condition = Tools.getReqParamsToMap(req, getObejctClass());
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, getObejctClass());
 		if(condition == null || condition.isEmpty()){
 			return ResultTools.custom(Tips.ERROR211, "查询条件").toJSONString();
 		}

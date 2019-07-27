@@ -64,11 +64,22 @@ new Vue({
 			case 5:
 				url = 'count.html';
 				break;
-			case 6:
-				url = 'sys.html';
-				break;
 			case 7:
 				url = 'equip.html';
+				break;
+			case 6:
+				break;
+			case 611:
+				url = 'dictType.html';
+				break;
+			case 612:
+				url = 'dict.html';
+				break;
+			case 641:
+				url = 'group.html';
+				break;
+			case 642:
+				url = 'user.html';
 				break;
 				
 			default:

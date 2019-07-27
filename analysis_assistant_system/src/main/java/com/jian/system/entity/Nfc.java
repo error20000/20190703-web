@@ -21,7 +21,6 @@ public class Nfc extends Base<Nfc> {
 	@Excel(name="状态 0：未使用，1：已使用", sort=0, length="", isNull=1 )
 	private int lNfc_StatusFlag;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
 	private Date dNfc_CreateDate;
 
 

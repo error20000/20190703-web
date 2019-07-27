@@ -4,9 +4,12 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +17,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.PrimaryKeyCondition;
@@ -55,6 +60,115 @@ public class Utils {
 		}
 		return keys;
 	}
+	/**
+	 * 获取请求参数，防注入
+	 * @param req	request请求
+	 * @param clss	过滤条件。只获取与类属性名相同的参数
+	 * @return	map
+	 */
+	public static Map<String, Object> getReqParamsToMap(HttpServletRequest req, Class<?> clss){
+		Map<String, Object> obj = new HashMap<String, Object>();
+		Enumeration<String> enums = req.getParameterNames();
+		if(enums == null || !enums.hasMoreElements()){
+			enums = req.getAttributeNames();
+		}
+		while (enums.hasMoreElements()) {
+			String name = enums.nextElement();
+			Field[] fields = Tools.getFields(clss); //clss.getDeclaredFields();
+			for (Field f : fields) {
+				if(name.equals(f.getName())){
+					Object value = null;
+					String tmpValue = Tools.getReqParam(req, name);
+					//格式化
+					switch (f.getType().getSimpleName()) {
+					case "int":
+						value = Tools.parseInt(tmpValue);
+						break;
+					case "long":
+						value = Tools.parseLong(tmpValue);
+						break;
+					case "float":
+						value = Tools.parseFloat(tmpValue);
+						break;
+					case "double":
+						value = Tools.parseDouble(tmpValue);
+						break;
+					case "boolean":
+						value = Tools.parseBoolean(tmpValue);
+						break;
+					case "Date":
+						value = new Date(Tools.parseLong(tmpValue));
+						break;
+					default:
+						value = tmpValue;
+						break;
+					}
+					obj.put(name, value);
+				}
+			}
+		}
+		return obj;
+	}
+	
+	/**
+	 * 获取请求参数，防注入
+	 * @param req	request请求
+	 * @param obj	转换对象
+	 * @return	T
+	 */
+	public static <T> T getReqParamsToObject(HttpServletRequest req, T obj){
+		Class<?> clss = obj.getClass();
+		Field[] fields = Tools.getFields(clss); //clss.getDeclaredFields();
+		Method[] methods = Tools.getMethods(clss); //clss.getDeclaredMethods();
+		for (Field f : fields) {
+			Object value = null;
+			Enumeration<String> enums = req.getParameterNames();
+			if(enums == null || !enums.hasMoreElements()){
+				enums = req.getAttributeNames();
+			}
+			while (enums.hasMoreElements()) {
+				String name = (String) enums.nextElement();
+				String tmpValue = Tools.getReqParam(req, name);
+				if(name.equals(f.getName())){
+					//格式化
+					switch (f.getType().getSimpleName()) {
+					case "int":
+						value = Tools.parseInt(tmpValue);
+						break;
+					case "long":
+						value = Tools.parseLong(tmpValue);
+						break;
+					case "float":
+						value = Tools.parseFloat(tmpValue);
+						break;
+					case "double":
+						value = Tools.parseDouble(tmpValue);
+						break;
+					case "boolean":
+						value = Tools.parseBoolean(tmpValue);
+						break;
+					case "Date":
+						value = new Date(Tools.parseLong(tmpValue));
+						break;
+					default:
+						value = tmpValue;
+						break;
+					}
+					for (Method m : methods) {
+						if(m.getName().startsWith("set") && m.getName().substring(3).equalsIgnoreCase(name)){
+							try {
+								m.invoke(obj, value);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		}
+		return obj;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public static <T> Class<T> getObejctClass(Class<?> clzz){
