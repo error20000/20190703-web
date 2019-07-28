@@ -6,6 +6,29 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
+  <style>
+	  .text {
+	    font-size: 14px;
+	  }
+	
+	  .item {
+	    margin-bottom: 18px;
+	  }
+	
+	  .clearfix:before,
+	  .clearfix:after {
+	    display: table;
+	    content: "";
+	  }
+	  .clearfix:after {
+	    clear: both
+	  }
+	
+	  .box-card {
+	    width: 500px;
+	    display: inline-block;
+	  }
+</style>
 </head>
 <body class="animated fadeIn">
   <div id="app">
@@ -94,11 +117,11 @@
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" divided :disabled="scope.row.sAid_NfcID ? false : true ">
-							    	<i class="fas fa-unlink"></i>&nbsp;解绑
+							    <el-dropdown-item @click.native="handleResetPWD(scope.$index, scope.row)" divided >
+							    	<i class="fas fa-key"></i>&nbsp;重置密码
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sAid_NfcID ? true : false ">
-							    	<i class="fas fa-link"></i>&nbsp;绑定
+							    <el-dropdown-item @click.native="handleAuth(scope.$index, scope.row)">
+							    	<i class="fas fa-user-lock"></i>&nbsp;授权
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
@@ -126,10 +149,10 @@
 			    <el-input v-model="addForm.sUser_UserName"></el-input>
 			  </el-form-item>
 			  <el-form-item label="密码" prop="sUser_PassWord">
-			    <el-input v-model="addForm.sUser_PassWord"></el-input>
+			    <el-input type="password" v-model="addForm.sUser_PassWord"></el-input>
 			  </el-form-item>
 			  <el-form-item label="确认密码" prop="sUser_PassWord2">
-			    <el-input v-model="addForm.sUser_PassWord2"></el-input>
+			    <el-input type="password" v-model="addForm.sUser_PassWord2"></el-input>
 			  </el-form-item>
 			  <el-form-item label="昵称" prop="sUser_Nick">
 			    <el-input v-model="addForm.sUser_Nick"></el-input>
@@ -204,6 +227,82 @@
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="editClose">取消</el-button>
 				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!-- pwd -->
+		<el-dialog title="重置密码" :visible.sync="pwdFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="pwdForm" :rules="pwdFormRules" ref="pwdForm" label-width="120px">
+				<el-form-item label="密码" prop="sUser_PassWord">
+					<el-input type="password" v-model="pwdForm.sUser_PassWord"></el-input>
+				</el-form-item>
+			    <el-form-item label="确认密码" prop="sUser_PassWord2">
+			      <el-input type="password" v-model="pwdForm.sUser_PassWord2" placeholder=""></el-input>
+			    </el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="pwdClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="pwdSubmit" :loading="pwdLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		
+		<!-- auth -->
+		<el-dialog width="90%" title="授权" :visible.sync="authFormVisible" :close-on-click-modal="false" >
+			
+			<!-- <el-card class="box-card" style="float: left;">
+			  <div slot="header" class="clearfix">
+			    <span>用户权限</span>
+			    <el-button style="float: right; padding: 3px 0" type="text">展开>></el-button>
+			  </div>
+			  <el-form size="mini" label-position="top" :model="authForm" :rules="authFormRules" ref="authForm" label-width="120px">
+				  <el-form-item v-for="(menuAuth, index) in menuAuthOptions" :key="index" >
+				  	<div class="auth_label" slot="label" style="label">
+				  		<el-breadcrumb separator="/">
+						  	<el-breadcrumb-item v-for="(item, index2) in menuAuth.parray">{{item}}</el-breadcrumb-item>
+				  			{{menuAuth.sMenu_Name}}&nbsp;&nbsp;
+					  		<el-checkbox :disabled="menuAuth.disabled" :indeterminate="menuAuth.isIndeterminate" v-model="menuAuth.checkAll" @change="(val) => {handleCheckAllChange(val, menuAuth);}">全选</el-checkbox>
+						</el-breadcrumb>
+				  	</div>
+				    <el-checkbox-group v-model="authForm[menuAuth.sMenu_ID]" @change="(val) => {handleCheckedChange(val, menuAuth);}">
+				    	<template v-for="(item, index2) in menuAuth.children">
+						    <el-tooltip class="item" effect="dark" :content="item.sMFun_Describe" placement="top">
+					    		<el-checkbox border :label="item.sMFun_ID" :disabled="menuAuth.disabled ? true : item.lMFun_StatusFlag ? false : true">{{item.sMFun_Name}}</el-checkbox>
+			    			</el-tooltip>
+				    	</template>
+				    </el-checkbox-group>
+				  </el-form-item>
+				</el-form>
+			</el-card> -->
+			
+			<el-card class="box-card" style="float: right;">
+			  <div slot="header" class="clearfix">
+			    <span>用户组权限</span>
+			  </div>
+			  <el-form size="mini" label-position="top"  label-width="120px">
+				  <el-form-item v-for="(menuAuth, index) in groupAuthOptions" :key="index" >
+				  	<div slot="label" >
+				  		<el-breadcrumb separator="/">
+						  	<el-breadcrumb-item v-for="(item, index2) in menuAuth.parray">{{item}}</el-breadcrumb-item>
+				  			{{menuAuth.sMenu_Name}}&nbsp;&nbsp;
+					  		<el-checkbox :disabled="menuAuth.disabled" :indeterminate="menuAuth.isIndeterminate" v-model="menuAuth.checkAll" >全选</el-checkbox>
+						</el-breadcrumb>
+				  	</div>
+				  	<!-- <div style="margin: 15px 0;"></div> -->
+				    <el-checkbox-group v-model="menuAuth.checked" >
+				    	<template v-for="(item, index2) in menuAuth.children">
+						    <el-tooltip class="item" effect="dark" :content="item.sMFun_Describe" placement="top">
+					    		<el-checkbox border :label="item.sMFun_ID" :disabled="menuAuth.disabled ">{{item.sMFun_Name}}</el-checkbox>
+			    			</el-tooltip>
+				    	</template>
+				    </el-checkbox-group>
+				  </el-form-item>
+				</el-form>
+			</el-card>
+			<div class="clearfix"></div>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="authClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="authSubmit" :loading="authLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

@@ -29,6 +29,7 @@ public class ControllerExceptionHandler {
 	public String ServiceValidHandler(HttpServletRequest request, HttpServletResponse response, ServiceException e) {
 		String message = e.getLocalizedMessage();
 		log.error(message);
+		e.printStackTrace();
 		System.out.println("ServiceException");
 		return message;
 	}
@@ -36,7 +37,8 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler({ Exception.class })
 	@ResponseStatus(HttpStatus.OK)
 	public String GlobalException(HttpServletRequest request, HttpServletResponse response, Exception e) {
-		log.error(e.getMessage());
+		log.error(e.getLocalizedMessage());
+		e.printStackTrace();
 		System.out.println("Exception");
 		return ResultTools.custom(Tips.ERROR0).toJSONString();
 	}

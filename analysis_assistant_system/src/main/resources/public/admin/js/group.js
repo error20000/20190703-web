@@ -7,6 +7,9 @@ var delUrl = baseUrl + "api/group/delete";
 var oneUrl = baseUrl + "api/group/findOne";
 var excelUrl = baseUrl + "api/group/excel";
 var importUrl = baseUrl + "api/group/import";
+var menuAuthUrl = baseUrl + "api/menu/menuAuthOptions";
+var modAuthUrl = baseUrl + "api/menu/updateGroupMenuAuth";
+var getAuthUrl = baseUrl + "api/menu/groupMenuAuth";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -46,6 +49,13 @@ var myvue = new Vue({
 		                { required: true, message: '请输入分组名称.', trigger: 'blur' },
 		              ]
 				},
+				//auth
+				authFormVisible: false,
+				authLoading: false,
+				authFormLoading: true,
+				authForm: {},
+				authFormRules: {},
+				menuAuthOptions:[],
 				
 				user: ''
 			}
@@ -53,6 +63,18 @@ var myvue = new Vue({
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			handleMenuAuthOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(menuAuthUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.menuAuthOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
 			},
 			handleSizeChange: function (val) {
 				this.rows = val;
@@ -182,6 +204,112 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//auth
+			handleAuth: function (index, row) {
+				var params = {
+						sGroup_ID: row.sGroup_ID
+				};
+				var self = this;
+				self.authFormVisible = true;
+				ajaxReq(getAuthUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.authFormLoading = false;
+						self.authForm = {
+							sGroup_ID: row.sGroup_ID
+						};
+						for (var i = 0; i < self.menuAuthOptions.length; i++) {
+							var node = self.menuAuthOptions[i];
+							var array = [];
+							//array.push(node.sMenu_Name);
+							self.findParent(node, array);
+							node.parray = array;
+							node.disabled = node.lMenu_StatusFlag ? false : true;
+							//可用子集
+							var lenItem = []; 
+							for (var j = 0; j < node.children.length; j++) {
+								if(node.children[j].lMFun_StatusFlag){
+									lenItem.push(node.children[j].sMFun_ID);
+								}
+							}
+							node.lenItem = lenItem;
+							node.checkAll = false;
+							node.isIndeterminate = false;
+					        
+							self.$set(self.authForm, node.sMenu_ID, []);
+						}
+						//默认选中
+						for (var i = 0; i < res.data.length; i++) {
+							let menuID = res.data[i].sGroupMenu_MenuID;
+							self.authForm[menuID] = res.data[i].sGroupMenu_MenuFunID.split(",");
+							//默认选中状态
+							for (var j = 0; j < self.menuAuthOptions.length; j++) {
+								var node = self.menuAuthOptions[j];
+								if(menuID == node.sMenu_ID){
+									let cdata = self.authForm[node.sMenu_ID];
+									node.checkAll = node.lenItem.length === cdata.length;
+									node.isIndeterminate = cdata.length > 0 && cdata.length < node.lenItem.length;
+									break;
+								}
+							}
+						}
+						
+					});
+				});
+			},
+			findParent: function(node, array){
+				var parent = node.parent;
+				for (var i = 0; i < parent.length; i++) {
+					array.unshift(parent[i].sMenu_Name);
+					this.findParent(parent[i], array);
+				}
+			},
+			stopClick: function(){
+				$(".auth_label").click(function(event){
+		            alert("stopClick");
+		            event.stopPropagation();    //  阻止事件冒泡
+		            return false
+		        });
+			},
+			handleCheckAllChange: function(val, item){
+				this.authForm[item.sMenu_ID] = val ? item.lenItem : [];
+				item.isIndeterminate = false;
+			},
+			handleCheckedChange(val, item) {
+		        let checkedCount = val.length;
+		        item.checkAll = checkedCount === item.lenItem.length;
+		        item.isIndeterminate = checkedCount > 0 && checkedCount < item.lenItem.length;
+				this.menuAuthOptions = Object.assign({}, this.menuAuthOptions);
+		    },
+			authClose: function () {
+				this.authFormVisible = false;
+				this.authLoading = false;
+				this.$refs.authForm.resetFields();
+			},
+			authSubmit: function () {
+				this.$refs.authForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.authLoading = true;
+							var params = Object.assign({}, this.authForm);
+							for ( var key in params) {
+								if(key == 'sGroup_ID'){
+									continue;
+								}
+								params[key] = params[key].join(",");
+							}
+							ajaxReq(modAuthUrl, params, function(res){
+								self.authLoading = false;
+								self.handleResOperate(res, function(){
+									self.authFormVisible = false;
+									self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
 			//excel
 			getExcel: function(){
 				
@@ -247,7 +375,9 @@ var myvue = new Vue({
 	  			return;
 	  		}
 			this.preloading = true;
+			this.handleMenuAuthOptions();
 			this.getList();
+			
 		}
 	  });
 	

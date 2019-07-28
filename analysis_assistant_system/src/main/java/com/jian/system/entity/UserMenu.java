@@ -15,6 +15,8 @@ public class UserMenu extends Base<UserMenu> {
 	private String sUserMenu_UserID;
 	@Excel(name="菜单ID", sort=0, length="32", isNull=1 )
 	private String sUserMenu_MenuID;
+	@Excel(name="菜单功能ID 多个逗号分隔", sort=0, length="255", isNull=1 )
+	private String sUserMenu_MenuFunID;
 	
 	
 	public String getsUserMenu_ID() {
@@ -34,6 +36,12 @@ public class UserMenu extends Base<UserMenu> {
 	}
 	public void setsUserMenu_MenuID(String sUserMenu_MenuID) {
 		this.sUserMenu_MenuID = sUserMenu_MenuID;
+	}
+	public String getsUserMenu_MenuFunID() {
+		return sUserMenu_MenuFunID;
+	}
+	public void setsUserMenu_MenuFunID(String sUserMenu_MenuFunID) {
+		this.sUserMenu_MenuFunID = sUserMenu_MenuFunID;
 	}
 
 }

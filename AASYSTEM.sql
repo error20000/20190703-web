@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 27/07/2019 23:57:11
+ Date: 29/07/2019 01:07:41
 */
 
 
@@ -323,7 +323,8 @@ DROP TABLE "AASYSTEM"."tBase_GroupMenu";
 CREATE TABLE "AASYSTEM"."tBase_GroupMenu" (
   "sGroupMenu_ID" NVARCHAR2(32) NOT NULL ,
   "sGroupMenu_GroupID" NVARCHAR2(32) ,
-  "sGroupMenu_MenuID" NVARCHAR2(32) 
+  "sGroupMenu_MenuID" NVARCHAR2(32) ,
+  "sGroupMenu_MenuFunID" NVARCHAR2(255) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -331,6 +332,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -340,6 +345,13 @@ DISABLE ROW MOVEMENT
 COMMENT ON COLUMN "AASYSTEM"."tBase_GroupMenu"."sGroupMenu_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_GroupMenu"."sGroupMenu_GroupID" IS '用户组ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_GroupMenu"."sGroupMenu_MenuID" IS '菜单ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_GroupMenu"."sGroupMenu_MenuFunID" IS '菜单功能ID 多个逗号分隔';
+
+-- ----------------------------
+-- Records of tBase_GroupMenu
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_GroupMenu" VALUES ('605174712699453440', '604790269384065024', '642', '1,3');
+INSERT INTO "AASYSTEM"."tBase_GroupMenu" VALUES ('605174712699453441', '604790269384065024', '500', '2');
 
 -- ----------------------------
 -- Table structure for tBase_Menu
@@ -359,6 +371,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -371,6 +387,68 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Menu"."sMenu_Parent" IS '父级菜单Id';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Menu"."sMenu_Url" IS '菜单地址';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Menu"."sMenu_Icon" IS '菜单Icon';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Menu"."lMenu_StatusFlag" IS '状态 0：禁用，1：启用';
+
+-- ----------------------------
+-- Records of tBase_Menu
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('100', 'NFC标签', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('200', '仓库管理', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('300', '航标管理', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('700', '器材管理', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('400', '地图展示', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('500', '统计分析', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('600', '系统管理', NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('610', '数据字典', '600', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('611', '字典分类', '610', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('612', '字典配置', '610', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('620', '系统日志', '600', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('630', '应用注册', '600', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('640', '用户管理', '600', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('641', '用户组', '640', NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('642', '用户', '640', NULL, NULL, '1');
+
+-- ----------------------------
+-- Table structure for tBase_MenuFun
+-- ----------------------------
+DROP TABLE "AASYSTEM"."tBase_MenuFun";
+CREATE TABLE "AASYSTEM"."tBase_MenuFun" (
+  "sMFun_ID" NVARCHAR2(32) NOT NULL ,
+  "sMFun_Name" NVARCHAR2(10) ,
+  "sMFun_MenuID" NVARCHAR2(32) ,
+  "sMFun_InterfaceID" NVARCHAR2(255) ,
+  "lMFun_StatusFlag" NUMBER ,
+  "sMFun_Describe" NVARCHAR2(255) 
+)
+TABLESPACE "USERS"
+LOGGING
+NOCOMPRESS
+PCTFREE 10
+INITRANS 1
+STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
+  BUFFER_POOL DEFAULT
+)
+PARALLEL 1
+NOCACHE
+DISABLE ROW MOVEMENT
+;
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."sMFun_ID" IS 'ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."sMFun_Name" IS '名称';
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."sMFun_MenuID" IS '所属菜单Id';
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."sMFun_InterfaceID" IS '接口ID  多个逗号分隔';
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."lMFun_StatusFlag" IS '状态 0：禁用，1：启用';
+COMMENT ON COLUMN "AASYSTEM"."tBase_MenuFun"."sMFun_Describe" IS '功能描述';
+
+-- ----------------------------
+-- Records of tBase_MenuFun
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_MenuFun" VALUES ('1', 'test', '642', NULL, '1', 'test');
+INSERT INTO "AASYSTEM"."tBase_MenuFun" VALUES ('2', 'test2', '500', NULL, '1', 'test2');
+INSERT INTO "AASYSTEM"."tBase_MenuFun" VALUES ('3', 'test3', '642', NULL, '1', 'test3');
+INSERT INTO "AASYSTEM"."tBase_MenuFun" VALUES ('4', 'test4', '642', NULL, '0', 'test4');
 
 -- ----------------------------
 -- Table structure for tBase_MenuInterface
@@ -666,7 +744,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_User"."sUser_UserID" IS '创建人ID';
 -- ----------------------------
 -- Records of tBase_User
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604797909992472576', '121', '12', '12', '1', '604790286601682944', '11', '11', '11', '11', TO_DATE('2019-07-27 22:10:58', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604797909992472576', '121', '25d55ad283aa400af464c76d713c07ad', '12', '1', '604790269384065024', '11', '11', '11', '11', TO_DATE('2019-07-27 22:10:58', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604802285633011712', '88', '123', '78', '0', NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 22:28:21', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_User" VALUES ('604799230179016704', '12', '13', '13', '0', NULL, '13', '13', '13', '13', TO_DATE('2019-07-27 22:16:13', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_User" VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL);
@@ -735,7 +813,8 @@ DROP TABLE "AASYSTEM"."tBase_UserMenu";
 CREATE TABLE "AASYSTEM"."tBase_UserMenu" (
   "sUserMenu_ID" NVARCHAR2(32) NOT NULL ,
   "sUserMenu_UserID" NVARCHAR2(32) ,
-  "sUserMenu_MenuID" NVARCHAR2(32) 
+  "sUserMenu_MenuID" NVARCHAR2(32) ,
+  "sUserMenu_MenuFunID" NVARCHAR2(255) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -752,6 +831,7 @@ DISABLE ROW MOVEMENT
 COMMENT ON COLUMN "AASYSTEM"."tBase_UserMenu"."sUserMenu_ID" IS 'ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_UserMenu"."sUserMenu_UserID" IS '用户ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_UserMenu"."sUserMenu_MenuID" IS '菜单ID';
+COMMENT ON COLUMN "AASYSTEM"."tBase_UserMenu"."sUserMenu_MenuFunID" IS '菜单功能ID 多个逗号分隔';
 
 -- ----------------------------
 -- Table structure for tEquip_Energy
@@ -978,6 +1058,10 @@ CREATE INDEX "AASYSTEM"."GroupMenu_Index01"
 PCTFREE 10
 INITRANS 2
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 );
 
@@ -996,6 +1080,23 @@ ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0013198" CHECK ("sMenu_
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0013422" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0013611" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0013798" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+
+-- ----------------------------
+-- Primary Key structure for table tBase_MenuFun
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014207" PRIMARY KEY ("sMFun_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_MenuFun
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014199" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014200" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014201" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014202" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014203" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014204" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014205" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014206" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_MenuInterface

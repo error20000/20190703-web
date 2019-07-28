@@ -15,8 +15,10 @@ public class GroupMenu extends Base<GroupMenu> {
 	private String sGroupMenu_GroupID;
 	@Excel(name="菜单ID", sort=0, length="32", isNull=1 )
 	private String sGroupMenu_MenuID;
+	@Excel(name="菜单功能ID 多个逗号分隔", sort=0, length="255", isNull=1 )
+	private String sGroupMenu_MenuFunID;
 	
-	
+
 	public String getsGroupMenu_ID() {
 		return sGroupMenu_ID;
 	}
@@ -34,6 +36,12 @@ public class GroupMenu extends Base<GroupMenu> {
 	}
 	public void setsGroupMenu_MenuID(String sGroupMenu_MenuID) {
 		this.sGroupMenu_MenuID = sGroupMenu_MenuID;
+	}
+	public String getsGroupMenu_MenuFunID() {
+		return sGroupMenu_MenuFunID;
+	}
+	public void setsGroupMenu_MenuFunID(String sGroupMenu_MenuFunID) {
+		this.sGroupMenu_MenuFunID = sGroupMenu_MenuFunID;
 	}
 	
 }

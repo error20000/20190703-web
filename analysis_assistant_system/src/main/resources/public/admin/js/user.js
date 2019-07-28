@@ -8,6 +8,11 @@ var oneUrl = baseUrl + "api/user/findOne";
 var excelUrl = baseUrl + "api/user/excel";
 var importUrl = baseUrl + "api/user/import";
 var groupUrl = baseUrl + "api/group/findAll";
+var resetPwdUrl = baseUrl + "api/user/resetPWD";
+var menuAuthUrl = baseUrl + "api/menu/menuAuthOptions";
+var modAuthUrl = baseUrl + "api/menu/updateUserMenuAuth";
+var getAuthUrl = baseUrl + "api/menu/userMenuAuth";
+var getGroupAuthUrl = baseUrl + "api/menu/groupMenuAuth";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -31,6 +36,7 @@ var myvue = new Vue({
 				preloading: false,
 				
 				groupOptions: [],
+				pwdReg: /^[0-9A-Za-z]{8,16}$/,
 
 				//add
 				addFormVisible: false,
@@ -45,6 +51,13 @@ var myvue = new Vue({
 						{ validator: (rule, value, callback) => {
 					          if (this.addForm.sUser_PassWord2 && value !== this.addForm.sUser_PassWord2 ) {
 					            callback(new Error('两次输入密码不匹配!'));
+					          } else {
+					            callback();
+					          }
+						}, trigger: 'blur' },
+						{ validator: (rule, value, callback) => {
+					          if (!this.pwdReg.test(this.addForm.sUser_PassWord) ) {
+					            callback(new Error('密码格式不正确!'));
 					          } else {
 					            callback();
 					          }
@@ -76,6 +89,48 @@ var myvue = new Vue({
 		                { required: true, message: '请输入用户昵称.', trigger: 'blur' },
 		              ]
 				},
+				//reset
+				pwdFormVisible: false,
+				pwdLoading: false,
+				pwdForm: {},
+				pwdFormRules: {
+		            sUser_PassWord: [
+		                { required: true, message: '请输入密码.', trigger: 'blur' },
+						{ validator: (rule, value, callback) => {
+					          if (this.pwdForm.sUser_PassWord2 && value !== this.pwdForm.sUser_PassWord2 ) {
+					            callback(new Error('两次输入密码不匹配!'));
+					          } else {
+					            callback();
+					          }
+						}, trigger: 'blur' },
+						{ validator: (rule, value, callback) => {
+					          if (!this.pwdReg.test(this.pwdForm.sUser_PassWord) ) {
+					            callback(new Error('密码格式不正确!'));
+					          } else {
+					            callback();
+					          }
+						}, trigger: 'blur' }
+		              ],
+		            sUser_PassWord2: [
+						{ required: true, message: '请再次输入密码.', trigger: 'blur' },
+						{ validator: (rule, value, callback) => {
+					          if (this.pwdForm.sUser_PassWord && value !== this.pwdForm.sUser_PassWord) {
+					            callback(new Error('两次输入密码不匹配!'));
+					          } else {
+					            callback();
+					          }
+						}, trigger: 'blur' }
+				      ]
+				},
+				//auth
+				authFormVisible: false,
+				authLoading: false,
+				authForm: {},
+				authFormRules: {},
+				menuAuthOptions:[],
+				loginAuthOptions:[],
+				userAuthOptions:[],
+				groupAuthOptions:[],
 				
 				user: ''
 			}
@@ -103,6 +158,30 @@ var myvue = new Vue({
 						self.groupOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.groupOptions.push({name: res.data[i].sGroup_Name, value: res.data[i].sGroup_ID});
+						}
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleMenuAuthOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(menuAuthUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.menuAuthOptions = [];
+						self.groupAuthOptions = [];
+						for (var i = 0; i < res.data.length; i++) {
+							var node = Object.assign({}, res.data[i]);
+							node.lenItem = [];
+							node.parray = [];
+							node.disabled = false;
+							node.checkAll = false;
+							node.isIndeterminate = false;
+							node.checked = [];
+							self.menuAuthOptions.push(Object.assign({}, node));
+							self.groupAuthOptions.push(Object.assign({}, node));
 						}
 						if(typeof cb == 'function'){
 							cb();
@@ -240,6 +319,184 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//pwd
+			handleResetPWD: function (index, row) {
+				this.pwdFormVisible = true;
+				this.pwdForm = {
+						sUser_ID: row.sUser_ID
+				};
+			},
+			pwdClose: function () {
+				this.pwdFormVisible = false;
+				this.pwdLoading = false;
+				this.$refs.pwdForm.resetFields();
+			},
+			pwdSubmit: function () {
+				this.$refs.pwdForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认重置该用户的密码吗?', '提示', {}).then(() => {
+							var self = this;
+							this.pwdLoading = true;
+							var params = Object.assign({}, this.pwdForm);
+							ajaxReq(resetPwdUrl, params, function(res){
+								self.pwdLoading = false;
+								self.handleResOperate(res, function(){
+									self.pwdFormVisible = false;
+									self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
+			//auth
+			handleGroupAuth: function (sGroup_ID) {
+				var params = {
+						sGroup_ID: sGroup_ID
+				};
+				var self = this;
+				ajaxReq(getGroupAuthUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < self.groupAuthOptions.length; i++) {
+							var node = self.groupAuthOptions[i];
+							var array = [];
+							//array.push(node.sMenu_Name);
+							self.findParent(node, array);
+							node.parray = array;
+							node.disabled = true;
+							//可用子集
+							var lenItem = []; 
+							for (var j = 0; j < node.children.length; j++) {
+								if(node.children[j].lMFun_StatusFlag){
+									lenItem.push(node.children[j].sMFun_ID);
+								}
+							}
+							node.lenItem = lenItem;
+							node.checkAll = true;
+							node.isIndeterminate = false;
+							node.checked = [];
+							//默认选中
+							for (var j = 0; j < res.data.length; j++) {
+								let menuID = res.data[j].sGroupMenu_MenuID;
+								if(menuID == node.sMenu_ID){
+									node.checked = res.data[j].sGroupMenu_MenuFunID.split(",");
+									let cdata = node.checked;
+									node.checkAll = node.lenItem.length === cdata.length;
+									node.isIndeterminate = cdata.length > 0 && cdata.length < node.lenItem.length;
+									break;
+								}
+							}
+						}
+						console.log( self.groupAuthOptions);
+					});
+				});
+			},
+			handleAuth: function (index, row) {
+				this.handleGroupAuth(row.sUser_GroupID);
+				var params = {
+						sUser_ID: row.sUser_ID
+				};
+				var self = this;
+				self.authFormVisible = true;
+				ajaxReq(getAuthUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.authForm = {
+								sUser_ID: row.sUser_ID
+						};
+						for (var i = 0; i < self.menuAuthOptions.length; i++) {
+							var node = self.menuAuthOptions[i];
+							var array = [];
+							//array.push(node.sMenu_Name);
+							self.findParent(node, array);
+							node.parray = array;
+							node.disabled = node.lMenu_StatusFlag ? false : true;
+							//可用子集
+							var lenItem = []; 
+							for (var j = 0; j < node.children.length; j++) {
+								if(node.children[j].lMFun_StatusFlag){
+									lenItem.push(node.children[j].sMFun_ID);
+								}
+							}
+							node.lenItem = lenItem;
+							node.checkAll = false;
+							node.isIndeterminate = false;
+					        
+							self.$set(self.authForm, node.sMenu_ID, []);
+						}
+						//默认选中
+						for (var i = 0; i < res.data.length; i++) {
+							let menuID = res.data[i].sUserMenu_MenuID;
+							self.authForm[menuID] = res.data[i].sUserMenu_MenuFunID.split(",");
+							//默认选中状态
+							for (var j = 0; j < self.menuAuthOptions.length; j++) {
+								var node = self.menuAuthOptions[j];
+								if(menuID == node.sMenu_ID){
+									let cdata = self.authForm[node.sMenu_ID];
+									node.checkAll = node.lenItem.length === cdata.length;
+									node.isIndeterminate = cdata.length > 0 && cdata.length < node.lenItem.length;
+									break;
+								}
+							}
+						}
+						
+					});
+				});
+			},
+			findParent: function(node, array){
+				var parent = node.parent;
+				for (var i = 0; i < parent.length; i++) {
+					array.unshift(parent[i].sMenu_Name);
+					this.findParent(parent[i], array);
+				}
+			},
+			stopClick: function(){
+				$(".auth_label").click(function(event){
+		            alert("stopClick");
+		            event.stopPropagation();    //  阻止事件冒泡
+		            return false
+		        });
+			},
+			handleCheckAllChange: function(val, item){
+				this.authForm[item.sMenu_ID] = val ? item.lenItem : [];
+				item.isIndeterminate = false;
+			},
+			handleCheckedChange(val, item) {
+		        let checkedCount = val.length;
+		        item.checkAll = checkedCount === item.lenItem.length;
+		        item.isIndeterminate = checkedCount > 0 && checkedCount < item.lenItem.length;
+				this.menuAuthOptions = Object.assign({}, this.menuAuthOptions);
+		    },
+			authClose: function () {
+				this.authFormVisible = false;
+				this.authLoading = false;
+				this.$refs.authForm.resetFields();
+			},
+			authSubmit: function () {
+				this.$refs.authForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.authLoading = true;
+							var params = Object.assign({}, this.authForm);
+							for ( var key in params) {
+								if(key == 'sGroup_ID'){
+									continue;
+								}
+								params[key] = params[key].join(",");
+							}
+							ajaxReq(modAuthUrl, params, function(res){
+								self.authLoading = false;
+								self.handleResOperate(res, function(){
+									self.authFormVisible = false;
+									self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
 			//excel
 			getExcel: function(){
 				
@@ -306,6 +563,7 @@ var myvue = new Vue({
 	  		}
 			this.preloading = true;
 			this.handleGroupOptions();
+			this.handleMenuAuthOptions();
 			this.getList();
 		}
 	  });

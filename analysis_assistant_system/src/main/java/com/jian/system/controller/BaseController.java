@@ -37,6 +37,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 		user = new User();
 		user.setsUser_ID("22");
 		user.setsUser_Nick("33333");
+		user.setsUser_GroupID("1");
 		return user;
 	}
 	

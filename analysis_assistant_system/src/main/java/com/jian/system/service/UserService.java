@@ -40,6 +40,10 @@ public class UserService extends BaseService<User, UserMapper> {
 		if(!superGroupId.equals(user.getsUser_GroupID()) && superGroupId.equals(obj.getsUser_GroupID())) {
 			throw new ServiceException(Tips.ERROR101, "非超级用户组，不可创建用户到超级用户组。");
 		}
+		//检查密码复杂度
+		if(!checkPWD(obj.getsUser_PassWord())) {
+			throw new ServiceException(Tips.ERROR101, "密码不符合要求。");
+		}
 		//保存
 		obj.setsUser_ID(Utils.newSnowflakeIdStr());
 		obj.setsUser_PassWord(Tools.md5(obj.getsUser_PassWord())); //md5
@@ -123,5 +127,51 @@ public class UserService extends BaseService<User, UserMapper> {
 		return baseMapper.delete(tableName, condition);
 	}
 
+	@TargetDataSource
+	public int changePWD(String oldPwd, String newPwd, String sUser_ID) {
+		String tableName =  getTableName();
+		
+		Map<String, Object> condition = MapTools.custom().put("sUser_ID", sUser_ID).build();
+		User test = baseMapper.selectOne(tableName, condition);
+		//判断用户
+		if(test == null){
+			throw new ServiceException(Tips.ERROR102, "用户不存在。");
+		}
+		//判断密码
+		if(!test.getsUser_PassWord().equals(Tools.md5(oldPwd))){
+			throw new ServiceException(Tips.ERROR102, "原密码不正确。");
+		}
+		//检查密码复杂度
+		if(!checkPWD(newPwd)) {
+			throw new ServiceException(Tips.ERROR102, "密码不符合要求。");
+		}
+		Map<String, Object> value = MapTools.custom().put("sUser_PassWord", Tools.md5(newPwd)).build();
+		return baseMapper.update(tableName, value, condition);
+	}
+	
 
+	@TargetDataSource
+	public int resetPWD(String sUser_ID, String sUser_PassWord) {
+		String tableName =  getTableName();
+		
+		Map<String, Object> condition = MapTools.custom().put("sUser_ID", sUser_ID).build();
+		User test = baseMapper.selectOne(tableName, condition);
+		//判断用户
+		if(test == null){
+			throw new ServiceException(Tips.ERROR102, "用户不存在。");
+		}
+		//检查密码复杂度
+		if(!checkPWD(sUser_PassWord)) {
+			throw new ServiceException(Tips.ERROR102, "密码不符合要求。");
+		}
+		Map<String, Object> value = MapTools.custom().put("sUser_PassWord", Tools.md5(sUser_PassWord)).build();
+		return baseMapper.update(tableName, value, condition);
+	}
+	
+	
+	public boolean checkPWD(String pwd) {
+		
+		return true;
+	}
+	
 }
