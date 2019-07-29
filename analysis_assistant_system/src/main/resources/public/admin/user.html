@@ -104,7 +104,7 @@
 					</el-table-column>
 					<el-table-column label="用户组" prop="sUser_GroupID" :formatter="groupFormatter">
 					</el-table-column>
-					<el-table-column label="状态" prop="lUser_StatusFlag" :formatter="(r,c) => {return r.lUser_StatusFlag ? '' : '禁用';}">
+					<el-table-column label="状态" prop="lUser_StatusFlag" :formatter="(r,c) => {return r.lUser_StatusFlag ? '启用' : '禁用';}">
 					</el-table-column>
 					<el-table-column label="QQ" prop="sUser_QQ">
 					</el-table-column>
