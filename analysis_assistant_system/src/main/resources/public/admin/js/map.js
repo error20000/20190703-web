@@ -104,13 +104,39 @@ var myvue = new Vue({
 
 				console.log(this.addForm.sApp_NO);
 			},
-			handleSizeChange: function (val) {
-				this.rows = val;
-				this.getList();
-			},
-			handleCurrentChange: function (val) {
-				this.page = val;
-				this.getList();
+			initMap: function(){
+				 require([
+				      "esri/Map",
+				      "esri/views/MapView",
+				      "esri/layers/MapImageLayer"
+				    ], function(Map, MapView, MapImageLayer) {
+
+					 ArGis.map = new Map({
+				        basemap: "streets"
+				      });
+				      
+					 ArGis.layer = new MapImageLayer({
+				        url: "http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"
+				      });
+				      
+					 ArGis.map.add(ArGis.layer);
+
+					 ArGis.view = new MapView({
+				        container: "mapView",
+				        map: ArGis.map,
+				        center: ArGis.center,
+				        zoom: ArGis.zoom
+				      });
+				      
+				      /* view.on("mouse-wheel", function(evt){
+				    	  evt.stopPropagation ();
+				   	  }); */
+					 
+					 ArGis.view.on("click", function(evt){
+							console.log(evt);
+					 });
+
+				 });
 			},
 			query:function(){
 				this.page = 1;
@@ -304,7 +330,7 @@ var myvue = new Vue({
 	  		}
 			this.preloading = true;
 			this.handleUserOptions();
-			this.getList();
+			this.initMap();
 		}
 	  });
 	
