@@ -81,6 +81,9 @@ new Vue({
 			case 642:
 				url = 'user.html';
 				break;
+			case 63:
+				url = 'app.html';
+				break;
 				
 			default:
 				break;

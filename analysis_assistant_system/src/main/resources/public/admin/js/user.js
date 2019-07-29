@@ -131,6 +131,14 @@ var myvue = new Vue({
 				loginAuthOptions:[],
 				userAuthOptions:[],
 				groupAuthOptions:[],
+				userAuthWidthChange: false,
+				userAuthWidthName: '展开>>',
+				leftClassObject: {
+					large: false
+				},
+				rightClassObject: {
+					small: false
+				},
 				
 				user: ''
 			}
@@ -361,34 +369,32 @@ var myvue = new Vue({
 						for (var i = 0; i < self.groupAuthOptions.length; i++) {
 							var node = self.groupAuthOptions[i];
 							var array = [];
-							//array.push(node.sMenu_Name);
+							array.push(node.sMenu_Name);
 							self.findParent(node, array);
 							node.parray = array;
 							node.disabled = true;
-							//可用子集
-							var lenItem = []; 
-							for (var j = 0; j < node.children.length; j++) {
-								if(node.children[j].lMFun_StatusFlag){
-									lenItem.push(node.children[j].sMFun_ID);
-								}
-							}
-							node.lenItem = lenItem;
-							node.checkAll = true;
-							node.isIndeterminate = false;
-							node.checked = [];
 							//默认选中
+							var lenItem = []; 
 							for (var j = 0; j < res.data.length; j++) {
 								let menuID = res.data[j].sGroupMenu_MenuID;
 								if(menuID == node.sMenu_ID){
 									node.checked = res.data[j].sGroupMenu_MenuFunID.split(",");
-									let cdata = node.checked;
-									node.checkAll = node.lenItem.length === cdata.length;
-									node.isIndeterminate = cdata.length > 0 && cdata.length < node.lenItem.length;
+									//只显示选中项
+									for (var m = 0; m < node.checked.length; m++) {
+										for (var k = 0; k < node.children.length; k++) {
+											if(node.children[k].sMFun_ID == node.checked[m]){
+												lenItem.push(node.children[k]);
+											}
+										}
+										
+									}
 									break;
 								}
 							}
+							node.lenItem = lenItem;
+							
 						}
-						console.log( self.groupAuthOptions);
+						
 					});
 				});
 			},
@@ -457,6 +463,21 @@ var myvue = new Vue({
 		            return false
 		        });
 			},
+			handleChangeWidth: function(){
+				this.userAuthWidthChange = !this.userAuthWidthChange;
+				if(this.userAuthWidthChange){
+					this.userAuthWidthName = '收起<<';
+					this.leftClassObject.large = true;
+					this.rightClassObject.small = true;
+				}else{
+					this.userAuthWidthName = '展开>>';
+					this.leftClassObject.large = false;
+					var self = this;
+					setTimeout(function(){
+						self.rightClassObject.small = false;
+					}, 500);
+				}
+			},
 			handleCheckAllChange: function(val, item){
 				this.authForm[item.sMenu_ID] = val ? item.lenItem : [];
 				item.isIndeterminate = false;
@@ -465,7 +486,6 @@ var myvue = new Vue({
 		        let checkedCount = val.length;
 		        item.checkAll = checkedCount === item.lenItem.length;
 		        item.isIndeterminate = checkedCount > 0 && checkedCount < item.lenItem.length;
-				this.menuAuthOptions = Object.assign({}, this.menuAuthOptions);
 		    },
 			authClose: function () {
 				this.authFormVisible = false;
@@ -480,7 +500,7 @@ var myvue = new Vue({
 							this.authLoading = true;
 							var params = Object.assign({}, this.authForm);
 							for ( var key in params) {
-								if(key == 'sGroup_ID'){
+								if(key == 'sUser_ID'){
 									continue;
 								}
 								params[key] = params[key].join(",");

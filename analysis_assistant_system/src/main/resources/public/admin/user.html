@@ -28,6 +28,15 @@
 	    width: 500px;
 	    display: inline-block;
 	  }
+	  .box-card.large {
+	    width: 100%;
+	  }
+	  .box-card.small {
+	    display: none;
+	  }
+	  .el-breadcrumb {
+	    height: 20px;
+	  }
 </style>
 </head>
 <body class="animated fadeIn">
@@ -248,12 +257,12 @@
 		
 		
 		<!-- auth -->
-		<el-dialog width="90%" title="授权" :visible.sync="authFormVisible" :close-on-click-modal="false" >
+		<el-dialog width="1100px" title="授权" :visible.sync="authFormVisible" :close-on-click-modal="false" >
 			
-			<!-- <el-card class="box-card" style="float: left;">
+			<el-card class="box-card" style="float: left;" :class="leftClassObject">
 			  <div slot="header" class="clearfix">
 			    <span>用户权限</span>
-			    <el-button style="float: right; padding: 3px 0" type="text">展开>></el-button>
+			    <el-button style="float: right; padding: 3px 0" type="text" @click="handleChangeWidth">{{userAuthWidthName}}</el-button>
 			  </div>
 			  <el-form size="mini" label-position="top" :model="authForm" :rules="authFormRules" ref="authForm" label-width="120px">
 				  <el-form-item v-for="(menuAuth, index) in menuAuthOptions" :key="index" >
@@ -273,24 +282,24 @@
 				    </el-checkbox-group>
 				  </el-form-item>
 				</el-form>
-			</el-card> -->
+			</el-card>
 			
-			<el-card class="box-card" style="float: right;">
+			<el-card class="box-card" style="float: right;" :class="rightClassObject">
 			  <div slot="header" class="clearfix">
-			    <span>用户组权限</span>
+			    <span>用户组权限（仅查看）</span>
 			  </div>
 			  <el-form size="mini" label-position="top"  label-width="120px">
 				  <el-form-item v-for="(menuAuth, index) in groupAuthOptions" :key="index" >
 				  	<div slot="label" >
 				  		<el-breadcrumb separator="/">
 						  	<el-breadcrumb-item v-for="(item, index2) in menuAuth.parray">{{item}}</el-breadcrumb-item>
-				  			{{menuAuth.sMenu_Name}}&nbsp;&nbsp;
-					  		<el-checkbox :disabled="menuAuth.disabled" :indeterminate="menuAuth.isIndeterminate" v-model="menuAuth.checkAll" >全选</el-checkbox>
+				  			<!-- {{menuAuth.sMenu_Name}}&nbsp;&nbsp;
+					  		<el-checkbox :disabled="menuAuth.disabled" :indeterminate="menuAuth.isIndeterminate" v-model="menuAuth.checkAll" >全选</el-checkbox> -->
 						</el-breadcrumb>
 				  	</div>
 				  	<!-- <div style="margin: 15px 0;"></div> -->
 				    <el-checkbox-group v-model="menuAuth.checked" >
-				    	<template v-for="(item, index2) in menuAuth.children">
+				    	<template v-for="(item, index2) in menuAuth.lenItem">
 						    <el-tooltip class="item" effect="dark" :content="item.sMFun_Describe" placement="top">
 					    		<el-checkbox border :label="item.sMFun_ID" :disabled="menuAuth.disabled ">{{item.sMFun_Name}}</el-checkbox>
 			    			</el-tooltip>
@@ -299,6 +308,7 @@
 				  </el-form-item>
 				</el-form>
 			</el-card>
+			
 			<div class="clearfix"></div>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="authClose">取消</el-button>
