@@ -8,6 +8,7 @@ var oneUrl = baseUrl + "api/aid/findOne";
 var excelUrl = baseUrl + "api/aid/excel";
 var importUrl = baseUrl + "api/aid/import";
 var nfcUrl = baseUrl + "api/nfc/unbind";
+var nfcAllUrl = baseUrl + "api/nfc/findAll";
 var bindUrl = baseUrl + "api/aid/bind";
 var delBindUrl = baseUrl + "api/aid/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
@@ -42,6 +43,9 @@ var myvue = new Vue({
 				lightOptions: [],
 				markDictNo: 'AidMark',
 				markOptions: [],
+				iconDictNo: 'AidIcon',
+				iconOptions: [],
+				nfcOptions: [],
 				
 				//add
 				addFormVisible: false,
@@ -89,8 +93,8 @@ var myvue = new Vue({
 				var name = row.sAid_Type;
 				for (var i = 0; i < this.aidTypeOptions.length; i++) {
 					var item = this.aidTypeOptions[i];
-					if(row.sAid_Type == item.value){
-						name = item.name;
+					if(row.sAid_Type == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
@@ -100,8 +104,8 @@ var myvue = new Vue({
 				var name = row.sAid_Station;
 				for (var i = 0; i < this.stationOptions.length; i++) {
 					var item = this.stationOptions[i];
-					if(row.sAid_Station == item.value){
-						name = item.name;
+					if(row.sAid_Station == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
@@ -111,8 +115,8 @@ var myvue = new Vue({
 				var name = row.sAid_Lighting;
 				for (var i = 0; i < this.lightOptions.length; i++) {
 					var item = this.lightOptions[i];
-					if(row.sAid_Lighting == item.value){
-						name = item.name;
+					if(row.sAid_Lighting == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
@@ -122,8 +126,8 @@ var myvue = new Vue({
 				var name = row.sAid_Mark;
 				for (var i = 0; i < this.markOptions.length; i++) {
 					var item = this.markOptions[i];
-					if(row.sAid_Mark == item.value){
-						name = item.name;
+					if(row.sAid_Mark == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
@@ -134,10 +138,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
 					self.handleResQuery(res, function(){
-						self.aidTypeOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.aidTypeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.aidTypeOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -149,10 +150,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
 					self.handleResQuery(res, function(){
-						self.stationOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.stationOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -164,10 +162,7 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
 					self.handleResQuery(res, function(){
-						self.lightOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO, desc: res.data[i].sDict_Describe});
-						}
+						self.lightOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -179,10 +174,53 @@ var myvue = new Vue({
 				var params = {};
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
 					self.handleResQuery(res, function(){
-						self.markOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.markOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+						self.markOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
 						}
+					});
+				});
+			},
+			iconFormatter: function(row){
+				var name = row.sAid_Icon;
+				for (var i = 0; i < this.iconOptions.length; i++) {
+					var item = this.iconOptions[i];
+					if(row.sAid_Icon == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleIconOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.iconDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.iconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			nfcFormatter: function(row){
+				var name = row.sAid_NfcID;
+				for (var i = 0; i < this.nfcOptions.length; i++) {
+					var item = this.nfcOptions[i];
+					if(row.sAid_NfcID == item.sNfc_ID){
+						name = item.sNfc_NO;
+						break
+					}
+				}
+				return name;
+			},
+			handleNfcOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(nfcAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.nfcOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -447,8 +485,10 @@ var myvue = new Vue({
 			this.preloading = true;
 			this.handleAidTypeOptions();
 			this.handleStationOptions();
+			this.handleIconOptions();
 			this.handleLightOptions();
 			this.handleMarkOptions();
+			this.handleNfcOptions();
 			this.getList();
 		}
 	  });

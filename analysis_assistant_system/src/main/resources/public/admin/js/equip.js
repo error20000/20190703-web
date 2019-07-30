@@ -8,6 +8,7 @@ var oneUrl = baseUrl + "api/equip/findOne";
 var excelUrl = baseUrl + "api/equip/excel";
 var importUrl = baseUrl + "api/equip/import";
 var nfcUrl = baseUrl + "api/nfc/unbind";
+var nfcAllUrl = baseUrl + "api/nfc/findAll";
 var bindUrl = baseUrl + "api/equip/bind";
 var delBindUrl = baseUrl + "api/equip/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
@@ -40,10 +41,11 @@ var myvue = new Vue({
 		          label: 'sStore_Name',
 		          children: 'children'
 		        },
-				statusDictNo: '',
+				statusDictNo: 'EquipStatus',
 				statusOptions: [],
-				typeDictNo: '',
+				typeDictNo: 'EquipType',
 				typeOptions: [],
+				nfcOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -103,10 +105,7 @@ var myvue = new Vue({
 				var params = {sDict_DictTypeNO: this.statusDictNo};
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.statusOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.statusOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.statusOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -129,10 +128,7 @@ var myvue = new Vue({
 				var params = {sDict_DictTypeNO: this.statusDictNo};
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.typeOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.typeOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.typeOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -156,6 +152,29 @@ var myvue = new Vue({
 				ajaxReq(storeUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.storeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			nfcFormatter: function(row){
+				var name = row.sEquip_NfcID;
+				for (var i = 0; i < this.nfcOptions.length; i++) {
+					var item = this.nfcOptions[i];
+					if(row.sEquip_NfcID == item.sNfc_ID){
+						name = item.sNfc_NO;
+						break
+					}
+				}
+				return name;
+			},
+			handleNfcOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(nfcAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.nfcOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -443,6 +462,7 @@ var myvue = new Vue({
 			this.preloading = true;
 			this.handleStatusOptions();
 			this.handleTypeOptions();
+			this.handleNfcOptions();
 			this.handleStoreOptions(this.getList);
 		}
 	  });

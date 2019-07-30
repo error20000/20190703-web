@@ -9,6 +9,7 @@ var excelUrl = baseUrl + "api/dict/excel";
 var importUrl = baseUrl + "api/dict/import";
 var userUrl = baseUrl + "api/user/findAll";
 var dictTypeUrl = baseUrl + "api/dictType/findAll";
+var uploadImgUrl = baseUrl + "api/file/uploadImg";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -33,6 +34,7 @@ var myvue = new Vue({
 				
 				dictTypeOptions: [],
 				userOptions: [],
+				uploadImgUrl: uploadImgUrl,
 
 				//add
 				addFormVisible: false,
@@ -126,6 +128,12 @@ var myvue = new Vue({
 					});
 				});
 			},
+			handleFileUpload: function(res, file, obj, key){
+				var self = this;
+				this.handleResQuery(res, function(){
+					self[obj][key] = res.data.path;
+				});
+			},
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -175,7 +183,14 @@ var myvue = new Vue({
 			//add
 			handleAdd: function(){
 				this.addFormVisible = true;
-				this.addForm = {};
+				this.addForm = {
+					sDict_NO: '',
+					sDict_Name: '',
+					sDict_DictTypeNO: '',
+					sDict_Describe: '',
+					sDict_Picture: '',
+					sDict_Link: ''
+				};
 			},
 			addClose: function () {
 				this.addFormVisible = false;

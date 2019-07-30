@@ -39,9 +39,9 @@
 					    <el-select v-model="filters.sEquip_Status" placeholder="请选择状态">
 						    <el-option
 						      v-for="item in statusOptions"
-						      :key="item.value"
-						      :label="item.name"
-						      :value="item.value">
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
@@ -73,10 +73,18 @@
 					<el-table-column label="器材名称" prop="sEquip_Name" width="120" fixed="left">
 					</el-table-column>
 					<el-table-column label="NFC标签" prop="sEquip_NfcID" >
+						<template scope="scope">
+					        <el-popover trigger="hover" placement="top" v-for="item in nfcOptions" v-if="scope.row.sEquip_NfcID == item.sNfc_ID">
+					          <p>名称: {{ item.sNfc_Name }}</p>
+					          <div slot="reference" class="name-wrapper">
+					            <el-tag size="mini">{{ item.sNfc_NO }}</el-tag>
+					          </div>
+					        </el-popover>
+					     </template>
 					</el-table-column>
-					<el-table-column label="状态" prop="sEquip_Status" >
+					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter">
 					</el-table-column>
-					<el-table-column label="器材种类" prop="sEquip_Type">
+					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter">
 					</el-table-column>
 					<el-table-column label="所属航标" prop="sEquip_AidID" >
 					</el-table-column>

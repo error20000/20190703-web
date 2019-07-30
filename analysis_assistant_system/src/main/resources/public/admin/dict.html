@@ -73,6 +73,11 @@
 					<el-table-column label="字典描述" prop="sDict_Describe">
 					</el-table-column>
 					<el-table-column label="字典图片" prop="sDict_Picture">
+						<template scope="scope">
+							<div style="width: 45px; height: 45px;">
+								<img v-if="scope.row.sDict_Picture" :src="'/'+scope.row.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>
+							</div>
+						</template>
 					</el-table-column>
 					<el-table-column label="字典链接" prop="sDict_Link">
 					</el-table-column>
@@ -121,6 +126,19 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
+			  <el-form-item label="字典图片" prop="sDict_Picture">
+			    <el-input v-model="addForm.sDict_Picture">
+			    	<el-upload slot="append"
+					  :action="uploadImgUrl"
+					  :on-success="function(res, file){return handleFileUpload(res, file, 'addForm', 'sDict_Picture');}"
+					  :show-file-list="false">
+					  <el-button icon="el-icon-upload" title="上传"></el-button>
+					</el-upload>
+			    </el-input>
+			  </el-form-item>
+			  <el-form-item label="字典链接" prop="sDict_Link">
+			    <el-input v-model="addForm.sDict_Link"></el-input>
+			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="addClose">取消</el-button>
@@ -146,6 +164,19 @@
 				      :value="item.value">
 				    </el-option>
 			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="字典图片" prop="sDict_Picture">
+			    <el-input v-model="editForm.sDict_Picture">
+			    	<el-upload slot="append"
+					  :action="uploadImgUrl"
+					  :on-success="function(res, file){return handleFileUpload(res, file, 'editForm', 'sDict_Picture');}"
+					  :show-file-list="false">
+					  <el-button icon="el-icon-upload" title="上传"></el-button>
+					</el-upload>
+			    </el-input>
+			  </el-form-item>
+			  <el-form-item label="字典链接" prop="sDict_Link">
+			    <el-input v-model="editForm.sDict_Link"></el-input>
 			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

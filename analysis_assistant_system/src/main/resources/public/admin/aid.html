@@ -43,9 +43,9 @@
 					    <el-select v-model="filters.sAid_Type" placeholder="航标种类">
 						    <el-option
 						      v-for="item in aidTypeOptions"
-						      :key="item.value"
-						      :label="item.name"
-						      :value="item.value">
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
@@ -53,9 +53,9 @@
 					    <el-select v-model="filters.sAid_Station" placeholder="归属航标站">
 						    <el-option
 						      v-for="item in stationOptions"
-						      :key="item.value"
-						      :label="item.name"
-						      :value="item.value">
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
@@ -87,6 +87,14 @@
 					<el-table-column label="航标名称" prop="sAid_Name" fixed="left">
 					</el-table-column>
 					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
+						<template scope="scope">
+					        <el-popover trigger="hover" placement="top" v-for="item in nfcOptions" v-if="scope.row.sAid_NfcID == item.sNfc_ID">
+					          <p>名称: {{ item.sNfc_Name }}</p>
+					          <div slot="reference" class="name-wrapper">
+					            <el-tag size="mini">{{ item.sNfc_NO }}</el-tag>
+					          </div>
+					        </el-popover>
+					     </template>
 					</el-table-column>
 					<el-table-column label="纬度" prop="lAid_Lat" >
 					</el-table-column>
@@ -97,6 +105,11 @@
 					<el-table-column label="航标种类" prop="sAid_Type" :formatter="aidTypeFormatter">
 					</el-table-column>
 					<el-table-column label="航标图标" prop="sAid_Icon">
+						<template scope="scope">
+							<div style="width: 45px; height: 45px;" v-for="item in iconOptions" v-if="scope.row.sAid_Icon == item.sDict_NO">
+								<img v-if="item.sDict_Picture" :src="'/'+item.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>
+							</div>
+						</template>
 					</el-table-column>
 					<el-table-column label="灯质明灭" prop="sAid_Lighting" :formatter="lightFormatter">
 					</el-table-column>
@@ -162,9 +175,9 @@
 			    <el-select v-model="addForm.sAid_Station" placeholder="请选择归属航标站">
 				    <el-option
 				      v-for="item in stationOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -188,9 +201,19 @@
 			    <el-select v-model="addForm.sAid_Type" placeholder="请选择航标种类">
 				    <el-option
 				      v-for="item in aidTypeOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标图标" prop="sAid_Icon">
+			    <el-select v-model="addForm.sAid_Icon" placeholder="请选择航标图标">
+				    <el-option
+				      v-for="item in iconOptions"
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -198,11 +221,11 @@
 			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
-				      <span class="item_left">{{ item.name }}</span>
-      				  <span class="item_right">{{ item.desc }}</span>
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				      <span class="item_left">{{ item.sDict_Name }}</span>
+      				  <span class="item_right">{{ item.sDict_Describe }}</span>
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -210,9 +233,9 @@
 			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标设置">
 				    <el-option
 				      v-for="item in markOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -242,9 +265,9 @@
 			    <el-select v-model="editForm.sAid_Station" placeholder="请选择归属航标站">
 				    <el-option
 				      v-for="item in stationOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -268,9 +291,19 @@
 			    <el-select v-model="editForm.sAid_Type" placeholder="请选择航标种类">
 				    <el-option
 				      v-for="item in aidTypeOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="航标图标" prop="sAid_Icon">
+			    <el-select v-model="editForm.sAid_Icon" placeholder="请选择航标图标">
+				    <el-option
+				      v-for="item in iconOptions"
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -278,11 +311,11 @@
 			    <el-select v-model="editForm.sAid_Lighting" placeholder="请选择灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
-				      <span class="item_left">{{ item.name }}</span>
-      				  <span class="item_right">{{ item.desc }}</span>
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				      <span class="item_left">{{ item.sDict_Name }}</span>
+      				  <span class="item_right">{{ item.sDict_Describe }}</span>
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -290,9 +323,9 @@
 			    <el-select v-model="editForm.sAid_Mark" placeholder="请选择航标设置">
 				    <el-option
 				      v-for="item in markOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
