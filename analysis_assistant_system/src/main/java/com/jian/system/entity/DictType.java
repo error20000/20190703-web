@@ -25,6 +25,8 @@ public class DictType extends Base<DictType> {
 	private Date dDictType_UpdateDate;
 	@Excel(name="更新人ID", sort=0, length="32", isNull=1 )
 	private String sDictType_UpdateUserID;
+	@Excel(name="系统默认  0：否，1：是", sort=0, length="10", isNull=1 )
+	private int lDictType_SysFlag;
 	
 
 	public String getsDictType_ID() {
@@ -68,6 +70,12 @@ public class DictType extends Base<DictType> {
 	}
 	public void setsDictType_UpdateUserID(String sDictType_UpdateUserID) {
 		this.sDictType_UpdateUserID = sDictType_UpdateUserID;
+	}
+	public int getlDictType_SysFlag() {
+		return lDictType_SysFlag;
+	}
+	public void setlDictType_SysFlag(int lDictType_SysFlag) {
+		this.lDictType_SysFlag = lDictType_SysFlag;
 	}
 	
 	

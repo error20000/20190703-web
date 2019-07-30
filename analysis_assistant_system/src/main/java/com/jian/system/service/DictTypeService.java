@@ -81,6 +81,21 @@ public class DictTypeService extends BaseService<DictType, DictTypeMapper> {
 		return baseMapper.update(tableName, value, condition);
 	}
 
-
+	@Override
+	@TargetDataSource
+	public int delete(Map<String, Object> condition, User user) {
+		String tableName =  getTableName();
+		//判断用户
+		if(user == null) {
+			throw new ServiceException(Tips.ERROR104, "user is null");
+		}
+		//判断系统默认，不能删除
+		DictType old = baseMapper.selectOne(tableName, condition);
+		if(old.getlDictType_SysFlag() == 1) {
+			throw new ServiceException(Tips.ERROR104, "系统默认，不可删除。");
+		}
+		
+		return baseMapper.delete(tableName, condition);
+	}
 
 }

@@ -105,6 +105,7 @@ var myvue = new Vue({
 				console.log(this.addForm.sApp_NO);
 			},
 			initMap: function(){
+				var self = this;
 				 require([
 				      "esri/Map",
 				      "esri/views/MapView",
@@ -134,6 +135,12 @@ var myvue = new Vue({
 					 
 					 ArGis.view.on("click", function(evt){
 							console.log(evt);
+							console.log(self);
+							self.handleDetail();
+							//ArGis.view.ui.add(self.$el, "top-right");
+							/*watchUtils.watch(view, "camera", function() {
+							    info.camera = view.camera;
+							});*/
 					 });
 
 				 });
@@ -176,8 +183,15 @@ var myvue = new Vue({
 				this.getList();
 			},
 			//add
-			handleAdd: function(){
-				this.addFormVisible = true;
+			handleDetail: function(){
+				
+				for (var i = 0; i < this.$children.length; i++) {
+					var id = this.$children[i].$attrs.id;
+					if(id == "details"){
+						ArGis.view.ui.add(this.$children[i].$el, "top-right");
+					}
+				}
+				//this.addFormVisible = true;
 				this.addForm = {
 					sApp_NO: '',
 					sApp_Name: '',

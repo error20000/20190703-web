@@ -70,6 +70,12 @@
 					</el-table-column>
 					<el-table-column label="所属分类" prop="sDict_DictTypeNO" :formatter="dictTypeFormatter">
 					</el-table-column>
+					<el-table-column label="字典描述" prop="sDict_Describe">
+					</el-table-column>
+					<el-table-column label="字典图片" prop="sDict_Picture">
+					</el-table-column>
+					<el-table-column label="字典链接" prop="sDict_Link">
+					</el-table-column>
 					<el-table-column label="创建日期" prop="dDict_CreateDate" :formatter="(r,c) => {return formatDate(r.dDict_CreateDate);}">
 					</el-table-column>
 					<el-table-column label="创建者" prop="sDict_UserID" :formatter="userAddFormatter">

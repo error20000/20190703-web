@@ -27,7 +27,16 @@ public class Dict extends Base<Dict> {
 	private Date dDict_UpdateDate;
 	@Excel(name="更新人ID", sort=0, length="32", isNull=1 )
 	private String sDict_UpdateUserID;
+	@Excel(name="系统默认  0：否，1：是", sort=0, length="10", isNull=1 )
+	private int lDict_SysFlag;
+	@Excel(name="字典描述", sort=0, length="255", isNull=1 )
+	private String sDict_Describe;
+	@Excel(name="字典图片", sort=0, length="255", isNull=1 )
+	private String sDict_Picture;
+	@Excel(name="字典链接", sort=0, length="255", isNull=1 )
+	private String sDict_Link;
 	
+
 
 	public String getsDict_ID() {
 		return sDict_ID;
@@ -76,6 +85,30 @@ public class Dict extends Base<Dict> {
 	}
 	public void setsDict_UpdateUserID(String sDict_UpdateUserID) {
 		this.sDict_UpdateUserID = sDict_UpdateUserID;
+	}
+	public int getlDict_SysFlag() {
+		return lDict_SysFlag;
+	}
+	public void setlDict_SysFlag(int lDict_SysFlag) {
+		this.lDict_SysFlag = lDict_SysFlag;
+	}
+	public String getsDict_Describe() {
+		return sDict_Describe;
+	}
+	public void setsDict_Describe(String sDict_Describe) {
+		this.sDict_Describe = sDict_Describe;
+	}
+	public String getsDict_Picture() {
+		return sDict_Picture;
+	}
+	public void setsDict_Picture(String sDict_Picture) {
+		this.sDict_Picture = sDict_Picture;
+	}
+	public String getsDict_Link() {
+		return sDict_Link;
+	}
+	public void setsDict_Link(String sDict_Link) {
+		this.sDict_Link = sDict_Link;
 	}
 	
 	

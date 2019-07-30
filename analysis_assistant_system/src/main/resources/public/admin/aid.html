@@ -6,6 +6,17 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
+  <style type="text/css">
+  	.item_left{
+  		float: left; 
+  		margin-right: 10px;
+  	}
+  	.item_right{
+  		float: right; 
+  		color: #cccccc; 
+  		font-size: 12px;
+  	}
+  </style>
 </head>
 <body class="animated fadeIn">
   <div id="app">
@@ -190,6 +201,8 @@
 				      :key="item.value"
 				      :label="item.name"
 				      :value="item.value">
+				      <span class="item_left">{{ item.name }}</span>
+      				  <span class="item_right">{{ item.desc }}</span>
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -262,17 +275,19 @@
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
-			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质明灭">
+			    <el-select v-model="editForm.sAid_Lighting" placeholder="请选择灯质明灭">
 				    <el-option
 				      v-for="item in lightOptions"
 				      :key="item.value"
 				      :label="item.name"
 				      :value="item.value">
+				      <span class="item_left">{{ item.name }}</span>
+      				  <span class="item_right">{{ item.desc }}</span>
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
 			  <el-form-item label="航标设置" prop="sAid_Mark">
-			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标设置">
+			    <el-select v-model="editForm.sAid_Mark" placeholder="请选择航标设置">
 				    <el-option
 				      v-for="item in markOptions"
 				      :key="item.value"

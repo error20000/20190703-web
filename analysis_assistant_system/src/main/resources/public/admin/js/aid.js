@@ -34,15 +34,15 @@ var myvue = new Vue({
 				sels: [],
 				preloading: false,
 				
-				aidTypeDictNo: '',
+				aidTypeDictNo: 'AidType',
 				aidTypeOptions: [],
-				stationDictNo: '',
+				stationDictNo: 'AidStation',
 				stationOptions: [],
-				lightDictNo: '',
+				lightDictNo: 'AidLighting',
 				lightOptions: [],
-				markDictNo: '',
+				markDictNo: 'AidMark',
 				markOptions: [],
-
+				
 				//add
 				addFormVisible: false,
 				addLoading: false, 
@@ -166,7 +166,7 @@ var myvue = new Vue({
 					self.handleResQuery(res, function(){
 						self.lightOptions = [];
 						for (var i = 0; i < res.data.length; i++) {
-							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
+							self.lightOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO, desc: res.data[i].sDict_Describe});
 						}
 						if(typeof cb == 'function'){
 							cb();
