@@ -78,6 +78,9 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 		List<GroupMenu> list = new ArrayList<>();
 		GroupMenu node = null;
 		for (String key : params.keySet()) {
+			if(Tools.isNullOrEmpty(params.get(key))) {
+				continue;
+			}
 			node = new GroupMenu();
 			node.setsGroupMenu_ID(Utils.newSnowflakeIdStr());
 			node.setsGroupMenu_GroupID(sGroup_ID);
@@ -103,6 +106,9 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 		List<UserMenu> list = new ArrayList<>();
 		UserMenu node = null;
 		for (String key : params.keySet()) {
+			if(Tools.isNullOrEmpty(params.get(key))) {
+				continue;
+			}
 			node = new UserMenu();
 			node.setsUserMenu_ID(Utils.newSnowflakeIdStr());
 			node.setsUserMenu_UserID(sUser_ID);

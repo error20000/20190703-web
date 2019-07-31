@@ -505,10 +505,6 @@ var myvue = new Vue({
 								if(key == 'sUser_ID'){
 									continue;
 								}
-								if(!params[key]){
-									delete params[key];
-									continue;
-								}
 								params[key] = params[key].join(",");
 							}
 							ajaxReq(modAuthUrl, params, function(res){
