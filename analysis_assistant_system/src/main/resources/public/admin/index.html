@@ -32,7 +32,24 @@
 	          </el-col>
 	          <el-col :span="16">
 	            <el-menu background-color="#20a0ff" text-color="#fff" active-text-color="#ffd04b" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-	              <el-menu-item index="1" >NFC标签</el-menu-item> 
+	              
+	              <template v-for="item in menus">
+	              		<el-menu-item v-if="!item.children" :index="item.sMenu_ID" >{{item.sMenu_Name}}</el-menu-item>
+	              		<el-submenu v-if="item.children" :index="item.sMenu_ID">
+	              		 	<template slot="title">{{item.sMenu_Name}}</template>
+	              		 	<template v-for="item2 in item.children">
+	              		 		<el-menu-item v-if="!item2.children" :index="item2.sMenu_ID" >{{item2.sMenu_Name}}</el-menu-item>
+	              		 		<el-submenu v-if="item2.children" :index="item2.sMenu_ID">
+			              		 	<template slot="title">{{item2.sMenu_Name}}</template>
+			              		 	<template v-for="item3 in item2.children">
+			              		 		<el-menu-item :index="item3.sMenu_ID" >{{item3.sMenu_Name}}</el-menu-item>
+			              		 	</template>
+						    	</el-submenu>
+	              		 	</template>
+				    	</el-submenu>
+	              </template>
+	              
+	              <!-- <el-menu-item index="1" >NFC标签</el-menu-item> 
 	              <el-menu-item index="2" >仓库管理</el-menu-item> 
 	              <el-menu-item index="3" >航标管理</el-menu-item> 
 	              <el-menu-item index="7" >器材管理</el-menu-item> 
@@ -52,7 +69,8 @@
 				      <el-menu-item index="641">用户组</el-menu-item>
 				      <el-menu-item index="642">用户</el-menu-item>
 				    </el-submenu>
-				  </el-submenu>
+				  </el-submenu> -->
+				  
 	            </el-menu>
 	          </el-col>
 	          <el-col :span="3" class="userinfo">

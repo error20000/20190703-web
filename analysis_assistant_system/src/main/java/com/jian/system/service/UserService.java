@@ -1,17 +1,24 @@
 package com.jian.system.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jian.system.dao.UserMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.GroupMenu;
+import com.jian.system.entity.Menu;
+import com.jian.system.entity.MenuFun;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserMenu;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
+import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
@@ -21,7 +28,15 @@ public class UserService extends BaseService<User, UserMapper> {
 
 	private String superGroupId = "1";
 	private String defualtUserName = "admin";
-	
+
+	@Autowired
+	private MenuService menuService;
+	@Autowired
+	private MenuFunService menuFunService;
+	@Autowired
+	private GroupMenuService groupMenuService;
+	@Autowired
+	private UserMenuService userMenuService;
 	
 	@Override
 	@TargetDataSource
@@ -168,10 +183,96 @@ public class UserService extends BaseService<User, UserMapper> {
 		return baseMapper.update(tableName, value, condition);
 	}
 	
-	
 	public boolean checkPWD(String pwd) {
 		
 		return true;
 	}
 	
+	@TargetDataSource
+	public Map<String, Object> authMenu(User user){
+		String groupId = user.getsUser_GroupID();
+		String userId = user.getsUser_ID();
+		//查询所有菜单
+		List<Menu> allms = menuService.selectAll();
+		List<MenuFun> allmfs = menuFunService.selectAll();
+		Map<String, Object> res = new HashMap<>();
+		
+		if(superGroupId.equals(groupId)) { //超管
+			res.put("menus", allms);
+			res.put("funs", allmfs);
+		}else {
+			Map<String, Object> temp = new HashMap<>();
+			List<Menu> resms = new ArrayList<>();
+			List<MenuFun> resmfs = new ArrayList<>();
+			//查询用户组菜单
+			List<GroupMenu> gms = groupMenuService.selectList(MapTools.custom().put("sGroupMenu_GroupID", groupId).build());
+			for (GroupMenu groupMenu : gms) {
+				//菜单
+				for (Menu menu : allms) {
+					if(groupMenu.getsGroupMenu_MenuID().equals(menu.getsMenu_ID())
+							&& temp.get("menu_" + menu.getsMenu_ID()) == null) {
+						resms.add(menu);
+						temp.put("menu_" + menu.getsMenu_ID(), 1);
+					}
+				}
+				//功能
+				for (MenuFun menuFun : allmfs) {
+					if((groupMenu.getsGroupMenu_MenuFunID()+",").contains(menuFun.getsMFun_ID()+",")
+							&& temp.get("menuFun_" + menuFun.getsMFun_ID()) == null) {
+						resmfs.add(menuFun);
+						temp.put("menuFun_" + menuFun.getsMFun_ID(), 1);
+					}
+				}
+			}
+			//查询用户菜单
+			List<UserMenu> ums = userMenuService.selectList(MapTools.custom().put("sUserMenu_UserID", userId).build());
+			for (UserMenu userMenu : ums) {
+				//菜单
+				for (Menu menu : allms) {
+					if(userMenu.getsUserMenu_MenuID().equals(menu.getsMenu_ID())
+							&& temp.get("menu_" + menu.getsMenu_ID()) == null) {
+						resms.add(menu);
+						temp.put("menu_" + menu.getsMenu_ID(), 1);
+					}
+				}
+				//功能
+				for (MenuFun menuFun : allmfs) {
+					if((userMenu.getsUserMenu_MenuFunID()+",").contains(menuFun.getsMFun_ID()+",")
+							&& temp.get("menuFun_" + menuFun.getsMFun_ID()) == null) {
+						resmfs.add(menuFun);
+						temp.put("menuFun_" + menuFun.getsMFun_ID(), 1);
+					}
+				}
+			}
+			System.out.println(JsonTools.toJsonString(resms));
+			//查询菜单父级
+			List<Menu> pms = new ArrayList<>();
+			for (Menu menu : resms) {
+				pms.addAll(findParent(menu.getsMenu_Parent(), allms));
+			}
+			//加入菜单父级
+			for (Menu menu : pms) {
+				if(temp.get("menu_" + menu.getsMenu_ID()) == null) {
+					resms.add(menu);
+					temp.put("menu_" + menu.getsMenu_ID(), 1);
+				}
+			}
+			//结果
+			res.put("menus", resms);
+			res.put("funs", resmfs);
+		}
+		
+		return res;
+	}
+	
+	private List<Menu> findParent(String pid, List<Menu> all){
+		List<Menu> temp = new ArrayList<>();
+		for (Menu menu : all) {
+			if(menu.getsMenu_ID().equals(pid)){
+				temp.add(menu);
+				temp.addAll(findParent(menu.getsMenu_Parent(), all));
+			}
+		}
+		return temp;
+	}
 }

@@ -88,7 +88,7 @@
 					</el-table-column>
 					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
 						<template scope="scope">
-					        <el-popover trigger="hover" placement="top" v-for="item in nfcOptions" v-if="scope.row.sAid_NfcID == item.sNfc_ID">
+					        <el-popover trigger="hover" placement="top" v-for="item in nfcAllOptions" v-if="scope.row.sAid_NfcID == item.sNfc_ID">
 					          <p>名称: {{ item.sNfc_Name }}</p>
 					          <div slot="reference" class="name-wrapper">
 					            <el-tag size="mini">{{ item.sNfc_NO }}</el-tag>
@@ -343,9 +343,9 @@
 					<el-select v-model="bindForm.sNfc_ID" placeholder="请选择NFC标签" >
 						<el-option
 					      v-for="item in nfcOptions"
-					      :key="item.value"
-					      :label="item.name"
-					      :value="item.value">
+					      :key="item.sNfc_ID"
+					      :label="item.sNfc_NO"
+					      :value="item.sNfc_ID">
 						</el-option>
 					 </el-select>
 				</el-form-item>

@@ -21,8 +21,10 @@ public class MenuFun extends Base<MenuFun> {
 	private int lMFun_StatusFlag;
 	@Excel(name="功能描述", sort=0, length="255", isNull=1 )
 	private String sMFun_Describe;
+	@Excel(name="功能按钮", sort=0, length="64", isNull=1 )
+	private String sMFun_Button;
 	
-	
+
 	public String getsMFun_ID() {
 		return sMFun_ID;
 	}
@@ -58,6 +60,12 @@ public class MenuFun extends Base<MenuFun> {
 	}
 	public void setsMFun_Describe(String sMFun_Describe) {
 		this.sMFun_Describe = sMFun_Describe;
+	}
+	public String getsMFun_Button() {
+		return sMFun_Button;
+	}
+	public void setsMFun_Button(String sMFun_Button) {
+		this.sMFun_Button = sMFun_Button;
 	}
 	
 }

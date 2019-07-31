@@ -1,5 +1,6 @@
 package com.jian.system.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -219,6 +220,16 @@ public class UserController extends BaseController<User, UserService> {
 		}else{
 			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
 		}
+	}
+
+	@PostMapping("/authMenu")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	public String authMenu(HttpServletRequest req) {
+		
+		Map<String,Object> res = service.authMenu(getLoginUser(req));
+		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
 }

@@ -12,10 +12,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jian.annotation.Excel;
+import com.jian.system.config.Config;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.service.BaseService;
@@ -31,13 +33,16 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 	
 	@Autowired
 	public S service;
+	@Autowired
+	public Config config;
 	
 	public User getLoginUser(HttpServletRequest req) {
-		User user = (User) req.getSession().getAttribute("login_user");
-		user = new User();
+		HttpSession session = req.getSession();
+		User user = (User) session.getAttribute(config.login_session_key);
+		/*user = new User();
 		user.setsUser_ID("22");
 		user.setsUser_Nick("33333");
-		user.setsUser_GroupID("1");
+		user.setsUser_GroupID("1");*/
 		return user;
 	}
 	

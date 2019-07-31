@@ -24,7 +24,7 @@ var myvue = new Vue({
 	    		activeTab: 'table',
 				filters: {
 					sEquip_NO: '',
-					store: '',
+					store: [],
 					sEquip_Status: ''
 				},
 				list: [],
@@ -45,7 +45,7 @@ var myvue = new Vue({
 				statusOptions: [],
 				typeDictNo: 'EquipType',
 				typeOptions: [],
-				nfcOptions: [],
+				nfcAllOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -125,7 +125,7 @@ var myvue = new Vue({
 			},
 			handleTypeOptions: function(cb){
 				var self = this;
-				var params = {sDict_DictTypeNO: this.statusDictNo};
+				var params = {sDict_DictTypeNO: this.typeDictNo};
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.typeOptions = res.data;
@@ -158,10 +158,10 @@ var myvue = new Vue({
 					});
 				});
 			},
-			nfcFormatter: function(row){
+			nfcAllFormatter: function(row){
 				var name = row.sEquip_NfcID;
-				for (var i = 0; i < this.nfcOptions.length; i++) {
-					var item = this.nfcOptions[i];
+				for (var i = 0; i < this.nfcAllOptions.length; i++) {
+					var item = this.nfcAllOptions[i];
 					if(row.sEquip_NfcID == item.sNfc_ID){
 						name = item.sNfc_NO;
 						break
@@ -169,12 +169,12 @@ var myvue = new Vue({
 				}
 				return name;
 			},
-			handleNfcOptions: function(cb){
+			handleNfcAllOptions: function(cb){
 				var self = this;
 				var params = {};
 				ajaxReq(nfcAllUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.nfcOptions = res.data;
+						self.nfcAllOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -229,7 +229,7 @@ var myvue = new Vue({
 			reset: function(){
 				this.filters = {
 					sEquip_NO: '',
-					store: '',
+					store: [],
 					sEquip_Status: ''
 				};
 				this.getList();
@@ -356,13 +356,10 @@ var myvue = new Vue({
 				});
 			},
 			handleBind: function(index, row){
-				this.nfcOptions = [];
 				var self = this;
 				ajaxReq(nfcUrl, {}, function(res){
 					self.handleResQuery(res, function(){
-						for (var i = 0; i < res.data.length; i++) {
-							self.nfcOptions.push({name: res.data[i].sNfc_Name, value: res.data[i].sNfc_ID});
-						}
+						self.nfcOptions = res.data;
 						self.bindFormVisible = true;
 						self.bindForm = {
 								sNfc_ID: '',
@@ -462,7 +459,7 @@ var myvue = new Vue({
 			this.preloading = true;
 			this.handleStatusOptions();
 			this.handleTypeOptions();
-			this.handleNfcOptions();
+			this.handleNfcAllOptions();
 			this.handleStoreOptions(this.getList);
 		}
 	  });

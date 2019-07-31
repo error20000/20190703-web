@@ -16,6 +16,8 @@ var getGroupAuthUrl = baseUrl + "api/menu/groupMenuAuth";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
+var pwdReg = parent.window.pwdReg || "";
+
 
 var myvue = new Vue({
 	    el: '#app',
@@ -36,7 +38,7 @@ var myvue = new Vue({
 				preloading: false,
 				
 				groupOptions: [],
-				pwdReg: /^[0-9A-Za-z]{8,16}$/,
+				pwdReg: pwdReg,
 
 				//add
 				addFormVisible: false,
@@ -501,6 +503,10 @@ var myvue = new Vue({
 							var params = Object.assign({}, this.authForm);
 							for ( var key in params) {
 								if(key == 'sUser_ID'){
+									continue;
+								}
+								if(!params[key]){
+									delete params[key];
 									continue;
 								}
 								params[key] = params[key].join(",");

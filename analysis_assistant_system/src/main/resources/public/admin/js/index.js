@@ -2,15 +2,19 @@ var baseUrl = '../';
 var changePwdUrl = baseUrl + "api/user/changePWD";
 var logoutUrl = baseUrl + "api/user/logout";
 var isLoginUrl = baseUrl + "api/user/isLogin";
-
+var authUrl = baseUrl + "api/user/authMenu";
+var gMenuFuns = [];
+var pwdReg = /^[0-9A-Za-z]{8,16}$/;
 
 new Vue({
     el: '#app',
-    data() {
+    data: function(){
         return {
           sysName: "后台管理",
           sysUserName: "",
+          menusOrigin: [],
           menus: [],
+          menuFuns: [],
       	  preloading: false,
           //pwd
           pwdFormVisible: false,
@@ -47,46 +51,11 @@ new Vue({
         },
 		showIframe: function(index){
 			let url = "";
-			
-			switch (Number(index)) {
-			case 1:
-				url = 'nfc.html';
-				break;
-			case 2:
-				url = 'store.html';
-				break;
-			case 3:
-				url = 'aid.html';
-				break;
-			case 4:
-				url = 'map.html';
-				break;
-			case 5:
-				url = 'count.html';
-				break;
-			case 7:
-				url = 'equip.html';
-				break;
-			case 6:
-				break;
-			case 611:
-				url = 'dictType.html';
-				break;
-			case 612:
-				url = 'dict.html';
-				break;
-			case 641:
-				url = 'group.html';
-				break;
-			case 642:
-				url = 'user.html';
-				break;
-			case 63:
-				url = 'app.html';
-				break;
-				
-			default:
-				break;
+			for (var i = 0; i < this.menusOrigin.length; i++) {
+				if(index == this.menusOrigin[i].sMenu_ID){
+					url = this.menusOrigin[i].sMenu_Url;
+					break;
+				}
 			}
 			$('.content-iframe').attr('src', url);
 		},
@@ -167,6 +136,43 @@ new Vue({
               });
             }).catch(() => {});
         },
+        userAuthMenu: function() {
+			var params = {};
+			var self = this;
+			ajaxReq(authUrl, params, function(res){
+				if(res.code > 0){
+					var menus = res.data.menus;
+					self.menus = []; //menu tree
+					for (var i = 0; i < menus.length; i++) {
+						var node = menus[i];
+						if(!node.sMenu_Parent){
+							var children = self.findChildren(node.sMenu_ID, menus);
+							if(children && children.length > 0){
+								node.children = children;
+							}
+							self.menus.push(node);
+						}
+					}
+					self.menusOrigin = menus;  //menu array
+					self.menuFuns = res.data.funs;
+					gMenuFuns = self.menuFuns; //全局
+				}
+			});
+        },
+        findChildren: function(id, menus){
+        	let children = [];
+        	for (var i = 0; i < menus.length; i++) {
+				var node = menus[i];
+				if(node.sMenu_Parent == id){
+					let temp = this.findChildren(node.sMenu_ID, menus);
+					if(temp && temp.length > 0){
+						node.children = temp;
+					}
+					children.push(node);
+				}
+			}
+        	return children;
+        },
         isLogin: function(cb) {
 			var params = {};
 			ajaxReq(isLoginUrl, params, function(res){
@@ -195,5 +201,6 @@ new Vue({
     	loginUserId = this.user.pid;
 		this.isLogin(this.initLoginUser);
 		this.preloading = true;
+		this.userAuthMenu();
       }
   });
