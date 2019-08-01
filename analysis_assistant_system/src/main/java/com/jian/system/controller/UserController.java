@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
 import com.jian.annotation.ParamsInfo;
+import com.jian.system.annotation.SystemLog;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Config;
@@ -197,6 +198,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SystemLog(type="update", describe="重置用户密码")
 	public String resetPWD(HttpServletRequest req) {
 		
 		Map<String, Object> vMap = null;
@@ -226,6 +228,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SystemLog(type="query", describe="查询用户权限")
 	public String authMenu(HttpServletRequest req) {
 		
 		Map<String,Object> res = service.authMenu(getLoginUser(req));

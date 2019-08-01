@@ -4,6 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,27 +20,29 @@ public class RedisCache {
 	private static Map<String, CacheObject> objMap = new ConcurrentHashMap<String, CacheObject>();
 	
 	@Autowired
-	private RedisTemplate<String, Object> jedis;
+	private RedisTemplate<String, Object> redisTemplate;
 	
-	public RedisCache(){
+	
+	@PostConstruct
+	public void test() {
 		System.out.println("=====================RedisCache start===========================");
-		System.out.println(jedis);
+		System.out.println(redisTemplate);
 	}
 	
 	
 	protected void initSetCacheObj(CacheObject obj) {
-		if(jedis != null){
+		if(redisTemplate != null){
 			long s = obj.getTimeOut() - obj.getMillis();
-			jedis.opsForValue().set(obj.getKey(), JsonTools.toJsonString(obj), s, TimeUnit.MILLISECONDS);
+			redisTemplate.opsForValue().set(obj.getKey(), JsonTools.toJsonString(obj), s, TimeUnit.MILLISECONDS);
 		}else{
 			objMap.put(obj.getKey(), obj);
 		}
 	}
 	
 	protected CacheObject initGetCacheObj(String key) {
-		if(jedis != null){
+		if(redisTemplate != null){
 			CacheObject obj = null;
-			String value = (String) jedis.opsForValue().get(key);
+			String value = (String) redisTemplate.opsForValue().get(key);
 			if(!Tools.isNullOrEmpty(value)){
 				obj = JsonTools.jsonToObj(value, CacheObject.class);
 			}
@@ -49,8 +53,8 @@ public class RedisCache {
 	}
 	
 	protected void initClearCacheObj(String key) {
-		if(jedis != null){
-			jedis.delete(key);
+		if(redisTemplate != null){
+			redisTemplate.delete(key);
 		}else{
 			objMap.remove(key);
 		}

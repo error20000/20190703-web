@@ -19,6 +19,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.config.Config;
+import com.jian.system.config.RedisCacheKey;
 import com.jian.system.config.RedisConfig;
 import com.jian.system.entity.GroupMenu;
 import com.jian.system.entity.MenuIfs;
@@ -40,7 +41,7 @@ public class VerifyAuthAspect {
 	@Autowired
 	private Config config;
 	@Autowired
-	private RedisConfig redisConfig;
+	private RedisCacheKey redisCacheKey;
 	@Autowired
 	private MenuIfsService menuIfsService;
 	@Autowired
@@ -63,6 +64,7 @@ public class VerifyAuthAspect {
 	 */
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(auth)")
     public void before(JoinPoint joinPoint, VerifyAuth auth){
+    	long start = System.currentTimeMillis();
     	//1、获取登录用户
     	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
     	HttpSession session = request.getSession();
@@ -133,6 +135,7 @@ public class VerifyAuthAspect {
 		if(!flag) {
     		throw new ServiceException(Tips.ERROR201);
 		}
+		System.out.println("=== VerifyAuth ms =====>"+(System.currentTimeMillis()-start));
     }
 
 
