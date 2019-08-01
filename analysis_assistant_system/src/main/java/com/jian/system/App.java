@@ -1,15 +1,10 @@
 package com.jian.system;
 
-import java.net.UnknownHostException;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import com.jian.system.datasource.DynamicDataSourceRegister;
 
@@ -35,15 +30,6 @@ public class App {
     	System.out.println(scanBasePackages);
 		//启动
         applicationContext = SpringApplication.run(App.class, args);
-    }
-
-	
-	@Bean
-    public RedisTemplate<String, Object> redisTemplate(
-            RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
     }
 
 	
