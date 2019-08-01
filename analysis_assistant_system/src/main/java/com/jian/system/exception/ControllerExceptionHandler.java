@@ -1,6 +1,9 @@
 package com.jian.system.exception;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,17 +32,19 @@ public class ControllerExceptionHandler {
 	public String ServiceValidHandler(HttpServletRequest request, HttpServletResponse response, ServiceException e) {
 		String message = e.getLocalizedMessage();
 		log.error(message);
-		e.printStackTrace();
-		System.out.println("ServiceException");
 		return message;
 	}
 
 	@ExceptionHandler({ Exception.class })
 	@ResponseStatus(HttpStatus.OK)
 	public String GlobalException(HttpServletRequest request, HttpServletResponse response, Exception e) {
-		log.error(e.getLocalizedMessage());
-		e.printStackTrace();
-		System.out.println("Exception");
+
+		Writer result = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(result);
+		e.printStackTrace(printWriter);
+		
+		log.error(result.toString());
+		
 		return ResultTools.custom(Tips.ERROR0).toJSONString();
 	}
 

@@ -26,6 +26,9 @@ public class Config {
 	//登录session
 	@Value("${login_session_key}")
 	public String login_session_key="login_user";
-
+	
+	
+	public String superGroupId = "1";
+	public String defualtUserName = "admin";
 	
 }

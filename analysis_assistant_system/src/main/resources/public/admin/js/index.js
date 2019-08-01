@@ -189,7 +189,7 @@ new Vue({
         },
         initLoginUser: function(data){
         	this.user = data;
-      		this.sysUserName = this.user.username;
+      		this.sysUserName = this.user.sUser_Nick ? this.user.sUser_Nick : this.user.sUser_UserName;
         }
       },
       mounted: function() {

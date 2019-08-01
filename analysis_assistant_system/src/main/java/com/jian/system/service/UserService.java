@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jian.system.config.Config;
 import com.jian.system.dao.UserMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.GroupMenu;
@@ -26,9 +27,8 @@ import com.jian.tools.core.Tools;
 @Service
 public class UserService extends BaseService<User, UserMapper> {
 
-	private String superGroupId = "1";
-	private String defualtUserName = "admin";
-
+	@Autowired
+	private Config config;
 	@Autowired
 	private MenuService menuService;
 	@Autowired
@@ -52,7 +52,7 @@ public class UserService extends BaseService<User, UserMapper> {
 			throw new ServiceException(Tips.ERROR105, "用户名 "+obj.getsUser_UserName());
 		}
 		//判断超级用户组
-		if(!superGroupId.equals(user.getsUser_GroupID()) && superGroupId.equals(obj.getsUser_GroupID())) {
+		if(!config.superGroupId.equals(user.getsUser_GroupID()) && config.superGroupId.equals(obj.getsUser_GroupID())) {
 			throw new ServiceException(Tips.ERROR101, "非超级用户组，不可创建用户到超级用户组。");
 		}
 		//检查密码复杂度
@@ -101,13 +101,13 @@ public class UserService extends BaseService<User, UserMapper> {
 			}
 		}
 		//判断超级用户组
-		if(!superGroupId.equals(user.getsUser_GroupID()) && superGroupId.equals(value.get("sUser_GroupID"))) {
+		if(!config.superGroupId.equals(user.getsUser_GroupID()) && config.superGroupId.equals(value.get("sUser_GroupID"))) {
 			throw new ServiceException(Tips.ERROR102, "非超级用户组，不可创建用户到超级用户组。");
 		}
 		//判断非超级用户组，不可降级
-		if(!superGroupId.equals(user.getsUser_GroupID()) 
-				&& superGroupId.equals(old.getsUser_GroupID())
-				&& !superGroupId.equals(value.get("sUser_GroupID")) ) {
+		if(!config.superGroupId.equals(user.getsUser_GroupID()) 
+				&& config.superGroupId.equals(old.getsUser_GroupID())
+				&& !config.superGroupId.equals(value.get("sUser_GroupID")) ) {
 			throw new ServiceException(Tips.ERROR102, "非超级用户组，不可降级超级用户组。");
 		}
 		//判断自己修改自己用户组
@@ -135,7 +135,7 @@ public class UserService extends BaseService<User, UserMapper> {
 			throw new ServiceException(Tips.ERROR104, "自己不可删除自己。");
 		}
 		//判断默认用户，不可删除
-		if(!superGroupId.equals(user.getsUser_GroupID()) && defualtUserName.equals(old.getsUser_UserName())) {
+		if(!config.superGroupId.equals(user.getsUser_GroupID()) && config.defualtUserName.equals(old.getsUser_UserName())) {
 			throw new ServiceException(Tips.ERROR104, "非超级用户组，不可删除默认用户。");
 		}
 		
@@ -193,11 +193,11 @@ public class UserService extends BaseService<User, UserMapper> {
 		String groupId = user.getsUser_GroupID();
 		String userId = user.getsUser_ID();
 		//查询所有菜单
-		List<Menu> allms = menuService.selectAll();
-		List<MenuFun> allmfs = menuFunService.selectAll();
+		List<Menu> allms = menuService.selectList(MapTools.custom().put("lMenu_StatusFlag", 1).build());
+		List<MenuFun> allmfs = menuFunService.selectList(MapTools.custom().put("lMFun_StatusFlag", 1).build());
 		Map<String, Object> res = new HashMap<>();
 		
-		if(superGroupId.equals(groupId)) { //超管
+		if(config.superGroupId.equals(groupId)) { //超管
 			res.put("menus", allms);
 			res.put("funs", allmfs);
 		}else {
@@ -275,4 +275,5 @@ public class UserService extends BaseService<User, UserMapper> {
 		}
 		return temp;
 	}
+	
 }

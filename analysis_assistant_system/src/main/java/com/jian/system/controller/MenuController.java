@@ -26,7 +26,7 @@ import com.jian.tools.core.Tools;
 
 @Controller
 @RequestMapping("/api/menu")
-@API(name="用户分组管理")
+@API(name="菜单管理")
 public class MenuController extends BaseController<Menu, MenuService> {
 
 

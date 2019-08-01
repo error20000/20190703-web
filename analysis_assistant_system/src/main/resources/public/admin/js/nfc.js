@@ -15,6 +15,7 @@ var equipUnbindUrl = baseUrl + "api/equip/unbind";
 var equipBindUrl = baseUrl + "api/equip/bind";
 
 var ajaxReq = parent.window.ajaxReq || "";
+var gMenuFuns = parent.window.gMenuFuns || "";
 
 
 var myvue = new Vue({
@@ -33,6 +34,9 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
+				menuFuns: gMenuFuns,
+				authCache: {},
+				
 				statusOptions: [
 					{name: '未使用', value: '0'},
 					{name: '已使用', value: '1'}
@@ -96,6 +100,9 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+				if(!this.hasAuth('query')){
+					return;
+				}
 				var self = this;
 				var params = {
 					page: this.page,
@@ -121,6 +128,10 @@ var myvue = new Vue({
 			},
 			//add
 			handleAdd: function(){
+				if(!this.hasAuth('add')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.addFormVisible = true;
 				this.addForm = {
 						sNfc_Name: '',
@@ -152,6 +163,10 @@ var myvue = new Vue({
 			},
 			//edit
 			handleEdit: function (index, row) {
+				if(!this.hasAuth('edit')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var params = {
 						sNfc_ID: row.sNfc_ID
 				};
@@ -192,6 +207,10 @@ var myvue = new Vue({
 			},
 			//del
 			handleDel: function(index, row){
+				if(!this.hasAuth('delete')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -269,19 +288,6 @@ var myvue = new Vue({
 			},
 			handleBind: function(index, row){
 				var self = this;
-				/*ajaxReq(viewBindUrl, {sNfc_ID: row.sNfc_ID }, function(res){
-					self.handleResQuery(res, function(){
-						if(!res.data.type){
-							self.bindFormVisible = true;
-							self.bindForm = {
-									sNfc_ID: row.sNfc_ID,
-									type: '',
-									id: ''
-							};
-						}
-					});
-				});*/
-
 				ajaxReq(oneUrl, {sNfc_ID: row.sNfc_ID }, function(res){
 					self.handleResQuery(res, function(){
 						if(!res.data.lNfc_StatusFlag){
@@ -334,6 +340,36 @@ var myvue = new Vue({
 						});
 					}
 				});
+			},
+			//has auth
+			hasAuth: function(ref){
+				console.log("==========================");
+				console.log(ref);
+				if(typeof this.authCache[ref] != "undefined"){
+					return this.authCache[ref];
+				}
+				console.log(this);
+				console.log(this.$refs);
+				console.log(this.$refs[ref]);
+				//console.log(this.$refs[ref].$attrs.auth);
+				let flag = false;
+				if(!this.$refs[ref]){
+					console.log("========null==========");
+					return flag;
+				}
+				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
+				if(!auth){
+					console.log("========auth==========");
+					return flag;
+				}
+				for (var i = 0; i < this.menuFuns.length; i++) {
+					if(this.menuFuns[i].sMFun_Button == auth){
+						flag = true;
+						break;
+					}
+				}
+				this.authCache[ref] = flag;
+				return flag;
 			},
 			
 			//reset
