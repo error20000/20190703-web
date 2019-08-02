@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +20,7 @@ import com.jian.system.config.Config;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.service.BaseService;
+import com.jian.system.utils.TokenUtils;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.ResultKey;
@@ -37,13 +37,8 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 	public Config config;
 	
 	public User getLoginUser(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		User user = (User) session.getAttribute(config.login_session_key);
-		/*user = new User();
-		user.setsUser_ID("22");
-		user.setsUser_Nick("33333");
-		user.setsUser_GroupID("1");*/
-		return user;
+		String tokenStr = TokenUtils.getLoginToken(req);
+		return TokenUtils.getLoginUser(tokenStr);
 	}
 	
     public String add(HttpServletRequest req) {

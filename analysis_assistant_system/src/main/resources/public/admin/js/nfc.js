@@ -34,6 +34,7 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
+				
 				menuFuns: gMenuFuns,
 				authCache: {},
 				

@@ -5,14 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,7 +18,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.config.Config;
 import com.jian.system.config.RedisCacheKey;
-import com.jian.system.config.RedisConfig;
 import com.jian.system.entity.GroupMenu;
 import com.jian.system.entity.MenuIfs;
 import com.jian.system.entity.User;
@@ -29,6 +26,7 @@ import com.jian.system.exception.ServiceException;
 import com.jian.system.service.GroupMenuService;
 import com.jian.system.service.MenuIfsService;
 import com.jian.system.service.UserMenuService;
+import com.jian.system.utils.TokenUtils;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
@@ -41,7 +39,7 @@ public class VerifyAuthAspect {
 	@Autowired
 	private Config config;
 	@Autowired
-	private RedisCacheKey redisCacheKey;
+	private RedisCacheKey cacheKey;
 	@Autowired
 	private MenuIfsService menuIfsService;
 	@Autowired
@@ -64,13 +62,15 @@ public class VerifyAuthAspect {
 	 */
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(auth)")
     public void before(JoinPoint joinPoint, VerifyAuth auth){
-    	System.out.println(redisCacheKey.userAuthCacheKey);
+    	
+    	System.out.println(cacheKey.userAuthCacheKey);
+    	
     	long start = System.currentTimeMillis();
     	//1、获取登录用户
     	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-    	HttpSession session = request.getSession();
-		User user = (User) session.getAttribute(config.login_session_key);
-    	if(user == null) {
+    	String tokenStr = TokenUtils.getLoginToken(request);
+		User user = TokenUtils.getLoginUser(tokenStr);
+		if(user == null) {
     		throw new ServiceException(Tips.ERROR111);
     	}
     	//2、获取接口

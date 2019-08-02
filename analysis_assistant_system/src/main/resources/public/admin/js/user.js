@@ -15,7 +15,7 @@ var getAuthUrl = baseUrl + "api/menu/userMenuAuth";
 var getGroupAuthUrl = baseUrl + "api/menu/groupMenuAuth";
 
 var ajaxReq = parent.window.ajaxReq || "";
-
+var gMenuFuns = parent.window.gMenuFuns || "";
 var pwdReg = parent.window.pwdReg || "";
 
 
@@ -36,6 +36,9 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
+				
+				menuFuns: gMenuFuns,
+				authCache: {},
 				
 				groupOptions: [],
 				pwdReg: pwdReg,
@@ -518,6 +521,28 @@ var myvue = new Vue({
 						});
 					}
 				});
+			},
+			//has auth
+			hasAuth: function(ref){
+				if(typeof this.authCache[ref] != "undefined"){
+					return this.authCache[ref];
+				}
+				let flag = false;
+				if(!this.$refs[ref]){
+					return flag;
+				}
+				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
+				if(!auth){
+					return flag;
+				}
+				for (var i = 0; i < this.menuFuns.length; i++) {
+					if(this.menuFuns[i].sMFun_Button == auth){
+						flag = true;
+						break;
+					}
+				}
+				this.authCache[ref] = flag;
+				return flag;
 			},
 			//excel
 			getExcel: function(){

@@ -61,6 +61,17 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 			}
 		}
 		
+		//排序
+		for (int i = 0; i < res.size(); i++) {
+			for (int j = i; j < res.size(); j++) {
+				if(Integer.parseInt(res.get(i).get("lMenu_Order") + "") > Integer.parseInt(res.get(j).get("lMenu_Order") + "")) {
+					Map<String, Object> t = res.get(i);
+					res.set(i, res.get(j));
+					res.set(j, t);
+				}
+			}
+		}
+		
 		return res;
 	}
 	
@@ -87,6 +98,9 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 			node.setsGroupMenu_MenuID(key);
 			node.setsGroupMenu_MenuFunID(String.valueOf(params.get(key))); 
 			list.add(node);
+		}
+		if(list.size() == 0) { //空权限
+			return 1;
 		}
 		return groupMenuService.batchInsert(list, null);
 	}
@@ -115,6 +129,9 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 			node.setsUserMenu_MenuID(key);
 			node.setsUserMenu_MenuFunID(String.valueOf(params.get(key))); 
 			list.add(node);
+		}
+		if(list.size() == 0) { //空权限
+			return 1;
 		}
 		return userMenuService.batchInsert(list, null);
 	}

@@ -49,10 +49,10 @@
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="导入" @click="getImport" icon="fas fa-file-import"></el-button>
-						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
+						<el-button type="primary" title="导入" @click="getImport" icon="fas fa-file-import" ref="import" auth="sys:equip:import" v-show="hasAuth('import')"></el-button>
+						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export" ref="export" auth="sys:equip:export" v-show="hasAuth('export')"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus"></el-button>
+						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus" ref="add" auth="sys:equip:add" v-show="hasAuth('add')"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -63,7 +63,7 @@
 		</el-row>
 		
 	    <el-tabs v-model="activeTab" >
-		    <el-tab-pane label="结果" name="table" disabled>
+		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:equip:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="ID" prop="sEquip_ID" width="120" fixed="left">
@@ -105,7 +105,7 @@
 							   	<i class="fas fa-cog"></i>
 							  </el-button>
 							  <el-dropdown-menu slot="dropdown">
-							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)">
+							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row)" ref="edit" auth="sys:equip:update" v-show="hasAuth('edit')">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" divided :disabled="scope.row.sEquip_NfcID ? false : true ">
@@ -114,7 +114,7 @@
 							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sEquip_NfcID ? true : false ">
 							    	<i class="fas fa-link"></i>&nbsp;绑定
 							    </el-dropdown-item>
-							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;">
+							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;" ref="delete" auth="sys:equip:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 							    </el-dropdown-item>
 							  </el-dropdown-menu>

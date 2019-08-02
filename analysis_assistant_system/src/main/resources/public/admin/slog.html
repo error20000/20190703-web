@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
+  <style type="text/css">
+  	.el-table .cell {
+	    white-space: nowrap !important;
+	}
+  </style>
 </head>
 <body class="animated fadeIn">
   <div id="app">
@@ -66,7 +71,7 @@
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
+						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export" ref="export" auth="sys:equip:export" v-show="hasAuth('export')"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -77,7 +82,7 @@
 		</el-row>
 		
 	    <el-tabs v-model="activeTab" >
-		    <el-tab-pane label="结果" name="table" disabled>
+		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:slog:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="ID" prop="sSLog_ID" width="120" fixed="left">
@@ -102,9 +107,9 @@
 					</el-table-column>
 					<el-table-column label="方法名" prop="sSLog_Method">
 					</el-table-column>
-					<el-table-column label="请求参数" prop="sSLog_Request">
+					<el-table-column label="请求参数" prop="sSLog_Request" width="300">
 					</el-table-column>
-					<el-table-column label="响应参数" prop="sSLog_Response">
+					<el-table-column label="响应参数" prop="sSLog_Response" width="300">
 					</el-table-column>
 					<el-table-column label="异常信息" prop="sSLog_Exception" width="300">
 					</el-table-column>

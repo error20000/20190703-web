@@ -21,6 +21,8 @@ public class Menu extends Base<Menu> {
 	private String sMenu_Icon;
 	@Excel(name="状态 0：禁用，1：启用", sort=0, length="10", isNull=1 )
 	private int lMenu_StatusFlag;
+	@Excel(name="排序", sort=0, length="10", isNull=1 )
+	private int lMenu_Order;
 	
 	
 	public String getsMenu_ID() {
@@ -58,6 +60,12 @@ public class Menu extends Base<Menu> {
 	}
 	public void setlMenu_StatusFlag(int lMenu_StatusFlag) {
 		this.lMenu_StatusFlag = lMenu_StatusFlag;
+	}
+	public int getlMenu_Order() {
+		return lMenu_Order;
+	}
+	public void setlMenu_Order(int lMenu_Order) {
+		this.lMenu_Order = lMenu_Order;
 	}
 	
 }

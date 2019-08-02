@@ -12,17 +12,25 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.jian.system.config.Config;
+import com.jian.system.config.RedisCacheKey;
+import com.jian.system.entity.User;
+import com.jian.system.exception.ServiceException;
+import com.jian.tools.core.JsonTools;
+import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
+import com.jian.tools.core.cache.CacheObject;
 
 
 @Component
 public class TokenUtils {
 	
 	public static Config config = null;
+	public static RedisCacheKey cacheKey = null;
 	
 	@Autowired
-	public void setConfig(Config config){
+	public void setConfig(Config config, RedisCacheKey cacheKey){
 		TokenUtils.config = config;
+		TokenUtils.cacheKey = cacheKey;
 	}
 	
 	public static String getLoginToken(){
@@ -96,5 +104,26 @@ public class TokenUtils {
 	}
 	
 	
+	public static User getLoginUser(String tokenStr){
+		
+		if(!TokenUtils.checkLoginToken(tokenStr)) {
+			throw new ServiceException(Tips.ERROR213, "token");
+		}
+		String userId = TokenUtils.getUserId(tokenStr);
+		String pkey = cacheKey.userLoginOnPc + userId;
+		CacheObject test = RedisUtils.getCacheObj(pkey);
+		if(test == null ) {
+			String mkey = cacheKey.userLoginOnMobile + userId;
+			test = RedisUtils.getCacheObj(mkey);
+		}
+		if(test == null ) {
+			throw new ServiceException(Tips.ERROR111);
+		}
+		User user = JsonTools.jsonToObj((String)test.getValue(), User.class);
+		if(user == null ) {
+			throw new ServiceException(Tips.ERROR111);
+		}
+		return user;
+	}
 	
 }

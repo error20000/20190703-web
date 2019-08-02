@@ -257,6 +257,16 @@ public class UserService extends BaseService<User, UserMapper> {
 					temp.put("menu_" + menu.getsMenu_ID(), 1);
 				}
 			}
+			//排序
+			for (int i = 0; i < resms.size(); i++) {
+				for (int j = i; j < resms.size(); j++) {
+					if(resms.get(i).getlMenu_Order() > resms.get(j).getlMenu_Order()) {
+						Menu t = resms.get(i);
+						resms.set(i, resms.get(j));
+						resms.set(j, t);
+					}
+				}
+			}
 			//结果
 			res.put("menus", resms);
 			res.put("funs", resmfs);

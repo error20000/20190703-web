@@ -8,6 +8,7 @@ var dictUrl = baseUrl + "api/dict/findList";
 var listUrl = baseUrl + "api/store/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
+var gMenuFuns = parent.window.gMenuFuns || "";
 
 
 var myvue = new Vue({
@@ -24,8 +25,11 @@ var myvue = new Vue({
 				listLoading: false,
 				sels: [],
 				preloading: false,
+				
+				menuFuns: gMenuFuns,
+				authCache: {},
 
-				stationDictNo: '',
+				stationDictNo: 'AidStation',
 				stationOptions: [],
 				lv1Options: [],
 				lv2Options: [],
@@ -148,10 +152,10 @@ var myvue = new Vue({
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
 			stationFormatter: function(row){
-				var name = row.sAid_Station;
+				var name = row.sStoreType_Station;
 				for (var i = 0; i < this.stationOptions.length; i++) {
 					var item = this.stationOptions[i];
-					if(row.sAid_Station == item.sDict_NO){
+					if(row.sStoreType_Station == item.sDict_NO){
 						name = item.sDict_Name;
 						break
 					}
@@ -163,10 +167,7 @@ var myvue = new Vue({
 				var params = {sDict_DictTypeNO: this.stationDictNo};
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.stationOptions = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.stationOptions.push({name: res.data[i].sDict_Name, value: res.data[i].sDict_NO});
-						}
+						self.stationOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -355,6 +356,28 @@ var myvue = new Vue({
 						});
 					}
 				});
+			},
+			//has auth
+			hasAuth: function(ref){
+				if(typeof this.authCache[ref] != "undefined"){
+					return this.authCache[ref];
+				}
+				let flag = false;
+				if(!this.$refs[ref]){
+					return flag;
+				}
+				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
+				if(!auth){
+					return flag;
+				}
+				for (var i = 0; i < this.menuFuns.length; i++) {
+					if(this.menuFuns[i].sMFun_Button == auth){
+						flag = true;
+						break;
+					}
+				}
+				this.authCache[ref] = flag;
+				return flag;
 			},
 			//excel
 			getExcel: function(){

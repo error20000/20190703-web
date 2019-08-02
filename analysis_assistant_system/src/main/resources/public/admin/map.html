@@ -58,11 +58,6 @@
 					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="导入" @click="getImport" icon="fas fa-file-import"></el-button>
-						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -73,7 +68,7 @@
 		</el-row>
 		
 	    <el-tabs v-model="activeTab" >
-		    <el-tab-pane label="结果" name="table" disabled>
+		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:map:query" v-show="hasAuth('query')">
 				<div id="mapView" style="width: 100%;height: 500px;"></div>
 			</el-tab-pane>
 		  </el-tabs>

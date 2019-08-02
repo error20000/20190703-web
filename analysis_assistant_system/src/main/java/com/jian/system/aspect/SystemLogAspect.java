@@ -95,7 +95,7 @@ public class SystemLogAspect {
 			break;
 		}
 
-		logger.debug("request: "+JsonTools.toJsonString(request.getParameterMap()));
+		logger.info("request: "+JsonTools.toJsonString(request.getParameterMap()));
     }
 
     
@@ -112,14 +112,17 @@ public class SystemLogAspect {
 	    	logService.update(slog, null);
 			break;
 		default:
-			logger.debug("response: "+String.valueOf(obj));
+			logger.info("response: "+String.valueOf(obj));
 			break;
 		}
     }
     
     @AfterThrowing(pointcut="execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)", throwing="e")
     public void afterThrowing(JoinPoint joinPoint, Exception e, SysLog log){
-    	slog.setsSLog_Exception(e.getMessage());
+    	logger.error(e.getMessage());
+    	String str = e.getMessage();
+    	str = str.substring(0, str.length() > 255 ? 255 : str.length());
+    	slog.setsSLog_Exception(str);
     	logService.update(slog, null);
     }
     

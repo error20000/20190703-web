@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
@@ -22,6 +22,8 @@ import com.jian.system.config.RedisCacheKey;
 import com.jian.system.entity.User;
 import com.jian.system.service.UserService;
 import com.jian.system.utils.RedisUtils;
+import com.jian.system.utils.TokenUtils;
+import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
@@ -166,7 +168,7 @@ public class UserController extends BaseController<User, UserService> {
 		//保存
 		String okey = cacheKey.userLoginOnPc + user.getsUser_ID();
 		String tokenStr = newToken(user);
-		RedisUtils.setCacheObj(okey, tokenStr, config.expireTime); 
+		RedisUtils.setCacheObj(okey, JsonTools.toJsonString(user), config.expireTime); 
 		
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put("token", tokenStr);
@@ -179,14 +181,14 @@ public class UserController extends BaseController<User, UserService> {
 	@SysLog(type=SystemLogType.Other, describe="退出登录")
 	public String logout(HttpServletRequest req) {
 		//保存
-		HttpSession session = req.getSession();
-		session.removeAttribute(config.login_session_key);
+		String tokenStr = TokenUtils.getLoginToken(req);
 		
-		/*String userId = req.getHeader("userId");
-		if(Tools.isNullOrEmpty(userId)) {
-			userId = Tools.getReqParamSafe(req, "userId");
+		if(!TokenUtils.checkLoginToken(tokenStr)) {
+			return ResultTools.custom(Tips.ERROR213, "token").toJSONString();
 		}
-		CacheTools.clearCacheObj("login_user_"+userId);*/
+
+		String key = cacheKey.userLoginOnPc + TokenUtils.getUserId(tokenStr);
+		RedisUtils.clearCacheObj(key);
 		return ResultTools.custom(Tips.ERROR1).toJSONString();
 	}
 	
@@ -196,18 +198,18 @@ public class UserController extends BaseController<User, UserService> {
 	@SysLog(type=SystemLogType.Query, describe="检测用户是否已登录")
 	public String isLogin(HttpServletRequest req) {
 		//保存
-		HttpSession session = req.getSession();
-		Object test = session.getAttribute(config.login_session_key);
+		String tokenStr = TokenUtils.getLoginToken(req);
 		
-//		String userId = req.getHeader("userId");
-//		if(Tools.isNullOrEmpty(userId)) {
-//			userId = Tools.getReqParamSafe(req, "userId");
-//		}
-//		CacheObject test = CacheTools.getCacheObj("login_user_"+userId);
+		if(!TokenUtils.checkLoginToken(tokenStr)) {
+			return ResultTools.custom(Tips.ERROR213, "token").toJSONString();
+		}
+		
+		String key = cacheKey.userLoginOnPc + TokenUtils.getUserId(tokenStr);
+		CacheObject test = RedisUtils.getCacheObj(key);
 		if(test == null){
 			return ResultTools.custom(Tips.ERROR0).toJSONString();
 		}else {
-			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, test).toJSONString();
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, JsonTools.jsonToMap(String.valueOf(test.getValue())) ).toJSONString();
 		}
 	}
 	
