@@ -1,6 +1,6 @@
 package com.jian.system.controller;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,20 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
-import com.jian.annotation.ParamsInfo;
-import com.jian.system.annotation.SystemLog;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Config;
+import com.jian.system.config.RedisCacheKey;
 import com.jian.system.entity.User;
 import com.jian.system.service.UserService;
-import com.jian.tools.core.CacheTools;
-import com.jian.tools.core.JsonTools;
+import com.jian.system.utils.RedisUtils;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
+import com.jian.tools.core.cache.CacheObject;
 
 
 @Controller
@@ -36,6 +37,8 @@ public class UserController extends BaseController<User, UserService> {
 
 	@Autowired
 	private Config config;
+	@Autowired
+	private RedisCacheKey cacheKey;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -44,6 +47,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增用户")
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -53,6 +57,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新用户")
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -63,6 +68,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除用户")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -72,6 +78,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询用户")
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
 	}
@@ -81,6 +88,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单个用户")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -90,6 +98,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有用户")
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
@@ -99,6 +108,7 @@ public class UserController extends BaseController<User, UserService> {
 
 	@RequestMapping("/login")
     @ResponseBody
+	@SysLog(type=SystemLogType.Login, describe="用户登录")
 	public String login(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		
@@ -119,20 +129,54 @@ public class UserController extends BaseController<User, UserService> {
 		if(user == null){
 			return ResultTools.custom(Tips.ERROR109).toJSONString();
 		}
+		if(user.getlUser_StatusFlag() == 0){
+			return ResultTools.custom(Tips.ERROR107, "账号").toJSONString();
+		}
+		//时长
+		String tkey = cacheKey.userLoginErrorPwdTime + user.getsUser_ID();
+		CacheObject tobj = RedisUtils.getCacheObj(tkey);
+		if(tobj != null) {
+			int m = (int)((tobj.getTimeOut() - System.currentTimeMillis()) / (60 * 1000));
+			m = m <= 0 ? 1 : m;
+			return ResultTools.custom(Tips.ERROR108).put(ResultKey.MSG, "账号登录失败，请" +m+"分钟后重试。").toJSONString();
+		}
+		//次数
 		if(!user.getsUser_PassWord().equals(Tools.md5(password))){
-			return ResultTools.custom(Tips.ERROR110).toJSONString();
+			//限制错误次数
+			int loinTime = config.maxLoginCount - 1;
+			String ckey = cacheKey.userLoginErrorPwdCount + user.getsUser_ID();
+			CacheObject cobj = RedisUtils.getCacheObj(ckey);
+			if(cobj == null){
+				RedisUtils.setCacheObj(ckey, loinTime);
+			}else{
+				loinTime = Integer.parseInt(cobj.getValue()+"");
+				loinTime--;
+				if(loinTime <= 0){
+					//时长限制
+					RedisUtils.setCacheObj(tkey, 1, config.maxLoginTime); 
+					RedisUtils.clearCacheObj(ckey); //解除禁用
+				}else{
+					RedisUtils.setCacheObj(ckey, loinTime);
+				}
+			}
+			return ResultTools.custom(Tips.ERROR110).put(ResultKey.DATA, loinTime).toJSONString();
 		}
 		user.setsUser_PassWord("");
 		
 		//保存
-		HttpSession session = req.getSession();
-		session.setAttribute(config.login_session_key, user);
-		//CacheTools.setCacheObj("login_user_"+user.getPid(), user);
-		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, user).toJSONString();
+		String okey = cacheKey.userLoginOnPc + user.getsUser_ID();
+		String tokenStr = newToken(user);
+		RedisUtils.setCacheObj(okey, tokenStr, config.expireTime); 
+		
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.put("token", tokenStr);
+		res.put("user", user);
+		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
 	@RequestMapping("/logout")
     @ResponseBody
+	@SysLog(type=SystemLogType.Other, describe="退出登录")
 	public String logout(HttpServletRequest req) {
 		//保存
 		HttpSession session = req.getSession();
@@ -149,6 +193,7 @@ public class UserController extends BaseController<User, UserService> {
 
 	@RequestMapping("/isLogin")
     @ResponseBody
+	@SysLog(type=SystemLogType.Query, describe="检测用户是否已登录")
 	public String isLogin(HttpServletRequest req) {
 		//保存
 		HttpSession session = req.getSession();
@@ -170,6 +215,7 @@ public class UserController extends BaseController<User, UserService> {
 	@PostMapping("/changePWD")
     @ResponseBody
 	@VerifyLogin
+	@SysLog(type=SystemLogType.Update, describe="修改用户密码")
 	public String changePWD(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		
@@ -198,7 +244,7 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	@SystemLog(type="update", describe="重置用户密码")
+	@SysLog(type=SystemLogType.Update, describe="重置用户密码")
 	public String resetPWD(HttpServletRequest req) {
 		
 		Map<String, Object> vMap = null;
@@ -228,11 +274,19 @@ public class UserController extends BaseController<User, UserService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	@SystemLog(type="query", describe="查询用户权限")
+	@SysLog(type=SystemLogType.Query, describe="查询用户权限")
 	public String authMenu(HttpServletRequest req) {
 		
 		Map<String,Object> res = service.authMenu(getLoginUser(req));
 		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	private String newToken(User user){
+		long curTime = System.currentTimeMillis();
+		String str = user.getsUser_ID() + "." + curTime + "."  + config.expireTime;
+		String token = Tools.md5(str + config.tokenSecretKey); // userId + time + expire + key
+		String tokenStr = token + "." + str;
+		return tokenStr;
 	}
 
 }

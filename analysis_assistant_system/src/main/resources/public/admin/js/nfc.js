@@ -343,23 +343,15 @@ var myvue = new Vue({
 			},
 			//has auth
 			hasAuth: function(ref){
-				console.log("==========================");
-				console.log(ref);
 				if(typeof this.authCache[ref] != "undefined"){
 					return this.authCache[ref];
 				}
-				console.log(this);
-				console.log(this.$refs);
-				console.log(this.$refs[ref]);
-				//console.log(this.$refs[ref].$attrs.auth);
 				let flag = false;
 				if(!this.$refs[ref]){
-					console.log("========null==========");
 					return flag;
 				}
 				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
 				if(!auth){
-					console.log("========auth==========");
 					return flag;
 				}
 				for (var i = 0; i < this.menuFuns.length; i++) {
@@ -445,11 +437,7 @@ var myvue = new Vue({
 			}
 		},
 		mounted: function() {
-	      	this.user = JSON.parse(localStorage.getItem('loginUser'));
-	  		if(this.user　==　null){
-	  			parent.window.location.href = "login.html";
-	  			return;
-	  		}
+			getLoginToken();
 			this.preloading = true;
 			this.getList();
 		}

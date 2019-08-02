@@ -28,7 +28,14 @@ public class Config {
 	public String login_session_key="login_user";
 	
 	
-	public String superGroupId = "1";
-	public String defualtUserName = "admin";
+	public String superGroupId = "1"; //超管组
+	public String defualtUserName = "admin"; //默认用户
+	
+	public int maxLoginCount = 5; //登录密码错误次数限制
+	public int maxLoginTime = 1 * 60 * 1000; //登录密码错误时长限制  单位毫秒
+	
+	public int expireTime = 2 * 3600 * 1000; //登录有效期
+	
+	public String tokenSecretKey = "123456700"; //token密钥
 	
 }

@@ -1,4 +1,4 @@
-var loginUserId = '';
+var loginToken = '';
 
 function ajaxReq(url, param, callback, cp){
 	$.ajax({
@@ -7,7 +7,7 @@ function ajaxReq(url, param, callback, cp){
 		   url: url,
 		   data: param,
 		   headers: {
-		        userId: loginUserId
+		        token: loginToken
 		    },
 		   success: function(data){
 			   	if(data.code == -203 || data.code == -111){ // token 超时
@@ -21,6 +21,15 @@ function ajaxReq(url, param, callback, cp){
 		   }
 		});
 };
+
+function getLoginToken(){
+  	let token = localStorage.getItem('loginUser');
+	if(!token){
+		parent.window.location.href = "login.html";
+		return;
+	}
+	loginToken = token;
+}
 
 function formatDate(d, s){
 	if(!d){

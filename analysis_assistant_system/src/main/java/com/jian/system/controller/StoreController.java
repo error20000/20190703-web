@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Store;
@@ -37,6 +39,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增仓库")
 	public String add(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -66,6 +69,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新仓库")
 	public String update(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -96,6 +100,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除仓库")
 	public String delete(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -124,6 +129,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单条仓库")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -133,6 +139,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有仓库")
 	public String findAll(HttpServletRequest req) {
 		List<Map<String, Object>> list = service.storeTree();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
@@ -143,6 +150,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询仓库列表")
 	public String findList(HttpServletRequest req) {
 		String parent = Tools.getReqParamSafe(req, "parent");
 		List<Map<String, Object>> list = service.storeList(parent);

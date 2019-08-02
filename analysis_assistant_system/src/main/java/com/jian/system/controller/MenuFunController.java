@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.MenuFun;
@@ -27,6 +29,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增菜单按钮")
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -36,6 +39,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新菜单按钮")
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -46,6 +50,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除菜单按钮")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -55,6 +60,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询菜单按钮")
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
 	}
@@ -64,6 +70,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单个菜单按钮")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -73,6 +80,7 @@ public class MenuFunController extends BaseController<MenuFun, MenuFunService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有菜单按钮")
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}

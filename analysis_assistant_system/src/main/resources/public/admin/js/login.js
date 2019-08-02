@@ -52,7 +52,7 @@ function ajaxReq(url, param, callback, cp){
 				ajaxReq(loginUrl, params, function(res){
 					self.logining = false;
 					if(res.code > 0){
-						localStorage.setItem('loginUser', JSON.stringify(res.data));
+						localStorage.setItem('loginUser', res.data.token);
 						window.location.href = 'index.html';
 					}else if(res.code == -110){
 						self.$message({
@@ -66,7 +66,7 @@ function ajaxReq(url, param, callback, cp){
 						})
 					}else{
 						self.$message({
-							message: '失败',
+							message: '失败：'+res.msg,
 							type: 'warning'
 						})
 					}

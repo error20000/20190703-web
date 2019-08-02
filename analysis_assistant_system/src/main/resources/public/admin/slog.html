@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- css -->
+  <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
+  <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body class="animated fadeIn">
+  <div id="app">
+  
+  	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
+	   <div class="el-loading-spinner">
+	    <i class="fa fa-spinner fa-pulse"></i>
+ 	    <p class="el-loading-text">Loading...</p>
+	   </div>
+    </div>
+    
+    <section style="padding: 20px;" v-show="preloading">
+		<!-- filter -->
+		<el-row>
+		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+			<el-col :span="24">
+			<el-tabs value="filter" >
+			    <el-tab-pane label="筛选" name="filter" disabled>
+			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
+					<el-form-item>
+					    <el-select v-model="filters.sSLog_UserID" placeholder="请选择用户">
+						    <el-option
+						      v-for="item in userOptions"
+						      :key="item.sUser_ID"
+						      :label="item.sUser_Nick"
+						      :value="item.sUser_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sSLog_Type" placeholder="请选择日志类型">
+						    <el-option
+						      v-for="item in typeOptions"
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+						<el-date-picker
+					      v-model="filters.startDate"
+					      type="datetime"
+					      value-format="timestamp"
+					      placeholder="开始时间">
+					    </el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-date-picker
+					      v-model="filters.endDate"
+					      type="datetime"
+					      :default-time="'23:59:59'"
+					      value-format="timestamp"
+					      placeholder="结束时间">
+					    </el-date-picker>
+					</el-form-item>
+					<el-form-item>
+						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
+						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export"></el-button>
+					</el-form-item>
+				</el-form>
+			    </el-tab-pane>
+		    </el-tabs>
+				
+			</el-col>
+		</el-col>
+		</el-row>
+		
+	    <el-tabs v-model="activeTab" >
+		    <el-tab-pane label="结果" name="table" disabled>
+				<!-- list -->
+				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
+					<el-table-column label="ID" prop="sSLog_ID" width="120" fixed="left">
+					</el-table-column>
+					<el-table-column label="日志分类" prop="sSLog_Type" fixed="left">
+					</el-table-column>
+					<el-table-column label="日志描述" prop="sSLog_Describe" width="150" fixed="left">
+					</el-table-column>
+					<el-table-column label="创建日期" prop="dSLog_CreateDate" width="150" :formatter="(r,c) => {return formatDate(r.dSLog_CreateDate);}">
+					</el-table-column>
+					<el-table-column label="用户ID" prop="sSLog_UserID">
+					</el-table-column>
+					<el-table-column label="用户名" prop="sSLog_UserNick">
+					</el-table-column>
+					<el-table-column label="访问IP" prop="sSLog_IP">
+					</el-table-column>
+					<el-table-column label="请求地址" prop="sSLog_Uri" width="200">
+					</el-table-column>
+					<el-table-column label="请求耗时(ms)" prop="lSLog_TimeConsume">
+					</el-table-column>
+					<el-table-column label="模块" prop="sSLog_Module" width="150">
+					</el-table-column>
+					<el-table-column label="方法名" prop="sSLog_Method">
+					</el-table-column>
+					<el-table-column label="请求参数" prop="sSLog_Request">
+					</el-table-column>
+					<el-table-column label="响应参数" prop="sSLog_Response">
+					</el-table-column>
+					<el-table-column label="异常信息" prop="sSLog_Exception" width="300">
+					</el-table-column>
+
+					<!-- <el-table-column fixed="right" label="操作" width="180">
+						<template scope="scope">
+							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+							<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)">删除</el-button>
+						</template>
+					</el-table-column> -->
+				</el-table>
+		
+				<!-- page tool -->
+				<el-col :span="24" class="toolbar">
+					<!-- <el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">Batch remove</el-button> -->
+					<el-pagination layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[10, 20, 50, 100]" :page-size="rows" :total="total" style="float:right;">
+					</el-pagination>
+				</el-col>
+			</el-tab-pane>
+		  </el-tabs>
+		
+		
+	</section>
+  </div>
+</body>
+  <script src="js/jquery-3.4.1.js" type="text/javascript"></script>
+  <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
+  <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
+  <script type="text/javascript" src="js/global.js"></script>
+  <script type="text/javascript" src="js/slog.js"></script>
+</html>

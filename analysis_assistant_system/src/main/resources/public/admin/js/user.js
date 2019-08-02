@@ -578,11 +578,7 @@ var myvue = new Vue({
 			}
 		},
 		mounted: function() {
-	      	this.user = JSON.parse(localStorage.getItem('loginUser'));
-	  		if(this.user　==　null){
-	  			parent.window.location.href = "login.html";
-	  			return;
-	  		}
+			getLoginToken();
 			this.preloading = true;
 			this.handleGroupOptions();
 			this.handleMenuAuthOptions();

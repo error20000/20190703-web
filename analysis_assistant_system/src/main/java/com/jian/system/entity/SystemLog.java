@@ -17,11 +17,11 @@ public class SystemLog extends Base<SystemLog> {
 	private String sSLog_Type;
 	@Excel(name="日期", sort=0, length="", isNull=1 )
 	private Date dSLog_CreateDate;
-	@Excel(name="操作员ID", sort=0, length="32", isNull=1 )
+	@Excel(name="用户ID", sort=0, length="32", isNull=1 )
 	private String sSLog_UserID;
-	@Excel(name="操作员名称", sort=0, length="32", isNull=1 )
-	private String sSLog_UserName;
-	@Excel(name="操作员IP", sort=0, length="255", isNull=1 )
+	@Excel(name="用户昵称", sort=0, length="32", isNull=1 )
+	private String sSLog_UserNick;
+	@Excel(name="用户IP", sort=0, length="255", isNull=1 )
 	private String sSLog_IP;
 	@Excel(name="日志描述", sort=0, length="255", isNull=1 )
 	private String sSLog_Describe;
@@ -65,11 +65,11 @@ public class SystemLog extends Base<SystemLog> {
 	public void setsSLog_UserID(String sSLog_UserID) {
 		this.sSLog_UserID = sSLog_UserID;
 	}
-	public String getsSLog_UserName() {
-		return sSLog_UserName;
+	public String getsSLog_UserNick() {
+		return sSLog_UserNick;
 	}
-	public void setsSLog_UserName(String sSLog_UserName) {
-		this.sSLog_UserName = sSLog_UserName;
+	public void setsSLog_UserNick(String sSLog_UserNick) {
+		this.sSLog_UserNick = sSLog_UserNick;
 	}
 	public String getsSLog_IP() {
 		return sSLog_IP;

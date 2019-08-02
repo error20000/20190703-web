@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Nfc;
@@ -35,6 +37,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增NFC")
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -44,6 +47,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新NFC")
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -54,6 +58,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除NFC")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -63,6 +68,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询NFC")
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
 	}
@@ -72,6 +78,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单个NFC")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -81,6 +88,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有NFC")
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
@@ -89,6 +97,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询NFC绑定信息")
 	public String viewBind(HttpServletRequest req) {
 		return service.viewBind(req);
 	}
@@ -97,6 +106,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="解除NFC绑定")
 	public String delBind(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -119,6 +129,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询未使用的NFC")
 	public String unbind(HttpServletRequest req) {
 		List<Nfc> list = service.unbind();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();

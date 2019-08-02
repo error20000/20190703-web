@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.jian.annotation.API;
 import com.jian.annotation.APIType;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.utils.UploadUtils;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
@@ -66,6 +68,7 @@ public class FileUploadController {
 	@ResponseBody
 	@RequestMapping("/uploadImg")
 	@API(type=APIType.Both)
+	@SysLog(type=SystemLogType.Upload, describe="上传图片")
 	public String upload(HttpServletRequest request, HttpServletResponse response, MultipartFile file) {
 		String dir = Tools.getReqParamSafe(request, "dir");
 		dir = Tools.isNullOrEmpty(dir) ? "" : dir.endsWith("/") ? dir : dir + "/";
@@ -117,6 +120,7 @@ public class FileUploadController {
 	@ResponseBody
 	@RequestMapping("/uploadImgBase64")
 	@API(type=APIType.Both)
+	@SysLog(type=SystemLogType.Upload, describe="上传Base64图片")
 	public String uploadBase64(HttpServletRequest request, HttpServletResponse response) {
 		String dir = Tools.getReqParamSafe(request, "dir");
 		dir = Tools.isNullOrEmpty(dir) ? "" : dir.endsWith("/") ? dir : dir + "/";
@@ -181,6 +185,7 @@ public class FileUploadController {
 	@ResponseBody
 	@RequestMapping("/uploadFile")
 	@API(type=APIType.Both)
+	@SysLog(type=SystemLogType.Upload, describe="上传文件")
 	public String uploadFile(HttpServletRequest request, HttpServletResponse response, MultipartFile file) {
 		String dir = Tools.getReqParamSafe(request, "dir");
 		dir = Tools.isNullOrEmpty(dir) ? "" : dir.endsWith("/") ? dir : dir + "/";

@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface SystemLog {
-	String type() default "";
+public @interface SysLog {
+	SystemLogType type();
 	String describe() default "";
 }

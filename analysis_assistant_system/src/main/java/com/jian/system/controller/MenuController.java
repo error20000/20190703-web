@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.GroupMenu;
@@ -37,6 +39,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增菜单")
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -46,6 +49,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新菜单")
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -56,6 +60,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除菜单")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -65,6 +70,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询菜单")
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
 	}
@@ -74,6 +80,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单个菜单")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -83,6 +90,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有菜单")
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
@@ -92,6 +100,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询权限菜单选项")
 	public String menuAuthOptions(HttpServletRequest req) {
 		List<Map<String, Object>> res = service.menuAuthOptions();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
@@ -101,6 +110,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询用户组菜单权限")
 	public String groupMenuAuth(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -117,6 +127,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新用户组菜单权限")
 	public String updateGroupMenuAuth(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -136,6 +147,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询用户菜单权限")
 	public String userMenuAuth(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -152,6 +164,7 @@ public class MenuController extends BaseController<Menu, MenuService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新用户菜单权限")
 	public String updateUserMenuAuth(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数

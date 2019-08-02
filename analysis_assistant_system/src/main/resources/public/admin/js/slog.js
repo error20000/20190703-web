@@ -1,7 +1,9 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/data/findPage";
-var excelUrl = baseUrl + "api/data/excel";
+var queryUrl = baseUrl + "api/systemLog/findPage";
+var excelUrl = baseUrl + "api/systemLog/excel";
+var dictUrl = baseUrl + "api/dict/findList";
+var userUrl = baseUrl + "api/user/findAll";
 
 var ajaxReq = parent.window.ajaxReq || "";
 
@@ -12,9 +14,9 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					user: '',
-					start: '',
-					end: ''
+					sSLog_Type: '',
+					startDate: '',
+					endDate: ''
 				},
 				list: [],
 				total: 0,
@@ -24,12 +26,52 @@ var myvue = new Vue({
 				sels: [],
 				preloading: false,
 				
+				userOptions: [],
+				typeDictNo: 'SystemLogType',
+				typeOptions: [],
+
+				
 				user: ''
 			}
 		},
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			typeFormatter: function(row){
+				var name = row.sSLog_Type;
+				for (var i = 0; i < this.typeOptions.length; i++) {
+					var item = this.typeOptions[i];
+					if(row.sSLog_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.typeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.typeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleUserOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(userUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.userOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
 			},
 			handleSizeChange: function (val) {
 				this.rows = val;
@@ -71,22 +113,15 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					user: '',
-					start: '',
-					end: ''
+					sSLog_Type: '',
+					startDate: '',
+					endDate: ''
 				};
 				this.getList();
 			},
+			//excel
 			getExcel: function(){
-				this.query();
-				var params = "";
-				for ( var key in this.filters) {
-					if(this.filters[key]){
-						params += "&"+key+"="+this.filters[key];
-					}
-				}
-				params += "&userId="+this.user.pid;
-				parent.window.open(excelUrl+(params ? "?"+params.substring(1) : ""));
+				
 			},
 			
 			selsChange: function (sels) {
@@ -99,6 +134,9 @@ var myvue = new Vue({
 			},
 			handleResQuery: function(res, success, failed){
 				this.handleRes(false, res, success, failed);
+			},
+			handleResOperate: function(res, success, failed){
+				this.handleRes(true, res, success, failed);
 			},
 			handleRes: function(show, res, success, failed){
 				if(res.code > 0){
@@ -125,7 +163,7 @@ var myvue = new Vue({
 				}else{
 					if(show){
 						this.$message({
-							message: '失败',
+							message: '失败：'+res.msg,
 							type: 'warning'
 						});
 					}
@@ -136,12 +174,10 @@ var myvue = new Vue({
 			}
 		},
 		mounted: function() {
-	      	this.user = JSON.parse(localStorage.getItem('loginUser'));
-	  		if(this.user　==　null){
-	  			parent.window.location.href = "login.html";
-	  			return;
-	  		}
+			getLoginToken();
 			this.preloading = true;
+			this.handleTypeOptions();
+			this.handleUserOptions();
 			this.getList();
 		}
 	  });

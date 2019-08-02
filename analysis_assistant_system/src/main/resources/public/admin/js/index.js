@@ -193,12 +193,7 @@ new Vue({
         }
       },
       mounted: function() {
-      	this.user = JSON.parse(localStorage.getItem('loginUser'));
-  		if(this.user　==　null){
-  			parent.window.location.href = "login.html";
-  			return;
-  		}
-    	loginUserId = this.user.pid;
+    	getLoginToken();
 		this.isLogin(this.initLoginUser);
 		this.preloading = true;
 		this.userAuthMenu();

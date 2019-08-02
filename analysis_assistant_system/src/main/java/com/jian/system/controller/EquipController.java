@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
+import com.jian.system.annotation.SysLog;
+import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Equip;
@@ -36,6 +38,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="新增器材")
 	public String add(HttpServletRequest req) {
 		return super.add(req);
 	}
@@ -45,6 +48,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新器材")
 	public String update(HttpServletRequest req) {
 		return super.update(req);
 	}
@@ -55,6 +59,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="删除器材")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
 	}
@@ -64,6 +69,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询器材")
 	public String findPage(HttpServletRequest req) {
 		return super.findPage(req);
 	}
@@ -73,6 +79,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询单个器材")
 	public String findOne(HttpServletRequest req) {
 		return super.findOne(req);
 	}
@@ -82,6 +89,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有器材")
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
@@ -90,6 +98,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="器材解除NFC绑定")
 	public String delBind(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -116,6 +125,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="器材绑定NFC")
 	public String bind(HttpServletRequest req) {
 		Map<String, Object> vMap = null;
 		//参数
@@ -142,6 +152,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询未绑定NFC的器材")
 	public String unbind(HttpServletRequest req) {
 		List<Equip> list = service.unbind();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();

@@ -1,6 +1,8 @@
 package com.jian.system.aspect;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,8 +21,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import com.jian.system.annotation.SystemLog;
+import com.jian.system.annotation.SysLog;
 import com.jian.system.config.Config;
+import com.jian.system.entity.SystemLog;
 import com.jian.system.entity.User;
 import com.jian.system.service.SystemLogService;
 import com.jian.system.utils.Utils;
@@ -38,57 +41,84 @@ public class SystemLogAspect {
 	private SystemLogService logService;
 	
     private long startTime = 0;
-    private com.jian.system.entity.SystemLog slog = null;
+    private SystemLog slog = null;
     private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
     
 
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)")
-    public void before(JoinPoint joinPoint, SystemLog log){
+    public void before(JoinPoint joinPoint, SysLog log){
     	startTime = System.currentTimeMillis();
     }
 
 
     @After("execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)")
-    public void after(JoinPoint joinPoint, SystemLog log){
+    public void after(JoinPoint joinPoint, SysLog log){
     	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
     	HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(config.login_session_key);
     	//日志
-		slog = new com.jian.system.entity.SystemLog();
+		slog = new SystemLog();
     	slog.setsSLog_ID(Utils.newSnowflakeIdStr());
     	slog.setdSLog_CreateDate(new Date());
-    	slog.setsSLog_Type(log.type());
+    	slog.setsSLog_Type(log.type().getValue());
     	slog.setsSLog_Describe(log.describe());
     	if(user != null) {
     		slog.setsSLog_UserID(user.getsUser_ID());
-    		slog.setsSLog_UserName(user.getsUser_UserName());
+    		slog.setsSLog_UserNick(user.getsUser_Nick());
     	}
     	slog.setlSLog_TimeConsume((int)(System.currentTimeMillis() - startTime));
     	slog.setsSLog_Uri(request.getRequestURI());
     	slog.setsSLog_Method(joinPoint.getSignature().getName());
     	slog.setsSLog_Module(joinPoint.getTarget().getClass().getName());
     	slog.setsSLog_IP(Tools.getIp(request));
-    	logService.insert(slog, user);
+    	
+    	//保存
+    	switch (log.type()) {
+		case Query:
+			break;
+		case Add:
+		case Update:
+		case Delete:
+			String str = JsonTools.toJsonString(request.getParameterMap());
+			str = str.substring(0, str.length() > 255 ? 255 : str.length());
+			slog.setsSLog_Request(str);
+			logService.insert(slog, user);
+			break;
+		case Login:
+			Map<String, String[]> params = new HashMap<>(request.getParameterMap());
+			params.remove("password");
+			slog.setsSLog_Request(JsonTools.toJsonString(params));
+			logService.insert(slog, user);
+			break;
+		default:
+			logService.insert(slog, user);
+			break;
+		}
 
 		logger.debug("request: "+JsonTools.toJsonString(request.getParameterMap()));
     }
 
     
     @AfterReturning(pointcut="execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)", returning="obj")
-    public void afterReturning(JoinPoint joinPoint, Object obj, SystemLog log){
+    public void afterReturning(JoinPoint joinPoint, Object obj, SysLog log){
     	switch (log.type()) {
-		case "query":
+		case Query:
 			break;
-
+		case Add:
+		case Update:
+		case Login:
+			String str = String.valueOf(obj);
+			slog.setsSLog_Response(str.substring(0, str.length() > 255 ? 255 : str.length()) );
+	    	logService.update(slog, null);
+			break;
 		default:
-			logger.debug("response: "+JsonTools.toJsonString(obj));
+			logger.debug("response: "+String.valueOf(obj));
 			break;
 		}
     }
     
     @AfterThrowing(pointcut="execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)", throwing="e")
-    public void afterThrowing(JoinPoint joinPoint, Exception e, SystemLog log){
-    	System.out.println(e.getMessage());
+    public void afterThrowing(JoinPoint joinPoint, Exception e, SysLog log){
     	slog.setsSLog_Exception(e.getMessage());
     	logService.update(slog, null);
     }
