@@ -33,7 +33,7 @@ public class AppService extends BaseService<App, AppMapper> {
 			obj.setsApp_NO(new Date().getTime() + "");
 		}
 		if("******".equals(obj.getsApp_SecretKey())) {
-			obj.setsApp_SecretKey(Tools.md5(new Date().getTime() + ""));
+			obj.setsApp_SecretKey(Tools.md5(Utils.newSnowflakeIdStr()));
 		}
 		//判断重复
 		App test = baseMapper.selectOne(tableName, MapTools.custom().put("sApp_NO", obj.getsApp_NO()).build());
@@ -77,7 +77,7 @@ public class AppService extends BaseService<App, AppMapper> {
 			value.put("sApp_NO", new Date().getTime() + "");
 		}
 		if("******".equals(value.get("sApp_SecretKey"))) {
-			value.put("sApp_SecretKey", Tools.md5(new Date().getTime() + ""));
+			value.put("sApp_SecretKey", Tools.md5(Utils.newSnowflakeIdStr()));
 		}
 		//判断重复
 		String sApp_NO = (String) value.get("sApp_NO");

@@ -12,6 +12,9 @@ var nfcAllUrl = baseUrl + "api/nfc/findAll";
 var bindUrl = baseUrl + "api/aid/bind";
 var delBindUrl = baseUrl + "api/aid/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
+var userUrl = baseUrl + "api/user/findAll";
+var aidUserUrl = baseUrl + "api/aid/user";
+var aidUpdateUserUrl = baseUrl + "api/aid/updateUser";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -50,6 +53,7 @@ var myvue = new Vue({
 				iconDictNo: 'AidIcon',
 				iconOptions: [],
 				nfcAllOptions: [],
+				userOptions: [],
 				
 				//add
 				addFormVisible: false,
@@ -85,6 +89,13 @@ var myvue = new Vue({
 		                { required: true, message: '请选择NFC标签.', trigger: 'blur' },
 			        ]
 				},
+				//user
+				userFormVisible: false,
+				userLoading: false,
+				userForm: {
+					user: []
+				},
+				userFormRules: {},
 				
 				user: ''
 			}
@@ -231,6 +242,18 @@ var myvue = new Vue({
 					});
 				});
 			},
+			handleUserOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(userUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.userOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -245,6 +268,10 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var self = this;
 				var params = {
 					page: this.page,
@@ -279,6 +306,10 @@ var myvue = new Vue({
 			},
 			//add
 			handleAdd: function(){
+				if(!this.hasAuth('add')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.addFormVisible = true;
 				this.addForm = {};
 			},
@@ -307,6 +338,10 @@ var myvue = new Vue({
 			},
 			//del
 			handleDel: function(index, row){
+				if(!this.hasAuth('delete')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -324,8 +359,10 @@ var myvue = new Vue({
 			},
 			//edit
 			handleEdit: function (index, row) {
-				//this.editFormVisible = true;
-				//this.editForm = Object.assign({}, row);
+				if(!this.hasAuth('edit')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var params = {
 						sAid_ID: row.sAid_ID
 				};
@@ -413,6 +450,48 @@ var myvue = new Vue({
 								self.handleResOperate(res, function(){
 									self.bindFormVisible = false;
 									self.getList();
+								});
+							});
+						});
+					}
+				});
+			},
+			//user
+			handleUser: function(index, row){
+				if(!this.hasAuth('user')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				var self = this;
+				ajaxReq(aidUserUrl, {sAid_ID: row.sAid_ID}, function(res){
+					self.handleResQuery(res, function(){
+						self.userFormVisible = true;
+						self.userForm.sAid_ID = row.sAid_ID;
+						self.userForm.user = [];
+						for (var i = 0; i < res.data.length; i++) {
+							self.userForm.user.push(res.data[i].sUser_ID);
+						}
+					});
+				});
+			},
+			userClose: function () {
+				this.userFormVisible = false;
+				this.userLoading = false;
+				this.$refs.userForm.resetFields();
+			},
+			userSubmit: function () {
+				this.$refs.userForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确定提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.userLoading = true;
+							var params = Object.assign({}, this.userForm);
+							params.user = params.user.join(",");
+							ajaxReq(aidUpdateUserUrl, params, function(res){
+								self.userLoading = false;
+								self.handleResOperate(res, function(){
+									self.userFormVisible = false;
+									//self.getList();
 								});
 							});
 						});
@@ -509,6 +588,7 @@ var myvue = new Vue({
 			this.handleMarkOptions();
 			this.handleNfcAllOptions();
 			this.getList();
+			this.handleUserOptions();
 		}
 	  });
 	

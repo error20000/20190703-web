@@ -104,6 +104,10 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var self = this;
 				var params = {
 					page: this.page,
@@ -136,6 +140,10 @@ var myvue = new Vue({
 			},
 			//add
 			handleAdd: function(){
+				if(!this.hasAuth('add')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.addFormVisible = true;
 				this.addForm = {};
 			},
@@ -164,6 +172,10 @@ var myvue = new Vue({
 			},
 			//del
 			handleDel: function(index, row){
+				if(!this.hasAuth('delete')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -181,8 +193,10 @@ var myvue = new Vue({
 			},
 			//edit
 			handleEdit: function (index, row) {
-				//this.editFormVisible = true;
-				//this.editForm = Object.assign({}, row);
+				if(!this.hasAuth('edit')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var params = {
 						sGroup_ID: row.sGroup_ID
 				};
@@ -220,6 +234,10 @@ var myvue = new Vue({
 			},
 			//auth
 			handleAuth: function (index, row) {
+				if(!this.hasAuth('auth')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var params = {
 						sGroup_ID: row.sGroup_ID
 				};

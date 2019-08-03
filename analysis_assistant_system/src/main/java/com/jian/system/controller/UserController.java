@@ -1,6 +1,7 @@
 package com.jian.system.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -105,8 +106,6 @@ public class UserController extends BaseController<User, UserService> {
 		return super.findAll(req);
 	}
 
-	
-	//TODO -------------------------------------------------------------------------------- 前端接口
 
 	@RequestMapping("/login")
     @ResponseBody
@@ -283,6 +282,43 @@ public class UserController extends BaseController<User, UserService> {
 		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
+
+	@PostMapping("/aid")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询分配给用户的航标")
+	public String aid(HttpServletRequest req) {
+
+		Map<String, Object> vMap = null;
+		//参数
+		String sUser_ID = Tools.getReqParamSafe(req, "sUser_ID");
+		vMap = Tools.verifyParam("sUser_ID", sUser_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		List<Map<String, Object>> list = service.aid(sUser_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+	@PostMapping("/updateAid")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新分配给用户的航标")
+	public String updateAid(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sUser_ID = Tools.getReqParamSafe(req, "sUser_ID");
+		String aid = Tools.getReqParamSafe(req, "aid");
+		vMap = Tools.verifyParam("sUser_ID", sUser_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int res = service.updateAid(sUser_ID, aid);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	private String newToken(User user){
 		long curTime = System.currentTimeMillis();
 		String str = user.getsUser_ID() + "." + curTime + "."  + config.expireTime;
@@ -291,4 +327,5 @@ public class UserController extends BaseController<User, UserService> {
 		return tokenStr;
 	}
 
+	//TODO -------------------------------------------------------------------------------- 前端接口
 }

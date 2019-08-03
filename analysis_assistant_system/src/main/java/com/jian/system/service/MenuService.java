@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.dao.MenuMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.AppMenu;
 import com.jian.system.entity.GroupMenu;
 import com.jian.system.entity.Menu;
 import com.jian.system.entity.MenuFun;
@@ -28,6 +29,8 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 	private GroupMenuService groupMenuService;
 	@Autowired
 	private UserMenuService userMenuService;
+	@Autowired
+	private AppMenuService appMenuService;
 	
 	@TargetDataSource
 	@SuppressWarnings("unchecked")
@@ -134,6 +137,38 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 			return 1;
 		}
 		return userMenuService.batchInsert(list, null);
+	}
+	
+
+	
+	@TargetDataSource
+	public List<AppMenu> appMenuAuth(String sApp_ID) {
+		return appMenuService.selectList(MapTools.custom().put("sAppMenu_AppID", sApp_ID).build());
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateAppMenuAuth(String sApp_ID, Map<String, Object> params) {
+		//删除原权限
+		appMenuService.delete(MapTools.custom().put("sAppMenu_AppID", sApp_ID).build(), null);
+		//添加新权限
+		List<AppMenu> list = new ArrayList<>();
+		AppMenu node = null;
+		for (String key : params.keySet()) {
+			if(Tools.isNullOrEmpty(params.get(key))) {
+				continue;
+			}
+			node = new AppMenu();
+			node.setsAppMenu_ID(Utils.newSnowflakeIdStr());
+			node.setsAppMenu_AppID(sApp_ID);
+			node.setsAppMenu_MenuID(key);
+			node.setsAppMenu_MenuFunID(String.valueOf(params.get(key))); 
+			list.add(node);
+		}
+		if(list.size() == 0) { //空权限
+			return 1;
+		}
+		return appMenuService.batchInsert(list, null);
 	}
 	
 	private List<Map<String, Object>> findParent(String pid, List<Menu> all){

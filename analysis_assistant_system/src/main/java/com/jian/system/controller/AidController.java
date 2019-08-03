@@ -158,6 +158,42 @@ public class AidController extends BaseController<Aid, AidService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	
+
+	@PostMapping("/user")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标分配的用户")
+	public String user(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		vMap = Tools.verifyParam("sAid_ID", sAid_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		List<Map<String, Object>> list = service.user(sAid_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+	@PostMapping("/updateUser")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新航标分配的用户")
+	public String updateUser(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		String user = Tools.getReqParamSafe(req, "user");
+		vMap = Tools.verifyParam("sAid_ID", sAid_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int res = service.updateUser(sAid_ID, user);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
 

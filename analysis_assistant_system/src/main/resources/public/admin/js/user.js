@@ -13,6 +13,9 @@ var menuAuthUrl = baseUrl + "api/menu/menuAuthOptions";
 var modAuthUrl = baseUrl + "api/menu/updateUserMenuAuth";
 var getAuthUrl = baseUrl + "api/menu/userMenuAuth";
 var getGroupAuthUrl = baseUrl + "api/menu/groupMenuAuth";
+var aidAllUrl = baseUrl + "api/aid/findAll";
+var userAidUrl = baseUrl + "api/user/aid";
+var userUpdateAidUserUrl = baseUrl + "api/user/updateAid";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -42,6 +45,7 @@ var myvue = new Vue({
 				
 				groupOptions: [],
 				pwdReg: pwdReg,
+				aidOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -144,6 +148,13 @@ var myvue = new Vue({
 				rightClassObject: {
 					small: false
 				},
+				//aid
+				aidFormVisible: false,
+				aidLoading: false,
+				aidForm: {
+					aid: []
+				},
+				aidFormRules: {},
 				
 				user: ''
 			}
@@ -202,6 +213,18 @@ var myvue = new Vue({
 					});
 				});
 			},
+			handleAidOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(aidAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aidOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -216,6 +239,10 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var self = this;
 				var params = {
 					page: this.page,
@@ -250,6 +277,10 @@ var myvue = new Vue({
 			},
 			//add
 			handleAdd: function(){
+				if(!this.hasAuth('add')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.addFormVisible = true;
 				this.addForm = {};
 			},
@@ -278,6 +309,10 @@ var myvue = new Vue({
 			},
 			//del
 			handleDel: function(index, row){
+				if(!this.hasAuth('delete')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.$confirm('确定删除该条记录吗? ', '提示', {
 					type: 'warning'
 				}).then(() => {
@@ -295,8 +330,10 @@ var myvue = new Vue({
 			},
 			//edit
 			handleEdit: function (index, row) {
-				//this.editFormVisible = true;
-				//this.editForm = Object.assign({}, row);
+				if(!this.hasAuth('edit')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var params = {
 					sUser_ID: row.sUser_ID
 				};
@@ -334,6 +371,10 @@ var myvue = new Vue({
 			},
 			//pwd
 			handleResetPWD: function (index, row) {
+				if(!this.hasAuth('resetPwd')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.pwdFormVisible = true;
 				this.pwdForm = {
 						sUser_ID: row.sUser_ID
@@ -404,6 +445,10 @@ var myvue = new Vue({
 				});
 			},
 			handleAuth: function (index, row) {
+				if(!this.hasAuth('auth')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				this.handleGroupAuth(row.sUser_GroupID);
 				var params = {
 						sUser_ID: row.sUser_ID
@@ -522,6 +567,48 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//aid
+			handleAid: function(index, row){
+				if(!this.hasAuth('aid')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				var self = this;
+				ajaxReq(userAidUrl, {sUser_ID: row.sUser_ID}, function(res){
+					self.handleResQuery(res, function(){
+						self.aidFormVisible = true;
+						self.aidForm.sUser_ID = row.sUser_ID;
+						self.aidForm.aid = [];
+						for (var i = 0; i < res.data.length; i++) {
+							self.aidForm.aid.push(res.data[i].sAid_ID);
+						}
+					});
+				});
+			},
+			aidClose: function () {
+				this.aidFormVisible = false;
+				this.aidLoading = false;
+				this.$refs.aidForm.resetFields();
+			},
+			aidSubmit: function () {
+				this.$refs.aidForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确定提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.userLoading = true;
+							var params = Object.assign({}, this.aidForm);
+							params.aid = params.aid.join(",");
+							ajaxReq(userUpdateAidUserUrl, params, function(res){
+								self.userLoading = false;
+								self.handleResOperate(res, function(){
+									self.aidFormVisible = false;
+									//self.getList();
+								});
+							});
+						});
+					}
+				});
+			},
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
@@ -608,6 +695,7 @@ var myvue = new Vue({
 			this.handleGroupOptions();
 			this.handleMenuAuthOptions();
 			this.getList();
+			this.handleAidOptions();
 		}
 	  });
 	

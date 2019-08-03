@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.config.Config;
 import com.jian.system.dao.UserMapper;
@@ -16,6 +17,7 @@ import com.jian.system.entity.GroupMenu;
 import com.jian.system.entity.Menu;
 import com.jian.system.entity.MenuFun;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserAid;
 import com.jian.system.entity.UserMenu;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
@@ -37,6 +39,8 @@ public class UserService extends BaseService<User, UserMapper> {
 	private GroupMenuService groupMenuService;
 	@Autowired
 	private UserMenuService userMenuService;
+	@Autowired
+	private UserAidService userAidService;
 	
 	@Override
 	@TargetDataSource
@@ -284,6 +288,35 @@ public class UserService extends BaseService<User, UserMapper> {
 			}
 		}
 		return temp;
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> aid(String sUser_ID) {
+		return baseMapper.aid(sUser_ID);
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateAid(String sUser_ID, String aidIds) {
+		//删除分配
+		userAidService.delete(MapTools.custom().put("sUserAid_UserID", sUser_ID).build(), null);
+		//重新分配
+		if(Tools.isNullOrEmpty(aidIds)) {
+			return 1;
+		}
+		List<UserAid> list = new ArrayList<>();
+		UserAid node = null;
+		for (String aidId : aidIds.split(",")) {
+			node = new UserAid();
+			node.setsUserAid_ID(Utils.newSnowflakeIdStr());
+			node.setsUserAid_AidID(aidId);
+			node.setsUserAid_UserID(sUser_ID);
+			list.add(node);
+		}
+		if(list.size() == 0) { //空分配
+			return 1;
+		}
+		return userAidService.batchInsert(list, null);
 	}
 	
 }

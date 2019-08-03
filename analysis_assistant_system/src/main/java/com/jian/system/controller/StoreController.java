@@ -156,7 +156,16 @@ public class StoreController extends BaseController<Store, StoreService> {
 		List<Map<String, Object>> list = service.storeList(parent);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
-	
+
+	@PostMapping("/findType")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询一级仓库")
+	public String findType(HttpServletRequest req) {
+		List<StoreType> list = service.findType();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
 

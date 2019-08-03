@@ -91,6 +91,10 @@ var myvue = new Vue({
 			},
 			//query
 			getList: function () {
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
+				}
 				var self = this;
 				var params = {
 					page: this.page,

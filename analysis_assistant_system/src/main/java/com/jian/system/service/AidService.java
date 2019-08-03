@@ -1,5 +1,6 @@
 package com.jian.system.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserAid;
+import com.jian.system.utils.Utils;
+import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tools;
 
 @Service
@@ -19,6 +23,8 @@ public class AidService extends BaseService<Aid, AidMapper> {
 
 	@Autowired
 	private NfcService nfcService;
+	@Autowired
+	private UserAidService userAidService;
 	
 	@Transactional
 	@TargetDataSource
@@ -67,6 +73,42 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			nfcService.rebind(old.getsAid_NfcID()); //修改状态
 		}
 		return baseMapper.delete(tableName, condition); //删除
+	}
+	
+	
+	@TargetDataSource
+	public List<Aid> unuser() {
+		return baseMapper.unuser();
+	}
+	
+
+	@TargetDataSource
+	public List<Map<String, Object>> user(String sAid_ID) {
+		return baseMapper.user(sAid_ID);
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateUser(String sAid_ID, String userIds) {
+		//删除分配
+		userAidService.delete(MapTools.custom().put("sUserAid_AidID", sAid_ID).build(), null);
+		//重新分配
+		if(Tools.isNullOrEmpty(userIds)) {
+			return 1;
+		}
+		List<UserAid> list = new ArrayList<>();
+		UserAid node = null;
+		for (String userId : userIds.split(",")) {
+			node = new UserAid();
+			node.setsUserAid_ID(Utils.newSnowflakeIdStr());
+			node.setsUserAid_AidID(sAid_ID);
+			node.setsUserAid_UserID(userId);
+			list.add(node);
+		}
+		if(list.size() == 0) { //空分配
+			return 1;
+		}
+		return userAidService.batchInsert(list, null);
 	}
 
 }

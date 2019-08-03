@@ -15,6 +15,7 @@ import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
+import com.jian.system.entity.AppMenu;
 import com.jian.system.entity.GroupMenu;
 import com.jian.system.entity.Menu;
 import com.jian.system.entity.UserMenu;
@@ -176,6 +177,44 @@ public class MenuController extends BaseController<Menu, MenuService> {
 		Map<String, Object> params =Tools.getReqParamsToMap(req);
 		params.remove("sUser_ID");
 		int res = service.updateUserMenuAuth(sUser_ID, params);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+
+
+	@PostMapping("/appMenuAuth")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询应用菜单权限")
+	public String appMenuAuth(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sApp_ID = Tools.getReqParamSafe(req, "sApp_ID");
+		vMap = Tools.verifyParam("sApp_ID", sApp_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		List<AppMenu> res = service.appMenuAuth(sApp_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@PostMapping("/updateAppMenuAuth")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新应用菜单权限")
+	public String updateAppMenuAuth(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sApp_ID = Tools.getReqParamSafe(req, "sApp_ID");
+		vMap = Tools.verifyParam("sApp_ID", sApp_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		Map<String, Object> params =Tools.getReqParamsToMap(req);
+		params.remove("sApp_ID");
+		int res = service.updateAppMenuAuth(sApp_ID, params);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	

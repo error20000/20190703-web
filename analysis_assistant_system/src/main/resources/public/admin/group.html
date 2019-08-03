@@ -55,7 +55,7 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:group:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sGroup_ID" width="180">
+					<el-table-column label="ID" prop="sGroup_ID" width="120">
 					</el-table-column>
 					<el-table-column label="分组名称" prop="sGroup_Name">
 					</el-table-column>
@@ -120,7 +120,8 @@
 			  	<!-- <div style="margin: 15px 0;"></div> -->
 			    <el-checkbox-group v-model="authForm[menuAuth.sMenu_ID]" @change="(val) => {handleCheckedChange(val, menuAuth);}">
 			    	<template v-for="(item, index2) in menuAuth.children">
-					    <el-tooltip class="item" effect="dark" :disabled="!item.sMFun_Describe" :content="item.sMFun_Describe" placement="top">
+					    <el-tooltip class="item" effect="dark" :disabled="!item.sMFun_Describe" placement="top">
+					    	<div slot="content" v-html="item.sMFun_Describe"></div>
 				    		<el-checkbox border :label="item.sMFun_ID" :disabled="menuAuth.disabled ? true : item.lMFun_StatusFlag ? false : true">{{item.sMFun_Name}}</el-checkbox>
 		    			</el-tooltip>
 			    	</template>

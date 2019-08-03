@@ -1,13 +1,7 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/app/findPage";
-var addUrl = baseUrl + "api/app/add";
-var modUrl = baseUrl + "api/app/update";
-var delUrl = baseUrl + "api/app/delete";
-var oneUrl = baseUrl + "api/app/findOne";
-var excelUrl = baseUrl + "api/app/excel";
-var importUrl = baseUrl + "api/app/import";
-var userUrl = baseUrl + "api/user/findAll";
+var aidUrl = baseUrl + "api/aid/findAll";
+var storeTypeUrl = baseUrl + "api/store/findType";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -19,8 +13,9 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					sApp_NO: '',
-					sApp_Name: ''
+					type: '1',
+					sAid_ID: '',
+					sStoreType_ID: ''
 				},
 				list: [],
 				total: 0,
@@ -32,33 +27,14 @@ var myvue = new Vue({
 				
 				menuFuns: gMenuFuns,
 				authCache: {},
-				
-				userOptions: [],
 
-				//add
-				addFormVisible: false,
-				addLoading: false, 
-				addForm: {},
-				addFormRules: {
-					sApp_NO: [
-		                { required: true, message: '请输入编码.', trigger: 'blur' },
-		              ],
-		            sApp_SecretKey: [
-		                { required: true, message: '请输入秘钥.', trigger: 'blur' },
-		              ]
-				},
-				//edit
-				editFormVisible: false,
-				editLoading: false,
-				editForm: {},
-				editFormRules: {
-					sApp_NO: [
-		                { required: true, message: '请输入编码.', trigger: 'blur' },
-		              ],
-		            sApp_SecretKey: [
-		                { required: true, message: '请输入秘钥.', trigger: 'blur' },
-		              ]
-				},
+				aidOptions: [],
+				storeTypeOptions: [],
+				
+				pointArray: [],
+				
+				detailFormVisible: false,
+				detailForm: {},
 				
 				user: ''
 			}
@@ -67,46 +43,29 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
-			userAddFormatter: function(row){
-				var name = row.sApp_UserID;
-				for (var i = 0; i < this.userOptions.length; i++) {
-					var item = this.userOptions[i];
-					if(row.sApp_UserID == item.sUser_ID){
-						name = item.sUser_Nick;
-						break
-					}
-				}
-				return name;
-			},
-			handleUserOptions: function(cb){
+			handleAidOptions: function(cb){
 				var self = this;
 				var params = {};
-				ajaxReq(userUrl, params, function(res){
+				ajaxReq(aidUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.userOptions = res.data;
+						self.aidOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
 					});
 				});
 			},
-			handleRandom: function(form, attr){
-				this.$refs[form][attr] = "******";
-				if(form == 'addForm'){
-					if(attr == 'sApp_NO'){
-						this.addForm.sApp_NO = "******";
-					}else{
-						this.addForm.sApp_SecretKey = "******";
-					}
-				}else{
-					if(attr == 'sApp_NO'){
-						this.editForm.sApp_NO = "******";
-					}else{
-						this.editForm.sApp_SecretKey = "******";
-					}
-				}
-
-				console.log(this.addForm.sApp_NO);
+			handleStoreTypeOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(storeTypeUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.storeTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
 			},
 			initMap: function(){
 				var self = this;
@@ -140,54 +99,136 @@ var myvue = new Vue({
 					 ArGis.view.on("click", function(evt){
 							console.log(evt);
 							console.log(self);
-							self.handleDetail();
-							//ArGis.view.ui.add(self.$el, "top-right");
-							/*watchUtils.watch(view, "camera", function() {
-							    info.camera = view.camera;
-							});*/
+							ArGis.view.hitTest(evt).then(function(response) {
+							    var result = response.results[0];
+							    if (result) {
+							    	self.handleDetail(result);
+							    }
+						    });
 					 });
-
+					 
+					 self.initData();
+					 
 				 });
 			},
-			query:function(){
-				this.page = 1;
-				this.getList();
+			initData: function(){
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				this.pointArray = [];
+				for (var i = 0; i < this.aidOptions.length; i++) {
+					let node = this.aidOptions[i];
+					this.pointArray.push(this.createPoint({
+						lat: node.lAid_Lat,
+						lng: node.lAid_Lng,
+						attr:{
+							id: node.sAid_ID,
+							name: node.sAid_Name,
+							no: node.sAid_NO,
+							type: 'aid'
+						},
+						color: "blue",
+						width: "10px"
+					}));
+				}
+				for (var i = 0; i < this.storeTypeOptions.length; i++) {
+					let node = this.storeTypeOptions[i];
+					this.pointArray.push(this.createPoint({
+						lat: node.lStoreType_Lat,
+						lng: node.lStoreType_Lng,
+						attr:{
+							id: node.sStoreType_ID,
+							name: node.sStoreType_Name,
+							type: 'store'
+						},
+						color: "red",
+						width: "10px"
+					}));
+				}
+				
+				ArGis.view.graphics.addMany(this.pointArray);
+			},
+			createPoint: function(params){
+				var geometry = {
+					type: "point",
+				    longitude: params.lng ,
+				    latitude: params.lat
+				  };
+					
+			     var symbol  = {
+		  		    type: "simple-marker",  
+		  		    color: params.color ? params.color : [226, 119, 40],
+		  		    size: params.width ? params.width : "4px",
+				    outline: {
+				    	style:"none"
+				    }
+		  		  };
+				return this.createGraphic(geometry, symbol, params.attr, params.template);
+			},
+			createGraphic: function(geometry, symbol, attr, template){
+				var graphic;
+				require(["esri/Graphic"], 
+						function (Graphic) {
+					      
+						graphic = new Graphic({
+				    	  	geometry: geometry,
+						    symbol: symbol
+				      	});
+						
+				      if(attr){
+				    	  graphic.attributes = attr;
+				      }
+				      if(template){
+				    	  graphic.popupTemplate = template;
+				      }
+				});
+				return graphic;
+			},
+			drawPoint: function(params){
+				var point = this.createPoint(params);
+				ArGis.view.graphics.add(point)
 			},
 			//query
-			getList: function () {
-				var self = this;
-				var params = {
-					page: this.page,
-					rows: this.rows
-				};
-				for ( var key in this.filters) {
-					if(this.filters[key]){
-						params[key] = this.filters[key];
-					}
+			query:function(){
+				if(!this.hasAuth('query')){
+					this.$message.error('没有权限！');
+					return;
 				}
-				this.listLoading = true;
-				ajaxReq(queryUrl, params, function(res){
-					self.listLoading = false;
-					self.handleResQuery(res, function(){
-						self.total = res.total;
-						self.list = res.data;
-						/*if(self.page != 1 && self.total <= (self.page - 1) * self.rows){
-							self.page = self.page - 1;
-							self.getList();
-						}*/
-					});
-				});
+				let lat = "";
+				let lng = "";
+				switch (this.filters.type) {
+				case "1":
+					for (var i = 0; i < this.aidOptions.length; i++) {
+						let node = this.aidOptions[i];
+						if(this.filters.sAid_ID == node.sAid_ID){
+							lat = node.lAid_Lat;
+							lng = node.lAid_Lng;
+							break;
+						}
+					}
+					break;
+				case "2":
+					for (var i = 0; i < this.storeTypeOptions.length; i++) {
+						let node = this.storeTypeOptions[i];
+						if(this.filters.sStoreType_ID == node.sStoreType_ID){
+							lat = node.lStoreType_Lat;
+							lng = node.lStoreType_Lng;
+							break;
+						}
+					}
+					break;
+
+				default:
+					break;
+				}
+				
+				ArGis.view.goTo([lng, lat]);
 			},
-			//reset
-			reset: function(){
-				this.filters = {
-					sApp_NO: '',
-					sApp_Name: ''
-				};
-				this.getList();
-			},
-			//add
-			handleDetail: function(){
+			//detail
+			handleDetail: function(result){
+				let pid = result.graphic.attributes.id;
+				let type = result.graphic.attributes.type;
 				
 				for (var i = 0; i < this.$children.length; i++) {
 					var id = this.$children[i].$attrs.id;
@@ -195,92 +236,39 @@ var myvue = new Vue({
 						ArGis.view.ui.add(this.$children[i].$el, "top-right");
 					}
 				}
-				//this.addFormVisible = true;
-				this.addForm = {
-					sApp_NO: '',
-					sApp_Name: '',
-					sApp_SecretKey: '',
-					lApp_StatusFlag: 0
-				};
-			},
-			addClose: function () {
-				this.addFormVisible = false;
-				this.addLoading = false;
-				this.$refs.addForm.resetFields();
-			},
-			addSubmit: function () {
-				this.$refs.addForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确定提交吗?', '提示', {}).then(() => {
-							var params = Object.assign({}, this.addForm);
-							var self = this;
-							this.addLoading = true;
-							ajaxReq(addUrl, params, function(res){
-								self.addLoading = false;
-								self.handleResOperate(res, function(){
-									self.addFormVisible = false;
-									self.getList();
-								});
-							});
-						});
+				this.detailFormVisible = true;
+
+				switch (type) {
+				case "aid":
+					for (var i = 0; i < this.aidOptions.length; i++) {
+						let node = this.aidOptions[i];
+						if(pid == node.sAid_ID){
+							this.detailForm = node;
+							break;
+						}
 					}
-				});
-			},
-			//del
-			handleDel: function(index, row){
-				this.$confirm('确定删除该条记录吗? ', '提示', {
-					type: 'warning'
-				}).then(() => {
-					var self = this;
-					this.listLoading = true;
-					ajaxReq(delUrl, {sApp_ID: row.sApp_ID }, function(res){
-						self.listLoading = false;
-						self.handleResOperate(res, function(){
-							self.getList();
-						});
-					});
-					
-				}).catch(() => {
-				});
-			},
-			//edit
-			handleEdit: function (index, row) {
-				//this.editFormVisible = true;
-				//this.editForm = Object.assign({}, row);
-				var params = {
-					sApp_ID: row.sApp_ID
-				};
-				var self = this;
-				ajaxReq(oneUrl, params, function(res){
-					self.handleResQuery(res, function(){
-						self.editFormVisible = true;
-						self.editForm = Object.assign({}, res.data)
-					});
-				});
-			},
-			editClose: function () {
-				this.editFormVisible = false;
-				this.editLoading = false;
-				this.$refs.editForm.resetFields();
-			},
-			editSubmit: function () {
-				this.$refs.editForm.validate((valid) => {
-					if (valid) {
-						this.$confirm('确认提交吗?', '提示', {}).then(() => {
-							var self = this;
-							this.editLoading = true;
-							var params = Object.assign({}, this.editForm);
-							ajaxReq(modUrl, params, function(res){
-								self.editLoading = false;
-								self.handleResOperate(res, function(){
-									self.editFormVisible = false;
-									self.getList();
-								});
-							});
-							
-						});
+					break;
+				case "store":
+					for (var i = 0; i < this.storeTypeOptions.length; i++) {
+						let node = this.storeTypeOptions[i];
+						if(pid == node.sStoreType_ID){
+							this.detailForm = node;
+							break;
+						}
 					}
-				});
+					break;
+
+				default:
+					break;
+				}
+			},
+			//reset
+			reset: function(){
+				this.filters = {
+					type: '1',
+					sAid_ID: '',
+					sStoreType_ID: ''
+				};
 			},
 			//has auth
 			hasAuth: function(ref){
@@ -365,8 +353,9 @@ var myvue = new Vue({
 		mounted: function() {
 			getLoginToken();
 			this.preloading = true;
-			this.handleUserOptions();
-			this.initMap();
+			this.handleStoreTypeOptions(this.handleAidOptions(this.initMap()));
+			//this.handleAidOptions();
+			//this.initMap();
 		}
 	  });
 	
