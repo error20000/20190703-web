@@ -242,7 +242,7 @@
 		<el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="editForm" :rules="editFormRules" ref="editForm" label-width="120px">
 				<el-form-item label="仓库级别">
-			    <el-select v-model="editForm.level" placeholder="请选仓库级别"  @change="() => {this.$refs.editForm.clearValidate();}">
+			    <el-select v-model="editForm.level" placeholder="请选仓库级别" disabled @change="() => {this.$refs.editForm.clearValidate();}">
 			      <el-option label="一级" value="1"></el-option>
 			      <el-option label="二级" value="2"></el-option>
 			      <el-option label="三级" value="3"></el-option>

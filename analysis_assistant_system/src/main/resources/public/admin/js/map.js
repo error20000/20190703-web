@@ -240,26 +240,32 @@ var myvue = new Vue({
 
 				switch (type) {
 				case "aid":
-					for (var i = 0; i < this.aidOptions.length; i++) {
-						let node = this.aidOptions[i];
-						if(pid == node.sAid_ID){
-							this.detailForm = node;
-							break;
-						}
-					}
+					this.detailAid(pid);
 					break;
 				case "store":
-					for (var i = 0; i < this.storeTypeOptions.length; i++) {
-						let node = this.storeTypeOptions[i];
-						if(pid == node.sStoreType_ID){
-							this.detailForm = node;
-							break;
-						}
-					}
+					this.detailStore(pid);
 					break;
 
 				default:
 					break;
+				}
+			},
+			detailAid: function(id){
+				for (var i = 0; i < this.aidOptions.length; i++) {
+					let node = this.aidOptions[i];
+					if(id == node.sAid_ID){
+						this.detailForm = node;
+						break;
+					}
+				}
+			},
+			detailStore: function(id){
+				for (var i = 0; i < this.storeTypeOptions.length; i++) {
+					let node = this.storeTypeOptions[i];
+					if(id == node.sStoreType_ID){
+						this.detailForm = node;
+						break;
+					}
 				}
 			},
 			//reset
