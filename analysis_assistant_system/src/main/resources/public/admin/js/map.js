@@ -146,7 +146,8 @@ var myvue = new Vue({
 						width: "10px"
 					}));
 				}
-				
+				console.log("=============initData==============");
+				console.log(this.pointArray);
 				ArGis.view.graphics.addMany(this.pointArray);
 			},
 			createPoint: function(params){
@@ -164,7 +165,18 @@ var myvue = new Vue({
 				    	style:"none"
 				    }
 		  		  };
-				return this.createGraphic(geometry, symbol, params.attr, params.template);
+				/*var symbol = {};
+			     require(["esri/symbols/WebStyleSymbol"], 
+							function (WebStyleSymbol) {
+			    	 symbol = {
+			    			 type: "web-style", 
+			    			 name: "tear-pin-2",
+			    			 styleName: "Esri2DPointSymbolsStyle"
+			    	 };
+
+			     });*/
+			     
+			     return this.createGraphic(geometry, symbol, params.attr, params.template);
 			},
 			createGraphic: function(geometry, symbol, attr, template){
 				var graphic;
