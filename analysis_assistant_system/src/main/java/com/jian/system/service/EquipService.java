@@ -11,7 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.jian.system.dao.EquipMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.EquipLog;
 import com.jian.system.entity.User;
+import com.jian.system.exception.ServiceException;
+import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
 @Service
@@ -19,6 +22,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@Autowired
 	private NfcService nfcService;
+	@Autowired
+	private EquipLogService logService;
 	
 	@Transactional
 	@TargetDataSource
@@ -74,6 +79,16 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	@TargetDataSource
 	public int isStore(String sStore_ID) {
 		return baseMapper.isStore(sStore_ID);
+	}
+	
+	@TargetDataSource
+	public List<EquipLog> history(String sEquip_ID){
+		if(Tools.isNullOrEmpty(sEquip_ID)) {
+			throw new ServiceException(Tips.ERROR106, "sEquip_ID");
+		}
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("sELog_EquipID", sEquip_ID);
+		return logService.selectList(condition);
 	}
 
 }

@@ -146,7 +146,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	}
 
 	@Override
-	@PostMapping("/findList")
+	@RequestMapping("/findList")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth

@@ -16,6 +16,7 @@ import com.jian.system.annotation.SystemLogType;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.EquipLog;
 import com.jian.system.service.EquipService;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.ResultKey;
@@ -155,6 +156,18 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	@SysLog(type=SystemLogType.Query, describe="查询未绑定NFC的器材")
 	public String unbind(HttpServletRequest req) {
 		List<Equip> list = service.unbind();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+
+	@PostMapping("/history")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材历史记录")
+	public String history(HttpServletRequest req) {
+		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
+		List<EquipLog> list = service.history(sEquip_ID);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	
