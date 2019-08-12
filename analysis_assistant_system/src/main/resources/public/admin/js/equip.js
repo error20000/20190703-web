@@ -249,7 +249,9 @@ var myvue = new Vue({
 					return;
 				}
 				this.addFormVisible = true;
-				this.addForm = {};
+				this.addForm = {
+					store: []
+				};
 			},
 			addClose: function () {
 				this.addFormVisible = false;
