@@ -6,13 +6,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
+import com.jian.system.annotation.VerifyAppAuth;
+import com.jian.system.annotation.VerifyAppLogin;
+import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Store;
@@ -35,7 +37,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
 	@Override
-	@PostMapping("/add")
+	@RequestMapping("/add")
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
@@ -65,7 +67,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	}
 	
 	@Override
-	@PostMapping("/update")
+	@RequestMapping("/update")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -96,7 +98,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 
 
 	@Override
-	@PostMapping("/delete")
+	@RequestMapping("/delete")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -125,7 +127,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 
 
 	@Override
-	@PostMapping("/findOne")
+	@RequestMapping("/findOne")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -135,7 +137,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	}
 	
 	@Override
-	@PostMapping("/findAll")
+	@RequestMapping("/findAll")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -157,7 +159,7 @@ public class StoreController extends BaseController<Store, StoreService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
-	@PostMapping("/findType")
+	@RequestMapping("/findType")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -166,7 +168,35 @@ public class StoreController extends BaseController<Store, StoreService> {
 		List<StoreType> list = service.findType();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+	
+	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
+
+	//TODO -------------------------------------------------------------------------------- app接口
+	
+	
+	@RequestMapping("/app/findList")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询仓库列表")
+	public String appFindList(HttpServletRequest req) {
+		String parent = Tools.getReqParamSafe(req, "parent");
+		List<Map<String, Object>> list = service.storeList(parent);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+	@RequestMapping("/app/findType")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库")
+	public String appFindType(HttpServletRequest req) {
+		List<StoreType> list = service.findType();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 
 }

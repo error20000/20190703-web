@@ -6,13 +6,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
+import com.jian.system.annotation.VerifyAppAuth;
+import com.jian.system.annotation.VerifyAppLogin;
+import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Nfc;
@@ -33,7 +35,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
 	@Override
-	@PostMapping("/add")
+	@RequestMapping("/add")
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
@@ -43,7 +45,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 	
 	@Override
-	@PostMapping("/update")
+	@RequestMapping("/update")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -54,7 +56,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 
 
 	@Override
-	@PostMapping("/delete")
+	@RequestMapping("/delete")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -64,7 +66,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 
 	@Override
-	@PostMapping("/findPage")
+	@RequestMapping("/findPage")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -74,7 +76,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 
 	@Override
-	@PostMapping("/findOne")
+	@RequestMapping("/findOne")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -84,7 +86,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 	
 	@Override
-	@PostMapping("/findAll")
+	@RequestMapping("/findAll")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -93,7 +95,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 		return super.findAll(req);
 	}
 
-	@PostMapping("/viewBind")
+	@RequestMapping("/viewBind")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -102,7 +104,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 		return service.viewBind(req);
 	}
 
-	@PostMapping("/delBind")
+	@RequestMapping("/delBind")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -125,7 +127,7 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 
 
-	@PostMapping("/unbind")
+	@RequestMapping("/unbind")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -136,6 +138,30 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 	}
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
-
 	
+	
+
+	//TODO -------------------------------------------------------------------------------- app接口
+	
+	@RequestMapping("/app/findAll")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询所有NFC")
+	public String appFindAll(HttpServletRequest req) {
+		return super.findAll(req);
+	}
+
+
+	@RequestMapping("/app/unbind")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询未使用的NFC")
+	public String appUnbind(HttpServletRequest req) {
+		List<Nfc> list = service.unbind();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 }

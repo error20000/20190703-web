@@ -3,13 +3,15 @@ package com.jian.system.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
+import com.jian.system.annotation.VerifyAppAuth;
+import com.jian.system.annotation.VerifyAppLogin;
+import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Dict;
@@ -25,7 +27,7 @@ public class DictController extends BaseController<Dict, DictService> {
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
 	@Override
-	@PostMapping("/add")
+	@RequestMapping("/add")
     @ResponseBody	
 	@VerifyLogin
 	@VerifyAuth
@@ -35,7 +37,7 @@ public class DictController extends BaseController<Dict, DictService> {
 	}
 	
 	@Override
-	@PostMapping("/update")
+	@RequestMapping("/update")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -46,7 +48,7 @@ public class DictController extends BaseController<Dict, DictService> {
 
 
 	@Override
-	@PostMapping("/delete")
+	@RequestMapping("/delete")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -56,7 +58,7 @@ public class DictController extends BaseController<Dict, DictService> {
 	}
 
 	@Override
-	@PostMapping("/findPage")
+	@RequestMapping("/findPage")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -66,7 +68,7 @@ public class DictController extends BaseController<Dict, DictService> {
 	}
 
 	@Override
-	@PostMapping("/findOne")
+	@RequestMapping("/findOne")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -76,7 +78,7 @@ public class DictController extends BaseController<Dict, DictService> {
 	}
 	
 	@Override
-	@PostMapping("/findAll")
+	@RequestMapping("/findAll")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -87,7 +89,7 @@ public class DictController extends BaseController<Dict, DictService> {
 
 	
 	@Override
-	@PostMapping("/findList")
+	@RequestMapping("/findList")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
@@ -97,6 +99,18 @@ public class DictController extends BaseController<Dict, DictService> {
 	}
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
+	
+	
 
+	//TODO -------------------------------------------------------------------------------- app接口
 
+	@RequestMapping("/app/findList")
+    @ResponseBody
+	@VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询数据字典列表")
+	public String appFindList(HttpServletRequest req) {
+		return super.findList(req);
+	}
 }

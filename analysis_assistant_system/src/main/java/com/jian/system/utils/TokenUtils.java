@@ -113,9 +113,23 @@ public class TokenUtils {
 		String pkey = cacheKey.userLoginOnPc + userId;
 		CacheObject test = RedisUtils.getCacheObj(pkey);
 		if(test == null ) {
-			String mkey = cacheKey.userLoginOnMobile + userId;
-			test = RedisUtils.getCacheObj(mkey);
+			throw new ServiceException(Tips.ERROR111);
 		}
+		User user = JsonTools.jsonToObj((String)test.getValue(), User.class);
+		if(user == null ) {
+			throw new ServiceException(Tips.ERROR111);
+		}
+		return user;
+	}
+	
+	public static User getAppLoginUser(String tokenStr){
+		
+		if(!TokenUtils.checkLoginToken(tokenStr)) {
+			throw new ServiceException(Tips.ERROR213, "token");
+		}
+		String userId = TokenUtils.getUserId(tokenStr);
+		String pkey = cacheKey.userLoginOnMobile + userId;
+		CacheObject test = RedisUtils.getCacheObj(pkey);
 		if(test == null ) {
 			throw new ServiceException(Tips.ERROR111);
 		}

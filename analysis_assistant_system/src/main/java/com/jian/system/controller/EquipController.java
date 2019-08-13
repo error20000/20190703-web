@@ -1,6 +1,5 @@
 package com.jian.system.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -206,9 +205,30 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
+	
 	//TODO -------------------------------------------------------------------------------- app接口
 
 
+	@RequestMapping("/app/findPage")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app分页查询器材")
+	public String appFindPage(HttpServletRequest req) {
+		return super.findPage(req);
+	}
+
+	@RequestMapping("/app/findOne")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询单个器材")
+	public String appFindOne(HttpServletRequest req) {
+		return super.findOne(req);
+	}
+	
 	@RequestMapping("/app/history")
     @ResponseBody
     @VerifyAppSign
