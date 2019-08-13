@@ -258,7 +258,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		if(obj == null){
 			return ResultTools.custom(Tips.ERROR0).toJSONString();
 		}
-		int res = service.insert(obj, getLoginUser(req), Tools.getIp(req));
+		int res = service.insert(obj, getAppLoginUser(req), Tools.getIp(req));
 		if(res > 0){
 			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 		}else{
@@ -283,7 +283,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		if(obj == null){
 			return ResultTools.custom(Tips.ERROR0).toJSONString();
 		}
-		int res = service.inStore(obj, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.inStore(obj, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -296,7 +296,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appOutStore(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.outStore(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.outStore(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -309,7 +309,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appRemove(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.remove(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.remove(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -322,7 +322,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appTransport(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.transport(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.transport(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -335,7 +335,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appToBeTest(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.toBeTest(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.toBeTest(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -348,7 +348,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appCheck(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.check(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.check(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -361,7 +361,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appRepair(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.repair(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.repair(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -374,7 +374,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	public String appDump(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.dump(sEquip_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.dump(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -388,7 +388,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
 		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
-		int res = service.useToAid(sEquip_ID, sAid_ID, remarks, getLoginUser(req), Tools.getIp(req));
+		int res = service.useToAid(sEquip_ID, sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 }

@@ -40,6 +40,11 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 		String tokenStr = TokenUtils.getLoginToken(req);
 		return TokenUtils.getLoginUser(tokenStr);
 	}
+
+	public User getAppLoginUser(HttpServletRequest req) {
+		String tokenStr = TokenUtils.getLoginToken(req);
+		return TokenUtils.getAppLoginUser(tokenStr);
+	}
 	
     public String add(HttpServletRequest req) {
 		T obj = null;
