@@ -194,6 +194,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		return logs;
 	}
+	
+
+	
+	@TargetDataSource
+	public List<Equip> search(String keywords, User user, String ip) {
+		return baseMapper.search(keywords);
+	}
 
 
 	//TODO ----------------------------------------------------------------------器材操作

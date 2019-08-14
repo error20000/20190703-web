@@ -391,4 +391,18 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		int res = service.useToAid(sEquip_ID, sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+	
+
+	
+	@RequestMapping("/app/search")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app搜索器材")
+	public String appSearch(HttpServletRequest req) {
+		String keywords = Tools.getReqParamSafe(req, "keywords");
+		List<Equip> res = service.search(keywords, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 }

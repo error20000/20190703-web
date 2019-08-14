@@ -26,4 +26,10 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public int isStore(String sStore_ID);
 	
+
+	@Select({
+		" select * from \"tBase_Equip\" where \"sEquip_NO\" like concat(concat('%', #{keywords}), '%') "
+	})
+	public List<Equip> search(String keywords);
+	
 }
