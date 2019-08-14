@@ -110,5 +110,33 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		}
 		return userAidService.batchInsert(list, null);
 	}
+	
 
+	
+	@TargetDataSource
+	public List<Map<String, Object>> aidAll() {
+		return baseMapper.aidAll();
+	}
+	
+
+	@TargetDataSource
+	public List<Aid> selectPage(Map<String, Object> condition, User user, int start, int rows) {
+		if(user == null) {
+			return new ArrayList<Aid>();
+		}
+		condition = condition.isEmpty() ? null : condition;
+		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
+	}
+
+	@TargetDataSource
+	public long size(Map<String, Object> condition, User user) {
+		if(user == null) {
+			return 0;
+		}
+		condition = condition.isEmpty() ? null : condition;
+		return baseMapper.sizeByUser(condition, user.getsUser_ID());
+	}
+
+	
+	
 }

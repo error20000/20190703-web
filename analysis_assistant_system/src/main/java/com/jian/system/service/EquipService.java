@@ -181,7 +181,18 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("sELog_EquipID", sEquip_ID);
-		return logService.selectList(condition);
+		//排序
+		List<EquipLog> logs = logService.selectList(condition);
+		for (int i = 0; i < logs.size(); i++) {
+			for (int j = i; j < logs.size(); j++) {
+				if(logs.get(i).getdELog_CreateDate().getTime() > logs.get(j).getdELog_CreateDate().getTime()) {
+					EquipLog temp = logs.get(i);
+					logs.set(i, logs.get(j));
+					logs.set(j, temp);
+				}
+			}
+		}
+		return logs;
 	}
 
 

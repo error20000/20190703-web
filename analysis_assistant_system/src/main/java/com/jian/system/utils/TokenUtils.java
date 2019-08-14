@@ -63,6 +63,9 @@ public class TokenUtils {
 	}
 	
 	public static boolean checkLoginToken(String tokenStr){
+		if(Tools.isNullOrEmpty(tokenStr)) {
+			return false;
+		}
 		String token = getToken(tokenStr);
 		String userId = getUserId(tokenStr);
 		long time = getTokenTime(tokenStr);
@@ -73,7 +76,7 @@ public class TokenUtils {
 	
 	public static String getToken(String tokenStr){
 		String token = "";
-		if(tokenStr.split("[.]").length >= 1){
+		if(!Tools.isNullOrEmpty(tokenStr) && tokenStr.split("[.]").length >= 1){
 			token = tokenStr.split("[.]")[0];
 		}
 		return token;
@@ -81,7 +84,7 @@ public class TokenUtils {
 	
 	public static String getUserId(String tokenStr){
 		String userId = "";
-		if(tokenStr.split("[.]").length >= 2){
+		if(!Tools.isNullOrEmpty(tokenStr) && tokenStr.split("[.]").length >= 2){
 			userId = tokenStr.split("[.]")[1];
 		}
 		return userId;
@@ -89,7 +92,7 @@ public class TokenUtils {
 	
 	public static long getTokenTime(String tokenStr){
 		long time = 0;
-		if(tokenStr.split("[.]").length >= 3){
+		if(!Tools.isNullOrEmpty(tokenStr) && tokenStr.split("[.]").length >= 3){
 			time = Long.parseLong(tokenStr.split("[.]")[2]);
 		}
 		return time;
@@ -97,7 +100,7 @@ public class TokenUtils {
 	
 	public static long getTokenExpire(String tokenStr){
 		long expire = 0;
-		if(tokenStr.split("[.]").length >= 4){
+		if(!Tools.isNullOrEmpty(tokenStr) && tokenStr.split("[.]").length >= 4){
 			expire = Long.parseLong(tokenStr.split("[.]")[3]);
 		}
 		return expire;

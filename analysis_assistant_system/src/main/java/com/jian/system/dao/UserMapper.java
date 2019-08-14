@@ -20,4 +20,11 @@ public interface UserMapper extends BaseMapper<User> {
 		" where b.\"sUserAid_UserID\" = #{sUser_ID}"
 	})
 	public List<Map<String, Object>> aid(String sUser_ID);
+	
+	@Select({
+		" select ",
+		" \"sAid_ID\", \"sAid_Name\", \"sAid_NO\" ",
+		" from \"tBase_Aid\" ",
+	})
+	public List<Map<String, Object>> aidAll();
 }

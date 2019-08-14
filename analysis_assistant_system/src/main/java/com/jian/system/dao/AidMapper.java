@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -36,4 +37,69 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" where b.\"sUserAid_AidID\" = #{sAid_ID}"
 	})
 	public List<Map<String, Object>> user(String sAid_ID);
+
+	@Select({
+		"<script>",
+		" select a.* ",
+		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and b.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
+		" minus  ",
+		" select a.* ",
+		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and b.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${start}",
+		"</script>"
+	})
+	public List<Aid> selectPageByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID,  @Param("start") int start, @Param("rows") int rows);
+
+	@Select({
+		"<script>",
+		" select count(distinct a.\"sAid_ID\") ",
+		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>",
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and b.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public long sizeByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
+	
+
+	@Select({
+		" select ",
+		" \"sAid_ID\", \"sAid_Name\", \"sAid_NO\" ",
+		" from \"tBase_Aid\" ",
+	})
+	public List<Map<String, Object>> aidAll();
 }

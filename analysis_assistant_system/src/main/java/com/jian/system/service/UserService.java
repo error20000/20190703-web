@@ -295,6 +295,11 @@ public class UserService extends BaseService<User, UserMapper> {
 		return baseMapper.aid(sUser_ID);
 	}
 	
+	@TargetDataSource
+	public List<Map<String, Object>> aidAll() {
+		return baseMapper.aidAll();
+	}
+	
 	@Transactional
 	@TargetDataSource
 	public int updateAid(String sUser_ID, String aidIds) {

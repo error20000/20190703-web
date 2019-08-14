@@ -1,5 +1,6 @@
 package com.jian.system.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.annotation.SystemLogType;
+import com.jian.system.annotation.VerifyAppAuth;
+import com.jian.system.annotation.VerifyAppLogin;
+import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Config;
@@ -318,8 +322,12 @@ public class UserController extends BaseController<User, UserService> {
 	}
 	
 	private String newToken(User user){
+		return newToken(user, config.expireTime);
+	}
+	
+	private String newToken(User user, int expireTime){
 		long curTime = System.currentTimeMillis();
-		String str = user.getsUser_ID() + "." + curTime + "."  + config.expireTime;
+		String str = user.getsUser_ID() + "." + curTime + "."  + expireTime;
 		String token = Tools.md5(str + config.tokenSecretKey); // userId + time + expire + key
 		String tokenStr = token + "." + str;
 		return tokenStr;
@@ -388,9 +396,10 @@ public class UserController extends BaseController<User, UserService> {
 		user.setsUser_PassWord("");
 		
 		//保存
+		int expireTime = 8 * 3600 * 1000;
 		String okey = cacheKey.userLoginOnMobile + user.getsUser_ID();
-		String tokenStr = newToken(user);
-		RedisUtils.setCacheObj(okey, JsonTools.toJsonString(user), config.expireTime); 
+		String tokenStr = newToken(user, expireTime);
+		RedisUtils.setCacheObj(okey, JsonTools.toJsonString(user), expireTime); 
 		
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.put("token", tokenStr);
@@ -433,5 +442,26 @@ public class UserController extends BaseController<User, UserService> {
 		}else {
 			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, JsonTools.jsonToMap(String.valueOf(test.getValue())) ).toJSONString();
 		}
+	}
+
+	@RequestMapping("/app/aid")
+    @ResponseBody
+	@VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询登录用户的航标")
+	public String appAid(HttpServletRequest req) {
+
+		User luser = getAppLoginUser(req);
+		if(luser == null){
+			return ResultTools.custom(Tips.ERROR111).toJSONString();
+		}
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
+		if(config.superGroupId.equals(luser.getsUser_GroupID())) { //超管
+			list = service.aidAll();
+		}else {
+			list = service.aid(luser.getsUser_ID());
+		}
+		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 }
