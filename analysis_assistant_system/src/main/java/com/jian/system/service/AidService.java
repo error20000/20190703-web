@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jian.system.config.Config;
 import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.Equip;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.utils.Utils;
@@ -21,6 +23,8 @@ import com.jian.tools.core.Tools;
 @Service
 public class AidService extends BaseService<Aid, AidMapper> {
 
+	@Autowired
+	private Config config;
 	@Autowired
 	private NfcService nfcService;
 	@Autowired
@@ -125,6 +129,9 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			return new ArrayList<Aid>();
 		}
 		condition = condition.isEmpty() ? null : condition;
+		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.selectPageByUser(condition, null, start, rows);
+		}
 		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
 	}
 
@@ -134,9 +141,21 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			return 0;
 		}
 		condition = condition.isEmpty() ? null : condition;
+		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.sizeByUser(condition, null);
+		}
 		return baseMapper.sizeByUser(condition, user.getsUser_ID());
 	}
 
+
+	
+	@TargetDataSource
+	public List<Aid> search(String keywords, User user, String ip) {
+		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有航标
+			return baseMapper.search(keywords, null);
+		}
+		return baseMapper.search(keywords, user.getsUser_ID());
+	}
 	
 	
 }

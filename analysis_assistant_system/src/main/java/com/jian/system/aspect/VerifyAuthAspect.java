@@ -31,7 +31,7 @@ import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
-//@Aspect
+@Aspect
 @Component
 @Order(3)
 public class VerifyAuthAspect {

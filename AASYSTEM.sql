@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 14/08/2019 18:10:00
+ Date: 16/08/2019 14:20:31
 */
 
 
@@ -248,7 +248,7 @@ INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('1', 'test', '灯塔', NULL, NULL, '
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('2', 'test', '厦门', NULL, NULL, 'AidStation', NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('4', 'test2', '互顿蓝黄3秒', NULL, NULL, 'AidLighting', NULL, NULL, NULL, '蓝1.0+5.0+黄1.0+5.0', NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('5', 'test', 'test', NULL, NULL, 'AidMark', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('7', 't', 'ttt', NULL, NULL, 'EquipType', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('7', 't', '灯', NULL, NULL, 'EquipType', NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('700001', '1', '入库', NULL, NULL, 'EquipStatus', NULL, NULL, '1', '#3B7FD4', NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('601001', 'query', '查询', NULL, NULL, 'SystemLogType', NULL, NULL, '1', NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('601002', 'update', '修改', NULL, NULL, 'SystemLogType', NULL, NULL, '1', NULL, NULL, NULL);

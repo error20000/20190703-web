@@ -208,7 +208,7 @@ public class AidController extends BaseController<Aid, AidService> {
 	@VerifyAppSign
 	@VerifyAppLogin
 	@VerifyAppAuth
-	@SysLog(type=SystemLogType.Query, describe="app查询所有航标")
+	@SysLog(type=SystemLogType.Query, describe="app查询所有航标(只有id，名称，编码)")
 	public String appFindAll(HttpServletRequest req) {
 		
 		List<Map<String, Object>> list = service.aidAll();
@@ -253,6 +253,19 @@ public class AidController extends BaseController<Aid, AidService> {
 	@SysLog(type=SystemLogType.Query, describe="app查询单个航标")
 	public String appFindOne(HttpServletRequest req) {
 		return super.findOne(req);
+	}
+	
+	
+	@RequestMapping("/app/search")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app搜索航标")
+	public String appSearch(HttpServletRequest req) {
+		String keywords = Tools.getReqParamSafe(req, "keywords");
+		List<Aid> res = service.search(keywords, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
 }

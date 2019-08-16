@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.Equip;
 
 
 @Mapper
@@ -41,7 +42,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 	@Select({
 		"<script>",
 		" select a.* ",
-		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" from \"tBase_Aid\" a left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
 		" where ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
@@ -57,7 +58,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
 		" select a.* ",
-		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" from \"tBase_Aid\" a left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
 		" where ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
@@ -78,7 +79,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 	@Select({
 		"<script>",
 		" select count(distinct a.\"sAid_ID\") ",
-		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" from \"tBase_Aid\" a left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
 		" where ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
@@ -102,4 +103,18 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" from \"tBase_Aid\" ",
 	})
 	public List<Map<String, Object>> aidAll();
+	
+
+	@Select({
+		"<script>",
+		" select a.* ",
+		" from \"tBase_Aid\" a left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" where a.\"sAid_NO\" like concat(concat('%', #{keywords}), '%') ",
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and b.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Aid> search(@Param("keywords") String keywords, @Param("sUser_ID") String sUser_ID);
+	
 }

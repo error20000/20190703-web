@@ -19,7 +19,7 @@ import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.TokenUtils;
 import com.jian.tools.core.Tips;
 
-//@Aspect
+@Aspect
 @Component
 @Order(2)
 public class VerifyLoginAspect {
