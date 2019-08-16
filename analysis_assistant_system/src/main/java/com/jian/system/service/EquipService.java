@@ -338,6 +338,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
 		//保存
+		aidEquipService.delete(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build(), user);
 		return baseMapper.update(tableName, values, condition);
 	}
 
@@ -578,10 +579,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		//使用
 		values.put("sEquip_Status", "9");
 		values.put("sEquip_AidID", sAid_ID);
+		Date date = new Date();
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -596,6 +598,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		aidEquip.setsAidEquip_ID(Utils.newSnowflakeIdStr());
 		aidEquip.setsAidEquip_AidID(sAid_ID);
 		aidEquip.setsAidEquip_EquipID(sEquip_ID);
+		aidEquip.setdAidEquip_CreateDate(date);
 		aidEquipService.insert(aidEquip, user);
 		return baseMapper.update(tableName, values, condition);
 	}
