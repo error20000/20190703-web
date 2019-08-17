@@ -1,5 +1,6 @@
 package com.jian.system.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,9 @@ import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.EquipLog;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserAid;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.MapTools;
@@ -33,6 +36,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private AidEquipService aidEquipService;
 	@Autowired
 	private AidService aidService;
+	@Autowired
+	private MessageService messageService;
+	@Autowired
+	private UserAidService userAidService;
 	
 	
 	@Transactional
@@ -645,14 +652,42 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
 		//标记航标为异常
+		Aid aid = null;
+		List<UserAid> ausers = null;
 		AidEquip aidEquip = aidEquipService.selectOne(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build());
 		if(aidEquip != null) {
-			Aid aid = aidService.selectOne(MapTools.custom().put("sAid_ID", aidEquip.getsAidEquip_AidID()).build());
+			aid = aidService.selectOne(MapTools.custom().put("sAid_ID", aidEquip.getsAidEquip_AidID()).build());
 			if(aid != null) {
 				aid.setsAid_Status("unusual");
 				aidService.update(aid, user);
+				//查询用户
+				ausers = userAidService.selectList(MapTools.custom().put("sUserAid_AidID", aid.getsAid_ID()).build());
 			}
 		}
+
+		//产生消息
+		List<Message> mlist = new ArrayList<Message>();
+		Message message = new Message();
+		message.setsMsg_ID(Utils.newSnowflakeIdStr());
+		message.setdMsg_CreateDate(new Date());
+		message.setlMsg_Level(1);
+		message.setsMsg_EquipID(sEquip_ID);
+		message.setsMsg_Describe("器材异常");
+		if(aid != null) {
+			message.setsMsg_AidID(aid.getsAid_ID());
+		}
+		if(ausers != null) {
+			for (UserAid userAid : ausers) {
+				Message node = message.clone();
+				node.setsMsg_ID(Utils.newSnowflakeIdStr());
+				node.setsMsg_ToUserID(userAid.getsUserAid_UserID());
+				mlist.add(node);
+			}
+		}else {
+			mlist.add(message);
+		}
+		messageService.batchInsert(mlist, user);
+		//更新
 		return baseMapper.update(tableName, values, condition);
 	}
 }

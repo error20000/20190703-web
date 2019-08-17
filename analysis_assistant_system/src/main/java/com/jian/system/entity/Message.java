@@ -37,8 +37,10 @@ public class Message extends Base<Message> {
 	private String sMsg_FromUserID;
 	@Excel(name="消息自定义标签", sort=0, length="64", isNull=1 )
 	private String sMsg_Label;
-	@Excel(name="消息重要级别	", sort=0, length="64", isNull=1 )
+	@Excel(name="消息重要级别", sort=0, length="", isNull=1 )
 	private int lMsg_Level = Integer.MAX_VALUE;
+	@Excel(name="已读 0：否，1：是", sort=0, length="", isNull=1 )
+	private int lMsg_ReadFlag;
 	
 
 	public String getsMsg_ID() {
@@ -124,6 +126,12 @@ public class Message extends Base<Message> {
 	}
 	public void setlMsg_Level(int lMsg_Level) {
 		this.lMsg_Level = lMsg_Level;
+	}
+	public int getlMsg_ReadFlag() {
+		return lMsg_ReadFlag;
+	}
+	public void setlMsg_ReadFlag(int lMsg_ReadFlag) {
+		this.lMsg_ReadFlag = lMsg_ReadFlag;
 	}
 	
 }
