@@ -79,7 +79,14 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="字典链接" prop="sDict_Link">
+					<el-table-column label="字典链接" prop="sDict_Link" width="100">
+					</el-table-column>
+					<el-table-column label="字典颜色" prop="sDict_Color" width="100">
+						<template scope="scope">
+							<el-tag v-if="scope.row.sDict_Color" :color="scope.row.sDict_Color" :disable-transitions="true" style="color: #ffffff;">
+							{{scope.row.sDict_Color}}
+							</el-tag>
+						</template>
 					</el-table-column>
 					<el-table-column label="创建日期" prop="dDict_CreateDate" :formatter="(r,c) => {return formatDate(r.dDict_CreateDate);}">
 					</el-table-column>
@@ -126,6 +133,9 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
+			  <el-form-item label="字典描述" prop="sDict_Describe">
+			    <el-input v-model="addForm.sDict_Describe"></el-input>
+			  </el-form-item>
 			  <el-form-item label="字典图片" prop="sDict_Picture">
 			    <el-input v-model="addForm.sDict_Picture">
 			    	<el-upload slot="append"
@@ -138,6 +148,10 @@
 			  </el-form-item>
 			  <el-form-item label="字典链接" prop="sDict_Link">
 			    <el-input v-model="addForm.sDict_Link"></el-input>
+			  </el-form-item>
+			  <el-form-item label="字典颜色" prop="sDict_Color">
+				    <el-color-picker v-model="addForm.sDict_Color"></el-color-picker>
+				    <span>{{addForm.sDict_Color}}</span>
 			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -165,6 +179,9 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
+			  <el-form-item label="字典描述" prop="sDict_Describe">
+			    <el-input v-model="editForm.sDict_Describe"></el-input>
+			  </el-form-item>
 			  <el-form-item label="字典图片" prop="sDict_Picture">
 			    <el-input v-model="editForm.sDict_Picture">
 			    	<el-upload slot="append"
@@ -177,6 +194,10 @@
 			  </el-form-item>
 			  <el-form-item label="字典链接" prop="sDict_Link">
 			    <el-input v-model="editForm.sDict_Link"></el-input>
+			  </el-form-item>
+			  <el-form-item label="字典颜色" prop="sDict_Color">
+				    <el-color-picker v-model="editForm.sDict_Color"></el-color-picker>
+				    <span>{{editForm.sDict_Color}}</span>
 			  </el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">

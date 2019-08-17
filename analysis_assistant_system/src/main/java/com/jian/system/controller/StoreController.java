@@ -184,7 +184,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@SysLog(type=SystemLogType.Query, describe="app查询仓库列表")
 	public String appFindList(HttpServletRequest req) {
 		String parent = Tools.getReqParamSafe(req, "parent");
-		List<Map<String, Object>> list = service.storeList(parent);
+		List<Map<String, Object>> list = service.storeListApp(parent);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 

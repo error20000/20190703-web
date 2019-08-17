@@ -21,6 +21,10 @@ public class StoreType extends Base<StoreType> {
 	private float lStoreType_Lng;
 	@Excel(name="归属航标站", sort=0, length="64", isNull=1 )
 	private String sStoreType_Station;
+	@Excel(name="库存预警值", sort=0, length="10", isNull=1 )
+	private int lStoreType_Limit;
+	@Excel(name="地图图标", sort=0, length="64", isNull=1 )
+	private String sStoreType_MapIcon;
 	
 	
 	
@@ -59,6 +63,18 @@ public class StoreType extends Base<StoreType> {
 	}
 	public void setsStoreType_Station(String sStoreType_Station) {
 		this.sStoreType_Station = sStoreType_Station;
+	}
+	public int getlStoreType_Limit() {
+		return lStoreType_Limit;
+	}
+	public void setlStoreType_Limit(int lStoreType_Limit) {
+		this.lStoreType_Limit = lStoreType_Limit;
+	}
+	public String getsStoreType_MapIcon() {
+		return sStoreType_MapIcon;
+	}
+	public void setsStoreType_MapIcon(String sStoreType_MapIcon) {
+		this.sStoreType_MapIcon = sStoreType_MapIcon;
 	}
 	
 }

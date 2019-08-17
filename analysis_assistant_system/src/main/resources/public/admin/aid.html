@@ -60,6 +60,16 @@
 					    </el-select>
 					</el-form-item>
 					<el-form-item>
+					    <el-select v-model="filters.sAid_Status" placeholder="航标状态">
+						    <el-option
+						      v-for="item in statusOptions"
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
 						&nbsp;&nbsp;&nbsp;&nbsp;
@@ -95,6 +105,8 @@
 					          </div>
 					        </el-popover>
 					     </template>
+					</el-table-column>
+					<el-table-column label="航标状态" prop="sAid_Status" :formatter="statusFormatter">
 					</el-table-column>
 					<el-table-column label="纬度" prop="lAid_Lat" >
 					</el-table-column>

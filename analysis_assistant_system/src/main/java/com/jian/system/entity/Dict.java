@@ -35,6 +35,9 @@ public class Dict extends Base<Dict> {
 	private String sDict_Picture;
 	@Excel(name="字典链接", sort=0, length="255", isNull=1 )
 	private String sDict_Link;
+	@Excel(name="字典颜色", sort=0, length="255", isNull=1 )
+	private String sDict_Color;
+	
 	
 
 
@@ -109,6 +112,12 @@ public class Dict extends Base<Dict> {
 	}
 	public void setsDict_Link(String sDict_Link) {
 		this.sDict_Link = sDict_Link;
+	}
+	public String getsDict_Color() {
+		return sDict_Color;
+	}
+	public void setsDict_Color(String sDict_Color) {
+		this.sDict_Color = sDict_Color;
 	}
 	
 	

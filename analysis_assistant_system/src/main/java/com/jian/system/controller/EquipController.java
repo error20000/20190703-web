@@ -391,6 +391,20 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		int res = service.useToAid(sEquip_ID, sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	
+	@RequestMapping("/app/unusual")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Update, describe="app器材异常")
+	public String appUnusual(HttpServletRequest req) {
+		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
+		String remarks = Tools.getReqParamSafe(req, "remarks");
+		int res = service.unusual(sEquip_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 	
 
 	

@@ -267,5 +267,31 @@ public class AidController extends BaseController<Aid, AidService> {
 		List<Aid> res = service.search(keywords, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+	
+	
+	@RequestMapping("/app/equip")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询航标的器材")
+	public String appEquip(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		List<Map<String, Object>> res = service.equip(sAid_ID, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	
+	@RequestMapping("/app/unusual")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Update, describe="app器材异常")
+	public String appUnusual(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		int res = service.unusual(sAid_ID, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 
 }

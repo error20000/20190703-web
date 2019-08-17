@@ -21,6 +21,8 @@ public class Store extends Base<Store> {
 	private String sStore_Level3;
 	@Excel(name="父级ID", sort=0, length="32", isNull=1 )
 	private String sStore_Parent;
+	@Excel(name="库存预警值", sort=0, length="10", isNull=1 )
+	private int lStore_Limit;
 	
 
 	
@@ -59,6 +61,12 @@ public class Store extends Base<Store> {
 	}
 	public void setsStore_Parent(String sStore_Parent) {
 		this.sStore_Parent = sStore_Parent;
+	}
+	public int getlStore_Limit() {
+		return lStore_Limit;
+	}
+	public void setlStore_Limit(int lStore_Limit) {
+		this.lStore_Limit = lStore_Limit;
 	}
 	
 }

@@ -11,6 +11,9 @@
 	    margin-left: 0px !important;
 	    margin-right: 10px !important;
 	}
+	.el-table tr {
+	    height: 40px;
+	}
   </style>
 </head>
 <body class="animated fadeIn">
@@ -54,7 +57,7 @@
 	    <el-tabs v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:group:query" v-show="hasAuth('query')">
 				<!-- list -->
-				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
+				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable">
 					<el-table-column label="ID" prop="sGroup_ID" width="120">
 					</el-table-column>
 					<el-table-column label="分组名称" prop="sGroup_Name">

@@ -2,7 +2,6 @@ package com.jian.system.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jian.annotation.Excel;
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.Table;

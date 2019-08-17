@@ -26,10 +26,10 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					user: '',
-					alarm: '',
-					connected: '',
-					status: ''
+					sAid_NO: '',
+					sAid_Type: '',
+					sAid_Station: '',
+					sAid_Status: ''
 				},
 				list: [],
 				total: 0,
@@ -52,6 +52,8 @@ var myvue = new Vue({
 				markOptions: [],
 				iconDictNo: 'AidIcon',
 				iconOptions: [],
+				statusDictNo: 'AidStatus',
+				statusOptions: [],
 				nfcAllOptions: [],
 				userOptions: [],
 				
@@ -219,6 +221,29 @@ var myvue = new Vue({
 					});
 				});
 			},
+			statusFormatter: function(row){
+				var name = row.sAid_Status;
+				for (var i = 0; i < this.statusOptions.length; i++) {
+					var item = this.statusOptions[i];
+					if(row.sAid_Status == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleStatusOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.statusDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.statusOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
 			nfcAllFormatter: function(row){
 				var name = row.sAid_NfcID;
 				for (var i = 0; i < this.nfcAllOptions.length; i++) {
@@ -298,9 +323,10 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					user: '',
-					connected: '',
-					status: ''
+					sAid_NO: '',
+					sAid_Type: '',
+					sAid_Station: '',
+					sAid_Status: ''
 				};
 				this.getList();
 			},
@@ -311,7 +337,9 @@ var myvue = new Vue({
 					return;
 				}
 				this.addFormVisible = true;
-				this.addForm = {};
+				this.addForm = {
+					sAid_Status: 'normal'
+				};
 			},
 			addClose: function () {
 				this.addFormVisible = false;
@@ -587,6 +615,7 @@ var myvue = new Vue({
 			this.handleLightOptions();
 			this.handleMarkOptions();
 			this.handleNfcAllOptions();
+			this.handleStatusOptions();
 			this.getList();
 			this.handleUserOptions();
 		}

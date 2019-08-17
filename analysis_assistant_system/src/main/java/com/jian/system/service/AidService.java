@@ -13,11 +13,12 @@ import com.jian.system.config.Config;
 import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
-import com.jian.system.entity.Equip;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
+import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.MapTools;
+import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
 @Service
@@ -156,6 +157,26 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		}
 		return baseMapper.search(keywords, user.getsUser_ID());
 	}
-	
+
+
+	@TargetDataSource
+	public List<Map<String, Object>> equip(String sAid_ID, User user, String ip) {
+		return baseMapper.equip(sAid_ID);
+	}
+
+
+	@TargetDataSource
+	public int unusual(String sAid_ID, User user, String ip) {
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("sAid_ID", sAid_ID);
+		String tableName =  getTableName();
+		Aid aid = baseMapper.selectOne(tableName, condition);
+		if(aid == null) {
+			throw new ServiceException(Tips.ERROR102, "航标不存在");
+		}
+		Map<String, Object> value = new HashMap<>();
+		value.put("sAid_Status", "unusual");
+		return baseMapper.update(tableName, value, condition);
+	}
 	
 }

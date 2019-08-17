@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.jian.system.entity.Aid;
-import com.jian.system.entity.Equip;
 
 
 @Mapper
@@ -116,5 +115,13 @@ public interface AidMapper extends BaseMapper<Aid> {
 		"</script>"
 	})
 	public List<Aid> search(@Param("keywords") String keywords, @Param("sUser_ID") String sUser_ID);
+	
+
+	@Select({ " select ",
+			" a.* , b.\"sEquip_Name\" \"sAidEquip_EquipName\",  b.\"sEquip_NO\" \"sAidEquip_EquipNO\",  b.\"sEquip_Type\" \"sAidEquip_EquipType\", c.\"sDict_Name\" \"sAidEquip_EquipTypeName\" ",
+			" from \"tBase_AidEquip\" a, \"tBase_Equip\" b, \"tBase_Dict\" c ", " where ",
+			" 	a.\"sAidEquip_EquipID\" = b.\"sEquip_ID\" ", " 	and b.\"sEquip_Type\" = c.\"sDict_NO\" ",
+			"   and a.\"sAidEquip_AidID\" = #{sAid_ID} " })
+	public List<Map<String, Object>> equip(String sAid_ID);
 	
 }

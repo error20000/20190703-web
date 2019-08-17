@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.dao.EquipMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.EquipLog;
@@ -30,6 +31,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private EquipLogService logService;
 	@Autowired
 	private AidEquipService aidEquipService;
+	@Autowired
+	private AidService aidService;
 	
 	
 	@Transactional
@@ -549,6 +552,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 
 
+
 	@TargetDataSource
 	@Transactional
 	public int useToAid(String sEquip_ID, String sAid_ID, String remarks, User user, String ip){
@@ -600,6 +604,55 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		aidEquip.setsAidEquip_EquipID(sEquip_ID);
 		aidEquip.setdAidEquip_CreateDate(date);
 		aidEquipService.insert(aidEquip, user);
+		return baseMapper.update(tableName, values, condition);
+	}
+	
+
+	@TargetDataSource
+	@Transactional
+	public int unusual(String sEquip_ID, String remarks, User user, String ip){
+		String tableName =  getTableName();
+		if(Tools.isNullOrEmpty(sEquip_ID)) {
+			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
+		}
+		Map<String, Object> values = new HashMap<String, Object>();
+		//查询器材是否可维修
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("sEquip_ID", sEquip_ID);
+		Equip test = baseMapper.selectOne(tableName, condition);
+		if(test == null) {
+			throw new ServiceException(Tips.ERROR106, "器材");
+		}
+		if("10".equals(test.getsEquip_Status())) {
+			throw new ServiceException(Tips.ERROR101, "器材已处于异常状态");
+		}
+		if(!"9".equals(test.getsEquip_Status())) { //使用
+			throw new ServiceException(Tips.ERROR101, "器材未使用");
+		}
+		//异常
+		values.put("sEquip_Status", "10");
+		//日志
+		EquipLog log = new EquipLog();
+		log.setsELog_ID(Utils.newSnowflakeIdStr());
+		log.setdELog_CreateDate(new Date());
+		log.setsELog_EquipID(sEquip_ID);
+		log.setsELog_IP(ip);
+		if(user != null) {
+			log.setsELog_UserID(user.getsUser_ID());
+		}
+		log.setsELog_Type("10"); // 异常
+		log.setsELog_Describe("器材异常");
+		log.setsELog_Remarks(remarks);
+		logService.insert(log, user);
+		//标记航标为异常
+		AidEquip aidEquip = aidEquipService.selectOne(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build());
+		if(aidEquip != null) {
+			Aid aid = aidService.selectOne(MapTools.custom().put("sAid_ID", aidEquip.getsAidEquip_AidID()).build());
+			if(aid != null) {
+				aid.setsAid_Status("unusual");
+				aidService.update(aid, user);
+			}
+		}
 		return baseMapper.update(tableName, values, condition);
 	}
 }

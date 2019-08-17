@@ -2,7 +2,6 @@ package com.jian.system.entity;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jian.annotation.Excel;
 import com.jian.annotation.PrimaryKey;
 import com.jian.annotation.Table;
@@ -16,7 +15,7 @@ public class Aid extends Base<Aid> {
 	private String sAid_ID;
 	@Excel(name="航标名称", sort=0, length="64", isNull=1 )
 	private String sAid_Name;
-	@Excel(name="菜单航标编码", sort=0, length="64", isNull=1 )
+	@Excel(name="航标编码", sort=0, length="64", isNull=1 )
 	private String sAid_NO;
 	@Excel(name="纬度", sort=0, length="", isNull=1 )
 	private float lAid_Lat;
@@ -40,6 +39,9 @@ public class Aid extends Base<Aid> {
 	private String sAid_NfcID;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
 	private Date dAid_CreateDate;
+	@Excel(name="航标状态", sort=0, length="64", isNull=1 )
+	private String sAid_Status;
+	
 	
 	
 	public String getsAid_ID() {
@@ -125,6 +127,12 @@ public class Aid extends Base<Aid> {
 	}
 	public void setdAid_BuildDate(Date dAid_BuildDate) {
 		this.dAid_BuildDate = dAid_BuildDate;
+	}
+	public String getsAid_Status() {
+		return sAid_Status;
+	}
+	public void setsAid_Status(String sAid_Status) {
+		this.sAid_Status = sAid_Status;
 	}
 	
 }

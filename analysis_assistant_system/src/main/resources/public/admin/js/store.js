@@ -31,6 +31,8 @@ var myvue = new Vue({
 
 				stationDictNo: 'AidStation',
 				stationOptions: [],
+				mapIconDictNo: 'StoreTypeMapIcon',
+				mapIconOptions: [],
 				lv1Options: [],
 				lv2Options: [],
 				lv3Options: [],
@@ -144,6 +146,10 @@ var myvue = new Vue({
 		              ]
 				},
 				
+				//has auth
+				hasEditAuth: false,
+				hasDeleteAuth: false,
+				
 				user: ''
 			}
 		},
@@ -174,15 +180,37 @@ var myvue = new Vue({
 					});
 				});
 			},
+			mapIconFormatter: function(row){
+				var name = row.sStoreType_MapIcon;
+				for (var i = 0; i < this.mapIconOptions.length; i++) {
+					var item = this.mapIconOptions[i];
+					if(row.sStoreType_MapIcon == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleMapIconOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.mapIconDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.mapIconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
 			handleLV1Options: function(){
 				var self = this;
 				var params = {};
 				ajaxReq(listUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.lv1Options = [];
-						for (var i = 0; i < res.data.length; i++) {
-							self.lv1Options.push({name: res.data[i].sStoreType_Name, value: res.data[i].sStoreType_ID});
-						}
+						self.lv1Options = res.data;
+						self.lv2Options = [];
+						self.lv3Options = [];
 					});
 				});
 			},
@@ -191,14 +219,12 @@ var myvue = new Vue({
 				var params = {parent: id};
 				ajaxReq(listUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.lv2Options = [];
+						self.lv2Options = res.data;
+						self.lv3Options = [];
 						self.addForm.sStore_Level2 = "";
 						self.addForm.sStore_Level3 = "";
 						self.editForm.sStore_Level2 = "";
 						self.editForm.sStore_Level3 = "";
-						for (var i = 0; i < res.data.length; i++) {
-							self.lv2Options.push({name: res.data[i].sStore_Name, value: res.data[i].sStore_ID});
-						}
 					});
 				});
 			},
@@ -207,12 +233,9 @@ var myvue = new Vue({
 				var params = {parent: id};
 				ajaxReq(listUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.lv3Options = [];
+						self.lv3Options = res.data;
 						self.addForm.sStore_Level3 = "";
 						self.editForm.sStore_Level3 = "";
-						for (var i = 0; i < res.data.length; i++) {
-							self.lv3Options.push({name: res.data[i].sStore_Name, value: res.data[i].sStore_ID});
-						}
 					});
 				});
 			},
@@ -254,6 +277,8 @@ var myvue = new Vue({
 							self.page = self.page - 1;
 							self.getList();
 						}*/
+						self.hasAuth('edit');
+						self.hasAuth('delete');
 					});
 				});
 			},
@@ -375,24 +400,34 @@ var myvue = new Vue({
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
+					console.log("----->1"+ref);
 					return this.authCache[ref];
 				}
 				let flag = false;
 				if(!this.$refs[ref]){
+					console.log("----->2"+ref);
 					return flag;
 				}
 				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
 				if(!auth){
+					console.log("----->3"+ref);
 					return flag;
 				}
 				for (var i = 0; i < this.menuFuns.length; i++) {
 					if(this.menuFuns[i].sMFun_Button == auth){
+						console.log("----->4"+ref);
 						flag = true;
 						break;
 					}
 				}
 				this.authCache[ref] = flag;
 				return flag;
+			},
+			checkAuth: function(){
+				this.hasEditAuth = this.hasAuth('edit');
+				this.hasDeleteAuth = this.hasAuth('delete');
+				alert(this.hasDeleteAuth);
+				console.log(this.menuFuns);
 			},
 			//excel
 			getExcel: function(){
@@ -456,6 +491,7 @@ var myvue = new Vue({
 			getLoginToken();
 			this.preloading = true;
 			this.handleStationOptions();
+			this.handleMapIconOptions();
 			this.getList();
 		}
 	  });

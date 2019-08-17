@@ -126,6 +126,28 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		Map<String, Object> node = null;
 		
 		if(Tools.isNullOrEmpty(parent)) {
+			List<StoreType> typeList = typeService.selectAll();
+			for (StoreType type : typeList) {
+				node = Tools.parseObjectToMap(type);
+				res.add(node);
+			}
+		}else {
+			List<Store> list = this.selectList(MapTools.custom().put("sStore_Parent", parent).build());
+			for (Store store : list) {
+				node = Tools.parseObjectToMap(store);
+				res.add(node);
+			}
+		}
+		return res;
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> storeListApp(String parent) {
+		
+		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
+		Map<String, Object> node = null;
+		
+		if(Tools.isNullOrEmpty(parent)) {
 			List<Store> list = this.selectAll();
 			for (Store store : list) {
 				node = Tools.parseObjectToMap(store);

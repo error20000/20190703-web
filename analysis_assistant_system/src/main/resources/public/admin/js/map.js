@@ -2,6 +2,7 @@ var baseUrl = parent.window.baseUrl || '../';
 
 var aidUrl = baseUrl + "api/aid/findAll";
 var storeTypeUrl = baseUrl + "api/store/findType";
+var dictUrl = baseUrl + "api/dict/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -13,7 +14,7 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					type: '1',
+					type: '',
 					sAid_ID: '',
 					sStoreType_ID: ''
 				},
@@ -30,11 +31,30 @@ var myvue = new Vue({
 
 				aidOptions: [],
 				storeTypeOptions: [],
+				aidStatusIconDictNo: 'AidMapIconByStatus',
+				aidStatusIconOptions: [],
+				storeMapIconDictNo: 'StoreTypeMapIcon',
+				storeMapIconOptions: [],
+				
+				aidTypeDictNo: 'AidType',
+				aidTypeOptions: [],
+				stationDictNo: 'AidStation',
+				stationOptions: [],
+				lightDictNo: 'AidLighting',
+				lightOptions: [],
+				markDictNo: 'AidMark',
+				markOptions: [],
+				iconDictNo: 'AidIcon',
+				iconOptions: [],
+				statusDictNo: 'AidStatus',
+				statusOptions: [],
 				
 				pointArray: [],
 				
 				detailFormVisible: false,
 				detailForm: {},
+				detailType: "aid",
+				detailTitle: "",
 				
 				user: ''
 			}
@@ -43,6 +63,197 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
+			formatDegree: function(value) {                
+				//将度转换成为度分秒                
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分                
+				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
+				return v1 + '°' + v2 + '\'' + v3 + '"';            
+			},
+			handleAidStatusIconOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.aidStatusIconDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aidStatusIconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			findAidStatusIcon: function(status){
+				for (var i = 0; i < this.aidStatusIconOptions.length; i++) {
+					if(status == this.aidStatusIconOptions[i].sDict_NO){
+						return this.aidStatusIconOptions[i];
+					}
+					
+				}
+				return null;
+			},
+			handleStoreMapIconOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.storeMapIconDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.storeMapIconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			findStoreMapIcon: function(status){
+				for (var i = 0; i < this.storeMapIconOptions.length; i++) {
+					if(status == this.storeMapIconOptions[i].sDict_NO){
+						return this.storeMapIconOptions[i];
+					}
+					
+				}
+				return this.storeMapIconOptions[0];
+			},
+			
+
+			aidTypeFormatter: function(row){
+				var name = row.sAid_Type;
+				for (var i = 0; i < this.aidTypeOptions.length; i++) {
+					var item = this.aidTypeOptions[i];
+					if(row.sAid_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			stationFormatter: function(row){
+				var name = row.sAid_Station;
+				for (var i = 0; i < this.stationOptions.length; i++) {
+					var item = this.stationOptions[i];
+					if(row.sAid_Station == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			lightFormatter: function(row){
+				var name = row.sAid_Lighting;
+				for (var i = 0; i < this.lightOptions.length; i++) {
+					var item = this.lightOptions[i];
+					if(row.sAid_Lighting == item.sDict_NO){
+						name = item.sDict_Name + " ("+item.sDict_Describe+")";
+						break
+					}
+				}
+				return name;
+			},
+			markFormatter: function(row){
+				var name = row.sAid_Mark;
+				for (var i = 0; i < this.markOptions.length; i++) {
+					var item = this.markOptions[i];
+					if(row.sAid_Mark == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleAidTypeOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.aidTypeDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.aidTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleStationOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.stationDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.stationOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLightOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.lightDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.lightOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleMarkOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.markDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.markOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			iconFormatter: function(row){
+				var name = row.sAid_Icon;
+				for (var i = 0; i < this.iconOptions.length; i++) {
+					var item = this.iconOptions[i];
+					if(row.sAid_Icon == item.sDict_NO){
+						name = item.sDict_Picture;
+						break
+					}
+				}
+				return name;
+			},
+			handleIconOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.iconDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.iconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			statusFormatter: function(row){
+				var name = row.sAid_Status;
+				for (var i = 0; i < this.statusOptions.length; i++) {
+					var item = this.statusOptions[i];
+					if(row.sAid_Status == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleStatusOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(dictUrl, {sDict_DictTypeNO: this.statusDictNo}, function(res){
+					self.handleResQuery(res, function(){
+						self.statusOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			
 			handleAidOptions: function(cb){
 				var self = this;
 				var params = {};
@@ -80,7 +291,7 @@ var myvue = new Vue({
 				      });
 				      
 					 ArGis.layer = new MapImageLayer({
-				        url: "http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"
+				        url: ArGis.mapUrl
 				      });
 				      
 					 ArGis.map.add(ArGis.layer);
@@ -97,8 +308,6 @@ var myvue = new Vue({
 				   	  }); */
 					 
 					 ArGis.view.on("click", function(evt){
-							console.log(evt);
-							console.log(self);
 							ArGis.view.hitTest(evt).then(function(response) {
 							    var result = response.results[0];
 							    if (result) {
@@ -126,7 +335,8 @@ var myvue = new Vue({
 							id: node.sAid_ID,
 							name: node.sAid_Name,
 							no: node.sAid_NO,
-							type: 'aid'
+							type: 'aid',
+							status: this.findAidStatusIcon(node.sAid_Status || "normal")
 						},
 						color: "blue",
 						width: "10px"
@@ -140,14 +350,13 @@ var myvue = new Vue({
 						attr:{
 							id: node.sStoreType_ID,
 							name: node.sStoreType_Name,
-							type: 'store'
+							type: 'store',
+							status: this.findStoreMapIcon(node.sStoreType_MapIcon)
 						},
 						color: "red",
 						width: "10px"
 					}));
 				}
-				console.log("=============initData==============");
-				console.log(this.pointArray);
 				ArGis.view.graphics.addMany(this.pointArray);
 			},
 			createPoint: function(params){
@@ -157,24 +366,26 @@ var myvue = new Vue({
 				    latitude: params.lat
 				  };
 					
-			     var symbol  = {
+			     /*var symbol  = {
 		  		    type: "simple-marker",  
 		  		    color: params.color ? params.color : [226, 119, 40],
 		  		    size: params.width ? params.width : "4px",
 				    outline: {
 				    	style:"none"
 				    }
-		  		  };
-				/*var symbol = {};
-			     require(["esri/symbols/WebStyleSymbol"], 
-							function (WebStyleSymbol) {
+		  		  };*/
+				var iconUrl = params.attr.status ? "/"+params.attr.status.sDict_Picture : "";
+				var symbol = {};
+			     require(["esri/symbols/PictureMarkerSymbol"], 
+							function (PictureMarkerSymbol) {
 			    	 symbol = {
-			    			 type: "web-style", 
-			    			 name: "tear-pin-2",
-			    			 styleName: "Esri2DPointSymbolsStyle"
-			    	 };
+		    			  type: "picture-marker",
+		    			  url: iconUrl,
+		    			  width: "24px",
+		    			  height: "24px"
+		    			};
 
-			     });*/
+			     });
 			     
 			     return this.createGraphic(geometry, symbol, params.attr, params.template);
 			},
@@ -239,7 +450,9 @@ var myvue = new Vue({
 			},
 			//detail
 			handleDetail: function(result){
+				
 				let pid = result.graphic.attributes.id;
+				let name = result.graphic.attributes.name;
 				let type = result.graphic.attributes.type;
 				
 				for (var i = 0; i < this.$children.length; i++) {
@@ -249,41 +462,65 @@ var myvue = new Vue({
 					}
 				}
 				this.detailFormVisible = true;
+				this.detailTitle = name;
 
 				switch (type) {
 				case "aid":
-					this.detailAid(pid);
+					this.detailAid(pid, result);
+					this.detailType = 'aid';
 					break;
 				case "store":
-					this.detailStore(pid);
+					this.detailStore(pid, result);
+					this.detailType = 'store';
 					break;
 
 				default:
 					break;
 				}
 			},
-			detailAid: function(id){
+			detailAid: function(id, result){
 				for (var i = 0; i < this.aidOptions.length; i++) {
 					let node = this.aidOptions[i];
 					if(id == node.sAid_ID){
 						this.detailForm = node;
+						this.detailForm.lat = this.formatDegree(node.lAid_Lat);
+						this.detailForm.lng = this.formatDegree(node.lAid_Lng);
+						
+						this.detailForm.sAid_TypeName = this.aidTypeFormatter(node);
+						this.detailForm.sAid_StationName = this.stationFormatter(node);
+						this.detailForm.sAid_IconName = this.iconFormatter(node);
+						this.detailForm.sAid_LightingName = this.lightFormatter(node);
+						this.detailForm.sAid_MarkName = this.markFormatter(node);
+						this.detailForm.sAid_StatusName = this.statusFormatter(node);
 						break;
 					}
 				}
 			},
-			detailStore: function(id){
+			detailStore: function(id, result){
 				for (var i = 0; i < this.storeTypeOptions.length; i++) {
 					let node = this.storeTypeOptions[i];
 					if(id == node.sStoreType_ID){
 						this.detailForm = node;
+						this.detailForm.lat = this.formatDegree(node.lStoreType_Lat);
+						this.detailForm.lng = this.formatDegree(node.lStoreType_Lng);
+						let temp = {
+							sAid_Station: node.sStoreType_Station
+						};
+						this.detailForm.sStoreType_StationName = this.stationFormatter(temp);
 						break;
 					}
 				}
 			},
+
+			detailClose: function () {
+				this.detailFormVisible = false;
+				this.$refs.detailForm.resetFields();
+			},
+			
 			//reset
 			reset: function(){
 				this.filters = {
-					type: '1',
+					type: '',
 					sAid_ID: '',
 					sStoreType_ID: ''
 				};
@@ -371,6 +608,17 @@ var myvue = new Vue({
 		mounted: function() {
 			getLoginToken();
 			this.preloading = true;
+			this.handleAidStatusIconOptions();
+			this.handleStoreMapIconOptions();
+			
+			//aid
+			this.handleAidTypeOptions();
+			this.handleStationOptions();
+			this.handleIconOptions();
+			this.handleLightOptions();
+			this.handleMarkOptions();
+			this.handleStatusOptions();
+			
 			this.handleStoreTypeOptions(this.handleAidOptions(this.initMap()));
 			//this.handleAidOptions();
 			//this.initMap();
