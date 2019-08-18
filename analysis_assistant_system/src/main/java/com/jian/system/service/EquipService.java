@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jian.system.config.Constant;
 import com.jian.system.dao.EquipMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
@@ -671,8 +672,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		message.setsMsg_ID(Utils.newSnowflakeIdStr());
 		message.setdMsg_CreateDate(new Date());
 		message.setlMsg_Level(1);
+		message.setsMsg_Type(Constant.MsgType_3);
+		message.setsMsg_Status(Constant.MsgStatus_1);
 		message.setsMsg_EquipID(sEquip_ID);
-		message.setsMsg_Describe("器材异常");
+		message.setsMsg_Title("器材异常");
+		message.setsMsg_Describe(remarks);
 		if(aid != null) {
 			message.setsMsg_AidID(aid.getsAid_ID());
 		}
