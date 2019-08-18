@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 17/08/2019 22:31:05
+ Date: 19/08/2019 00:07:59
 */
 
 
@@ -257,6 +257,13 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Dict"."sDict_Color" IS '字典颜色';
 -- ----------------------------
 -- Records of tBase_Dict
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('801001', '1', '库存不足', NULL, NULL, 'MsgType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('801002', '2', '航标异常', NULL, NULL, 'MsgType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('801003', '3', '器材异常', NULL, NULL, 'MsgType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802001', '1', '未读', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802002', '2', '已读', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802003', '3', '待处理', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802004', '4', '已处理', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('605884478887297024', '12', '22', TO_DATE('2019-07-30 22:08:36', 'SYYYY-MM-DD HH24:MI:SS'), '22', 'AidIcon', NULL, NULL, '0', NULL, 'upload/20190730/201907302208285808068.png', NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('3', 'test1', '长闪白10秒', NULL, NULL, 'AidLighting', NULL, NULL, NULL, '2+8', NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('1', 'test', '灯塔', NULL, NULL, 'AidType', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -342,6 +349,8 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_DictType"."lDictType_SysFlag" IS '系统默�
 -- ----------------------------
 -- Records of tBase_DictType
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('801', 'MsgType', '消息类型', NULL, NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('802', 'MsgStatus', '消息状态', NULL, NULL, NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('101', 'AidStation', '航标站', NULL, NULL, NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('102', 'AidType', '航标种类', NULL, NULL, NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('103', 'AidLighting', '灯质明灭', NULL, NULL, NULL, NULL, '1');
@@ -795,7 +804,9 @@ CREATE TABLE "AASYSTEM"."tBase_Message" (
   "sMsg_IP" NVARCHAR2(255) ,
   "sMsg_FromUserID" NVARCHAR2(32) ,
   "sMsg_Label" NVARCHAR2(64) ,
-  "lMsg_Level" NUMBER 
+  "lMsg_Level" NUMBER ,
+  "sMsg_Status" NVARCHAR2(64) ,
+  "sMsg_Title" NVARCHAR2(32) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -803,6 +814,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -823,6 +838,16 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_IP" IS '操作员IP';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_FromUserID" IS '产生消息人员ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Label" IS '消息自定义标签';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."lMsg_Level" IS '消息重要级别';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Status" IS '消息状态';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Message"."sMsg_Title" IS '消息标题';
+
+-- ----------------------------
+-- Records of tBase_Message
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Message" VALUES ('1', '1', TO_DATE('2019-08-17 00:57:32', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '1', '1', 'test1');
+INSERT INTO "AASYSTEM"."tBase_Message" VALUES ('2', '1', TO_DATE('2019-08-15 00:57:32', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', '1', '1', 'test2');
+INSERT INTO "AASYSTEM"."tBase_Message" VALUES ('3', '3', TO_DATE('2019-08-18 00:57:32', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常器材异常', 'cccc', TO_DATE('2019-08-18 14:57:27', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '604748743446626304', '192.168.1.16', NULL, '1', '1', '4', '器材异常');
+INSERT INTO "AASYSTEM"."tBase_Message" VALUES ('4', '3', TO_DATE('2019-08-19 15:41:02', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_Nfc
@@ -1156,6 +1181,11 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611174086063685632', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612296764807970816', TO_DATE('2019-08-17 14:48:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1546', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346348007587840', TO_DATE('2019-08-17 18:05:46', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '3', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407471822077952', TO_DATE('2019-08-17 22:08:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '16', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612660206102380544', TO_DATE('2019-08-18 14:52:55', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/read', 'app消息已读', '200', 'appRead', '{"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661106808193024', TO_DATE('2019-08-18 14:56:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '50', 'appHandle', '{"remarks":["tyu"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661200861265920', TO_DATE('2019-08-18 14:56:52', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["yhj"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，消息已处理","code":-101}', 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661259661213696', TO_DATE('2019-08-18 14:57:06', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '16', 'appUnHandle', '{"remarks":["fhbn"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661346592358400', TO_DATE('2019-08-18 14:57:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["cccc"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312764043493376', TO_DATE('2019-08-17 15:52:19', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '53', 'update', '{"sDict_ID":["612311872565149696"],"sDict_NO":["12"],"sDict_Name":["12"],"dDict_CreateDate":["1566028126000"],"sDict_UserID":["1"],"sDict_DictTypeNO":["AidType"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["0"],"sDict_Describe":["12', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312847153627136', TO_DATE('2019-08-17 15:52:38', 'SYYYY-MM-DD HH24:MI:SS'), 'delete', NULL, '127.0.0.1', NULL, '/api/dict/delete', '删除数据字典', '48', 'delete', '{"sDict_ID":["612311872565149696"]}', NULL, NULL, 'com.jian.system.controller.DictController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612315385487687680', TO_DATE('2019-08-17 16:02:44', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '43', 'update', '{"sDict_ID":["700008"],"sDict_NO":["8"],"sDict_Name":["报废"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["EquipStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDict_Picture":[""],"', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
@@ -1163,6 +1193,9 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398627536502784', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398724747886592', TO_DATE('2019-08-17 21:33:53', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '80', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.12"],"lSys_MapLat":["242"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398795115724800', TO_DATE('2019-08-17 21:34:10', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '48', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398864783114240', TO_DATE('2019-08-17 21:34:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '36', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612673345506246656', TO_DATE('2019-08-18 15:45:08', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '51', 'appUnHandle', '{"remarks":["gggg"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，已处理消息，不可设为待处理","code":-101}', 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612735045173510144', TO_DATE('2019-08-18 19:50:18', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '2189', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612737266892144640', TO_DATE('2019-08-18 19:59:08', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '1187', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612401665785462784', TO_DATE('2019-08-17 21:45:34', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '44', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612402087157825536', TO_DATE('2019-08-17 21:47:15', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '30', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1dfsdf"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407490113437696', TO_DATE('2019-08-17 22:08:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '17', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
