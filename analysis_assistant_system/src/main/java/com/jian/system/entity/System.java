@@ -17,6 +17,13 @@ public class System extends Base<System> {
 	private float lSys_MapLng;
 	@Excel(name="默认纬度", sort=0, length="", isNull=1 )
 	private float lSys_MapLat;
+	@Excel(name="默认级别", sort=0, length="", isNull=1 )
+	private int lSys_MapLevel;
+	@Excel(name="图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconWidth;
+	@Excel(name="图标高度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconHeight;
+	
 	
 	
 	public String getsSys_ID() {
@@ -42,6 +49,24 @@ public class System extends Base<System> {
 	}
 	public void setlSys_MapLat(float lSys_MapLat) {
 		this.lSys_MapLat = lSys_MapLat;
+	}
+	public int getlSys_MapLevel() {
+		return lSys_MapLevel;
+	}
+	public void setlSys_MapLevel(int lSys_MapLevel) {
+		this.lSys_MapLevel = lSys_MapLevel;
+	}
+	public int getlSys_MapIconWidth() {
+		return lSys_MapIconWidth;
+	}
+	public void setlSys_MapIconWidth(int lSys_MapIconWidth) {
+		this.lSys_MapIconWidth = lSys_MapIconWidth;
+	}
+	public int getlSys_MapIconHeight() {
+		return lSys_MapIconHeight;
+	}
+	public void setlSys_MapIconHeight(int lSys_MapIconHeight) {
+		this.lSys_MapIconHeight = lSys_MapIconHeight;
 	}
 	
 	
