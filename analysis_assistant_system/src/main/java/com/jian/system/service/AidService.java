@@ -178,5 +178,11 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		value.put("sAid_Status", "unusual");
 		return baseMapper.update(tableName, value, condition);
 	}
+
+	
+	@TargetDataSource
+	public List<Map<String, Object>> aidMap() {
+		return baseMapper.aidMap();
+	}
 	
 }

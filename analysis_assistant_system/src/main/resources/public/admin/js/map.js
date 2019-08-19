@@ -1,8 +1,9 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var aidUrl = baseUrl + "api/aid/findAll";
-var storeTypeUrl = baseUrl + "api/store/findType";
+var aidUrl = baseUrl + "api/aid/map";
+var storeTypeUrl = baseUrl + "api/store/map";
 var dictUrl = baseUrl + "api/dict/findList";
+var aidEquipUrl = baseUrl + "api/aid/equip";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -30,11 +31,12 @@ var myvue = new Vue({
 				authCache: {},
 
 				aidOptions: [],
+				aidEquipOptions: [],
 				storeTypeOptions: [],
-				aidStatusIconDictNo: 'AidMapIconByStatus',
-				aidStatusIconOptions: [],
-				storeMapIconDictNo: 'StoreTypeMapIcon',
-				storeMapIconOptions: [],
+				//aidStatusIconDictNo: 'MapIcon',
+				//aidStatusIconOptions: [],
+				//storeMapIconDictNo: 'MapIcon',
+				//storeMapIconOptions: [],
 				
 				aidTypeDictNo: 'AidType',
 				aidTypeOptions: [],
@@ -55,6 +57,7 @@ var myvue = new Vue({
 				detailForm: {},
 				detailType: "aid",
 				detailTitle: "",
+				activeNames: ['1', '2'],
 				
 				user: ''
 			}
@@ -71,7 +74,7 @@ var myvue = new Vue({
 				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
 				return v1 + '°' + v2 + '\'' + v3 + '"';            
 			},
-			handleAidStatusIconOptions: function(cb){
+			/*handleAidStatusIconOptions: function(cb){
 				var self = this;
 				var params = {sDict_DictTypeNO: this.aidStatusIconDictNo};
 				ajaxReq(dictUrl, params, function(res){
@@ -112,7 +115,7 @@ var myvue = new Vue({
 					
 				}
 				return this.storeMapIconOptions[0];
-			},
+			},*/
 			
 
 			aidTypeFormatter: function(row){
@@ -336,7 +339,8 @@ var myvue = new Vue({
 							name: node.sAid_Name,
 							no: node.sAid_NO,
 							type: 'aid',
-							status: this.findAidStatusIcon(node.sAid_Status || "normal")
+							//status: this.findAidStatusIcon(node.sAid_Status || "normal")
+							pic: node.sAid_StatusIcon ? node.sAid_StatusIcon : node.sAid_TypeIcon
 						},
 						color: "blue",
 						width: "10px"
@@ -351,13 +355,29 @@ var myvue = new Vue({
 							id: node.sStoreType_ID,
 							name: node.sStoreType_Name,
 							type: 'store',
-							status: this.findStoreMapIcon(node.sStoreType_MapIcon)
+							//status: this.findStoreMapIcon(node.sStoreType_MapIcon)
+							pic: node.sStoreType_MapIconPic
 						},
 						color: "red",
 						width: "10px"
 					}));
 				}
+				//图例
+				this.initLegend();
 				ArGis.view.graphics.addMany(this.pointArray);
+			},
+			initLegend: function(){
+				require([
+			        "esri/widgets/Legend",
+			      ], function(Legend) {
+					
+					var legend = new Legend({
+			            view: ArGis.view,
+			            container: document.createElement("div")
+			          });
+					
+					ArGis.view.ui.add(legend, "bottom-left");
+				});
 			},
 			createPoint: function(params){
 				var geometry = {
@@ -374,18 +394,19 @@ var myvue = new Vue({
 				    	style:"none"
 				    }
 		  		  };*/
-				var iconUrl = params.attr.status ? "/"+params.attr.status.sDict_Picture : "";
+				//var iconUrl = params.attr.status ? params.attr.status.sDict_Picture ? "/"+params.attr.status.sDict_Picture : "/admin/images/map.png" : "/admin/images/map.png";
+				var iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
 				var symbol = {};
-			     require(["esri/symbols/PictureMarkerSymbol"], 
+					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
-			    	 symbol = {
-		    			  type: "picture-marker",
-		    			  url: iconUrl,
-		    			  width: "24px",
-		    			  height: "24px"
-		    			};
-
-			     });
+						symbol = {
+								type: "picture-marker",
+								url: iconUrl,
+								width: "24px",
+								height: "24px"
+						};
+						
+					});
 			     
 			     return this.createGraphic(geometry, symbol, params.attr, params.template);
 			},
@@ -492,6 +513,9 @@ var myvue = new Vue({
 						this.detailForm.sAid_LightingName = this.lightFormatter(node);
 						this.detailForm.sAid_MarkName = this.markFormatter(node);
 						this.detailForm.sAid_StatusName = this.statusFormatter(node);
+						
+						console.log(node);
+						this.detailEquip(id, result);
 						break;
 					}
 				}
@@ -510,6 +534,18 @@ var myvue = new Vue({
 						break;
 					}
 				}
+			},
+			detailEquip: function(id, result){
+				var self = this;
+				var params = {sAid_ID: id};
+				ajaxReq(aidEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aidEquipOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
 			},
 
 			detailClose: function () {
@@ -608,8 +644,9 @@ var myvue = new Vue({
 		mounted: function() {
 			getLoginToken();
 			this.preloading = true;
-			this.handleAidStatusIconOptions();
-			this.handleStoreMapIconOptions();
+			
+			//this.handleAidStatusIconOptions();
+			//this.handleStoreMapIconOptions();
 			
 			//aid
 			this.handleAidTypeOptions();

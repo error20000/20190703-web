@@ -117,11 +117,36 @@ public interface AidMapper extends BaseMapper<Aid> {
 	public List<Aid> search(@Param("keywords") String keywords, @Param("sUser_ID") String sUser_ID);
 	
 
-	@Select({ " select ",
-			" a.* , b.\"sEquip_Name\" \"sAidEquip_EquipName\",  b.\"sEquip_NO\" \"sAidEquip_EquipNO\",  b.\"sEquip_Type\" \"sAidEquip_EquipType\", c.\"sDict_Name\" \"sAidEquip_EquipTypeName\" ",
+	/*@Select({ " select ",
+			" a.*, b.* , b.\"sEquip_Name\" \"sAidEquip_EquipName\",  b.\"sEquip_NO\" \"sAidEquip_EquipNO\",  b.\"sEquip_Type\" \"sAidEquip_EquipType\", c.\"sDict_Name\" \"sAidEquip_EquipTypeName\" ",
 			" from \"tBase_AidEquip\" a, \"tBase_Equip\" b, \"tBase_Dict\" c ", " where ",
 			" 	a.\"sAidEquip_EquipID\" = b.\"sEquip_ID\" ", " 	and b.\"sEquip_Type\" = c.\"sDict_NO\" ",
-			"   and a.\"sAidEquip_AidID\" = #{sAid_ID} " })
+			"   and a.\"sAidEquip_AidID\" = #{sAid_ID} " 
+	})*/
+	@Select({
+		" select ",
+		"	a.*, b.*, ",
+		" 	b.\"sEquip_Name\" \"sAidEquip_EquipName\",  b.\"sEquip_NO\" \"sAidEquip_EquipNO\",  b.\"sEquip_Type\" \"sAidEquip_EquipType\", d.\"sDict_Name\" \"sAidEquip_EquipTypeName\" ",
+		" from \"tBase_AidEquip\" a ",
+		" 	left join \"tBase_Equip\" b on a.\"sAidEquip_EquipID\" = b.\"sEquip_ID\"  ",
+		" 	left join \"tBase_Dict\" d on b.\"sEquip_Type\" = d.\"sDict_NO\"  and d.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" e on b.\"sEquip_Icon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		"   where a.\"sAidEquip_AidID\" = #{sAid_ID} " 
+	})
 	public List<Map<String, Object>> equip(String sAid_ID);
+	
+
+
+	@Select({
+		" select ",
+		"	a.*, ",
+		"	d.\"sDict_Picture\" \"sAid_StatusIcon\", e.\"sDict_Picture\" \"sAid_TypeIcon\" ",
+		" from \"tBase_Aid\" a ",
+		" 	left join \"tBase_AidMapIcon\" b on a.\"sAid_ID\" = b.\"sAidIcon_AidID\" and a.\"sAid_Status\" = b.\"sAidIcon_Status\" ",
+		" 	left join \"tBase_AidTypeMapIcon\" c on a.\"sAid_Type\" = c.\"sAidTypeIcon_Type\" and a.\"sAid_Status\" = c.\"sAidTypeIcon_Status\" ",
+		" 	left join \"tBase_Dict\" d on b.\"sAidIcon_StatusIcon\" = d.\"sDict_NO\"  and d.\"sDict_DictTypeNO\" = 'MapIcon' ",
+		" 	left join \"tBase_Dict\" e on c.\"sAidTypeIcon_StatusIcon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'MapIcon' ",
+	})
+	public List<Map<String, Object>> aidMap();
 	
 }

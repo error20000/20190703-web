@@ -1,15 +1,14 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/dict/findPage";
-var addUrl = baseUrl + "api/dict/add";
-var modUrl = baseUrl + "api/dict/update";
-var delUrl = baseUrl + "api/dict/delete";
-var oneUrl = baseUrl + "api/dict/findOne";
-var excelUrl = baseUrl + "api/dict/excel";
-var importUrl = baseUrl + "api/dict/import";
-var userUrl = baseUrl + "api/user/findAll";
-var dictTypeUrl = baseUrl + "api/dictType/findAll";
-var uploadImgUrl = baseUrl + "api/file/uploadImg";
+var queryUrl = baseUrl + "api/aidTypeMapIcon/findPage";
+var addUrl = baseUrl + "api/aidTypeMapIcon/add";
+var modUrl = baseUrl + "api/aidTypeMapIcon/update";
+var delUrl = baseUrl + "api/aidTypeMapIcon/delete";
+var oneUrl = baseUrl + "api/aidTypeMapIcon/findOne";
+var excelUrl = baseUrl + "api/aidTypeMapIcon/excel";
+var importUrl = baseUrl + "api/aidTypeMapIcon/import";
+
+var dictUrl = baseUrl + "api/dict/findList";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -21,9 +20,8 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
-					sDict_NO: '',
-					sDict_Name: '',
-					sDict_DictTypeNO: ''
+					sAidTypeIcon_Type: '',
+					sAidTypeIcon_Status: ''
 				},
 				list: [],
 				total: 0,
@@ -36,20 +34,23 @@ var myvue = new Vue({
 				menuFuns: gMenuFuns,
 				authCache: {},
 				
-				dictTypeOptions: [],
-				userOptions: [],
-				uploadImgUrl: uploadImgUrl,
+				statusDictNo: 'AidStatus',
+				statusOptions: [],
+				mapIconDictNo: 'MapIcon',
+				mapIconOptions: [],
+				aidTypeDictNo: 'AidType',
+				aidTypeOptions: [],
 
 				//add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
 				addFormRules: {
-					sDict_NO: [
-		                { required: true, message: '请输入编码.', trigger: 'blur' },
+					sAidTypeIcon_Type: [
+		                { required: true, message: '请选择航标种类.', trigger: 'blur' },
 		              ],
-		            sDict_DictTypeNO: [
-		                { required: true, message: '请选择字典分类.', trigger: 'blur' },
+		            sAidTypeIcon_Status: [
+		                { required: true, message: '请选择状态.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -57,11 +58,11 @@ var myvue = new Vue({
 				editLoading: false,
 				editForm: {},
 				editFormRules: {
-					sDict_NO: [
-		                { required: true, message: '请输入编码.', trigger: 'blur' },
+					sAidTypeIcon_Type: [
+		                { required: true, message: '请选择航标种类.', trigger: 'blur' },
 		              ],
-		            sDict_DictTypeNO: [
-		                { required: true, message: '请选择字典分类.', trigger: 'blur' },
+		            sAidTypeIcon_Status: [
+		                { required: true, message: '请选择状态.', trigger: 'blur' },
 		              ]
 				},
 				
@@ -72,76 +73,84 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
-			userAddFormatter: function(row){
-				var name = row.sDict_UserID;
-				for (var i = 0; i < this.userOptions.length; i++) {
-					var item = this.userOptions[i];
-					if(row.sDict_UserID == item.sUser_ID){
-						name = item.sUser_Nick;
+			statusFormatter: function(row){
+				var name = row.sAidTypeIcon_Status;
+				for (var i = 0; i < this.statusOptions.length; i++) {
+					var item = this.statusOptions[i];
+					if(row.sAidTypeIcon_Status == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
 				return name;
 			},
-			userModFormatter: function(row){
-				var name = row.sDict_UpdateUserID;
-				for (var i = 0; i < this.userOptions.length; i++) {
-					var item = this.userOptions[i];
-					if(row.sDict_UpdateUserID == item.sUser_ID){
-						name = item.sUser_Nick;
-						break
-					}
-				}
-				return name;
-			},
-			handleUserOptions: function(cb){
+			handleStatusOptions: function(cb){
 				var self = this;
-				var params = {};
-				ajaxReq(userUrl, params, function(res){
+				var params = {sDict_DictTypeNO: this.statusDictNo};
+				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.userOptions = res.data;
+						self.statusOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
 					});
 				});
 			},
-			dictTypeFormatter: function(row){
-				var name = row.sDict_DictTypeNO;
-				for (var i = 0; i < this.dictTypeOptions.length; i++) {
-					var item = this.dictTypeOptions[i];
-					if(row.sDict_DictTypeNO == item.value){
-						name = item.name;
+			mapIconFormatter: function(row){
+				var name = row.sAidTypeIcon_StatusIcon;
+				for (var i = 0; i < this.mapIconOptions.length; i++) {
+					var item = this.mapIconOptions[i];
+					if(row.sAidTypeIcon_StatusIcon == item.sDict_NO){
+						name = item.sDict_Name;
 						break
 					}
 				}
 				return name;
 			},
-			handleDictTypeOptions: function(cb){
+			mapIconPicFormatter: function(row){
+				var name = row.sAidTypeIcon_StatusIcon;
+				for (var i = 0; i < this.mapIconOptions.length; i++) {
+					var item = this.mapIconOptions[i];
+					if(row.sAidTypeIcon_StatusIcon == item.sDict_NO){
+						name = item.sDict_Picture;
+						break
+					}
+				}
+				return name;
+			},
+			handleMapIconOptions: function(cb){
 				var self = this;
-				var params = {};
-				ajaxReq(dictTypeUrl, params, function(res){
+				var params = {sDict_DictTypeNO: this.mapIconDictNo};
+				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.dictTypeOptions = res.data;
-						for (var i = 0; i < self.dictTypeOptions.length; i++) {
-							for (var j = i; j < self.dictTypeOptions.length; j++) {
-								if(self.dictTypeOptions[i] > self.dictTypeOptions[j]){
-									var temp = self.dictTypeOptions[i];
-									self.dictTypeOptions[i] = self.dictTypeOptions[j];
-									self.dictTypeOptions[j] = temp;
-								}
-							}
-						}
+						self.mapIconOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
 					});
 				});
 			},
-			handleFileUpload: function(res, file, obj, key){
+			aidTypeFormatter: function(row){
+				var name = row.sAidTypeIcon_Type;
+				for (var i = 0; i < this.aidTypeOptions.length; i++) {
+					var item = this.aidTypeOptions[i];
+					if(row.sAidTypeIcon_Type == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleAidTypeOptions: function(cb){
 				var self = this;
-				this.handleResQuery(res, function(){
-					self[obj][key] = res.data.path;
+				var params = {sDict_DictTypeNO: this.aidTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aidTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
 				});
 			},
 			handleSizeChange: function (val) {
@@ -188,9 +197,8 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					sDict_NO: '',
-					sDict_Name: '',
-					sDict_DictTypeNO: ''
+					sAidTypeIcon_Type: '',
+					sAidTypeIcon_Status: ''
 				};
 				this.getList();
 			},
@@ -202,12 +210,9 @@ var myvue = new Vue({
 				}
 				this.addFormVisible = true;
 				this.addForm = {
-					sDict_NO: '',
-					sDict_Name: '',
-					sDict_DictTypeNO: '',
-					sDict_Describe: '',
-					sDict_Picture: '',
-					sDict_Link: ''
+					sAidTypeIcon_Status: '',
+					sAidTypeIcon_StatusIcon: '',
+					sAidTypeIcon_Type: ''
 				};
 			},
 			addClose: function () {
@@ -244,7 +249,7 @@ var myvue = new Vue({
 				}).then(() => {
 					var self = this;
 					this.listLoading = true;
-					ajaxReq(delUrl, {sDict_ID: row.sDict_ID }, function(res){
+					ajaxReq(delUrl, {sAidTypeIcon_ID: row.sAidTypeIcon_ID }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();
@@ -261,7 +266,7 @@ var myvue = new Vue({
 					return;
 				}
 				var params = {
-					sDict_ID: row.sDict_ID
+					sAidTypeIcon_ID: row.sAidTypeIcon_ID
 				};
 				var self = this;
 				ajaxReq(oneUrl, params, function(res){
@@ -378,8 +383,9 @@ var myvue = new Vue({
 		mounted: function() {
 			getLoginToken();
 			this.preloading = true;
-			this.handleDictTypeOptions();
-			this.handleUserOptions();
+			this.handleAidTypeOptions();
+			this.handleStatusOptions();
+			this.handleMapIconOptions();
 			this.getList();
 		}
 	  });

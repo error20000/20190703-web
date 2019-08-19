@@ -202,4 +202,9 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	public List<StoreType> findType() {
 		return typeService.selectAll();
 	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> storeMap() {
+		return typeService.storeMap();
+	}
 }

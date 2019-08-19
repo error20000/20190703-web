@@ -169,6 +169,17 @@ public class StoreController extends BaseController<Store, StoreService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	
+
+	@RequestMapping("/map")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询一级仓库(地图)")
+	public String map(HttpServletRequest req) {
+		List<Map<String, Object>> list = service.storeMap();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
@@ -199,4 +210,16 @@ public class StoreController extends BaseController<Store, StoreService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
+
+	@RequestMapping("/app/map")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库(地图)")
+	public String appMap(HttpServletRequest req) {
+		List<Map<String, Object>> list = service.storeMap();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
 }

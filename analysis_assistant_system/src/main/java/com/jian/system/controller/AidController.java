@@ -196,6 +196,27 @@ public class AidController extends BaseController<Aid, AidService> {
 		int res = service.updateUser(sAid_ID, user);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	@RequestMapping("/equip")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标的器材")
+	public String equip(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		List<Map<String, Object>> res = service.equip(sAid_ID, getLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
+	@RequestMapping("/map")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标（地图）")
+	public String map(HttpServletRequest req) {
+		List<Map<String, Object>> list = service.aidMap();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
@@ -294,4 +315,16 @@ public class AidController extends BaseController<Aid, AidService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
+
+	@RequestMapping("/app/map")
+    @ResponseBody
+	@VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询所有航标(地图)")
+	public String appMap(HttpServletRequest req) {
+		
+		List<Map<String, Object>> list = service.aidMap();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 }

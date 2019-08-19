@@ -35,7 +35,10 @@ public class Equip extends Base<Equip> {
 	private String sEquip_AidID;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
 	private Date dEquip_CreateDate;
+	@Excel(name="器材Icon", sort=0, length="64", isNull=1 )
+	private String sEquip_Icon;
 	
+
 	
 	public String getsEquip_ID() {
 		return sEquip_ID;
@@ -108,6 +111,12 @@ public class Equip extends Base<Equip> {
 	}
 	public void setsEquip_Status(String sEquip_Status) {
 		this.sEquip_Status = sEquip_Status;
+	}
+	public String getsEquip_Icon() {
+		return sEquip_Icon;
+	}
+	public void setsEquip_Icon(String sEquip_Icon) {
+		this.sEquip_Icon = sEquip_Icon;
 	}
 	
 }
