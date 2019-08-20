@@ -37,6 +37,15 @@ public class Equip extends Base<Equip> {
 	private Date dEquip_CreateDate;
 	@Excel(name="器材Icon", sort=0, length="64", isNull=1 )
 	private String sEquip_Icon;
+	@Excel(name="生产厂家", sort=0, length="64", isNull=1 )
+	private String sEquip_Manufacturer;
+	@Excel(name="厂方型号", sort=0, length="64", isNull=1 )
+	private String sEquip_MModel;
+	@Excel(name="到货日期", sort=0, length="", isNull=1 )
+	private Date dEquip_ArrivalDate;
+	@Excel(name="使用日期", sort=0, length="", isNull=1 )
+	private Date dEquip_UseDate;
+	
 	
 
 	
@@ -117,6 +126,30 @@ public class Equip extends Base<Equip> {
 	}
 	public void setsEquip_Icon(String sEquip_Icon) {
 		this.sEquip_Icon = sEquip_Icon;
+	}
+	public String getsEquip_Manufacturer() {
+		return sEquip_Manufacturer;
+	}
+	public void setsEquip_Manufacturer(String sEquip_Manufacturer) {
+		this.sEquip_Manufacturer = sEquip_Manufacturer;
+	}
+	public String getsEquip_MModel() {
+		return sEquip_MModel;
+	}
+	public void setsEquip_MModel(String sEquip_MModel) {
+		this.sEquip_MModel = sEquip_MModel;
+	}
+	public Date getdEquip_ArrivalDate() {
+		return dEquip_ArrivalDate;
+	}
+	public void setdEquip_ArrivalDate(Date dEquip_ArrivalDate) {
+		this.dEquip_ArrivalDate = dEquip_ArrivalDate;
+	}
+	public Date getdEquip_UseDate() {
+		return dEquip_UseDate;
+	}
+	public void setdEquip_UseDate(Date dEquip_UseDate) {
+		this.dEquip_UseDate = dEquip_UseDate;
 	}
 	
 }

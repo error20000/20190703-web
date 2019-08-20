@@ -555,7 +555,15 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_Describe("器材报废");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
-		//保存
+		//解除绑定关系
+		// 航标
+		values.put("sEquip_AidID", "");
+		aidEquipService.delete(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build(), user);
+		// nfc
+		if(!Tools.isNullOrEmpty(test.getsEquip_NfcID())) {
+			values.put("sEquip_NfcID", "");
+			nfcService.update(MapTools.custom().put("lNfc_StatusFlag", 0).build(), MapTools.custom().put("sNfc_ID", test.getsEquip_NfcID()).build(), user);
+		}
 		return baseMapper.update(tableName, values, condition);
 	}
 
@@ -588,10 +596,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if("1".equals(test.getsEquip_Status())) { //仓库
 			throw new ServiceException(Tips.ERROR101, "器材未出库，不可使用");
 		}
+		Date date = new Date();
 		//使用
 		values.put("sEquip_Status", "9");
 		values.put("sEquip_AidID", sAid_ID);
-		Date date = new Date();
+		if(test.getdEquip_UseDate() == null) {
+			values.put("dEquip_UseDate", date);
+		}
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
