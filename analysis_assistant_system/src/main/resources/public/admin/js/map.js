@@ -66,13 +66,14 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
-			formatDegree: function(value) {                
+			formatDegree: function(value) { 
+				var v = value < 0 ? '-' : '';
 				//将度转换成为度分秒                
 				value = Math.abs(value);                
 				var v1 = Math.floor(value);//度               
 				var v2 = Math.floor((value - v1) * 60);//分                
 				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
-				return v1 + '°' + v2 + '\'' + v3 + '"';            
+				return v + v1 + '°' + v2 + '\'' + v3 + '"';            
 			},
 			/*handleAidStatusIconOptions: function(cb){
 				var self = this;
