@@ -1,2 +1,6 @@
 
 /dist/
+
+*.apk
+*.rar
+*.zip
