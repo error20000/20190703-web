@@ -11,14 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.config.Config;
+import com.jian.system.config.Constant;
 import com.jian.system.dao.MessageMapper;
 import com.jian.system.datasource.TargetDataSource;
-import com.jian.system.entity.Equip;
-import com.jian.system.entity.EquipLog;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
-import com.jian.system.utils.Utils;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
 
@@ -95,7 +93,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		
 		//保存
 		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("sMsg_Status", "4");
+		values.put("sMsg_Status", Constant.MsgStatus_4);
 		if(user != null) {
 			values.put("sMsg_UserID", user.getsUser_ID());
 		}
@@ -130,7 +128,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		
 		//保存
 		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("sMsg_Status", "3");
+		values.put("sMsg_Status", Constant.MsgStatus_3);
 		if(user != null) {
 			values.put("sMsg_UserID", user.getsUser_ID());
 		}
@@ -159,7 +157,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		
 		//保存
 		Map<String, Object> values = new HashMap<String, Object>();
-		values.put("sMsg_Status", "2");
+		values.put("sMsg_Status", Constant.MsgStatus_2);
 		if(user != null) {
 			values.put("sMsg_UserID", user.getsUser_ID());
 		}

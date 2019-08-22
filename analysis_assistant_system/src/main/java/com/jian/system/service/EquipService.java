@@ -51,9 +51,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		obj.setsEquip_ID(Utils.newSnowflakeIdStr());
 		obj.setdEquip_CreateDate(new Date());
-		obj.setsEquip_Status("0"); //空闲
+		obj.setsEquip_Status(Constant.EquipStatus_0); //空闲
 		if(!Tools.isNullOrEmpty(obj.getsEquip_StoreLv1())) {
-			obj.setsEquip_Status("1"); // 入库    dict (EquipStatus)
+			obj.setsEquip_Status(Constant.EquipStatus_1); // 入库    dict (EquipStatus)
 			//器材仓库不为空，入库操作
 			EquipLog log = new EquipLog();
 			log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -63,7 +63,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			if(user != null) {
 				log.setsELog_UserID(user.getsUser_ID());
 			}
-			log.setsELog_Type("1"); // 仓库待用    dict (EquipLogType)
+			log.setsELog_Type(Constant.EquipLogType_1); // 仓库待用    dict (EquipLogType)
 			log.setsELog_Describe("器材入库");
 			log.setsELog_Remarks("");
 			logService.insert(log, user);
@@ -100,6 +100,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Tools.isNullOrEmpty(old.getsEquip_StoreLv1())
 				&& !"".equals(value.get("sEquip_StoreLv1"))) {
 			//器材仓库不为空，入库操作
+			value.put("sEquip_Status", Constant.EquipStatus_1); // 入库
+			//日志
 			EquipLog log = new EquipLog();
 			log.setsELog_ID(Utils.newSnowflakeIdStr());
 			log.setdELog_CreateDate(new Date());
@@ -108,7 +110,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			if(user != null) {
 				log.setsELog_UserID(user.getsUser_ID());
 			}
-			log.setsELog_Type("1"); // 仓库待用    dict (EquipLogType)
+			log.setsELog_Type(Constant.EquipLogType_1); // 仓库待用    dict (EquipLogType)
 			log.setsELog_Describe("器材入库");
 			log.setsELog_Remarks("");
 			logService.insert(log, user);
@@ -235,16 +237,16 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("1".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_1.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已入库");
 		}
-		if("8".equals(test.getsEquip_Status())) { //报废
+		if(Constant.EquipStatus_8.equals(test.getsEquip_Status())) { //报废
 			throw new ServiceException(Tips.ERROR101, "器材已报废，不可入库");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用中
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用中
 			throw new ServiceException(Tips.ERROR101, "器材使用者，不可入库");
 		}
-		equip.setsEquip_Status("1"); // 入库
+		equip.setsEquip_Status(Constant.EquipStatus_1); // 入库
 		values.put("sEquip_Status", equip.getsEquip_Status());
 		values.put("sEquip_StoreLv1", equip.getsEquip_StoreLv1());
 		values.put("sEquip_StoreLv2", equip.getsEquip_StoreLv2());
@@ -259,7 +261,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("1"); // 仓库待用
+		log.setsELog_Type(Constant.EquipLogType_1); // 仓库待用
 		log.setsELog_Describe("器材入库");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -282,14 +284,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("2".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_2.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已出库");
 		}
-		if(!"1".equals(test.getsEquip_Status())) { //不再仓库中
+		if(!Constant.EquipStatus_1.equals(test.getsEquip_Status())) { //不再仓库中
 			throw new ServiceException(Tips.ERROR101, "器材不在仓库中，不可出库");
 		}
 		//出库
-		values.put("sEquip_Status", "2");
+		values.put("sEquip_Status", Constant.EquipStatus_2);
 		values.put("sEquip_StoreLv1", " ");
 		values.put("sEquip_StoreLv2", " ");
 		values.put("sEquip_StoreLv3", " ");
@@ -303,7 +305,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("2"); // 出库
+		log.setsELog_Type(Constant.EquipLogType_2); // 出库
 		log.setsELog_Describe("器材出库");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -327,14 +329,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("3".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_3.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已拆除");
 		}
-		if(!"9".equals(test.getsEquip_Status())) { //拆除
+		if(!Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //拆除
 			throw new ServiceException(Tips.ERROR101, "器材未使用，不可拆除");
 		}
 		//拆除
-		values.put("sEquip_Status", "3");
+		values.put("sEquip_Status", Constant.EquipStatus_3);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -344,7 +346,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("3"); // 拆除
+		log.setsELog_Type(Constant.EquipLogType_3); // 拆除
 		log.setsELog_Describe("器材拆除");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -369,14 +371,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("4".equals(test.getsEquip_Status())) {
-			throw new ServiceException(Tips.ERROR101, "器材已拆除");
+		if(Constant.EquipStatus_4.equals(test.getsEquip_Status())) {
+			throw new ServiceException(Tips.ERROR101, "器材已在运输中");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可运输");
 		}
 		//运输
-		values.put("sEquip_Status", "4");
+		values.put("sEquip_Status", Constant.EquipStatus_4);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -386,7 +388,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("4"); // 运输
+		log.setsELog_Type(Constant.EquipLogType_4); // 运输
 		log.setsELog_Describe("器材运输中");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -410,14 +412,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("5".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_5.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已待检测中");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可待检测");
 		}
 		//待检测
-		values.put("sEquip_Status", "5");
+		values.put("sEquip_Status", Constant.EquipStatus_5);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -427,7 +429,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("5"); // 待检测
+		log.setsELog_Type(Constant.EquipLogType_5); // 待检测
 		log.setsELog_Describe("器材待检测中");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -451,14 +453,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("6".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_6.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已检测中");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可检测");
 		}
 		//检测
-		values.put("sEquip_Status", "6");
+		values.put("sEquip_Status", Constant.EquipStatus_6);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -468,7 +470,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("6"); // 检测
+		log.setsELog_Type(Constant.EquipLogType_6); // 检测
 		log.setsELog_Describe("器材检测中");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -492,14 +494,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("7".equals(test.getsEquip_Status())) {
-			throw new ServiceException(Tips.ERROR101, "器材已维修");
+		if(Constant.EquipStatus_7.equals(test.getsEquip_Status())) {
+			throw new ServiceException(Tips.ERROR101, "器材已在维修");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可维修");
 		}
 		//维修
-		values.put("sEquip_Status", "7");
+		values.put("sEquip_Status", Constant.EquipStatus_7);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -509,7 +511,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("7"); // 维修
+		log.setsELog_Type(Constant.EquipLogType_7); // 维修
 		log.setsELog_Describe("器材维修中");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -534,14 +536,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("8".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_8.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已报废");
 		}
-		if("9".equals(test.getsEquip_Status())) { //使用
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可报废");
 		}
 		//报废
-		values.put("sEquip_Status", "8");
+		values.put("sEquip_Status", Constant.EquipStatus_8);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -551,7 +553,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("8"); // 报废
+		log.setsELog_Type(Constant.EquipLogType_8); // 报废
 		log.setsELog_Describe("器材报废");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -587,18 +589,18 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("9".equals(test.getsEquip_Status())) {
-			throw new ServiceException(Tips.ERROR101, "器材已使用");
+		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) {
+			throw new ServiceException(Tips.ERROR101, "器材已在使用");
 		}
-		if("8".equals(test.getsEquip_Status())) { //报废
+		if(Constant.EquipStatus_8.equals(test.getsEquip_Status())) { //报废
 			throw new ServiceException(Tips.ERROR101, "器材已报废，不可使用");
 		}
-		if("1".equals(test.getsEquip_Status())) { //仓库
+		if(Constant.EquipStatus_1.equals(test.getsEquip_Status())) { //仓库
 			throw new ServiceException(Tips.ERROR101, "器材未出库，不可使用");
 		}
 		Date date = new Date();
 		//使用
-		values.put("sEquip_Status", "9");
+		values.put("sEquip_Status", Constant.EquipStatus_9);
 		values.put("sEquip_AidID", sAid_ID);
 		if(test.getdEquip_UseDate() == null) {
 			values.put("dEquip_UseDate", date);
@@ -612,7 +614,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("9"); // 使用
+		log.setsELog_Type(Constant.EquipLogType_9); // 使用
 		log.setsELog_Describe("器材使用中");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
@@ -642,14 +644,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if("10".equals(test.getsEquip_Status())) {
+		if(Constant.EquipStatus_10.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已处于异常状态");
 		}
-		if(!"9".equals(test.getsEquip_Status())) { //使用
-			throw new ServiceException(Tips.ERROR101, "器材未使用");
-		}
 		//异常
-		values.put("sEquip_Status", "10");
+		values.put("sEquip_Status", Constant.EquipStatus_10);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -659,7 +658,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
-		log.setsELog_Type("10"); // 异常
+		log.setsELog_Type(Constant.EquipLogType_10); // 异常
 		log.setsELog_Describe("器材异常");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
