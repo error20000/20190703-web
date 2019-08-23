@@ -18,6 +18,7 @@ var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
 
 
+
 var myvue = new Vue({
 	    el: '#app',
 	    data: function(){
@@ -50,6 +51,19 @@ var myvue = new Vue({
 				typeDictNo: 'EquipType',
 				typeOptions: [],
 				nfcAllOptions: [],
+				
+				equipTypeOptions: {
+					EquipType_AIS: "EquipAIS", //AIS
+					EquipType_Radar: "EquipRadar", //雷达应答器
+					EquipType_Telemetry: "EquipTelemetry", //遥测遥控
+					EquipType_Battery:  "EquipBattery", //蓄电池	
+					EquipType_SolarEnergy:  "EquipSolarEnergy", //太阳能板
+					EquipType_SpareLamp:  "EquipSpareLamp", //备灯器	
+					EquipType_ViceLamp:  "EquipViceLamp", //副灯器	
+					EquipType_Lamp:  "EquipLamp" //灯器
+				},
+				aisMMSIXDictNo: 'EquipAisMMSIX',
+				aisMMSIXOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -179,6 +193,30 @@ var myvue = new Vue({
 				ajaxReq(nfcAllUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.nfcAllOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleTypeChange: function(){
+				var type = this.addForm.sEquip_Type ||  this.editForm.sEquip_Type;
+				switch (type) {
+				case this.equipTypeOptions.EquipType_AIS:
+					this.handleAISMMSIXOptions();
+					break;
+
+				default:
+					break;
+				}
+			},
+			
+			handleAISMMSIXOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.aisMMSIXDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aisMMSIXOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}

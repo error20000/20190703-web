@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 22/08/2019 18:38:54
+ Date: 23/08/2019 18:40:42
 */
 
 
@@ -512,6 +512,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_UseDate" IS '使用日期';
 -- ----------------------------
 -- Records of tBase_Equip
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614529104644931584', '12111', '612326895639330816', '612328289813397504', NULL, NULL, 'EquipAIS', '1', NULL, NULL, TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '12111', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '2', '2', '2', '2', '2', '2', '2', NULL, NULL, NULL, '2', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('4', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
@@ -574,6 +575,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_IP" IS '操作员IP';
 -- ----------------------------
 -- Records of tBase_EquipLog
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('614529104644931585', '1', TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '1', '614529104644931584', '器材入库', NULL, '127.0.0.1');
 INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('1', NULL, TO_DATE('2019-08-01 15:59:27', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '1000', '10100101001', NULL);
 INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('2', NULL, TO_DATE('2019-08-02 16:01:41', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '11111', '11111111111', NULL);
 INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('3', NULL, TO_DATE('2019-08-03 16:02:03', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '222222', '222222222222', NULL);
@@ -1366,6 +1368,8 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193531026505728', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613398323432259584', TO_DATE('2019-08-20 15:45:56', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '115', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613399369986605056', TO_DATE('2019-08-20 15:50:06', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '46', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613804630559686656', TO_DATE('2019-08-21 18:40:27', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '5', 'appLogin', '{"username":[""]}', '{"msg":"缺少username参数 ","code":-206}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614528628398489600', TO_DATE('2019-08-23 18:37:22', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '461', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614529116825190400', TO_DATE('2019-08-23 18:39:18', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '2976', 'add', '{"sEquip_Type":["EquipAIS"],"sEquip_NO":["12111"],"sEquip_Name":["12111"],"sEquip_StoreLv1":["612326895639330816"],"sEquip_StoreLv2":["612328289813397504"],"sEquip_StoreLv3":[" "],"sEquip_StoreLv4":[" "]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613793374465425408', TO_DATE('2019-08-21 17:55:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '2584', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613027760922689536', TO_DATE('2019-08-19 15:13:27', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/aidTypeMapIcon/add', '新增航标', '64', 'add', '{"sAidTypeIcon_Status":["normal"],"sAidTypeIcon_StatusIcon":[""],"sAidTypeIcon_Type":["test"]}', NULL, '{"msg":"test--normal已存在","code":-105}', 'com.jian.system.controller.AidTypeMapIconController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613033029576687616', TO_DATE('2019-08-19 15:34:23', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aidTypeMapIcon/update', '更新航标', '42', 'update', '{"sAidTypeIcon_ID":["612996387226779648"],"sAidTypeIcon_Status":["normal"],"sAidTypeIcon_StatusIcon":["normal"],"sAidTypeIcon_Type":["test"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.AidTypeMapIconController');
@@ -1588,6 +1592,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -1596,6 +1604,11 @@ DISABLE ROW MOVEMENT
 ;
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Ais"."sEquip_ID" IS '器材ID';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Ais"."sAis_MMSIX" IS 'MMSIX号';
+
+-- ----------------------------
+-- Records of tEquip_Ais
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tEquip_Ais" VALUES ('614529104644931584', NULL);
 
 -- ----------------------------
 -- Table structure for tEquip_Battery
@@ -1634,14 +1647,14 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_Battery"."sBattery_Connect" IS '连接方�
 DROP TABLE "AASYSTEM"."tEquip_Lamp";
 CREATE TABLE "AASYSTEM"."tEquip_Lamp" (
   "sEquip_ID" NVARCHAR2(32) NOT NULL ,
-  "sLamp_NO" NVARCHAR2(64) ,
+  "sLamp_NO" NVARCHAR2(255) ,
   "sLamp_Brand" NVARCHAR2(64) ,
   "sLamp_Type" NVARCHAR2(64) ,
   "lLamp_InputVolt" NUMBER ,
   "lLamp_Watt" NUMBER ,
   "sLamp_Lens" NVARCHAR2(64) ,
   "lLamp_TelemetryFlag" NUMBER ,
-  "sLamp_Telemetry" NVARCHAR2(64) 
+  "sLamp_Telemetry" NVARCHAR2(255) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -1666,10 +1679,10 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."lLamp_TelemetryFlag" IS '遥测遥�
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."sLamp_Telemetry" IS '遥测接口类型';
 
 -- ----------------------------
--- Table structure for tEquip_RadarTransponder
+-- Table structure for tEquip_Radar
 -- ----------------------------
-DROP TABLE "AASYSTEM"."tEquip_RadarTransponder";
-CREATE TABLE "AASYSTEM"."tEquip_RadarTransponder" (
+DROP TABLE "AASYSTEM"."tEquip_Radar";
+CREATE TABLE "AASYSTEM"."tEquip_Radar" (
   "sEquip_ID" NVARCHAR2(32) NOT NULL ,
   "sRadar_NO" NVARCHAR2(64) ,
   "sRadar_Band" NVARCHAR2(64) 
@@ -1686,9 +1699,9 @@ PARALLEL 1
 NOCACHE
 DISABLE ROW MOVEMENT
 ;
-COMMENT ON COLUMN "AASYSTEM"."tEquip_RadarTransponder"."sEquip_ID" IS '器材ID';
-COMMENT ON COLUMN "AASYSTEM"."tEquip_RadarTransponder"."sRadar_NO" IS '编码';
-COMMENT ON COLUMN "AASYSTEM"."tEquip_RadarTransponder"."sRadar_Band" IS '波段';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_Radar"."sEquip_ID" IS '器材ID';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_Radar"."sRadar_NO" IS '编码';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_Radar"."sRadar_Band" IS '波段';
 
 -- ----------------------------
 -- Table structure for tEquip_SolarEnergy
@@ -2190,15 +2203,15 @@ ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0018475" CHECK ("sEqui
 ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0018739" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
--- Primary Key structure for table tEquip_RadarTransponder
+-- Primary Key structure for table tEquip_Radar
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_RadarTransponder" ADD CONSTRAINT "SYS_C0018837" PRIMARY KEY ("sEquip_ID");
+ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018837" PRIMARY KEY ("sEquip_ID");
 
 -- ----------------------------
--- Checks structure for table tEquip_RadarTransponder
+-- Checks structure for table tEquip_Radar
 -- ----------------------------
-ALTER TABLE "AASYSTEM"."tEquip_RadarTransponder" ADD CONSTRAINT "SYS_C0018835" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
-ALTER TABLE "AASYSTEM"."tEquip_RadarTransponder" ADD CONSTRAINT "SYS_C0018836" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018835" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018836" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_SolarEnergy

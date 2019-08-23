@@ -6,7 +6,7 @@ public class Constant {
 	public static final String EquipType_AIS = "EquipAIS"; //AIS
 	public static final String EquipType_Radar = "EquipRadar"; //雷达应答器
 	public static final String EquipType_Telemetry = "EquipTelemetry"; //遥测遥控
-	public static final String EquipType_Batter = "EquipBattery"; //蓄电池	
+	public static final String EquipType_Battery = "EquipBattery"; //蓄电池	
 	public static final String EquipType_SolarEnergy = "EquipSolarEnergy"; //太阳能板
 	public static final String EquipType_SpareLamp = "EquipSpareLamp"; //备灯器	
 	public static final String EquipType_ViceLamp = "EquipViceLamp"; //副灯器	

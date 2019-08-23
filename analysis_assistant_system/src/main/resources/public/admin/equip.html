@@ -143,7 +143,7 @@
 			    <el-input v-model="addForm.sEquip_Name"></el-input>
 			  </el-form-item>
 			  <el-form-item label="器材种类" prop="sEquip_Type">
-			    <el-select v-model="addForm.sEquip_Type" placeholder="请选择器材种类">
+			    <el-select v-model="addForm.sEquip_Type" placeholder="请选择器材种类" @change="handleTypeChange">
 				    <el-option
 				      v-for="item in typeOptions"
 				      :key="item.sDict_NO"
@@ -159,6 +159,51 @@
 				    :props="storeProps">
 				  </el-cascader>
 			  </el-form-item>
+			  
+			  <!-- EquipType_AIS: "EquipAIS", //AIS -->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_AIS">
+				  <el-form-item label="MMSIX号" prop="sAis_MMSIX">
+				    <el-select v-model="addForm.sAis_MMSIX" placeholder="请选择MMSIX号">
+					    <el-option
+					      v-for="item in aisMMSIXOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+			  </template>
+			  <!-- EquipType_Radar: "EquipRadar", //雷达应答器-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Radar">
+			  
+			  </template>
+			  <!-- EquipType_Telemetry: "EquipTelemetry", //遥测遥控-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Telemetry">
+			  
+			  </template>
+			  <!-- EquipType_Battery:  "EquipBattery", //蓄电池-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Battery">
+			  
+			  </template>
+			  <!-- EquipType_SolarEnergy:  "EquipSolarEnergy", //太阳能板 -->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_SolarEnergy">
+			  
+			  </template>
+			  <!-- EquipType_SpareLamp:  "EquipSpareLamp", //备灯器-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_SpareLamp">
+			  
+			  </template>
+			  <!-- EquipType_ViceLamp:  "EquipViceLamp", //副灯器	-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_ViceLamp">
+			  
+			  </template>
+			  <!-- EquipType_Lamp:  "EquipLamp" //灯器-->
+			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Lamp">
+			  
+			  </template>
+			  
+			  
+			  
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="addClose">取消</el-button>

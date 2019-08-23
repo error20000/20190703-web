@@ -6,9 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.jian.system.config.Constant;
 import com.jian.system.dao.EquipMapper;
@@ -16,7 +20,15 @@ import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.EquipAis;
+import com.jian.system.entity.EquipBattery;
+import com.jian.system.entity.EquipLamp;
 import com.jian.system.entity.EquipLog;
+import com.jian.system.entity.EquipRadar;
+import com.jian.system.entity.EquipSolarEnergy;
+import com.jian.system.entity.EquipSpareLamp;
+import com.jian.system.entity.EquipTelemetry;
+import com.jian.system.entity.EquipViceLamp;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
@@ -41,6 +53,22 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private MessageService messageService;
 	@Autowired
 	private UserAidService userAidService;
+	@Autowired
+	private EquipAisService aisService;
+	@Autowired
+	private EquipBatteryService batteryService;
+	@Autowired
+	private EquipLampService lampService;
+	@Autowired
+	private EquipRadarService radarService;
+	@Autowired
+	private EquipSolarEnergyService solarEnergyService;
+	@Autowired
+	private EquipSpareLampService spareLampService;
+	@Autowired
+	private EquipTelemetryService telemetryService;
+	@Autowired
+	private EquipViceLampService viceLampService;
 	
 	
 	@Transactional
@@ -68,6 +96,82 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			log.setsELog_Remarks("");
 			logService.insert(log, user);
 		}
+		//保存详情
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		switch (obj.getsEquip_Type()) {
+		case Constant.EquipType_AIS:
+			EquipAis ais = new EquipAis();
+			ais.setsEquip_ID(obj.getsEquip_ID());
+			ais.setsAis_MMSIX(request.getParameter("sAis_MMSIX"));
+			aisService.insert(ais, user);
+			break;
+		case Constant.EquipType_Battery:
+			EquipBattery battery = new EquipBattery();
+			battery.setsEquip_ID(obj.getsEquip_ID());
+			battery.setsBattery_NO(request.getParameter("sBattery_NO"));
+			battery.setsBattery_Type(request.getParameter("sBattery_Type"));
+			battery.setsBattery_Connect(request.getParameter("sBattery_Connect"));
+			battery.setlBattery_Volt(Float.parseFloat(request.getParameter("lBattery_Volt")));
+			battery.setlBattery_Watt(Float.parseFloat(request.getParameter("lBattery_Watt")));
+			batteryService.insert(battery, user);
+			break;
+		case Constant.EquipType_Lamp:
+			EquipLamp lamp = new EquipLamp();
+			lamp.setsEquip_ID(obj.getsEquip_ID());
+			lamp.setsLamp_NO(request.getParameter("sLamp_NO"));
+			lamp.setsLamp_Type(request.getParameter("sLamp_Type"));
+			lamp.setsLamp_Telemetry(request.getParameter("sLamp_Telemetry"));
+			lamp.setsLamp_Brand(request.getParameter("sLamp_Brand"));
+			lamp.setsLamp_Lens(request.getParameter("sLamp_Lens"));
+			lamp.setlLamp_TelemetryFlag(Integer.parseInt(request.getParameter("lLamp_TelemetryFlag")));
+			lamp.setlLamp_InputVolt(Float.parseFloat(request.getParameter("lLamp_InputVolt")));
+			lamp.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			lampService.insert(lamp, user);
+			break;
+		case Constant.EquipType_Radar:
+			EquipRadar radar = new EquipRadar();
+			radar.setsEquip_ID(obj.getsEquip_ID());
+			radar.setsRadar_NO(request.getParameter("sRadar_NO"));
+			radar.setsRadar_Band(request.getParameter("sRadar_Band"));
+			radarService.insert(radar, user);
+			break;
+		case Constant.EquipType_SolarEnergy:
+			EquipSolarEnergy solar = new EquipSolarEnergy();
+			solar.setsEquip_ID(obj.getsEquip_ID());
+			solar.setsSolar_NO(request.getParameter("sSolar_NO"));
+			solar.setsSolar_Type(request.getParameter("sSolar_Type"));
+			solar.setsSolar_Connect(request.getParameter("sSolar_Connect"));
+			solar.setlSolar_Volt(Float.parseFloat(request.getParameter("lSolar_Volt")));
+			solar.setlSolar_Watt(Float.parseFloat(request.getParameter("lSolar_Watt")));
+			solarEnergyService.insert(solar, user);
+			break;
+		case Constant.EquipType_SpareLamp:
+			EquipSpareLamp spare = new EquipSpareLamp();
+			spare.setsEquip_ID(obj.getsEquip_ID());
+			spare.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			spareLampService.insert(spare, user);
+			break;
+		case Constant.EquipType_Telemetry:
+			EquipTelemetry telemetry = new EquipTelemetry();
+			telemetry.setsEquip_ID(obj.getsEquip_ID());
+			telemetry.setsTelemetry_NO(request.getParameter("sTelemetry_NO"));
+			telemetry.setsTelemetry_Mode(request.getParameter("sTelemetry_Mode"));
+			telemetry.setsTelemetry_SIM(request.getParameter("sTelemetry_SIM"));
+			telemetry.setlTelemetry_Volt(Float.parseFloat(request.getParameter("lTelemetry_Volt")));
+			telemetry.setlTelemetry_Watt(Float.parseFloat(request.getParameter("lTelemetry_Watt")));
+			telemetryService.insert(telemetry, user);
+			break;
+		case Constant.EquipType_ViceLamp:
+			EquipViceLamp vice = new EquipViceLamp();
+			vice.setsEquip_ID(obj.getsEquip_ID());
+			vice.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			viceLampService.insert(vice, user);
+			break;
+
+		default:
+			break;
+		}
+		
 		String tableName =  getTableName();
 		return baseMapper.insert(tableName, Tools.parseObjectToMap(obj));
 	}
@@ -114,6 +218,82 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			log.setsELog_Describe("器材入库");
 			log.setsELog_Remarks("");
 			logService.insert(log, user);
+		}
+
+		//更新详情
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		switch (old.getsEquip_Type()) {
+		case Constant.EquipType_AIS:
+			EquipAis ais = new EquipAis();
+			ais.setsEquip_ID(old.getsEquip_ID());
+			ais.setsAis_MMSIX(request.getParameter("sAis_MMSIX"));
+			aisService.update(ais, user);
+			break;
+		case Constant.EquipType_Battery:
+			EquipBattery battery = new EquipBattery();
+			battery.setsEquip_ID(old.getsEquip_ID());
+			battery.setsBattery_NO(request.getParameter("sBattery_NO"));
+			battery.setsBattery_Type(request.getParameter("sBattery_Type"));
+			battery.setsBattery_Connect(request.getParameter("sBattery_Connect"));
+			battery.setlBattery_Volt(Float.parseFloat(request.getParameter("lBattery_Volt")));
+			battery.setlBattery_Watt(Float.parseFloat(request.getParameter("lBattery_Watt")));
+			batteryService.update(battery, user);
+			break;
+		case Constant.EquipType_Lamp:
+			EquipLamp lamp = new EquipLamp();
+			lamp.setsEquip_ID(old.getsEquip_ID());
+			lamp.setsLamp_NO(request.getParameter("sLamp_NO"));
+			lamp.setsLamp_Type(request.getParameter("sLamp_Type"));
+			lamp.setsLamp_Telemetry(request.getParameter("sLamp_Telemetry"));
+			lamp.setsLamp_Brand(request.getParameter("sLamp_Brand"));
+			lamp.setsLamp_Lens(request.getParameter("sLamp_Lens"));
+			lamp.setlLamp_TelemetryFlag(Integer.parseInt(request.getParameter("lLamp_TelemetryFlag")));
+			lamp.setlLamp_InputVolt(Float.parseFloat(request.getParameter("lLamp_InputVolt")));
+			lamp.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			lampService.update(lamp, user);
+			break;
+		case Constant.EquipType_Radar:
+			EquipRadar radar = new EquipRadar();
+			radar.setsEquip_ID(old.getsEquip_ID());
+			radar.setsRadar_NO(request.getParameter("sRadar_NO"));
+			radar.setsRadar_Band(request.getParameter("sRadar_Band"));
+			radarService.update(radar, user);
+			break;
+		case Constant.EquipType_SolarEnergy:
+			EquipSolarEnergy solar = new EquipSolarEnergy();
+			solar.setsEquip_ID(old.getsEquip_ID());
+			solar.setsSolar_NO(request.getParameter("sSolar_NO"));
+			solar.setsSolar_Type(request.getParameter("sSolar_Type"));
+			solar.setsSolar_Connect(request.getParameter("sSolar_Connect"));
+			solar.setlSolar_Volt(Float.parseFloat(request.getParameter("lSolar_Volt")));
+			solar.setlSolar_Watt(Float.parseFloat(request.getParameter("lSolar_Watt")));
+			solarEnergyService.update(solar, user);
+			break;
+		case Constant.EquipType_SpareLamp:
+			EquipSpareLamp spare = new EquipSpareLamp();
+			spare.setsEquip_ID(old.getsEquip_ID());
+			spare.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			spareLampService.update(spare, user);
+			break;
+		case Constant.EquipType_Telemetry:
+			EquipTelemetry telemetry = new EquipTelemetry();
+			telemetry.setsEquip_ID(old.getsEquip_ID());
+			telemetry.setsTelemetry_NO(request.getParameter("sTelemetry_NO"));
+			telemetry.setsTelemetry_Mode(request.getParameter("sTelemetry_Mode"));
+			telemetry.setsTelemetry_SIM(request.getParameter("sTelemetry_SIM"));
+			telemetry.setlTelemetry_Volt(Float.parseFloat(request.getParameter("lTelemetry_Volt")));
+			telemetry.setlTelemetry_Watt(Float.parseFloat(request.getParameter("lTelemetry_Watt")));
+			telemetryService.update(telemetry, user);
+			break;
+		case Constant.EquipType_ViceLamp:
+			EquipViceLamp vice = new EquipViceLamp();
+			vice.setsEquip_ID(old.getsEquip_ID());
+			vice.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			viceLampService.update(vice, user);
+			break;
+
+		default:
+			break;
 		}
 		
 		return baseMapper.update(tableName, value, condition);
@@ -178,7 +358,36 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		//删除日志
 		logService.delete(MapTools.custom().put("sELog_EquipID", old.getsEquip_ID()).build(), user);
 		//删除详情
-		//to do 
+		Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", old.getsEquip_ID()).build();
+		switch (old.getsEquip_Type()) {
+		case Constant.EquipType_AIS:
+			aisService.delete(condetail, user);
+			break;
+		case Constant.EquipType_Battery:
+			batteryService.delete(condetail, user);
+			break;
+		case Constant.EquipType_Lamp:
+			lampService.delete(condetail, user);
+			break;
+		case Constant.EquipType_Radar:
+			radarService.delete(condetail, user);
+			break;
+		case Constant.EquipType_SolarEnergy:
+			solarEnergyService.delete(condetail, user);
+			break;
+		case Constant.EquipType_SpareLamp:
+			spareLampService.delete(condetail, user);
+			break;
+		case Constant.EquipType_Telemetry:
+			telemetryService.delete(condetail, user);
+			break;
+		case Constant.EquipType_ViceLamp:
+			viceLampService.delete(condetail, user);
+			break;
+
+		default:
+			break;
+		}
 		return baseMapper.delete(tableName, condition); //删除
 	}
 	
