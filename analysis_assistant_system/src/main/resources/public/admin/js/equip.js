@@ -51,6 +51,8 @@ var myvue = new Vue({
 				typeDictNo: 'EquipType',
 				typeOptions: [],
 				nfcAllOptions: [],
+				mfDictNo: 'EquipManufacturer',
+				mfOptions: [],
 				
 				equipTypeOptions: {
 					EquipType_AIS: "EquipAIS", //AIS
@@ -64,6 +66,20 @@ var myvue = new Vue({
 				},
 				aisMMSIXDictNo: 'EquipAisMMSIX',
 				aisMMSIXOptions: [],
+				batteryTypeDictNo: 'EquipBatteryType',
+				batteryTypeOptions: [],
+				lampTelemetryDictNo: 'EquipLampTelemetry',
+				lampTelemetryOptions: [],
+				lampTypeDictNo: 'EquipLampType',
+				lampTypeOptions: [],
+				lampLensDictNo: 'EquipLampLens',
+				lampLensOptions: [],
+				radarNODictNo: 'EquipRadarNO',
+				radarNOOptions: [],
+				radarBandDictNo: 'EquipRadarBand',
+				radarBandOptions: [],
+				solarTypeDictNo: 'EquipSolarEnergyType',
+				solarTypeOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -75,7 +91,16 @@ var myvue = new Vue({
 		              ],
 					sEquip_Name: [
 		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ]
+		              ],
+					sEquip_Type: [
+		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
+		            ],
+		            sEquip_Manufacturer: [
+		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
+			        ],
+			        sEquip_MModel: [
+		                { required: true, message: '请选择厂方型号.', trigger: 'blur' },
+			        ]
 				},
 				//edit
 				editFormVisible: false,
@@ -87,7 +112,16 @@ var myvue = new Vue({
 		              ],
 					sEquip_Name: [
 		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ]
+		              ],
+					sEquip_Type: [
+		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
+		            ],
+		            sEquip_Manufacturer: [
+		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
+			        ],
+			        sEquip_MModel: [
+		                { required: true, message: '请输入厂方型号.', trigger: 'blur' },
+			        ]
 				},
 				//bind
 				nfcOptions: [],
@@ -199,18 +233,56 @@ var myvue = new Vue({
 					});
 				});
 			},
+			mfFormatter: function(row){
+				var name = row.sEquip_Manufacturer;
+				for (var i = 0; i < this.mfOptions.length; i++) {
+					var item = this.mfOptions[i];
+					if(row.sEquip_Manufacturer == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleMfOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.mfDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.mfOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			
 			handleTypeChange: function(){
 				var type = this.addForm.sEquip_Type ||  this.editForm.sEquip_Type;
 				switch (type) {
 				case this.equipTypeOptions.EquipType_AIS:
 					this.handleAISMMSIXOptions();
 					break;
-
+				case this.equipTypeOptions.EquipType_Battery:
+					this.handleBatteryTypeOptions();
+					break;
+				case this.equipTypeOptions.EquipType_Lamp:
+					this.handleLampTypeOptions();
+					this.handleLampLensOptions();
+					this.handleLampTelemetryOptions();
+					break;
+				case this.equipTypeOptions.EquipType_Radar:
+					this.handleRadarNOOptions();
+					this.handleRadarBandOptions();
+					break;
+				case this.equipTypeOptions.EquipType_SolarEnergy:
+					this.handleSolarTypeOptions();
+					break;
+					
 				default:
 					break;
 				}
 			},
-			
 			handleAISMMSIXOptions: function(cb){
 				var self = this;
 				var params = {sDict_DictTypeNO: this.aisMMSIXDictNo};
@@ -223,6 +295,91 @@ var myvue = new Vue({
 					});
 				});
 			},
+			handleBatteryTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.batteryTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.batteryTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLampTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.lampTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lampTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLampLensOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.lampLensDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lampLensOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleLampTelemetryOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.lampTelemetryDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.lampTelemetryOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleRadarNOOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.radarNODictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.radarNOOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleRadarBandOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.radarBandDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.radarBandOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleSolarTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.solarTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.solarTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -536,6 +693,7 @@ var myvue = new Vue({
 			this.handleStatusOptions();
 			this.handleTypeOptions();
 			this.handleNfcAllOptions();
+			this.handleMfOptions();
 			this.handleStoreOptions(this.getList);
 		}
 	  });

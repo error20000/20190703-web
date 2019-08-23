@@ -13,7 +13,7 @@ public class EquipLamp extends Base<EquipLamp> {
 	private String sEquip_ID;
 	@Excel(name="编码", sort=0, length="255", isNull=1 )
 	private String sLamp_NO;
-	@Excel(name="品牌", sort=0, length="64", isNull=1 )
+	@Excel(name="品牌", sort=0, length="255", isNull=1 )
 	private String sLamp_Brand;
 	@Excel(name="类型", sort=0, length="64", isNull=1 )
 	private String sLamp_Type;
@@ -25,7 +25,7 @@ public class EquipLamp extends Base<EquipLamp> {
 	private String sLamp_Lens;
 	@Excel(name="遥测遥控接口 0：否，1：是", sort=0, length="", isNull=1 )
 	private int lLamp_TelemetryFlag;
-	@Excel(name="遥测接口类型", sort=0, length="255", isNull=1 )
+	@Excel(name="遥测接口类型", sort=0, length="64", isNull=1 )
 	private String sLamp_Telemetry;
 	
 

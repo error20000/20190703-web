@@ -45,7 +45,9 @@ public class Equip extends Base<Equip> {
 	private Date dEquip_ArrivalDate;
 	@Excel(name="使用日期", sort=0, length="", isNull=1 )
 	private Date dEquip_UseDate;
-	
+	@Excel(name="入库日期", sort=0, length="", isNull=1 )
+	private Date dEquip_StoreDate;
+
 	
 
 	
@@ -150,6 +152,12 @@ public class Equip extends Base<Equip> {
 	}
 	public void setdEquip_UseDate(Date dEquip_UseDate) {
 		this.dEquip_UseDate = dEquip_UseDate;
+	}
+	public Date getdEquip_StoreDate() {
+		return dEquip_StoreDate;
+	}
+	public void setdEquip_StoreDate(Date dEquip_StoreDate) {
+		this.dEquip_StoreDate = dEquip_StoreDate;
 	}
 	
 }

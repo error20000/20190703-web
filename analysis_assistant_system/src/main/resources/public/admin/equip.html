@@ -159,6 +159,27 @@
 				    :props="storeProps">
 				  </el-cascader>
 			  </el-form-item>
+			  <el-form-item label="生产厂家" prop="sEquip_Manufacturer">
+			    <el-select v-model="addForm.sEquip_Manufacturer" placeholder="请选择生产厂家">
+				    <el-option
+				      v-for="item in mfOptions"
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="厂方型号" prop="sEquip_MModel">
+			    <el-input v-model="addForm.sEquip_MModel"></el-input>
+			  </el-form-item>
+			  <el-form-item label="到货日期" prop="dEquip_ArrivalDate">
+			    <el-date-picker
+			      v-model="addForm.dEquip_ArrivalDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期">
+			    </el-date-picker>
+			  </el-form-item>
 			  
 			  <!-- EquipType_AIS: "EquipAIS", //AIS -->
 			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_AIS">
@@ -175,6 +196,26 @@
 			  </template>
 			  <!-- EquipType_Radar: "EquipRadar", //雷达应答器-->
 			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Radar">
+				  <el-form-item label="雷达应答器编码" prop="sRadar_NO">
+				    <el-select v-model="addForm.sRadar_NO" placeholder="请选择">
+					    <el-option
+					      v-for="item in radarNOOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+				  <el-form-item label="雷达应答器波段" prop="sRadar_Band">
+				    <el-select v-model="addForm.sRadar_Band" placeholder="请选择">
+					    <el-option
+					      v-for="item in radarBandOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
 			  
 			  </template>
 			  <!-- EquipType_Telemetry: "EquipTelemetry", //遥测遥控-->
@@ -183,10 +224,53 @@
 			  </template>
 			  <!-- EquipType_Battery:  "EquipBattery", //蓄电池-->
 			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Battery">
-			  
+				  <el-form-item label="编码" prop="sBattery_NO">
+				    <el-input v-model="addForm.sBattery_NO"></el-input>
+				  </el-form-item>
+				  <el-form-item label="种类" prop="sBattery_Type">
+				    <el-select v-model="addForm.sBattery_Type" placeholder="请选择">
+					    <el-option
+					      v-for="item in batteryTypeOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+				  <el-form-item label="工作电压（V）" prop="lBattery_Volt">
+				    <el-input v-model="addForm.lBattery_Volt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="容量（W）" prop="lBattery_Watt">
+				    <el-input v-model="addForm.lBattery_Watt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="连接方式" prop="sBattery_Connect">
+				    <el-input v-model="addForm.sBattery_Connect"></el-input>
+				  </el-form-item>
 			  </template>
 			  <!-- EquipType_SolarEnergy:  "EquipSolarEnergy", //太阳能板 -->
 			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_SolarEnergy">
+				  <el-form-item label="编码" prop="sSolar_NO">
+				    <el-input v-model="addForm.sSolar_NO"></el-input>
+				  </el-form-item>
+				  <el-form-item label="种类" prop="sSolar_Type">
+				    <el-select v-model="addForm.sSolar_Type" placeholder="请选择">
+					    <el-option
+					      v-for="item in solarTypeOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+				  <el-form-item label="额定电压（V）" prop="lSolar_Volt">
+				    <el-input v-model="addForm.lSolar_Volt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="功率（W）" prop="lSolar_Watt">
+				    <el-input v-model="addForm.lSolar_Watt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="连接方式" prop="sSolar_Connect">
+				    <el-input v-model="addForm.sSolar_Connect"></el-input>
+				  </el-form-item>
 			  
 			  </template>
 			  <!-- EquipType_SpareLamp:  "EquipSpareLamp", //备灯器-->
@@ -199,6 +283,57 @@
 			  </template>
 			  <!-- EquipType_Lamp:  "EquipLamp" //灯器-->
 			  <template v-if="addForm.sEquip_Type == equipTypeOptions.EquipType_Lamp">
+				  <el-form-item label="编码" prop="sLamp_NO">
+				    <el-input v-model="addForm.sLamp_NO"></el-input>
+				  </el-form-item>
+				  <el-form-item label="品牌" prop="sLamp_Brand">
+				    <el-input v-model="addForm.sLamp_Brand"></el-input>
+				  </el-form-item>
+				  <el-form-item label="类型" prop="sLamp_Type">
+				    <el-select v-model="addForm.sLamp_Type" placeholder="请选择">
+					    <el-option
+					      v-for="item in lampTypeOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+				  <el-form-item label="透镜形状" prop="sLamp_Lens">
+				    <el-select v-model="addForm.sLamp_Lens" placeholder="请选择">
+					    <el-option
+					      v-for="item in lampLensOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
+				  <el-form-item label="输入电压（V）" prop="lLamp_InputVolt">
+				    <el-input v-model="addForm.lLamp_InputVolt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="功率（W）" prop="lLamp_Watt">
+				    <el-input v-model="addForm.lLamp_Watt"></el-input>
+				  </el-form-item>
+				  <el-form-item label="遥测遥控接口" prop="lLamp_TelemetryFlag">
+				    <el-switch
+					  v-model="addForm.lLamp_TelemetryFlag"
+					  active-text="是"
+					  inactive-text="否"
+					  active-value="1"
+   					  inactive-value="0">
+					</el-switch>
+				  </el-form-item>
+				  <el-form-item label="遥测接口类型" prop="sLamp_Telemetry" v-if="addForm.lLamp_TelemetryFlag == 1">
+				    <el-select v-model="addForm.sLamp_Telemetry" placeholder="请选择">
+					    <el-option
+					      v-for="item in lampTelemetryOptions"
+					      :key="item.sDict_NO"
+					      :label="item.sDict_Name"
+					      :value="item.sDict_NO">
+					    </el-option>
+				    </el-select>
+				  </el-form-item>
 			  
 			  </template>
 			  
@@ -237,6 +372,28 @@
 				    :props="storeProps">
 				  </el-cascader>
 			  </el-form-item>
+			  <el-form-item label="生产厂家" prop="sEquip_Manufacturer">
+			    <el-select v-model="editForm.sEquip_Manufacturer" placeholder="请选择生产厂家">
+				    <el-option
+				      v-for="item in mfOptions"
+				      :key="item.sDict_NO"
+				      :label="item.sDict_Name"
+				      :value="item.sDict_NO">
+				    </el-option>
+			    </el-select>
+			  </el-form-item>
+			  <el-form-item label="厂方型号" prop="sEquip_MModel">
+			    <el-input v-model="editForm.sEquip_MModel"></el-input>
+			  </el-form-item>
+			  <el-form-item label="到货日期" prop="dEquip_ArrivalDate">
+			    <el-date-picker
+			      v-model="editForm.dEquip_ArrivalDate"
+			      type="datetime"
+			      value-format="timestamp"
+			      placeholder="选择日期">
+			    </el-date-picker>
+			  </el-form-item>
+			  
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="editClose">取消</el-button>

@@ -82,6 +82,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		obj.setsEquip_Status(Constant.EquipStatus_0); //空闲
 		if(!Tools.isNullOrEmpty(obj.getsEquip_StoreLv1())) {
 			obj.setsEquip_Status(Constant.EquipStatus_1); // 入库    dict (EquipStatus)
+			if(obj.getdEquip_StoreDate() == null) {
+				obj.setdEquip_StoreDate(new Date()); //第一次入库时间
+			}
 			//器材仓库不为空，入库操作
 			EquipLog log = new EquipLog();
 			log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -205,6 +208,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 				&& !"".equals(value.get("sEquip_StoreLv1"))) {
 			//器材仓库不为空，入库操作
 			value.put("sEquip_Status", Constant.EquipStatus_1); // 入库
+			if(old.getdEquip_StoreDate() == null) {
+				value.put("dEquip_StoreDate", new Date()); //第一次入库时间
+			}
 			//日志
 			EquipLog log = new EquipLog();
 			log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -453,18 +459,22 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			throw new ServiceException(Tips.ERROR101, "器材已报废，不可入库");
 		}
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用中
-			throw new ServiceException(Tips.ERROR101, "器材使用者，不可入库");
+			throw new ServiceException(Tips.ERROR101, "器材使用中，不可入库");
 		}
+		Date date = new Date();
 		equip.setsEquip_Status(Constant.EquipStatus_1); // 入库
 		values.put("sEquip_Status", equip.getsEquip_Status());
 		values.put("sEquip_StoreLv1", equip.getsEquip_StoreLv1());
 		values.put("sEquip_StoreLv2", equip.getsEquip_StoreLv2());
 		values.put("sEquip_StoreLv3", equip.getsEquip_StoreLv3());
 		values.put("sEquip_StoreLv4", equip.getsEquip_StoreLv4());
+		if(test.getdEquip_StoreDate() == null) {
+			values.put("dEquip_StoreDate", date); //第一次入库时间
+		}
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
