@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 23/08/2019 18:40:42
+ Date: 23/08/2019 23:30:39
 */
 
 
@@ -387,6 +387,15 @@ INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('702005', 'EquipSolarEnergy', '太�
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('702006', 'EquipSpareLamp', '备灯器', NULL, NULL, 'EquipType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('702007', 'EquipViceLamp', '副灯器', NULL, NULL, 'EquipType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('702008', 'EquipLamp', '灯器', NULL, NULL, 'EquipType', NULL, NULL, '1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('211001', 'test', '测试测试有限公司', NULL, NULL, 'EquipManufacturer', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('208001', '1', '锂电池', NULL, NULL, 'EquipBatteryType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('208002', '2', '铅酸电池', NULL, NULL, 'EquipBatteryType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('212001', '1', '测试遥测接口类型', NULL, NULL, 'EquipLampTelemetry', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('213001', '1', '测试灯器类型', NULL, NULL, 'EquipLampType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('214001', '1', '测试透镜形状', NULL, NULL, 'EquipLampLens', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('206001', '1', '测试雷达应答器编码', NULL, NULL, 'EquipRadarNO', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('207001', '1', '测试雷达应答器波段', NULL, NULL, 'EquipRadarBand', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('210001', '1', '测试太阳能板种类', NULL, NULL, 'EquipSolarEnergyType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_DictType
@@ -451,6 +460,10 @@ INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('207', 'EquipRadarBand', '雷达
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('208', 'EquipBatteryType', '蓄电池种类', NULL, NULL, NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('209', 'EquipTelemetryMode', '遥控遥测方式', NULL, NULL, NULL, NULL, '1');
 INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('210', 'EquipSolarEnergyType', '太阳能板种类', NULL, NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('211', 'EquipManufacturer', '生产厂家', NULL, NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('212', 'EquipLampTelemetry', '遥测接口类型', NULL, NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('213', 'EquipLampType', '灯器类型', NULL, NULL, NULL, NULL, '1');
+INSERT INTO "AASYSTEM"."tBase_DictType" VALUES ('214', 'EquipLampLens', '透镜形状', NULL, NULL, NULL, NULL, '1');
 
 -- ----------------------------
 -- Table structure for tBase_Equip
@@ -473,7 +486,8 @@ CREATE TABLE "AASYSTEM"."tBase_Equip" (
   "sEquip_Manufacturer" NVARCHAR2(64) ,
   "sEquip_MModel" NVARCHAR2(255) ,
   "dEquip_ArrivalDate" DATE ,
-  "dEquip_UseDate" DATE 
+  "dEquip_UseDate" DATE ,
+  "dEquip_StoreDate" DATE 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -508,30 +522,33 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_Manufacturer" IS '生产厂�
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_MModel" IS '厂方型号';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_ArrivalDate" IS '到货日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_UseDate" IS '使用日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_StoreDate" IS '入库日期';
 
 -- ----------------------------
 -- Records of tBase_Equip
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614529104644931584', '12111', '612326895639330816', '612328289813397504', NULL, NULL, 'EquipAIS', '1', NULL, NULL, TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '12111', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '2', '2', '2', '2', '2', '2', '2', NULL, NULL, NULL, '2', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('4', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('5', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('6', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('7', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('8', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('9', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('10', '10', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('11', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('12', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('13', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('14', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('15', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('16', '16', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('610646900542013440', '123333123', NULL, NULL, NULL, NULL, 't', '0', NULL, NULL, TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), '123333123', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('606098577566990336', '606098577566990336', '1', '12', '121', '1212', 't', 'rr', '603723565073694720', NULL, TO_DATE('2019-07-31 12:19:21', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611145406239211520', 'reres', '604434599291912192', '604613628313731072', NULL, NULL, 't', '9', NULL, '604748743446626304', TO_DATE('2019-08-14 10:33:39', 'SYYYY-MM-DD HH24:MI:SS'), 're', NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611149995122360320', 'wewewe', '604434599291912192', '604613628313731072', NULL, NULL, 't', '1', NULL, NULL, TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), 'wewe', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614529104644931584', '12111', '612326895639330816', '612328289813397504', NULL, NULL, 'EquipAIS', '1', NULL, NULL, TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '12111', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '2', '2', '2', '2', '2', '2', '2', NULL, NULL, TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), '2', NULL, 'test', '111111', TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('4', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('5', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('6', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('7', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('8', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('9', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('10', '10', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('11', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('12', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('13', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('14', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('15', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('16', '16', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('610646900542013440', '123333123', NULL, NULL, NULL, NULL, 't', '0', NULL, NULL, TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), '123333123', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('606098577566990336', '606098577566990336', '1', '12', '121', '1212', 't', 'rr', '603723565073694720', NULL, TO_DATE('2019-07-31 12:19:21', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611145406239211520', 'reres', '604434599291912192', '604613628313731072', NULL, NULL, 't', '9', NULL, '604748743446626304', TO_DATE('2019-08-14 10:33:39', 'SYYYY-MM-DD HH24:MI:SS'), 're', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611149995122360320', 'wewewe', '604434599291912192', '604613628313731072', NULL, NULL, 't', '1', NULL, NULL, TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), 'wewe', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614596394342154240', 'e2', NULL, NULL, NULL, NULL, 'EquipLamp', '0', NULL, NULL, TO_DATE('2019-08-23 23:06:39', 'SYYYY-MM-DD HH24:MI:SS'), 'e2', NULL, 'test', '222', TO_DATE('2019-08-21 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614595567070216192', 'ee', NULL, NULL, NULL, NULL, 'EquipLamp', '0', NULL, NULL, TO_DATE('2019-08-23 23:03:21', 'SYYYY-MM-DD HH24:MI:SS'), 'ee', NULL, 'test', 'ee', TO_DATE('2019-08-07 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_EquipLog
@@ -738,8 +755,8 @@ INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('641', '用户组', '640', 'group.ht
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('642', '用户', '640', 'user.html', NULL, '1', '150');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('650', '系统设置', '600', 'sys.html', NULL, '1', '160');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('330', '航标管理', '300', 'aid.html', NULL, '1', '33');
-INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('320', '种类地图图标', '300', 'aidTypeMapIcon.html', NULL, '1', '31');
-INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('310', '航标地图图标', '300', 'aidMapIcon.html', NULL, '1', '32');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('320', '航标种类的地图图标', '300', 'aidTypeMapIcon.html', NULL, '1', '31');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('310', '航标的地图图标', '300', 'aidMapIcon.html', NULL, '1', '32');
 
 -- ----------------------------
 -- Table structure for tBase_MenuFun
@@ -879,7 +896,7 @@ CREATE TABLE "AASYSTEM"."tBase_MenuInterface" (
  
  
  
-           ,
+            ,
   "sInterface_MFunID" NVARCHAR2(255) 
 )
 TABLESPACE "USERS"
@@ -1206,6 +1223,18 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_SystemLog"."sSLog_Module" IS '模块';
 -- ----------------------------
 -- Records of tBase_SystemLog
 -- ----------------------------
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606970950960807936', TO_DATE('2019-08-02 22:05:51', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/group/update', '更新用户组', '178', 'update', '{"sGroup_ID":["604790269384065024"],"sGroup_Name":["test"],"lGroup_SysFlag":["0"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.GroupController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971062298607616', TO_DATE('2019-08-02 22:06:18', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateGroupMenuAuth', '更新用户组菜单权限', '64', 'updateGroupMenuAuth', '{"100":["1001"],"200":["2001"],"300":["3001"],"400":["4001"],"500":["2"],"611":["611001"],"612":["612001"],"620":["620001"],"630":["630001"],"641":["641001"],"642":["642001"],"700":["7001"],"sGroup_ID":["604790269384065024"]}', '{"msg":"成功 ","code":1,"data":12}', NULL, 'com.jian.system.controller.MenuController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971155399573504', TO_DATE('2019-08-02 22:06:40', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/user/update', '更新用户', '175', 'update', '{"sUser_ID":["606138587578105856"],"sUser_UserName":["test"],"sUser_PassWord":["098f6bcd4621d373cade4e832627b4f6"],"sUser_Nick":["test"],"lUser_StatusFlag":["1"],"sUser_GroupID":["604790269384065024"],"sUser_QQ":[""],"sUser_Email":[""],"sUser_Phone":[""],', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971177792962560', TO_DATE('2019-08-02 22:06:45', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '2', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971193982976000', TO_DATE('2019-08-02 22:06:49', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '15', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607150517478490112', TO_DATE('2019-08-03 09:59:23', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '3', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607150536688402432', TO_DATE('2019-08-03 09:59:28', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '13', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607151743343525888', TO_DATE('2019-08-03 10:04:15', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/app/add', '新增应用', '523', 'add', '{"sApp_NO":["******"],"sApp_Name":["test"],"sApp_SecretKey":["******"],"lApp_StatusFlag":["1"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.AppController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607158738461130752', TO_DATE('2019-08-03 10:32:03', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateAppMenuAuth', '更新应用菜单权限', '112', 'updateAppMenuAuth', '{"100":["1002,1003"],"200":[""],"300":[""],"400":[""],"611":[""],"612":[""],"620":[""],"630":[""],"641":[""],"642":[""],"700":[""],"sApp_ID":["607151741296705536"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MenuController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607158891758747648', TO_DATE('2019-08-03 10:32:40', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateAppMenuAuth', '更新应用菜单权限', '42', 'updateAppMenuAuth', '{"100":["1002,1003,1006,1005"],"200":["2005,2006"],"300":[""],"400":[""],"611":[""],"612":[""],"620":[""],"630":[""],"641":[""],"642":[""],"700":[""],"sApp_ID":["607151741296705536"]}', '{"msg":"成功 ","code":1,"data":2}', NULL, 'com.jian.system.controller.MenuController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607189064176631808', TO_DATE('2019-08-03 12:32:33', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '8512', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606951321232211968', TO_DATE('2019-08-02 20:47:51', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '28', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606951340140134400', TO_DATE('2019-08-02 20:47:56', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '50', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606955070625415168', TO_DATE('2019-08-02 21:02:45', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateGroupMenuAuth', '更新用户组菜单权限', '107', 'updateGroupMenuAuth', '{"100":[""],"200":[""],"300":[""],"400":[""],"611":[""],"612":[""],"620":[""],"630":[""],"641":["641001,641002,641003,641004,641005,641006,641007"],"642":["642001,642002,642003,642004,642005,642006,642007"],"700":[""],"sGroup_ID":["2"]}', '{"msg":"成功 ","code":1,"data":2}', NULL, 'com.jian.system.controller.MenuController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606955262049255424', TO_DATE('2019-08-02 21:03:31', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateGroupMenuAuth', '更新用户组菜单权限', '93', 'updateGroupMenuAuth', '{"100":["1001,1002,1003,1004"],"200":["2001,2002,2003,2004"],"300":["3001,3002,3003,3004"],"400":["4001"],"611":[""],"612":[""],"620":[""],"630":[""],"641":[""],"642":[""],"700":["7001,7002,7003,7004"],"sGroup_ID":["3"]}', '{"msg":"成功 ","code":1,"data":5}', NULL, 'com.jian.system.controller.MenuController');
@@ -1259,33 +1288,6 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606958088964014080', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606958109524492288', TO_DATE('2019-08-02 21:14:50', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '18', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606958527944065024', TO_DATE('2019-08-02 21:16:29', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/group/update', '更新用户组', '31', 'update', '{"sGroup_ID":["2"],"sGroup_Name":["管理员组"],"lGroup_SysFlag":["1"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.GroupController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606942605703380992', TO_DATE('2019-08-02 20:13:13', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '2652', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606970950960807936', TO_DATE('2019-08-02 22:05:51', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/group/update', '更新用户组', '178', 'update', '{"sGroup_ID":["604790269384065024"],"sGroup_Name":["test"],"lGroup_SysFlag":["0"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.GroupController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971062298607616', TO_DATE('2019-08-02 22:06:18', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateGroupMenuAuth', '更新用户组菜单权限', '64', 'updateGroupMenuAuth', '{"100":["1001"],"200":["2001"],"300":["3001"],"400":["4001"],"500":["2"],"611":["611001"],"612":["612001"],"620":["620001"],"630":["630001"],"641":["641001"],"642":["642001"],"700":["7001"],"sGroup_ID":["604790269384065024"]}', '{"msg":"成功 ","code":1,"data":12}', NULL, 'com.jian.system.controller.MenuController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971155399573504', TO_DATE('2019-08-02 22:06:40', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/user/update', '更新用户', '175', 'update', '{"sUser_ID":["606138587578105856"],"sUser_UserName":["test"],"sUser_PassWord":["098f6bcd4621d373cade4e832627b4f6"],"sUser_Nick":["test"],"lUser_StatusFlag":["1"],"sUser_GroupID":["604790269384065024"],"sUser_QQ":[""],"sUser_Email":[""],"sUser_Phone":[""],', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971177792962560', TO_DATE('2019-08-02 22:06:45', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '2', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606971193982976000', TO_DATE('2019-08-02 22:06:49', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '15', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607150517478490112', TO_DATE('2019-08-03 09:59:23', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '3', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607150536688402432', TO_DATE('2019-08-03 09:59:28', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '13', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607151743343525888', TO_DATE('2019-08-03 10:04:15', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/app/add', '新增应用', '523', 'add', '{"sApp_NO":["******"],"sApp_Name":["test"],"sApp_SecretKey":["******"],"lApp_StatusFlag":["1"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.AppController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607158738461130752', TO_DATE('2019-08-03 10:32:03', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateAppMenuAuth', '更新应用菜单权限', '112', 'updateAppMenuAuth', '{"100":["1002,1003"],"200":[""],"300":[""],"400":[""],"611":[""],"612":[""],"620":[""],"630":[""],"641":[""],"642":[""],"700":[""],"sApp_ID":["607151741296705536"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MenuController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607158891758747648', TO_DATE('2019-08-03 10:32:40', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/menu/updateAppMenuAuth', '更新应用菜单权限', '42', 'updateAppMenuAuth', '{"100":["1002,1003,1006,1005"],"200":["2005,2006"],"300":[""],"400":[""],"611":[""],"612":[""],"620":[""],"630":[""],"641":[""],"642":[""],"700":[""],"sApp_ID":["607151741296705536"]}', '{"msg":"成功 ","code":1,"data":2}', NULL, 'com.jian.system.controller.MenuController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607189064176631808', TO_DATE('2019-08-03 12:32:33', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '8512', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('606951321232211968', TO_DATE('2019-08-02 20:47:51', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '28', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610178318276231168', TO_DATE('2019-08-11 18:30:47', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '18771', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611163240247853056', TO_DATE('2019-08-14 11:44:31', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/transport', 'app器材运输', '703', 'appTransport', '{"sEquip_ID":["611145406239211520"],"remarks":["good"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611173089077624832', TO_DATE('2019-08-14 12:23:39', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/dump', 'app器材已报废', '41', 'appDump', '{"sEquip_ID":["611145406239211520"],"remarks":["ghhhhn？n"]}', NULL, '{"msg":"未登录","code":-111}', 'com.jian.system.controller.EquipController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611174086063685632', TO_DATE('2019-08-14 12:27:37', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '2656', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612296764807970816', TO_DATE('2019-08-17 14:48:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1546', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346348007587840', TO_DATE('2019-08-17 18:05:46', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '3', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407471822077952', TO_DATE('2019-08-17 22:08:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '16', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612660206102380544', TO_DATE('2019-08-18 14:52:55', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/read', 'app消息已读', '200', 'appRead', '{"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661106808193024', TO_DATE('2019-08-18 14:56:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '50', 'appHandle', '{"remarks":["tyu"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661200861265920', TO_DATE('2019-08-18 14:56:52', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["yhj"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，消息已处理","code":-101}', 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661259661213696', TO_DATE('2019-08-18 14:57:06', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '16', 'appUnHandle', '{"remarks":["fhbn"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661346592358400', TO_DATE('2019-08-18 14:57:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["cccc"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312764043493376', TO_DATE('2019-08-17 15:52:19', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '53', 'update', '{"sDict_ID":["612311872565149696"],"sDict_NO":["12"],"sDict_Name":["12"],"dDict_CreateDate":["1566028126000"],"sDict_UserID":["1"],"sDict_DictTypeNO":["AidType"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["0"],"sDict_Describe":["12', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407490113437696', TO_DATE('2019-08-17 22:08:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '17', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612409486266597376', TO_DATE('2019-08-17 22:16:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '1', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612359960893849600', TO_DATE('2019-08-17 18:59:51', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/store/update', '更新仓库', '94', 'update', '{"lStoreType_Lng":["118.15"],"lStoreType_Limit":["0"],"sStoreType_Name":["rwrwr"],"lStoreType_Lat":["24.46"],"sStoreType_Station":[""],"sStore_Name":["rwrwr"],"sStoreType_Address":["rrr"],"sStoreType_MapIcon":["2"],"sStore_ID":["607149452645367808"],"sSto', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611256318023434240', TO_DATE('2019-08-14 17:54:22', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/useToAid', 'app器材使用中', '3833', 'appUseToAid', '{"sEquip_ID":["611145406239211520"],"remarks":[""],"sAid_ID":["604748743446626304"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611139143233175552', TO_DATE('2019-08-14 10:08:46', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '8158', 'appLogin', '{"username":["admin"]}', NULL, 'Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 127.0.0.1:6379', 'com.jian.system.controller.UserController');
@@ -1300,6 +1302,36 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611181682896142336', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611253229476380672', TO_DATE('2019-08-14 17:42:06', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '6161', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613027616470859776', TO_DATE('2019-08-19 15:12:53', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/aidMapIcon/add', '新增航标', '51', 'add', '{"sAidIcon_Status":["normal"],"sAidIcon_StatusIcon":["3"],"sAidIcon_AidID":["604743636243972096"]}', NULL, '{"msg":"604743636243972096--normal已存在","code":-105}', 'com.jian.system.controller.AidMapIconController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611253470594334720', TO_DATE('2019-08-14 17:43:03', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '284', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607221818150879232', TO_DATE('2019-08-03 14:42:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '190', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607321054481743872', TO_DATE('2019-08-03 21:17:02', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '527', 'login', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607321120403619840', TO_DATE('2019-08-03 21:17:18', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '29', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193665906933760', TO_DATE('2019-08-03 12:50:51', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aid/updateUser', '更新航标分配的用户', '32', 'updateUser', '{"user":[""],"sAid_ID":["604617148949594112"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.AidController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607252996442554368', TO_DATE('2019-08-03 16:46:36', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '21', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607283228440526848', TO_DATE('2019-08-03 18:46:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '135', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('609645962469572608', TO_DATE('2019-08-10 07:15:24', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1191', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610645738518478848', TO_DATE('2019-08-13 01:28:09', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '891', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610646900848197632', TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '117', 'add', '{"sEquip_NO":["123333"],"sEquip_Name":["123333"],"sEquip_Type":["t"],"sEquip_StoreLv1":[" "],"sEquip_StoreLv2":[" "],"sEquip_StoreLv3":[" "],"sEquip_StoreLv4":[" "]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612267861603254272', TO_DATE('2019-08-17 12:53:53', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1273', 'login', '{"username":["admin"]}', NULL, 'Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 127.0.0.1:6379', 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612315385487687680', TO_DATE('2019-08-17 16:02:44', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '43', 'update', '{"sDict_ID":["700008"],"sDict_NO":["8"],"sDict_Name":["报废"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["EquipStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDict_Picture":[""],"', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398627536502784', TO_DATE('2019-08-17 21:33:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '58', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398724747886592', TO_DATE('2019-08-17 21:33:53', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '80', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.12"],"lSys_MapLat":["242"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398795115724800', TO_DATE('2019-08-17 21:34:10', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '48', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398864783114240', TO_DATE('2019-08-17 21:34:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '36', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612673345506246656', TO_DATE('2019-08-18 15:45:08', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '51', 'appUnHandle', '{"remarks":["gggg"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，已处理消息，不可设为待处理","code":-101}', 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612735045173510144', TO_DATE('2019-08-18 19:50:18', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '2189', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612737266892144640', TO_DATE('2019-08-18 19:59:08', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '1187', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612401665785462784', TO_DATE('2019-08-17 21:45:34', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '44', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612402087157825536', TO_DATE('2019-08-17 21:47:15', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '30', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1dfsdf"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612268075147853824', TO_DATE('2019-08-17 12:54:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '647', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612328163841671168', TO_DATE('2019-08-17 16:53:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/store/update', '更新仓库', '61', 'update', '{"lStoreType_Lng":["11"],"lStoreType_Limit":["11"],"sStoreType_Name":["11"],"lStoreType_Lat":["11"],"sStoreType_Station":["test"],"sStore_Name":["11"],"sStoreType_Address":["11"],"sStore_ID":["612326895639330816"],"sStoreType_ID":["612326895639330816"],"l', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612328289859534848', TO_DATE('2019-08-17 16:54:00', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/store/add', '新增仓库', '53', 'add', '{"level":["2"],"name":["112"],"sStore_Level1":["612326895639330816"],"sStore_Level2":[""],"sStore_Level3":[""]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346282836492288', TO_DATE('2019-08-17 18:05:30', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '61', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346306962128896', TO_DATE('2019-08-17 18:05:36', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '58', 'update', '{"sDict_ID":["107001"],"sDict_NO":["normal"],"sDict_Name":["正常地图图标"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["AidMapIconByStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDict', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346358392684544', TO_DATE('2019-08-17 18:05:48', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '80', 'update', '{"sDict_ID":["107002"],"sDict_NO":["unusual"],"sDict_Name":["异常地图图标"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["AidMapIconByStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDic', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612359412853506048', TO_DATE('2019-08-17 18:57:41', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '43', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612359475424133120', TO_DATE('2019-08-17 18:57:56', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/store/update', '更新仓库', '57', 'update', '{"lStoreType_Lng":["11"],"lStoreType_Limit":["11"],"children[0][lStore_Limit]":["0"],"children[0][sStore_Level3]":[""],"children[0][sStore_Parent]":["612326895639330816"],"children[0][sStore_Level1]":["612326895639330816"],"children[0][sStore_Level2]":[""', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612390256250978304', TO_DATE('2019-08-17 21:00:14', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '87', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312847153627136', TO_DATE('2019-08-17 15:52:38', 'SYYYY-MM-DD HH24:MI:SS'), 'delete', NULL, '127.0.0.1', NULL, '/api/dict/delete', '删除数据字典', '48', 'delete', '{"sDict_ID":["612311872565149696"]}', NULL, NULL, 'com.jian.system.controller.DictController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611145406629281792', TO_DATE('2019-08-14 10:33:39', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '192.168.106.67', NULL, '/api/equip/app/add', 'app新增器材', '177', 'appAdd', '{"sEquip_NO":["re"],"sEquip_Name":["reres"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611145684027965440', TO_DATE('2019-08-14 10:34:45', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/inStore', 'app器材入库', '83', 'appInStore', '{"remarks":["of"],"sEquip_NO":["re"],"sEquip_StoreLv2":["604613628313731072"],"sEquip_Name":["reres"],"sEquip_StoreLv1":["604613628313731072"],"sEquip_ID":["611145406239211520"],"dEquip_CreateDate":["1565750019000"],"sEquip_Status":["0"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611147685331730432', TO_DATE('2019-08-14 10:42:42', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/inStore', 'app器材入库', '27', 'appInStore', '{"remarks":["you"],"sEquip_NO":["re"],"sEquip_StoreLv2":["604613628313731072"],"sEquip_Name":["reres"],"sEquip_StoreLv1":["604613628313731072"],"sEquip_ID":["611145406239211520"],"dEquip_CreateDate":["1565750019000"],"sEquip_Status":["0"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
@@ -1333,36 +1365,21 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612997650064605184', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613027506332631040', TO_DATE('2019-08-19 15:12:27', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '107', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193608474329088', TO_DATE('2019-08-03 12:50:37', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aid/updateUser', '更新航标分配的用户', '44', 'updateUser', '{"user":["1,606138587578105856"],"sAid_ID":["604617148949594112"]}', '{"msg":"成功 ","code":1,"data":2}', NULL, 'com.jian.system.controller.AidController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607216787167117312', TO_DATE('2019-08-03 14:22:43', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/user/updateAid', '更新分配给用户的航标', '132', 'updateAid', '{"aid":["604074845818322944,604748743446626304,604748877744046080,604743636243972096,604745958013534208"],"sUser_ID":["606138587578105856"]}', '{"msg":"成功 ","code":1,"data":5}', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607221818150879232', TO_DATE('2019-08-03 14:42:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '190', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607321054481743872', TO_DATE('2019-08-03 21:17:02', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '527', 'login', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607321120403619840', TO_DATE('2019-08-03 21:17:18', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '29', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193665906933760', TO_DATE('2019-08-03 12:50:51', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aid/updateUser', '更新航标分配的用户', '32', 'updateUser', '{"user":[""],"sAid_ID":["604617148949594112"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.AidController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607252996442554368', TO_DATE('2019-08-03 16:46:36', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '21', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607283228440526848', TO_DATE('2019-08-03 18:46:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '135', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('609645962469572608', TO_DATE('2019-08-10 07:15:24', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1191', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610645738518478848', TO_DATE('2019-08-13 01:28:09', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '891', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610646900848197632', TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '117', 'add', '{"sEquip_NO":["123333"],"sEquip_Name":["123333"],"sEquip_Type":["t"],"sEquip_StoreLv1":[" "],"sEquip_StoreLv2":[" "],"sEquip_StoreLv3":[" "],"sEquip_StoreLv4":[" "]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612267861603254272', TO_DATE('2019-08-17 12:53:53', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1273', 'login', '{"username":["admin"]}', NULL, 'Unable to connect to Redis; nested exception is io.lettuce.core.RedisConnectionException: Unable to connect to 127.0.0.1:6379', 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612268075147853824', TO_DATE('2019-08-17 12:54:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '647', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612328163841671168', TO_DATE('2019-08-17 16:53:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/store/update', '更新仓库', '61', 'update', '{"lStoreType_Lng":["11"],"lStoreType_Limit":["11"],"sStoreType_Name":["11"],"lStoreType_Lat":["11"],"sStoreType_Station":["test"],"sStore_Name":["11"],"sStoreType_Address":["11"],"sStore_ID":["612326895639330816"],"sStoreType_ID":["612326895639330816"],"l', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612328289859534848', TO_DATE('2019-08-17 16:54:00', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/store/add', '新增仓库', '53', 'add', '{"level":["2"],"name":["112"],"sStore_Level1":["612326895639330816"],"sStore_Level2":[""],"sStore_Level3":[""]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346282836492288', TO_DATE('2019-08-17 18:05:30', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '61', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346306962128896', TO_DATE('2019-08-17 18:05:36', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '58', 'update', '{"sDict_ID":["107001"],"sDict_NO":["normal"],"sDict_Name":["正常地图图标"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["AidMapIconByStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDict', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346358392684544', TO_DATE('2019-08-17 18:05:48', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '80', 'update', '{"sDict_ID":["107002"],"sDict_NO":["unusual"],"sDict_Name":["异常地图图标"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["AidMapIconByStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDic', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612359412853506048', TO_DATE('2019-08-17 18:57:41', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '43', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612359475424133120', TO_DATE('2019-08-17 18:57:56', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/store/update', '更新仓库', '57', 'update', '{"lStoreType_Lng":["11"],"lStoreType_Limit":["11"],"children[0][lStore_Limit]":["0"],"children[0][sStore_Level3]":[""],"children[0][sStore_Parent]":["612326895639330816"],"children[0][sStore_Level1]":["612326895639330816"],"children[0][sStore_Level2]":[""', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.StoreController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612390256250978304', TO_DATE('2019-08-17 21:00:14', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '87', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312847153627136', TO_DATE('2019-08-17 15:52:38', 'SYYYY-MM-DD HH24:MI:SS'), 'delete', NULL, '127.0.0.1', NULL, '/api/dict/delete', '删除数据字典', '48', 'delete', '{"sDict_ID":["612311872565149696"]}', NULL, NULL, 'com.jian.system.controller.DictController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612315385487687680', TO_DATE('2019-08-17 16:02:44', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '43', 'update', '{"sDict_ID":["700008"],"sDict_NO":["8"],"sDict_Name":["报废"],"dDict_CreateDate":[""],"sDict_UserID":[""],"sDict_DictTypeNO":["EquipStatus"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["1"],"sDict_Describe":[""],"sDict_Picture":[""],"', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398627536502784', TO_DATE('2019-08-17 21:33:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '58', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398724747886592', TO_DATE('2019-08-17 21:33:53', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '80', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.12"],"lSys_MapLat":["242"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398795115724800', TO_DATE('2019-08-17 21:34:10', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '48', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612398864783114240', TO_DATE('2019-08-17 21:34:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '36', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612673345506246656', TO_DATE('2019-08-18 15:45:08', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '51', 'appUnHandle', '{"remarks":["gggg"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，已处理消息，不可设为待处理","code":-101}', 'com.jian.system.controller.MessageController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612735045173510144', TO_DATE('2019-08-18 19:50:18', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '2189', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612737266892144640', TO_DATE('2019-08-18 19:59:08', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.1.16', NULL, '/api/user/app/login', 'app用户登录', '1187', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612401665785462784', TO_DATE('2019-08-17 21:45:34', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '44', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
-INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612402087157825536', TO_DATE('2019-08-17 21:47:15', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '30', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1dfsdf"],"lSys_MapLat":["24.46"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610178318276231168', TO_DATE('2019-08-11 18:30:47', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '18771', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611163240247853056', TO_DATE('2019-08-14 11:44:31', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/transport', 'app器材运输', '703', 'appTransport', '{"sEquip_ID":["611145406239211520"],"remarks":["good"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611173089077624832', TO_DATE('2019-08-14 12:23:39', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/equip/app/dump', 'app器材已报废', '41', 'appDump', '{"sEquip_ID":["611145406239211520"],"remarks":["ghhhhn？n"]}', NULL, '{"msg":"未登录","code":-111}', 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('611174086063685632', TO_DATE('2019-08-14 12:27:37', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '2656', 'appLogin', '{"username":["admin"]}', '{"msg":"密码错误","code":-110,"data":4}', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612296764807970816', TO_DATE('2019-08-17 14:48:44', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '1546', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612346348007587840', TO_DATE('2019-08-17 18:05:46', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '3', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407471822077952', TO_DATE('2019-08-17 22:08:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '16', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612660206102380544', TO_DATE('2019-08-18 14:52:55', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/read', 'app消息已读', '200', 'appRead', '{"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661106808193024', TO_DATE('2019-08-18 14:56:30', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '50', 'appHandle', '{"remarks":["tyu"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661200861265920', TO_DATE('2019-08-18 14:56:52', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["yhj"],"sMsg_ID":["3"]}', NULL, '{"msg":"保存失败，消息已处理","code":-101}', 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661259661213696', TO_DATE('2019-08-18 14:57:06', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/unhandle', 'app设为待处理消息', '16', 'appUnHandle', '{"remarks":["fhbn"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661346592358400', TO_DATE('2019-08-18 14:57:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.1.16', NULL, '/api/msg/app/handle', 'app处理消息', '20', 'appHandle', '{"remarks":["cccc"],"sMsg_ID":["3"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312764043493376', TO_DATE('2019-08-17 15:52:19', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '53', 'update', '{"sDict_ID":["612311872565149696"],"sDict_NO":["12"],"sDict_Name":["12"],"dDict_CreateDate":["1566028126000"],"sDict_UserID":["1"],"sDict_DictTypeNO":["AidType"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["0"],"sDict_Describe":["12', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407490113437696', TO_DATE('2019-08-17 22:08:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '17', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612409486266597376', TO_DATE('2019-08-17 22:16:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '1', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610647002140639232', TO_DATE('2019-08-13 01:33:10', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/equip/update', '更新器材', '712', 'update', '{"sEquip_ID":["610646900542013440"],"sEquip_NO":["123333123"],"sEquip_Name":["123333123"],"sEquip_StoreLv1":[" "],"sEquip_StoreLv2":[" "],"sEquip_StoreLv3":[" "],"sEquip_StoreLv4":[" "],"sEquip_Type":["t"],"sEquip_Status":["0"],"sEquip_NfcID":[""],"sEquip', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193531026505728', TO_DATE('2019-08-03 12:50:18', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aid/updateUser', '更新航标分配的用户', '149', 'updateUser', '{"user":["1,606138587578105856,22"],"sAid_ID":["604617148949594112"]}', '{"msg":"成功 ","code":1,"data":3}', NULL, 'com.jian.system.controller.AidController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613398323432259584', TO_DATE('2019-08-20 15:45:56', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '115', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
@@ -1383,6 +1400,11 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613033102834401280', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613044233137291264', TO_DATE('2019-08-19 16:18:54', 'SYYYY-MM-DD HH24:MI:SS'), 'upload', NULL, '127.0.0.1', NULL, '/api/file/uploadImg', '上传图片', '106', 'upload', NULL, NULL, NULL, 'com.jian.system.controller.FileUploadController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613328663466737664', TO_DATE('2019-08-20 11:09:08', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/msg/app/read', 'app消息已读', '159', 'appRead', '{"sMsg_ID":["4"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613397148909699072', TO_DATE('2019-08-20 15:41:16', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '3165', 'appLogin', '{"username":["admin"]}', NULL, 'Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out', 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614581748260405248', TO_DATE('2019-08-23 22:08:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/equip/update', '更新器材', '53', 'update', '{"sEquip_ID":["2"],"sEquip_NO":["2"],"sEquip_Name":["2"],"sEquip_StoreLv1":["2"],"sEquip_StoreLv2":["2"],"sEquip_StoreLv3":["2"],"sEquip_StoreLv4":["2"],"sEquip_Type":["2"],"sEquip_Status":["2"],"sEquip_NfcID":[""],"sEquip_AidID":[""],"dEquip_CreateDate":', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614573274117963776', TO_DATE('2019-08-23 21:34:46', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '179', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614595444298743808', TO_DATE('2019-08-23 23:02:52', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '89', 'add', '{"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sLamp_Telemetry":["1"],"lLamp_InputVolt":["wew"],"lLamp_Watt":["rwer"],"sLamp_Lens":["1"],"sLamp_Type":["1"],"dEquip_ArrivalDate":["1565107200000"],"sEquip_MModel":["ee"],"sEquip_Manufacturer":["te', NULL, 'For input string: "wew"', 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614596394417651712', TO_DATE('2019-08-23 23:06:39', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '51', 'add', '{"sEquip_NO":["e2"],"sEquip_Name":["e2"],"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sEquip_Manufacturer":["test"],"sEquip_MModel":["222"],"dEquip_ArrivalDate":["1566316800000"],"sLamp_NO":["e2"],"sLamp_Brand":["e2"],"sLamp_Type":["1"],"sLamp', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614595567812608000', TO_DATE('2019-08-23 23:03:22', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '207', 'add', '{"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sLamp_Telemetry":["1"],"lLamp_InputVolt":["12"],"lLamp_Watt":["12"],"sLamp_Lens":["1"],"sLamp_Type":["1"],"dEquip_ArrivalDate":["1565107200000"],"sEquip_MModel":["ee"],"sEquip_Manufacturer":["test"', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
 
 -- ----------------------------
 -- Table structure for tBase_ThirdUser
@@ -1648,13 +1670,13 @@ DROP TABLE "AASYSTEM"."tEquip_Lamp";
 CREATE TABLE "AASYSTEM"."tEquip_Lamp" (
   "sEquip_ID" NVARCHAR2(32) NOT NULL ,
   "sLamp_NO" NVARCHAR2(255) ,
-  "sLamp_Brand" NVARCHAR2(64) ,
+  "sLamp_Brand" NVARCHAR2(255) ,
   "sLamp_Type" NVARCHAR2(64) ,
   "lLamp_InputVolt" NUMBER ,
   "lLamp_Watt" NUMBER ,
   "sLamp_Lens" NVARCHAR2(64) ,
   "lLamp_TelemetryFlag" NUMBER ,
-  "sLamp_Telemetry" NVARCHAR2(255) 
+  "sLamp_Telemetry" NVARCHAR2(64) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -1662,6 +1684,10 @@ NOCOMPRESS
 PCTFREE 10
 INITRANS 1
 STORAGE (
+  INITIAL 65536 
+  NEXT 1048576 
+  MINEXTENTS 1
+  MAXEXTENTS 2147483645
   BUFFER_POOL DEFAULT
 )
 PARALLEL 1
@@ -1677,6 +1703,12 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."lLamp_Watt" IS '功率（W）';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."sLamp_Lens" IS '透镜形状';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."lLamp_TelemetryFlag" IS '遥测遥控接口 0：否，1：是';
 COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."sLamp_Telemetry" IS '遥测接口类型';
+
+-- ----------------------------
+-- Records of tEquip_Lamp
+-- ----------------------------
+INSERT INTO "AASYSTEM"."tEquip_Lamp" VALUES ('614596394342154240', 'e2', 'e2', '1', '22', '22', '1', '1', '1');
+INSERT INTO "AASYSTEM"."tEquip_Lamp" VALUES ('614595567070216192', NULL, NULL, '1', '12', '12', '1', '1', '1');
 
 -- ----------------------------
 -- Table structure for tEquip_Radar
@@ -1820,6 +1852,7 @@ ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0012861" PRIMARY KEY ("s
 -- Checks structure for table tBase_Aid
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0018712" CHECK ("sAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0019373" CHECK ("sAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Aid" ADD CONSTRAINT "SYS_C0114819" CHECK ("sAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1831,6 +1864,7 @@ ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0012908" PRIMARY KE
 -- Checks structure for table tBase_AidEquip
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0018713" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0019374" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_AidEquip" ADD CONSTRAINT "SYS_C0114820" CHECK ("sAidEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1843,6 +1877,7 @@ ALTER TABLE "AASYSTEM"."tBase_AidMapIcon" ADD CONSTRAINT "SYS_C0018045" PRIMARY 
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_AidMapIcon" ADD CONSTRAINT "SYS_C0018450" CHECK ("sAidIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_AidMapIcon" ADD CONSTRAINT "SYS_C0018714" CHECK ("sAidIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidMapIcon" ADD CONSTRAINT "SYS_C0019375" CHECK ("sAidIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_AidTypeMapIcon
@@ -1854,6 +1889,7 @@ ALTER TABLE "AASYSTEM"."tBase_AidTypeMapIcon" ADD CONSTRAINT "SYS_C0018049" PRIM
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_AidTypeMapIcon" ADD CONSTRAINT "SYS_C0018451" CHECK ("sAidTypeIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_AidTypeMapIcon" ADD CONSTRAINT "SYS_C0018715" CHECK ("sAidTypeIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AidTypeMapIcon" ADD CONSTRAINT "SYS_C0019376" CHECK ("sAidTypeIcon_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_App
@@ -1864,6 +1900,7 @@ ALTER TABLE "AASYSTEM"."tBase_App" ADD CONSTRAINT "SYS_C0113800" PRIMARY KEY ("s
 -- Checks structure for table tBase_App
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_App" ADD CONSTRAINT "SYS_C0018716" CHECK ("sApp_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_App" ADD CONSTRAINT "SYS_C0019377" CHECK ("sApp_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_App" ADD CONSTRAINT "SYS_C0114821" CHECK ("sApp_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1876,6 +1913,7 @@ ALTER TABLE "AASYSTEM"."tBase_AppMenu" ADD CONSTRAINT "SYS_C0016114" PRIMARY KEY
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_AppMenu" ADD CONSTRAINT "SYS_C0018453" CHECK ("sAppMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_AppMenu" ADD CONSTRAINT "SYS_C0018717" CHECK ("sAppMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_AppMenu" ADD CONSTRAINT "SYS_C0019378" CHECK ("sAppMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Indexes structure for table tBase_AppMenu
@@ -1904,6 +1942,7 @@ ALTER TABLE "AASYSTEM"."tBase_Dict" ADD CONSTRAINT "SYS_C0012842" PRIMARY KEY ("
 -- Checks structure for table tBase_Dict
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Dict" ADD CONSTRAINT "SYS_C0018718" CHECK ("sDict_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Dict" ADD CONSTRAINT "SYS_C0019379" CHECK ("sDict_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Dict" ADD CONSTRAINT "SYS_C0114822" CHECK ("sDict_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1915,6 +1954,7 @@ ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0012843" PRIMARY KE
 -- Checks structure for table tBase_DictType
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0018719" CHECK ("sDictType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0019380" CHECK ("sDictType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_DictType" ADD CONSTRAINT "SYS_C0114823" CHECK ("sDictType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1926,6 +1966,7 @@ ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0012881" PRIMARY KEY (
 -- Checks structure for table tBase_Equip
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0018720" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0019381" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Equip" ADD CONSTRAINT "SYS_C0114824" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1937,6 +1978,7 @@ ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0012888" PRIMARY KE
 -- Checks structure for table tBase_EquipLog
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0018721" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0019382" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_EquipLog" ADD CONSTRAINT "SYS_C0114825" CHECK ("sELog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1948,6 +1990,7 @@ ALTER TABLE "AASYSTEM"."tBase_Group" ADD CONSTRAINT "SYS_C0012844" PRIMARY KEY (
 -- Checks structure for table tBase_Group
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Group" ADD CONSTRAINT "SYS_C0018722" CHECK ("sGroup_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Group" ADD CONSTRAINT "SYS_C0019383" CHECK ("sGroup_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Group" ADD CONSTRAINT "SYS_C0114826" CHECK ("sGroup_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1959,6 +2002,7 @@ ALTER TABLE "AASYSTEM"."tBase_GroupMenu" ADD CONSTRAINT "SYS_C0012845" PRIMARY K
 -- Checks structure for table tBase_GroupMenu
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_GroupMenu" ADD CONSTRAINT "SYS_C0018723" CHECK ("sGroupMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_GroupMenu" ADD CONSTRAINT "SYS_C0019384" CHECK ("sGroupMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_GroupMenu" ADD CONSTRAINT "SYS_C0114827" CHECK ("sGroupMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1988,6 +2032,7 @@ ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0012846" PRIMARY KEY ("
 -- Checks structure for table tBase_Menu
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0018724" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0019385" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0114828" CHECK ("sMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -1999,6 +2044,7 @@ ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014207" PRIMARY KEY
 -- Checks structure for table tBase_MenuFun
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0018725" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0019386" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0114829" CHECK ("sMFun_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -2010,6 +2056,7 @@ ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0012847" PRIMA
 -- Checks structure for table tBase_MenuInterface
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0018726" CHECK ("sInterface_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0019387" CHECK ("sInterface_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_MenuInterface" ADD CONSTRAINT "SYS_C0114830" CHECK ("sInterface_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -2021,6 +2068,7 @@ ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0012916" PRIMARY KEY
 -- Checks structure for table tBase_Message
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0018727" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0019388" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Message" ADD CONSTRAINT "SYS_C0114831" CHECK ("sMsg_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -2032,6 +2080,7 @@ ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0012897" PRIMARY KEY ("s
 -- Checks structure for table tBase_Nfc
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0018728" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0019389" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Nfc" ADD CONSTRAINT "SYS_C0114832" CHECK ("sNfc_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -2043,6 +2092,7 @@ ALTER TABLE "AASYSTEM"."tBase_Store" ADD CONSTRAINT "SYS_C0012857" PRIMARY KEY (
 -- Checks structure for table tBase_Store
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Store" ADD CONSTRAINT "SYS_C0018729" CHECK ("sStore_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_Store" ADD CONSTRAINT "SYS_C0019390" CHECK ("sStore_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_Store" ADD CONSTRAINT "SYS_C0114833" CHECK ("sStore_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
@@ -2055,6 +2105,7 @@ ALTER TABLE "AASYSTEM"."tBase_StoreType" ADD CONSTRAINT "SYS_C0012853" PRIMARY K
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_StoreType" ADD CONSTRAINT "SYS_C0018466" CHECK ("sStoreType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_StoreType" ADD CONSTRAINT "SYS_C0018730" CHECK ("sStoreType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_StoreType" ADD CONSTRAINT "SYS_C0019391" CHECK ("sStoreType_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_System
@@ -2066,6 +2117,7 @@ ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0017770" PRIMARY KEY 
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0018467" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0018731" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0019392" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_SystemLog
@@ -2077,6 +2129,7 @@ ALTER TABLE "AASYSTEM"."tBase_SystemLog" ADD CONSTRAINT "SYS_C0015543" PRIMARY K
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_SystemLog" ADD CONSTRAINT "SYS_C0018468" CHECK ("sSLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_SystemLog" ADD CONSTRAINT "SYS_C0018732" CHECK ("sSLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_SystemLog" ADD CONSTRAINT "SYS_C0019393" CHECK ("sSLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_ThirdUser
@@ -2088,6 +2141,7 @@ ALTER TABLE "AASYSTEM"."tBase_ThirdUser" ADD CONSTRAINT "SYS_C0012848" PRIMARY K
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_ThirdUser" ADD CONSTRAINT "SYS_C0018469" CHECK ("sThird_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_ThirdUser" ADD CONSTRAINT "SYS_C0018733" CHECK ("sThird_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_ThirdUser" ADD CONSTRAINT "SYS_C0019394" CHECK ("sThird_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_User
@@ -2099,6 +2153,7 @@ ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0012849" PRIMARY KEY ("
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0018470" CHECK ("sUser_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0018734" CHECK ("sUser_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_User" ADD CONSTRAINT "SYS_C0019395" CHECK ("sUser_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_UserAid
@@ -2110,6 +2165,7 @@ ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0012902" PRIMARY KEY
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0018471" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0018735" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_UserAid" ADD CONSTRAINT "SYS_C0019396" CHECK ("sUserAid_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Indexes structure for table tBase_UserAid
@@ -2139,6 +2195,7 @@ ALTER TABLE "AASYSTEM"."tBase_UserLog" ADD CONSTRAINT "SYS_C0012850" PRIMARY KEY
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_UserLog" ADD CONSTRAINT "SYS_C0018472" CHECK ("sLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_UserLog" ADD CONSTRAINT "SYS_C0018736" CHECK ("sLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_UserLog" ADD CONSTRAINT "SYS_C0019397" CHECK ("sLog_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tBase_UserMenu
@@ -2150,6 +2207,7 @@ ALTER TABLE "AASYSTEM"."tBase_UserMenu" ADD CONSTRAINT "SYS_C0012851" PRIMARY KE
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_UserMenu" ADD CONSTRAINT "SYS_C0018473" CHECK ("sUserMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tBase_UserMenu" ADD CONSTRAINT "SYS_C0018737" CHECK ("sUserMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tBase_UserMenu" ADD CONSTRAINT "SYS_C0019398" CHECK ("sUserMenu_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Indexes structure for table tBase_UserMenu
@@ -2178,6 +2236,7 @@ ALTER TABLE "AASYSTEM"."tEquip_Ais" ADD CONSTRAINT "SYS_C0018834" PRIMARY KEY ("
 -- Checks structure for table tEquip_Ais
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tEquip_Ais" ADD CONSTRAINT "SYS_C0018833" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Ais" ADD CONSTRAINT "SYS_C0019399" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Battery
@@ -2190,6 +2249,7 @@ ALTER TABLE "AASYSTEM"."tEquip_Battery" ADD CONSTRAINT "SYS_C0018845" PRIMARY KE
 ALTER TABLE "AASYSTEM"."tEquip_Battery" ADD CONSTRAINT "SYS_C0018842" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Battery" ADD CONSTRAINT "SYS_C0018843" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Battery" ADD CONSTRAINT "SYS_C0018844" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Battery" ADD CONSTRAINT "SYS_C0019400" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Lamp
@@ -2201,6 +2261,7 @@ ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0012866" PRIMARY KEY (
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0018475" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0018739" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Lamp" ADD CONSTRAINT "SYS_C0019401" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Radar
@@ -2212,6 +2273,7 @@ ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018837" PRIMARY KEY 
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018835" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0018836" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Radar" ADD CONSTRAINT "SYS_C0019402" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_SolarEnergy
@@ -2223,6 +2285,7 @@ ALTER TABLE "AASYSTEM"."tEquip_SolarEnergy" ADD CONSTRAINT "SYS_C0012872" PRIMAR
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tEquip_SolarEnergy" ADD CONSTRAINT "SYS_C0018474" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_SolarEnergy" ADD CONSTRAINT "SYS_C0018738" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_SolarEnergy" ADD CONSTRAINT "SYS_C0019403" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_SpareLamp
@@ -2235,6 +2298,7 @@ ALTER TABLE "AASYSTEM"."tEquip_SpareLamp" ADD CONSTRAINT "SYS_C0018849" PRIMARY 
 ALTER TABLE "AASYSTEM"."tEquip_SpareLamp" ADD CONSTRAINT "SYS_C0018846" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_SpareLamp" ADD CONSTRAINT "SYS_C0018847" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_SpareLamp" ADD CONSTRAINT "SYS_C0018848" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_SpareLamp" ADD CONSTRAINT "SYS_C0019404" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Telemetry
@@ -2247,6 +2311,7 @@ ALTER TABLE "AASYSTEM"."tEquip_Telemetry" ADD CONSTRAINT "SYS_C0018841" PRIMARY 
 ALTER TABLE "AASYSTEM"."tEquip_Telemetry" ADD CONSTRAINT "SYS_C0018838" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Telemetry" ADD CONSTRAINT "SYS_C0018839" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_Telemetry" ADD CONSTRAINT "SYS_C0018840" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_Telemetry" ADD CONSTRAINT "SYS_C0019405" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_ViceLamp
@@ -2260,3 +2325,4 @@ ALTER TABLE "AASYSTEM"."tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0018850" CHECK ("s
 ALTER TABLE "AASYSTEM"."tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0018851" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0018852" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
 ALTER TABLE "AASYSTEM"."tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0018853" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
+ALTER TABLE "AASYSTEM"."tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0019406" CHECK ("sEquip_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
