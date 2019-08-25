@@ -47,6 +47,8 @@ public class Equip extends Base<Equip> {
 	private Date dEquip_UseDate;
 	@Excel(name="入库日期", sort=0, length="", isNull=1 )
 	private Date dEquip_StoreDate;
+	@Excel(name="品牌", sort=0, length="255", isNull=1 )
+	private String sEquip_MBrand;
 
 	
 
@@ -158,6 +160,12 @@ public class Equip extends Base<Equip> {
 	}
 	public void setdEquip_StoreDate(Date dEquip_StoreDate) {
 		this.dEquip_StoreDate = dEquip_StoreDate;
+	}
+	public String getsEquip_MBrand() {
+		return sEquip_MBrand;
+	}
+	public void setsEquip_MBrand(String sEquip_MBrand) {
+		this.sEquip_MBrand = sEquip_MBrand;
 	}
 	
 }

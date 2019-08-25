@@ -143,7 +143,11 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="查询所有仓库")
 	public String findAll(HttpServletRequest req) {
-		List<Map<String, Object>> list = service.storeTree();
+		String sStore_Level1 = Tools.getReqParamSafe(req, "sStore_Level1");
+		String sStore_Level2 = Tools.getReqParamSafe(req, "sStore_Level2");
+		String sStore_Level3 = Tools.getReqParamSafe(req, "sStore_Level3");
+		String sStore_Level4 = Tools.getReqParamSafe(req, "sStore_Level4");
+		List<Map<String, Object>> list = service.storeTree(sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 

@@ -27,8 +27,16 @@ public class EquipLog extends Base<EquipLog> {
 	private String sELog_Remarks;
 	@Excel(name="操作员IP", sort=0, length="255", isNull=1 )
 	private String sELog_IP;
+	@Excel(name="一级仓库", sort=0, length="32", isNull=1 )
+	private String sELog_StoreLv1;
+	@Excel(name="二级仓库", sort=0, length="32", isNull=1 )
+	private String sELog_StoreLv2;
+	@Excel(name="三级仓库", sort=0, length="32", isNull=1 )
+	private String sELog_StoreLv3;
+	@Excel(name="四级仓库", sort=0, length="32", isNull=1 )
+	private String sELog_StoreLv4;
 	
-	
+
 	
 	public String getsELog_ID() {
 		return sELog_ID;
@@ -77,6 +85,30 @@ public class EquipLog extends Base<EquipLog> {
 	}
 	public void setsELog_IP(String sELog_IP) {
 		this.sELog_IP = sELog_IP;
+	}
+	public String getsELog_StoreLv1() {
+		return sELog_StoreLv1;
+	}
+	public void setsELog_StoreLv1(String sELog_StoreLv1) {
+		this.sELog_StoreLv1 = sELog_StoreLv1;
+	}
+	public String getsELog_StoreLv2() {
+		return sELog_StoreLv2;
+	}
+	public void setsELog_StoreLv2(String sELog_StoreLv2) {
+		this.sELog_StoreLv2 = sELog_StoreLv2;
+	}
+	public String getsELog_StoreLv3() {
+		return sELog_StoreLv3;
+	}
+	public void setsELog_StoreLv3(String sELog_StoreLv3) {
+		this.sELog_StoreLv3 = sELog_StoreLv3;
+	}
+	public String getsELog_StoreLv4() {
+		return sELog_StoreLv4;
+	}
+	public void setsELog_StoreLv4(String sELog_StoreLv4) {
+		this.sELog_StoreLv4 = sELog_StoreLv4;
 	}
 	
 }

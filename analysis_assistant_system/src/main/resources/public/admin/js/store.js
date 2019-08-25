@@ -17,6 +17,10 @@ var myvue = new Vue({
 	    	return {
 	    		activeTab: 'table',
 				filters: {
+					sStore_Level1: '',
+					sStore_Level2: '',
+					sStore_Level3: '',
+					sStore_Level4: ''
 				},
 				list: [],
 				total: 0,
@@ -36,6 +40,15 @@ var myvue = new Vue({
 				lv1Options: [],
 				lv2Options: [],
 				lv3Options: [],
+				filtersLv1Options: [],
+				filtersLv2Options: [],
+				filtersLv3Options: [],
+				filtersLv4Options: [],
+				
+				expands1: [],
+				expands2: [],
+				expands3: [],
+				expands4: [],
 
 				//add
 				addFormVisible: false,
@@ -239,6 +252,59 @@ var myvue = new Vue({
 					});
 				});
 			},
+			//filter
+			handleFiltersInitOptions: function(){
+				var self = this;
+				var params = {};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv1Options = res.data;
+						self.filtersLv2Options = [];
+						self.filtersLv3Options = [];
+						self.filtersLv4Options = [];
+						self.filters.sStore_Level2 = "";
+						self.filters.sStore_Level3 = "";
+						self.filters.sStore_Level4 = "";
+					});
+				});
+			},
+			handleFiltersLV1Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv2Options = res.data;
+						self.filtersLv3Options = [];
+						self.filtersLv4Options = [];
+						self.filters.sStore_Level2 = "";
+						self.filters.sStore_Level3 = "";
+						self.filters.sStore_Level4 = "";
+					});
+				});
+			},
+			handleFiltersLV2Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv3Options = res.data;
+						self.filtersLv4Options = [];
+						self.filters.sStore_Level3 = "";
+						self.filters.sStore_Level4 = "";
+					});
+				});
+			},
+			handleFiltersLV3Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(listUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv4Options = res.data;
+						self.filters.sStore_Level4 = "";
+					});
+				});
+			},
+			
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -265,6 +331,19 @@ var myvue = new Vue({
 				for ( var key in this.filters) {
 					if(this.filters[key]){
 						params[key] = this.filters[key];
+						//expands
+						if(key == "sStore_Level1"){
+							this.expands1.push(this.filters[key]);
+						}
+						if(key == "sStore_Level2"){
+							this.expands2.push(this.filters[key]);
+						}
+						if(key == "sStore_Level3"){
+							this.expands3.push(this.filters[key]);
+						}
+						if(key == "sStore_Level4"){
+							this.expands4.push(this.filters[key]);
+						}
 					}
 				}
 				this.listLoading = true;
@@ -285,8 +364,20 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					
+					sStore_Level1: '',
+					sStore_Level2: '',
+					sStore_Level3: '',
+					sStore_Level4: ''
 				};
+				this.filtersLv2Options = [];
+				this.filtersLv3Options = [];
+				this.filtersLv4Options = [];
+				
+				this.expands1 = [];
+				this.expands2 = [];
+				this.expands3 = [];
+				this.expands4 = [];
+				
 				this.getList();
 			},
 			//add
@@ -492,6 +583,7 @@ var myvue = new Vue({
 			this.preloading = true;
 			this.handleStationOptions();
 			this.handleMapIconOptions();
+			this.handleFiltersInitOptions();
 			this.getList();
 		}
 	  });

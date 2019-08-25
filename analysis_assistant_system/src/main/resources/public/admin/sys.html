@@ -50,14 +50,66 @@
 				    <el-button style="float: right; padding: 3px 0" type="text" @click="editSubmit">保存</el-button>
 				  </div>
 				  <el-form size="mini" :model="editForm" ref="editForm" label-width="120px">
-					  <el-form-item label="地图地址" prop="sSys_MapService">
+					  <el-form-item prop="sSys_MapService">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.sSys_MapService" :effect="tips.effect" :placement="tips.forms.sSys_MapService.placement">
+	                            <div slot="content" v-html="tips.forms.sSys_MapService.content"></div>
+	                            <span>地图地址<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>地图地址</span>
+	                    </span>
 					    <el-input v-model="editForm.sSys_MapService"></el-input>
 					  </el-form-item>
-					  <el-form-item label="默认经度" prop="lSys_MapLng">
+					  <el-form-item prop="lSys_MapLng">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLng" :effect="tips.effect" :placement="tips.forms.lSys_MapLng.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLng.content"></div>
+	                            <span>默认经度(°)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>默认经度(°)</span>
+	                    </span>
 					    <el-input v-model="editForm.lSys_MapLng"></el-input>
 					  </el-form-item>
-					  <el-form-item label="默认纬度" prop="lSys_MapLat">
-					    <el-input v-model="editForm.lSys_MapLat "></el-input>
+					  <el-form-item prop="lSys_MapLat">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLat" :effect="tips.effect" :placement="tips.forms.lSys_MapLat.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLat.content"></div>
+	                            <span>默认纬度(°)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>默认纬度(°)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapLat"></el-input>
+					  </el-form-item>
+					  
+					  <el-form-item prop="lSys_MapLevel">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLevel" :effect="tips.effect" :placement="tips.forms.lSys_MapLevel.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLevel.content"></div>
+	                            <span>缩放级别<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>缩放级别</span>
+	                    </span>
+					    <el-slider input-size="mini" v-model="editForm.lSys_MapLevel" show-input :min="0" :max="23" :step="1"> </el-slider>
+					  </el-form-item>
+					  <el-form-item prop="lSys_MapIconWidth">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidth" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidth.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidth.content"></div>
+	                            <span>图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconWidth"></el-input>
+					  </el-form-item>
+					  <el-form-item prop="lSys_MapIconHeight">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeight" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeight.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeight.content"></div>
+	                            <span>图标高度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>图标高度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconHeight"></el-input>
 					  </el-form-item>
 				  </el-form>
 				</el-card>

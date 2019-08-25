@@ -261,7 +261,11 @@
 			
 			<el-card class="box-card" style="float: left;" :class="leftClassObject">
 			  <div slot="header" class="clearfix">
-			    <span>用户权限</span>
+                <el-tooltip v-if="tips.forms.title" :effect="tips.effect" :placement="tips.forms.title.placement">
+                    <div slot="content" v-html="tips.forms.title.content"></div>
+                    <span>用户权限<i class="el-icon-question"></i></span>
+                </el-tooltip>
+                <span v-else>用户权限</span>
 			    <el-button style="float: right; padding: 3px 0" type="text" @click="handleChangeWidth">{{userAuthWidthName}}</el-button>
 			  </div>
 			  <el-form size="mini" label-position="top" :model="authForm" :rules="authFormRules" ref="authForm" label-width="120px">
@@ -287,7 +291,7 @@
 			
 			<el-card class="box-card" style="float: right;" :class="rightClassObject">
 			  <div slot="header" class="clearfix">
-			    <span>用户组权限（仅查看）</span>
+			    <span>查看用户已拥有的权限，权限来自用户组</span>
 			  </div>
 			  <el-form size="mini" label-position="top"  label-width="120px">
 				  <el-form-item v-for="(menuAuth, index) in groupAuthOptions" :key="index" >

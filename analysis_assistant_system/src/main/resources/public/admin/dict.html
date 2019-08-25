@@ -35,9 +35,9 @@
 					    <el-select v-model="filters.sDict_DictTypeNO" placeholder="请选择字典分类">
 						    <el-option
 						      v-for="item in dictTypeOptions"
-						      :key="item.value"
-						      :label="item.name"
-						      :value="item.value">
+						      :key="item.sDictType_NO"
+						      :label="item.sDictType_Name"
+						      :value="item.sDictType_NO">
 						    </el-option>
 					    </el-select>
 					</el-form-item>
@@ -127,9 +127,9 @@
 			    <el-select v-model="addForm.sDict_DictTypeNO" placeholder="请选择字典分类">
 				    <el-option
 				      v-for="item in dictTypeOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDictType_NO"
+				      :label="item.sDictType_Name"
+				      :value="item.sDictType_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
@@ -173,9 +173,9 @@
 			    <el-select v-model="editForm.sDict_DictTypeNO" placeholder="请选择字典分类">
 				    <el-option
 				      v-for="item in dictTypeOptions"
-				      :key="item.value"
-				      :label="item.name"
-				      :value="item.value">
+				      :key="item.sDictType_NO"
+				      :label="item.sDictType_Name"
+				      :value="item.sDictType_NO">
 				    </el-option>
 			    </el-select>
 			  </el-form-item>

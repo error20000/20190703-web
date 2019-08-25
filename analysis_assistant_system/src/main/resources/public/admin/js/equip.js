@@ -13,6 +13,7 @@ var bindUrl = baseUrl + "api/equip/bind";
 var delBindUrl = baseUrl + "api/equip/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
 var storeUrl = baseUrl + "api/store/findAll";
+var detailUrl = baseUrl + "api/equip/detail";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -80,6 +81,8 @@ var myvue = new Vue({
 				radarBandOptions: [],
 				solarTypeDictNo: 'EquipSolarEnergyType',
 				solarTypeOptions: [],
+				telemetryModeDictNo: 'EquipTelemetryMode',
+				telemetryModeOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -99,7 +102,10 @@ var myvue = new Vue({
 		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
 			        ],
 			        sEquip_MModel: [
-		                { required: true, message: '请选择厂方型号.', trigger: 'blur' },
+		                { required: true, message: '请输入厂方型号.', trigger: 'blur' },
+			        ],
+			        sEquip_MBrand: [
+		                { required: true, message: '请输入品牌.', trigger: 'blur' },
 			        ]
 				},
 				//edit
@@ -121,8 +127,14 @@ var myvue = new Vue({
 			        ],
 			        sEquip_MModel: [
 		                { required: true, message: '请输入厂方型号.', trigger: 'blur' },
+			        ],
+			        sEquip_MBrand: [
+		                { required: true, message: '请输入品牌.', trigger: 'blur' },
 			        ]
 				},
+				//view
+				viewFormVisible: false,
+				viewForm: {},
 				//bind
 				nfcOptions: [],
 				bindFormVisible: false,
@@ -140,6 +152,9 @@ var myvue = new Vue({
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			formatDateStr: function(date, str){
+				return parent.window.formatDate(date, str);
 			},
 			statusFormatter: function(row){
 				var name = row.sEquip_Status;
@@ -186,17 +201,6 @@ var myvue = new Vue({
 						}
 					});
 				});
-			},
-			storeFormatter: function(row){
-				var name = row.sAid_Station;
-				for (var i = 0; i < this.stationOptions.length; i++) {
-					var item = this.stationOptions[i];
-					if(row.sAid_Station == item.sDict_NO){
-						name = item.sDict_Name;
-						break
-					}
-				}
-				return name;
 			},
 			handleStoreOptions: function(cb){
 				var self = this;
@@ -256,9 +260,50 @@ var myvue = new Vue({
 					});
 				});
 			},
-			
-			handleTypeChange: function(){
-				var type = this.addForm.sEquip_Type ||  this.editForm.sEquip_Type;
+
+			storeFormatter: function(row){
+				var name = "";
+				var name1 = "";
+				var name2 = "";
+				var name3 = "";
+				var name4 = "";
+				for (var i = 0; i < this.storeOptions.length; i++) {
+					var item = this.storeOptions[i];
+					if(row.sEquip_StoreLv1 == item.sStore_ID){
+						name1 = item.sStore_Name;
+						for (var j = 0; j < item.children.length; j++) {
+							var item2 = item.children[j];
+							if(row.sEquip_StoreLv2 == item2.sStore_ID){
+								name2 = item2.sStore_Name;
+								for (var m = 0; m < item2.children.length; m++) {
+									var item3 = item2.children[m];
+									if(row.sEquip_StoreLv3 == item3.sStore_ID){
+										name3 = item3.sStore_Name;
+										for (var n = 0; n < item3.children.length; n++) {
+											var item4 = item3.children[n];
+											if(row.sEquip_StoreLv4 == item4.sStore_ID){
+												name4 = item4.sStore_Name;
+												break;
+											}
+										}
+										break;
+									}
+								}
+								break;
+							}
+						}
+						break;
+					}
+					
+				}
+				name = name + (name1 ? name1 : "");
+				name = name + (name2 ? " / "+name2 : "");
+				name = name + (name3 ? " / "+name3 : "");
+				name = name + (name4 ? " / "+name4 : "");
+				return name;
+			},
+			handleTypeChange: function(sEquip_Type){
+				var type = sEquip_Type ||  this.addForm.sEquip_Type;
 				switch (type) {
 				case this.equipTypeOptions.EquipType_AIS:
 					this.handleAISMMSIXOptions();
@@ -277,6 +322,9 @@ var myvue = new Vue({
 					break;
 				case this.equipTypeOptions.EquipType_SolarEnergy:
 					this.handleSolarTypeOptions();
+					break;
+				case this.equipTypeOptions.EquipType_Telemetry:
+					this.handleTelemetryModeOptions();
 					break;
 					
 				default:
@@ -373,6 +421,18 @@ var myvue = new Vue({
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.solarTypeOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleTelemetryModeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.telemetryModeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.telemetryModeOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -507,16 +567,21 @@ var myvue = new Vue({
 						sEquip_ID: row.sEquip_ID
 				};
 				var self = this;
-				ajaxReq(oneUrl, params, function(res){
-					self.handleResQuery(res, function(){
-						self.editFormVisible = true;
-						self.editForm = Object.assign({}, res.data);
-						self.editForm.store = [];
-						self.editForm.store.push(self.editForm.sEquip_StoreLv1); 
-						self.editForm.store.push(self.editForm.sEquip_StoreLv2); 
-						self.editForm.store.push(self.editForm.sEquip_StoreLv3); 
-						self.editForm.store.push(self.editForm.sEquip_StoreLv4); 
-						console.log(self.editForm);
+				ajaxReq(detailUrl, params, function(res2){
+					self.handleResQuery(res2, function(){
+						self.handleTypeChange(row.sEquip_Type);
+						self.editForm = Object.assign({}, res2.data);
+						ajaxReq(oneUrl, params, function(res){
+							self.handleResQuery(res, function(){
+								self.editFormVisible = true;
+								self.editForm = Object.assign({}, self.editForm, res.data);
+								self.editForm.store = [];
+								self.editForm.store.push(self.editForm.sEquip_StoreLv1); 
+								self.editForm.store.push(self.editForm.sEquip_StoreLv2); 
+								self.editForm.store.push(self.editForm.sEquip_StoreLv3); 
+								self.editForm.store.push(self.editForm.sEquip_StoreLv4); 
+							});
+						});
 					});
 				});
 			},
@@ -606,6 +671,33 @@ var myvue = new Vue({
 						});
 					}
 				});
+			},
+			//detail
+			handleView: function(index, row){
+				var params = {
+						sEquip_ID: row.sEquip_ID
+				};
+				var self = this;
+				ajaxReq(detailUrl, params, function(res2){
+					self.handleResQuery(res2, function(){
+						self.handleTypeChange(row.sEquip_Type);
+						self.viewForm = Object.assign({}, res2.data);
+						ajaxReq(oneUrl, params, function(res){
+							self.handleResQuery(res, function(){
+								self.viewFormVisible = true;
+								self.viewForm = Object.assign({}, self.viewForm, res.data);
+								self.viewForm.store = [];
+								self.viewForm.store.push(self.viewForm.sEquip_StoreLv1); 
+								self.viewForm.store.push(self.viewForm.sEquip_StoreLv2); 
+								self.viewForm.store.push(self.viewForm.sEquip_StoreLv3); 
+								self.viewForm.store.push(self.viewForm.sEquip_StoreLv4); 
+							});
+						});
+					});
+				});
+			},
+			viewClose: function () {
+				this.viewFormVisible = false;
 			},
 			//has auth
 			hasAuth: function(ref){

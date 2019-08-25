@@ -165,9 +165,31 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 
 
 	@TargetDataSource
-	public List<Map<String, Object>> storeTree() {
+	public List<Map<String, Object>> storeTree(String sStore_Level1, String sStore_Level2, String sStore_Level3, String sStore_Level4) {
 		List<StoreType> typeList = typeService.selectAll();
+		if(!Tools.isNullOrEmpty(sStore_Level1)) {
+			typeList = typeList.stream()
+					.filter(e -> e.getsStoreType_ID().equals(sStore_Level1))
+					.collect(Collectors.toList());
+		}
 		List<Store> list = this.selectAll();
+		if(!Tools.isNullOrEmpty(sStore_Level2)) {
+			list = list.stream()
+					.filter(e -> e.getsStore_ID().equals(sStore_Level2) || sStore_Level2.equals(e.getsStore_Level2()))
+					.collect(Collectors.toList());
+		}
+		if(!Tools.isNullOrEmpty(sStore_Level3)) {
+			list = list.stream()
+					.filter(e -> e.getsStore_ID().equals(sStore_Level2)  
+							|| e.getsStore_ID().equals(sStore_Level3) || sStore_Level3.equals(e.getsStore_Level3()))
+					.collect(Collectors.toList());
+		}
+		if(!Tools.isNullOrEmpty(sStore_Level4)) {
+			list = list.stream()
+					.filter(e -> e.getsStore_ID().equals(sStore_Level2) || e.getsStore_ID().equals(sStore_Level3)
+							|| e.getsStore_ID().equals(sStore_Level4) )
+					.collect(Collectors.toList());
+		}
 		
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		Map<String, Object> node = null;

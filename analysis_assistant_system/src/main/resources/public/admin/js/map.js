@@ -312,6 +312,7 @@ var myvue = new Vue({
 				   	  }); */
 					 
 					 ArGis.view.on("click", function(evt){
+						 console.log(evt);
 							ArGis.view.hitTest(evt).then(function(response) {
 							    var result = response.results[0];
 							    if (result) {

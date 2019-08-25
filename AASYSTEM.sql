@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 23/08/2019 23:30:39
+ Date: 26/08/2019 00:19:43
 */
 
 
@@ -75,7 +75,7 @@ INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('605889035314921472', '1', '1', '1', 
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('605833582404960256', '1', '1', '1', '1', 'test', 'test', NULL, NULL, NULL, 'test1', 'test', NULL, TO_DATE('2019-07-30 18:46:21', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604617148949594112', '12', '12', '12', '12', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 10:12:41', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748640124141568', '1', '1', '1', '1', NULL, NULL, NULL, TO_DATE('2019-07-14 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-26 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:55:11', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
-INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748743446626304', '123', '123', '123', '123', NULL, NULL, NULL, TO_DATE('2019-07-17 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-26 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:55:36', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
+INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748743446626304', '123', '123', '24.46', '118.11', 'test', NULL, NULL, TO_DATE('2019-07-17 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-26 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:55:36', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604748877744046080', '1', '1', '1', '1', NULL, NULL, NULL, TO_DATE('2019-07-21 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-07-22 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL, TO_DATE('2019-07-27 18:56:08', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604743636243972096', '11test', '11', '24.46', '118.5', 'test', 'test', NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 18:35:18', 'SYYYY-MM-DD HH24:MI:SS'), 'unusual');
 INSERT INTO "AASYSTEM"."tBase_Aid" VALUES ('604745958013534208', '11', '1', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 18:44:32', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
@@ -396,6 +396,8 @@ INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('214001', '1', '测试透镜形状',
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('206001', '1', '测试雷达应答器编码', NULL, NULL, 'EquipRadarNO', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('207001', '1', '测试雷达应答器波段', NULL, NULL, 'EquipRadarBand', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('210001', '1', '测试太阳能板种类', NULL, NULL, 'EquipSolarEnergyType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('209001', '1', '测试遥控遥测方式', NULL, NULL, 'EquipTelemetryMode', NULL, NULL, '0', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('205001', '1', '测试MMSIX号', NULL, NULL, 'EquipAisMMSIX', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_DictType
@@ -487,7 +489,8 @@ CREATE TABLE "AASYSTEM"."tBase_Equip" (
   "sEquip_MModel" NVARCHAR2(255) ,
   "dEquip_ArrivalDate" DATE ,
   "dEquip_UseDate" DATE ,
-  "dEquip_StoreDate" DATE 
+  "dEquip_StoreDate" DATE ,
+  "sEquip_MBrand" NVARCHAR2(255) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -523,32 +526,33 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_MModel" IS '厂方型号';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_ArrivalDate" IS '到货日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_UseDate" IS '使用日期';
 COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."dEquip_StoreDate" IS '入库日期';
+COMMENT ON COLUMN "AASYSTEM"."tBase_Equip"."sEquip_MBrand" IS '品牌';
 
 -- ----------------------------
 -- Records of tBase_Equip
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614529104644931584', '12111', '612326895639330816', '612328289813397504', NULL, NULL, 'EquipAIS', '1', NULL, NULL, TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '12111', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '2', '2', '2', '2', '2', '2', '2', NULL, NULL, TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), '2', NULL, 'test', '111111', TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('4', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('5', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('6', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('7', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('8', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('9', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('10', '10', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('11', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('12', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('13', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('14', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('15', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('16', '16', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('610646900542013440', '123333123', NULL, NULL, NULL, NULL, 't', '0', NULL, NULL, TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), '123333123', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('606098577566990336', '606098577566990336', '1', '12', '121', '1212', 't', 'rr', '603723565073694720', NULL, TO_DATE('2019-07-31 12:19:21', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611145406239211520', 'reres', '604434599291912192', '604613628313731072', NULL, NULL, 't', '9', NULL, '604748743446626304', TO_DATE('2019-08-14 10:33:39', 'SYYYY-MM-DD HH24:MI:SS'), 're', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611149995122360320', 'wewewe', '604434599291912192', '604613628313731072', NULL, NULL, 't', '1', NULL, NULL, TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), 'wewe', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614596394342154240', 'e2', NULL, NULL, NULL, NULL, 'EquipLamp', '0', NULL, NULL, TO_DATE('2019-08-23 23:06:39', 'SYYYY-MM-DD HH24:MI:SS'), 'e2', NULL, 'test', '222', TO_DATE('2019-08-21 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614595567070216192', 'ee', NULL, NULL, NULL, NULL, 'EquipLamp', '0', NULL, NULL, TO_DATE('2019-08-23 23:03:21', 'SYYYY-MM-DD HH24:MI:SS'), 'ee', NULL, 'test', 'ee', TO_DATE('2019-08-07 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614529104644931584', '12111', '612326895639330816', '612328289813397504', NULL, NULL, 'EquipAIS', '1', NULL, NULL, TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '12111', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('2', '2', '2', '2', '2', '2', '2', '2', NULL, NULL, TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), '2', NULL, 'test', '111111', TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('3', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('4', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('5', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('6', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('7', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('8', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('9', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('10', '10', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('11', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('12', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('13', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('14', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('15', '3', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('16', '16', '3', '3', '3', '3', '3', '3', NULL, NULL, NULL, '3', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('610646900542013440', '123333123', NULL, NULL, NULL, NULL, 't', '0', NULL, NULL, TO_DATE('2019-08-13 01:32:46', 'SYYYY-MM-DD HH24:MI:SS'), '123333123', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('606098577566990336', '606098577566990336', '1', '12', '121', '1212', 't', 'rr', '603723565073694720', NULL, TO_DATE('2019-07-31 12:19:21', 'SYYYY-MM-DD HH24:MI:SS'), '1', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611145406239211520', 'reres', '604434599291912192', '604613628313731072', NULL, NULL, 'EquipLamp', '9', NULL, '604748743446626304', TO_DATE('2019-08-14 10:33:39', 'SYYYY-MM-DD HH24:MI:SS'), 're', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('611149995122360320', 'wewewe', '604434599291912192', '604613628313731072', NULL, NULL, 't', '1', NULL, NULL, TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), 'wewe', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614596394342154240', 'e2', NULL, NULL, NULL, NULL, 'EquipLamp', '0', NULL, NULL, TO_DATE('2019-08-23 23:06:39', 'SYYYY-MM-DD HH24:MI:SS'), 'e2', NULL, 'test', '222', TO_DATE('2019-08-21 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Equip" VALUES ('614595567070216192', 'ee', '1', '12', '121', '1212', 'EquipLamp', '1', NULL, NULL, TO_DATE('2019-08-23 23:03:21', 'SYYYY-MM-DD HH24:MI:SS'), 'ee', NULL, 'test', 'ee', TO_DATE('2019-08-07 00:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('1970-01-01 08:00:00', 'SYYYY-MM-DD HH24:MI:SS'), TO_DATE('2019-08-24 21:56:33', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 
 -- ----------------------------
 -- Table structure for tBase_EquipLog
@@ -562,7 +566,11 @@ CREATE TABLE "AASYSTEM"."tBase_EquipLog" (
   "sELog_EquipID" NVARCHAR2(32) ,
   "sELog_Describe" NVARCHAR2(255) ,
   "sELog_Remarks" NVARCHAR2(255) ,
-  "sELog_IP" NVARCHAR2(255) 
+  "sELog_IP" NVARCHAR2(255) ,
+  "sELog_StoreLv1" NVARCHAR2(32) ,
+  "sELog_StoreLv2" NVARCHAR2(32) ,
+  "sELog_StoreLv3" NVARCHAR2(32) ,
+  "sELog_StoreLv4" NVARCHAR2(32) 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -588,24 +596,29 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_EquipID" IS '器材ID';
 COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_Describe" IS '日志描述';
 COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_Remarks" IS '日志备注';
 COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_IP" IS '操作员IP';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_StoreLv1" IS '一级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_StoreLv2" IS '二级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_StoreLv3" IS '三级仓库';
+COMMENT ON COLUMN "AASYSTEM"."tBase_EquipLog"."sELog_StoreLv4" IS '四级仓库';
 
 -- ----------------------------
 -- Records of tBase_EquipLog
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('614529104644931585', '1', TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '1', '614529104644931584', '器材入库', NULL, '127.0.0.1');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('1', NULL, TO_DATE('2019-08-01 15:59:27', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '1000', '10100101001', NULL);
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('2', NULL, TO_DATE('2019-08-02 16:01:41', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '11111', '11111111111', NULL);
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('3', NULL, TO_DATE('2019-08-03 16:02:03', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '222222', '222222222222', NULL);
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611154333303570432', '1', TO_DATE('2019-08-14 11:09:07', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', NULL, '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611256305071423488', '9', TO_DATE('2019-08-14 17:54:19', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材使用中', NULL, '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611145683755335680', '1', TO_DATE('2019-08-14 10:34:45', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'of', '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611147685268815872', '1', TO_DATE('2019-08-14 10:42:42', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'you', '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611148412338831360', '1', TO_DATE('2019-08-14 10:45:36', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'uu', '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149096329150464', '1', TO_DATE('2019-08-14 10:48:19', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', NULL, '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149879342792704', '1', TO_DATE('2019-08-14 10:51:25', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', '器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库', '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149995122360321', '1', TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611149995122360320', '器材入库', NULL, '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611152641623326720', '2', TO_DATE('2019-08-14 11:02:24', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材出库', 'GBM', '192.168.106.67');
-INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611163237706104832', '4', TO_DATE('2019-08-14 11:44:30', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材运输中', 'good', '192.168.106.67');
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('614529104644931585', '1', TO_DATE('2019-08-23 18:39:15', 'SYYYY-MM-DD HH24:MI:SS'), '1', '614529104644931584', '器材入库', NULL, '127.0.0.1', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('1', NULL, TO_DATE('2019-08-01 15:59:27', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '1000', '10100101001', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('2', NULL, TO_DATE('2019-08-02 16:01:41', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '11111', '11111111111', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('3', NULL, TO_DATE('2019-08-03 16:02:03', 'SYYYY-MM-DD HH24:MI:SS'), NULL, '10', '222222', '222222222222', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611154333303570432', '1', TO_DATE('2019-08-14 11:09:07', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', NULL, '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611256305071423488', '9', TO_DATE('2019-08-14 17:54:19', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材使用中', NULL, '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611145683755335680', '1', TO_DATE('2019-08-14 10:34:45', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'of', '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611147685268815872', '1', TO_DATE('2019-08-14 10:42:42', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'you', '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611148412338831360', '1', TO_DATE('2019-08-14 10:45:36', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', 'uu', '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149096329150464', '1', TO_DATE('2019-08-14 10:48:19', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', NULL, '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149879342792704', '1', TO_DATE('2019-08-14 10:51:25', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材入库', '器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库器材入库', '192.168.106.67', '1', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611149995122360321', '1', TO_DATE('2019-08-14 10:51:53', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611149995122360320', '器材入库', NULL, '192.168.106.67', '1', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611152641623326720', '2', TO_DATE('2019-08-14 11:02:24', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材出库', 'GBM', '192.168.106.67', '1', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('611163237706104832', '4', TO_DATE('2019-08-14 11:44:30', 'SYYYY-MM-DD HH24:MI:SS'), '1', '611145406239211520', '器材运输中', 'good', '192.168.106.67', NULL, NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_EquipLog" VALUES ('614941143708205056', '1', TO_DATE('2019-08-24 21:56:33', 'SYYYY-MM-DD HH24:MI:SS'), '1', '614595567070216192', '器材入库', NULL, '127.0.0.1', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tBase_Group
@@ -743,7 +756,7 @@ INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('200', '仓库管理', NULL, 'store.
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('300', '航标管理', NULL, NULL, NULL, '1', '30');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('700', '器材管理', NULL, 'equip.html', NULL, '1', '40');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('400', '地图展示', NULL, 'map.html', NULL, '1', '50');
-INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('500', '统计分析', NULL, NULL, NULL, '1', '60');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('500', '统计分析', NULL, 'statis.html', NULL, '1', '60');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('600', '系统管理', NULL, NULL, NULL, '1', '70');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('610', '数据字典', '600', NULL, NULL, '1', '80');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('611', '字典分类', '610', 'dictType.html', NULL, '1', '90');
@@ -757,6 +770,10 @@ INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('650', '系统设置', '600', 'sys.h
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('330', '航标管理', '300', 'aid.html', NULL, '1', '33');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('320', '航标种类的地图图标', '300', 'aidTypeMapIcon.html', NULL, '1', '31');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('310', '航标的地图图标', '300', 'aidMapIcon.html', NULL, '1', '32');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('510', '首页', '500', 'statis.html', NULL, '1', '61');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('520', '器材统计分析', '500', 'statisEquip.html', NULL, '1', '62');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('530', '航标统计分析', '500', 'statisAid.html', NULL, '1', '63');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('540', '仓库统计分析', '500', 'statisStore.html', NULL, '1', '64');
 
 -- ----------------------------
 -- Table structure for tBase_MenuFun
@@ -1122,9 +1139,9 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_StoreType"."sStoreType_MapIcon" IS '地图�
 -- ----------------------------
 -- Records of tBase_StoreType
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('612326895639330816', '11', '11', '11', '11', 'test', '11', '1');
-INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('604434599291912192', '12', '123', '123', '123', NULL, NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('1', '1', NULL, '1', '1', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('612326895639330816', '11', '11', '24.47', '118.16', 'test', '11', '1');
+INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('604434599291912192', '12', '123', '24.48', '118.17', 'test', NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('1', '1', NULL, '24.49', '118.18', NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_StoreType" VALUES ('607149452645367808', 'rwrwr', 'rrr', '24.46', '118.15', 'test', '0', NULL);
 
 -- ----------------------------
@@ -1380,6 +1397,18 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612661346592358400', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612312764043493376', TO_DATE('2019-08-17 15:52:19', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/dict/update', '更新数据字典', '53', 'update', '{"sDict_ID":["612311872565149696"],"sDict_NO":["12"],"sDict_Name":["12"],"dDict_CreateDate":["1566028126000"],"sDict_UserID":["1"],"sDict_DictTypeNO":["AidType"],"dDict_UpdateDate":[""],"sDict_UpdateUserID":[""],"lDict_SysFlag":["0"],"sDict_Describe":["12', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.DictController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612407490113437696', TO_DATE('2019-08-17 22:08:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '17', 'login', '{"username":["test"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"606138587578105856","sUser_UserName":"test","sUser_PassWord":"","sUser_Nick":"test","lUser_StatusFlag":1,"sUser_GroupID":"604790269384065024","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_Th', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('612409486266597376', TO_DATE('2019-08-17 22:16:39', 'SYYYY-MM-DD HH24:MI:SS'), 'other', NULL, '127.0.0.1', NULL, '/api/user/logout', '退出登录', '1', 'logout', NULL, NULL, NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614862960497524736', TO_DATE('2019-08-24 16:45:53', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '174', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614931052502188032', TO_DATE('2019-08-24 21:16:27', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '16', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614941144207327232', TO_DATE('2019-08-24 21:56:33', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/equip/update', '更新器材', '147', 'update', '{"sEquip_ID":["614595567070216192"],"sLamp_NO":["ee"],"sLamp_Brand":["ee"],"sLamp_Type":["1"],"lLamp_InputVolt":["12"],"lLamp_Watt":["12"],"sLamp_Lens":["1"],"lLamp_TelemetryFlag":["1"],"sLamp_Telemetry":["1"],"sEquip_NO":["ee"],"sEquip_Name":["ee"],"sEqu', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615125065343696896', TO_DATE('2019-08-25 10:07:24', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '26', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"],"lSys_MapLevel":["11"],"lSys_MapIconWidth":["20"],"lSys_MapIconHeight":["20"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615130950656851968', TO_DATE('2019-08-25 10:30:47', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '15', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615209641550282752', TO_DATE('2019-08-25 15:43:28', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '33', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614826722348498944', TO_DATE('2019-08-24 14:21:53', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '13', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614898747033255936', TO_DATE('2019-08-24 19:08:05', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '17', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615124666536689664', TO_DATE('2019-08-25 10:05:48', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '72', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"],"lSys_MapLevel":["23"],"lSys_MapIconWidth":["20"],"lSys_MapIconHeight":["20"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615124866206531584', TO_DATE('2019-08-25 10:06:36', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '33', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"],"lSys_MapLevel":["1"],"lSys_MapIconWidth":["20"],"lSys_MapIconHeight":["20"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614742989222182912', TO_DATE('2019-08-24 08:49:10', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '18', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615172990409113600', TO_DATE('2019-08-25 13:17:50', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '20', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('610647002140639232', TO_DATE('2019-08-13 01:33:10', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/equip/update', '更新器材', '712', 'update', '{"sEquip_ID":["610646900542013440"],"sEquip_NO":["123333123"],"sEquip_Name":["123333123"],"sEquip_StoreLv1":[" "],"sEquip_StoreLv2":[" "],"sEquip_StoreLv3":[" "],"sEquip_StoreLv4":[" "],"sEquip_Type":["t"],"sEquip_Status":["0"],"sEquip_NfcID":[""],"sEquip', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('607193531026505728', TO_DATE('2019-08-03 12:50:18', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/aid/updateUser', '更新航标分配的用户', '149', 'updateUser', '{"user":["1,606138587578105856,22"],"sAid_ID":["604617148949594112"]}', '{"msg":"成功 ","code":1,"data":3}', NULL, 'com.jian.system.controller.AidController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613398323432259584', TO_DATE('2019-08-20 15:45:56', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '115', 'appLogin', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
@@ -1401,10 +1430,16 @@ INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613044233137291264', TO_DATE('
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613328663466737664', TO_DATE('2019-08-20 11:09:08', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '192.168.106.67', NULL, '/api/msg/app/read', 'app消息已读', '159', 'appRead', '{"sMsg_ID":["4"]}', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.MessageController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('613397148909699072', TO_DATE('2019-08-20 15:41:16', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '192.168.106.67', NULL, '/api/user/app/login', 'app用户登录', '3165', 'appLogin', '{"username":["admin"]}', NULL, 'Redis command timed out; nested exception is io.lettuce.core.RedisCommandTimeoutException: Command timed out', 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614581748260405248', TO_DATE('2019-08-23 22:08:27', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/equip/update', '更新器材', '53', 'update', '{"sEquip_ID":["2"],"sEquip_NO":["2"],"sEquip_Name":["2"],"sEquip_StoreLv1":["2"],"sEquip_StoreLv2":["2"],"sEquip_StoreLv3":["2"],"sEquip_StoreLv4":["2"],"sEquip_Type":["2"],"sEquip_Status":["2"],"sEquip_NfcID":[""],"sEquip_AidID":[""],"dEquip_CreateDate":', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614961305354240000', TO_DATE('2019-08-24 23:16:40', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '31', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614573274117963776', TO_DATE('2019-08-23 21:34:46', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '179', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614595444298743808', TO_DATE('2019-08-23 23:02:52', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '89', 'add', '{"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sLamp_Telemetry":["1"],"lLamp_InputVolt":["wew"],"lLamp_Watt":["rwer"],"sLamp_Lens":["1"],"sLamp_Type":["1"],"dEquip_ArrivalDate":["1565107200000"],"sEquip_MModel":["ee"],"sEquip_Manufacturer":["te', NULL, 'For input string: "wew"', 'com.jian.system.controller.EquipController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614596394417651712', TO_DATE('2019-08-23 23:06:39', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '51', 'add', '{"sEquip_NO":["e2"],"sEquip_Name":["e2"],"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sEquip_Manufacturer":["test"],"sEquip_MModel":["222"],"dEquip_ArrivalDate":["1566316800000"],"sLamp_NO":["e2"],"sLamp_Brand":["e2"],"sLamp_Type":["1"],"sLamp', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615099256130240512', TO_DATE('2019-08-25 08:24:50', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '169', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615124769234223104', TO_DATE('2019-08-25 10:06:13', 'SYYYY-MM-DD HH24:MI:SS'), 'update', NULL, '127.0.0.1', NULL, '/api/sys/update', '更新系统设置', '25', 'update', '{"sSys_ID":["1"],"sSys_MapService":["http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer"],"lSys_MapLng":["118.1"],"lSys_MapLat":["24.46"],"lSys_MapLevel":["0"],"lSys_MapIconWidth":["20"],"lSys_MapIconHeight":["20"]}', '{"msg":"成功 ","code":1}', NULL, 'com.jian.system.controller.SystemController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615251868691464192', TO_DATE('2019-08-25 18:31:16', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '166', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615282515531268096', TO_DATE('2019-08-25 20:33:03', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '107', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('614595567812608000', TO_DATE('2019-08-23 23:03:22', 'SYYYY-MM-DD HH24:MI:SS'), 'add', NULL, '127.0.0.1', NULL, '/api/equip/add', '新增器材', '207', 'add', '{"sEquip_Type":["EquipLamp"],"lLamp_TelemetryFlag":["1"],"sLamp_Telemetry":["1"],"lLamp_InputVolt":["12"],"lLamp_Watt":["12"],"sLamp_Lens":["1"],"sLamp_Type":["1"],"dEquip_ArrivalDate":["1565107200000"],"sEquip_MModel":["ee"],"sEquip_Manufacturer":["test"', '{"msg":"成功 ","code":1,"data":1}', NULL, 'com.jian.system.controller.EquipController');
+INSERT INTO "AASYSTEM"."tBase_SystemLog" VALUES ('615312884875919360', TO_DATE('2019-08-25 22:33:43', 'SYYYY-MM-DD HH24:MI:SS'), 'login', NULL, '127.0.0.1', NULL, '/api/user/login', '用户登录', '23', 'login', '{"username":["admin"]}', '{"msg":"成功 ","code":1,"data":{"user":{"sUser_ID":"1","sUser_UserName":"admin","sUser_PassWord":"","sUser_Nick":"admin","lUser_StatusFlag":1,"sUser_GroupID":"1","sUser_QQ":null,"sUser_Email":null,"sUser_Phone":null,"sUser_ThirdID":null,"dUser_CreateDate":n', NULL, 'com.jian.system.controller.UserController');
 
 -- ----------------------------
 -- Table structure for tBase_ThirdUser
@@ -1708,7 +1743,7 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_Lamp"."sLamp_Telemetry" IS '遥测接口类
 -- Records of tEquip_Lamp
 -- ----------------------------
 INSERT INTO "AASYSTEM"."tEquip_Lamp" VALUES ('614596394342154240', 'e2', 'e2', '1', '22', '22', '1', '1', '1');
-INSERT INTO "AASYSTEM"."tEquip_Lamp" VALUES ('614595567070216192', NULL, NULL, '1', '12', '12', '1', '1', '1');
+INSERT INTO "AASYSTEM"."tEquip_Lamp" VALUES ('614595567070216192', 'ee', 'ee', '1', '12', '12', '1', '1', '1');
 
 -- ----------------------------
 -- Table structure for tEquip_Radar
@@ -1772,7 +1807,7 @@ COMMENT ON COLUMN "AASYSTEM"."tEquip_SolarEnergy"."sSolar_Connect" IS '连接方
 DROP TABLE "AASYSTEM"."tEquip_SpareLamp";
 CREATE TABLE "AASYSTEM"."tEquip_SpareLamp" (
   "sEquip_ID" NVARCHAR2(32) NOT NULL ,
-  "lLamp_Watt" NUMBER 
+  "lSLamp_Watt" NUMBER 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -1787,7 +1822,7 @@ NOCACHE
 DISABLE ROW MOVEMENT
 ;
 COMMENT ON COLUMN "AASYSTEM"."tEquip_SpareLamp"."sEquip_ID" IS '器材ID';
-COMMENT ON COLUMN "AASYSTEM"."tEquip_SpareLamp"."lLamp_Watt" IS '功率（W）';
+COMMENT ON COLUMN "AASYSTEM"."tEquip_SpareLamp"."lSLamp_Watt" IS '功率（W）';
 
 -- ----------------------------
 -- Table structure for tEquip_Telemetry

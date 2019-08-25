@@ -12,7 +12,7 @@ public class EquipViceLamp extends Base<EquipViceLamp> {
 	@Excel(name="器材ID", sort=0, length="32", isNull=0 )
 	private String sEquip_ID;
 	@Excel(name="功率（W）", sort=0, length="", isNull=1 )
-	private float lLamp_Watt;
+	private float lVLamp_Watt;
 
 
 	
@@ -22,11 +22,11 @@ public class EquipViceLamp extends Base<EquipViceLamp> {
 	public void setsEquip_ID(String sEquip_ID) {
 		this.sEquip_ID = sEquip_ID;
 	}
-	public float getlLamp_Watt() {
-		return lLamp_Watt;
+	public float getlVLamp_Watt() {
+		return lVLamp_Watt;
 	}
-	public void setlLamp_Watt(float lLamp_Watt) {
-		this.lLamp_Watt = lLamp_Watt;
+	public void setlVLamp_Watt(float lVLamp_Watt) {
+		this.lVLamp_Watt = lVLamp_Watt;
 	}
 	
 	

@@ -125,7 +125,7 @@ var myvue = new Vue({
 						self.dictTypeOptions = res.data;
 						for (var i = 0; i < self.dictTypeOptions.length; i++) {
 							for (var j = i; j < self.dictTypeOptions.length; j++) {
-								if(self.dictTypeOptions[i] > self.dictTypeOptions[j]){
+								if(self.dictTypeOptions[i].sDictType_Name > self.dictTypeOptions[j].sDictType_Name){
 									var temp = self.dictTypeOptions[i];
 									self.dictTypeOptions[i] = self.dictTypeOptions[j];
 									self.dictTypeOptions[j] = temp;

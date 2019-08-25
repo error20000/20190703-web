@@ -156,6 +156,18 @@ var myvue = new Vue({
 				},
 				aidFormRules: {},
 				
+				//Tips
+				tips: {
+				    name: 'tips',
+				    effect: 'dark',
+				    forms: {
+				    	title: {
+				            content: "说明：<br/><br/>1、超级管理员默认所有权限，可不用分配。<br/><br/>2、选中（蓝色）代表授予该用户该权限，未选中代表不授予该用户该权限。",
+				            placement: "right"
+				        }
+				    }
+				},
+				
 				user: ''
 			}
 		},

@@ -202,6 +202,59 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		List<EquipLog> list = service.history(sEquip_ID);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+
+	@RequestMapping("/detail")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材详情")
+	public String detail(HttpServletRequest req) {
+		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
+		Object res = service.detail(sEquip_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	//TODO -------------------------------------------------------------------------------- 统计接口
+
+
+	@RequestMapping("/distribution")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材区域分布")
+	public String distribution(HttpServletRequest req) {
+		String used = Tools.getReqParamSafe(req, "used");
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		Map<String, Object> res = service.distribution(sEquip_Type, used);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/status")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材状态")
+	public String status(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		List<Map<String, Object>> res = service.status(sEquip_Type, sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/inoutStore")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材出入库")
+	public String inoutStore(HttpServletRequest req) {
+		String sEquip_StoreLv1 = Tools.getReqParamSafe(req, "sEquip_StoreLv1");
+		String sEquip_StoreLv2 = Tools.getReqParamSafe(req, "sEquip_StoreLv2");
+		String sEquip_StoreLv3 = Tools.getReqParamSafe(req, "sEquip_StoreLv3");
+		String sEquip_StoreLv4 = Tools.getReqParamSafe(req, "sEquip_StoreLv4");
+		List<Map<String, Object>> res = service.inoutStore(sEquip_StoreLv1, sEquip_StoreLv2, sEquip_StoreLv3, sEquip_StoreLv4);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

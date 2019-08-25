@@ -21,6 +21,28 @@ function ajaxReq(url, param, callback, cp){
 		   }
 		});
 };
+function ajaxReqSync(url, param, callback, cp){
+	$.ajax({
+		   dataType: "json",
+		   type: "POST",
+		   url: url,
+		   data: param,
+		   async: false,
+		   headers: {
+		        token: loginToken
+		    },
+		   success: function(data){
+			   	if(data.code == -203 || data.code == -111){ // token 超时
+			   		parent.window.location.href = "login.html";
+			   	}
+				if (typeof callback === "function") {
+					callback(data, cp);
+				}
+		   },
+		   error: function(data){
+		   }
+		});
+};
 
 function getLoginToken(){
   	let token = localStorage.getItem('loginUser');
@@ -29,7 +51,32 @@ function getLoginToken(){
 		return;
 	}
 	loginToken = token;
-}
+};
+
+function launchIntoFullscreen(element) {
+    if(element.requestFullscreen){
+        element.requestFullscreen();
+    }
+    else if(element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    }
+    else if(element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    }
+    else if(element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
+};
+
+function exitFullscreen() {
+    if(document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if(document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if(document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    }
+};
 
 function formatDate(d, s){
 	if(!d){

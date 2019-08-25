@@ -33,6 +33,34 @@ var myvue = new Vue({
 				editFormRules: {
 				},
 				
+				//Tips
+				tips: {
+				    name: 'tips',
+				    effect: 'dark',
+				    forms: {
+				    	sSys_MapService: {
+				            content: "说明：<br/><br/>1、该项可以修改地图的底图。",
+				            placement: "right"
+				        },
+				        lSys_MapLng: {
+				            content: "说明：<br/><br/>1、当定位失败或者没有定位时，地图以该经度为中心的经度显示地图。<br/><br/>2、单位：度。",
+				            placement: "right"
+				        },
+				        lSys_MapLat: {
+				            content: "说明：<br/><br/>1、当定位失败或者没有定位时，地图以该纬度为中心的纬度显示地图。<br/><br/>2、单位：度。",
+				            placement: "right"
+				        },
+				        lSys_MapIconWidth: {
+				            content: "说明：<br/><br/>1、设置图标在地图上显示的宽度。<br/><br/>2、单位：像素。",
+				            placement: "right"
+				        },
+				        lSys_MapIconHeight: {
+				            content: "说明：<br/><br/>1、设置图标在地图上显示的高度。<br/><br/>2、单位：像素。",
+				            placement: "right"
+				        }
+				    }
+				},
+				
 				user: ''
 			}
 		},

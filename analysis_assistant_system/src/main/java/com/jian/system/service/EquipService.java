@@ -91,6 +91,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			log.setdELog_CreateDate(new Date());
 			log.setsELog_EquipID(obj.getsEquip_ID());
 			log.setsELog_IP(ip);
+			log.setsELog_StoreLv1(obj.getsEquip_StoreLv1());
+			log.setsELog_StoreLv2(obj.getsEquip_StoreLv2());
+			log.setsELog_StoreLv3(obj.getsEquip_StoreLv3());
+			log.setsELog_StoreLv4(obj.getsEquip_StoreLv4());
 			if(user != null) {
 				log.setsELog_UserID(user.getsUser_ID());
 			}
@@ -151,7 +155,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_SpareLamp:
 			EquipSpareLamp spare = new EquipSpareLamp();
 			spare.setsEquip_ID(obj.getsEquip_ID());
-			spare.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			spare.setlSLamp_Watt(Float.parseFloat(request.getParameter("lSLamp_Watt")));
 			spareLampService.insert(spare, user);
 			break;
 		case Constant.EquipType_Telemetry:
@@ -167,7 +171,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_ViceLamp:
 			EquipViceLamp vice = new EquipViceLamp();
 			vice.setsEquip_ID(obj.getsEquip_ID());
-			vice.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			vice.setlVLamp_Watt(Float.parseFloat(request.getParameter("lVLamp_Watt")));
 			viceLampService.insert(vice, user);
 			break;
 
@@ -217,6 +221,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			log.setdELog_CreateDate(new Date());
 			log.setsELog_EquipID(old.getsEquip_ID());
 			log.setsELog_IP(ip);
+			log.setsELog_StoreLv1(String.valueOf(value.get("sEquip_StoreLv1")) );
+			log.setsELog_StoreLv2(String.valueOf(value.get("sEquip_StoreLv2")) );
+			log.setsELog_StoreLv3(String.valueOf(value.get("sEquip_StoreLv3")) );
+			log.setsELog_StoreLv4(String.valueOf(value.get("sEquip_StoreLv4")) );
 			if(user != null) {
 				log.setsELog_UserID(user.getsUser_ID());
 			}
@@ -278,7 +286,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_SpareLamp:
 			EquipSpareLamp spare = new EquipSpareLamp();
 			spare.setsEquip_ID(old.getsEquip_ID());
-			spare.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			spare.setlSLamp_Watt(Float.parseFloat(request.getParameter("lSLamp_Watt")));
 			spareLampService.update(spare, user);
 			break;
 		case Constant.EquipType_Telemetry:
@@ -294,7 +302,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_ViceLamp:
 			EquipViceLamp vice = new EquipViceLamp();
 			vice.setsEquip_ID(old.getsEquip_ID());
-			vice.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			vice.setlVLamp_Watt(Float.parseFloat(request.getParameter("lVLamp_Watt")));
 			viceLampService.update(vice, user);
 			break;
 
@@ -398,6 +406,56 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 	
 	@TargetDataSource
+	public Object detail(String sEquip_ID){
+		if(Tools.isNullOrEmpty(sEquip_ID)) {
+			throw new ServiceException(Tips.ERROR106, "sEquip_ID");
+		}
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("sEquip_ID", sEquip_ID);
+		String tableName =  getTableName();
+		Equip test = baseMapper.selectOne(tableName, condition);
+		if(test == null) {
+			throw new ServiceException(Tips.ERROR106, "器材");
+		}
+		if(Tools.isNullOrEmpty(test.getsEquip_Type())) {
+			throw new ServiceException(Tips.ERROR106, "器材分类");
+		}
+		//查询详情
+		Object detail = null;
+		Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", test.getsEquip_ID()).build();
+		switch (test.getsEquip_Type()) {
+		case Constant.EquipType_AIS:
+			detail = aisService.selectOne(condetail);
+			break;
+		case Constant.EquipType_Battery:
+			detail = batteryService.selectOne(condetail);
+			break;
+		case Constant.EquipType_Lamp:
+			detail = lampService.selectOne(condetail);
+			break;
+		case Constant.EquipType_Radar:
+			detail = radarService.selectOne(condetail);
+			break;
+		case Constant.EquipType_SolarEnergy:
+			detail = solarEnergyService.selectOne(condetail);
+			break;
+		case Constant.EquipType_SpareLamp:
+			detail = spareLampService.selectOne(condetail);
+			break;
+		case Constant.EquipType_Telemetry:
+			detail = telemetryService.selectOne(condetail);
+			break;
+		case Constant.EquipType_ViceLamp:
+			detail = viceLampService.selectOne(condetail);
+			break;
+
+		default:
+			break;
+		}
+		return detail;
+	}
+	
+	@TargetDataSource
 	public int isStore(String sStore_ID) {
 		return baseMapper.isStore(sStore_ID);
 	}
@@ -476,7 +534,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
 		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
-		log.setsELog_IP(ip);
+		log.setsELog_IP(ip);			
+		log.setsELog_StoreLv1(equip.getsEquip_StoreLv1());
+		log.setsELog_StoreLv2(equip.getsEquip_StoreLv2());
+		log.setsELog_StoreLv3(equip.getsEquip_StoreLv3());
+		log.setsELog_StoreLv4(equip.getsEquip_StoreLv4());
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
@@ -521,6 +583,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setdELog_CreateDate(new Date());
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
+		log.setsELog_StoreLv1(test.getsEquip_StoreLv1());
+		log.setsELog_StoreLv2(test.getsEquip_StoreLv2());
+		log.setsELog_StoreLv3(test.getsEquip_StoreLv3());
+		log.setsELog_StoreLv4(test.getsEquip_StoreLv4());
 		if(user != null) {
 			log.setsELog_UserID(user.getsUser_ID());
 		}
@@ -922,5 +988,50 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		messageService.batchInsert(mlist, user);
 		//更新
 		return baseMapper.update(tableName, values, condition);
+	}
+	
+	//TODO ---------------------------------------------------------------------------------统计
+	
+	/**
+	 * 器材区域分布
+	 */
+	@TargetDataSource
+	public Map<String, Object> distribution(String sEquip_Type, String used){
+		
+		//未使用器材
+		List<Map<String, Object>> list1 = new ArrayList<>();
+		if(Tools.isNullOrEmpty(used) || "2".equals(used)) {
+			list1 = baseMapper.statisUnused(sEquip_Type);
+		}
+
+		//正使用器材
+		List<Map<String, Object>> list2 = new ArrayList<>();
+		if(Tools.isNullOrEmpty(used) || "1".equals(used)) {
+			list2 = baseMapper.statisUsed(sEquip_Type);
+		}
+		
+		return MapTools.custom().put("unused", list1).put("used", list2).build();
+	}
+	
+	/**
+	 * 器材状态
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> status(String sEquip_Type, String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.statisStatus(sEquip_Type, sAid_Station);
+		
+		return list;
+	}
+	
+	/**
+	 * 器材出入库
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> inoutStore(String sEquip_StoreLv1, String sEquip_StoreLv2, String sEquip_StoreLv3, String sEquip_StoreLv4){
+		
+		List<Map<String, Object>> list = baseMapper.inoutStore(sEquip_StoreLv1, sEquip_StoreLv2, sEquip_StoreLv3, sEquip_StoreLv4);
+		
+		return list;
 	}
 }

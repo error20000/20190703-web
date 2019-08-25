@@ -10,7 +10,7 @@ new Vue({
     el: '#app',
     data: function(){
         return {
-          sysName: "后台管理",
+          sysName: "航标作业智能分析与辅助系统",
           sysUserName: "",
           menusOrigin: [],
           menus: [],

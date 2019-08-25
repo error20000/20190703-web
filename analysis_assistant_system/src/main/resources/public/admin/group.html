@@ -110,7 +110,16 @@
 		</el-dialog>
 		
 		<!-- auth -->
-		<el-dialog title="授权" :visible.sync="authFormVisible" :close-on-click-modal="false" >
+		<el-dialog :visible.sync="authFormVisible" :close-on-click-modal="false" >
+			
+	  		<span slot="title">
+                <el-tooltip v-if="tips.forms.title" :effect="tips.effect" :placement="tips.forms.title.placement">
+                    <div slot="content" v-html="tips.forms.title.content"></div>
+                    <span>授权<i class="el-icon-question"></i></span>
+                </el-tooltip>
+                <span v-else>授权</span>
+            </span>
+			
 			<el-form :loading="authFormLoading"  size="mini" label-position="top" :model="authForm" :rules="authFormRules" ref="authForm" label-width="120px">
 			  <el-form-item v-for="(menuAuth, index) in menuAuthOptions" :key="index" >
 			  	<div class="auth_label" slot="label" style="label">
