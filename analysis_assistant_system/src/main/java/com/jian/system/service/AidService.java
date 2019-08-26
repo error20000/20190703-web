@@ -184,6 +184,17 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	public List<Map<String, Object>> aidMap() {
 		return baseMapper.aidMap();
 	}
+
 	
+	//TODO ---------------------------------------------------------------------------------统计
+	
+	
+	@TargetDataSource
+	public List<Map<String, Object>> statis(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.statis(sAid_Station);
+		
+		return list;
+	}
 	
 }

@@ -255,6 +255,50 @@ public class EquipController extends BaseController<Equip, EquipService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
+	@RequestMapping("/brand")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材品牌、型号")
+	public String brand(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.brand(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/brandDump")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材品牌、型号的报废")
+	public String brandDump(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.brandDump(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/brandUnusual")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材品牌、型号的异常")
+	public String brandUnusual(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.brandUnusual(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/brandRepair")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材品牌、型号的维修")
+	public String brandRepair(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.brandRepair(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

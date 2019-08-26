@@ -133,7 +133,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" 	left join \"tBase_Dict\" e on b.\"sEquip_Icon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'EquipIcon' ",
 		"   where a.\"sAidEquip_AidID\" = #{sAid_ID} " 
 	})
-	public List<Map<String, Object>> equip(String sAid_ID);
+	public List<Map<String, Object>> equip(@Param("sAid_ID") String sAid_ID);
 	
 
 
@@ -152,5 +152,20 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" 	left join \"tBase_Dict\" g on a.\"sAid_Icon\" = g.\"sDict_NO\" and g.\"sDict_DictTypeNO\" = 'AidIcon' ",
 	})
 	public List<Map<String, Object>> aidMap();
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.\"sAid_Type\", count(1) \"sAid_Num\", b.\"sDict_Name\" \"sAid_TypeName\" ",
+		" from \"tBase_Aid\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sAid_Type\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'AidType' ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and a.\"sAid_Station\" = #{sAid_Station} ",	
+    	"   </if>",
+		" group by a.\"sAid_Type\", b.\"sDict_Name\" ",
+		"</script>" 
+	})
+	public List<Map<String, Object>> statis(@Param("sAid_Station") String sAid_Station);
 	
 }

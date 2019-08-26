@@ -6,6 +6,10 @@ var equipDistributionUrl = baseUrl + "api/equip/distribution";
 
 var equipStatusUrl = baseUrl + "api/equip/status";
 var equipInoutStoreUrl = baseUrl + "api/equip/inoutStore";
+var equipBrandUrl = baseUrl + "api/equip/brand";
+var equipBrandDumpUrl = baseUrl + "api/equip/brandDump";
+var equipBrandUnusualUrl = baseUrl + "api/equip/brandUnusual";
+var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -50,6 +54,15 @@ var myvue = new Vue({
 					sEquip_StoreLv1: ''
 				},
 				filtersBrand: {
+					sAid_Station: ''
+				},
+				filtersBrandDump: {
+					sAid_Station: ''
+				},
+				filtersBrandUnusual: {
+					sAid_Station: ''
+				},
+				filtersBrandRepair: {
 					sAid_Station: ''
 				},
 				
@@ -465,7 +478,6 @@ var myvue = new Vue({
 				var params = filter || {};
 				ajaxReqSync(equipInoutStoreUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						console.log(res);
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
@@ -483,7 +495,6 @@ var myvue = new Vue({
 								data[index].outStore = node.sELog_Type == '2' ? data[index].outStore + 1 : data[index].outStore;
 							}
 						}
-						console.log(data);
 						for (var i = 0; i < data.length; i++) {
 							xAxisData.push(data[i].name);
 							inData.push(data[i].inStore);
@@ -571,35 +582,43 @@ var myvue = new Vue({
 		        var data = [];
 				var legendData = [];
 				var xAxisData = [];
-				var inData = [];
-				var outData = [];
+				var yData = [];
 		        var self = this;
 				var params = filter || {};
-				ajaxReqSync(equipInoutStoreUrl, params, function(res){
+				ajaxReqSync(equipBrandUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						console.log(res);
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							var key = node.sDict_Name;
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
 							if(!hash[key]){
 								var index = data.push({
-				                       name: node.sDict_Name,
-				                       inStore: node.sELog_Type == '1' ? 1 : 0,
-				                       outStore: node.sELog_Type == '2' ? 1 : 0
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
 					            });
 								hash[key] = index;
 							}else{
 								var index = hash[key] - 1;
-								data[index].inStore = node.sELog_Type == '1' ? data[index].inStore + 1 : data[index].inStore;
-								data[index].outStore = node.sELog_Type == '2' ? data[index].outStore + 1 : data[index].outStore;
+								data[index].value = data[index].value + 1;
 							}
 						}
-						console.log(data);
+						var hash = {};
+						var temp = {};
 						for (var i = 0; i < data.length; i++) {
-							xAxisData.push(data[i].name);
-							inData.push(data[i].inStore);
-							outData.push(data[i].outStore);
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
 						}
 					});
 				});
@@ -607,12 +626,16 @@ var myvue = new Vue({
 				var option = {
 					    tooltip: {
 					        trigger: 'axis',
-					        axisPointer: {
-					            type: 'cross',
-					            crossStyle: {
-					                color: '#999'
-					            }
-					        }
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
 					    },
 					    toolbox: {
 					        feature: {
@@ -621,9 +644,6 @@ var myvue = new Vue({
 					            restore: {show: true},
 					            saveAsImage: {show: true}
 					        }
-					    },
-					    legend: {
-					        data: ['入库', '出库']
 					    },
 					    xAxis: [
 					        {
@@ -646,14 +666,9 @@ var myvue = new Vue({
 					    ],
 					    series: [
 					        {
-					            name:'入库',
+					            name:'品牌',
 					            type:'bar',
-					            data: inData
-					        },
-					        {
-					            name:'出库',
-					            type:'bar',
-					            data: outData
+					            data: yData
 					        }
 					    ]
 					};
@@ -672,6 +687,355 @@ var myvue = new Vue({
 				};
 				this.chartEquipBrand();
 			},
+
+
+			//queryEquipBrandDump
+			chartEquipBrandDump: function(filter){
+				var chartId = "chartEquipBrandDump";
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipBrandDumpUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
+							if(!hash[key]){
+								var index = data.push({
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
+					            });
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index].value = data[index].value + 1;
+							}
+						}
+						var hash = {};
+						var temp = {};
+						for (var i = 0; i < data.length; i++) {
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
+						}
+					});
+				});
+				
+				var option = {
+					    tooltip: {
+					        trigger: 'axis',
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
+					    },
+					    toolbox: {
+					        feature: {
+					            dataView: {show: true, readOnly: false},
+					            magicType: {show: true, type: ['line', 'bar']},
+					            restore: {show: true},
+					            saveAsImage: {show: true}
+					        }
+					    },
+					    xAxis: [
+					        {
+					            type: 'category',
+					            data: xAxisData,
+					            axisPointer: {
+					                type: 'shadow'
+					            }
+					        }
+					    ],
+					    yAxis: [
+					        {
+					            type: 'value',
+					            name: '数量',
+					            interval: 1,
+					            axisLabel: {
+					                formatter: '{value} 个'
+					            }
+					        }
+					    ],
+					    series: [
+					        {
+					            name:'品牌',
+					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption(option);
+
+				$("#"+chartId).resize(function() {
+					myChart.resize();
+				});
+			},
+			queryEquipBrandDump:function(){
+				this.chartEquipBrandDump(this.filtersBrandDump);
+			},
+			resetEquipBrandDump: function(){
+				this.filtersBrandDump = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandDump();
+			},
+
+
+			//queryEquipBrandUnusual
+			chartEquipBrandUnusual: function(filter){
+				var chartId = "chartEquipBrandUnusual";
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipBrandUnusualUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
+							if(!hash[key]){
+								var index = data.push({
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
+					            });
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index].value = data[index].value + 1;
+							}
+						}
+						var hash = {};
+						var temp = {};
+						for (var i = 0; i < data.length; i++) {
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
+						}
+					});
+				});
+				
+				var option = {
+					    tooltip: {
+					        trigger: 'axis',
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
+					    },
+					    toolbox: {
+					        feature: {
+					            dataView: {show: true, readOnly: false},
+					            magicType: {show: true, type: ['line', 'bar']},
+					            restore: {show: true},
+					            saveAsImage: {show: true}
+					        }
+					    },
+					    xAxis: [
+					        {
+					            type: 'category',
+					            data: xAxisData,
+					            axisPointer: {
+					                type: 'shadow'
+					            }
+					        }
+					    ],
+					    yAxis: [
+					        {
+					            type: 'value',
+					            name: '数量',
+					            interval: 1,
+					            axisLabel: {
+					                formatter: '{value} 个'
+					            }
+					        }
+					    ],
+					    series: [
+					        {
+					            name:'品牌',
+					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption(option);
+
+				$("#"+chartId).resize(function() {
+					myChart.resize();
+				});
+			},
+			queryEquipBrandUnusual:function(){
+				this.chartEquipBrandUnusual(this.filtersBrandUnusual);
+			},
+			resetEquipBrandUnusual: function(){
+				this.filtersBrandUnusual = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandUnusual();
+			},
+
+
+			//queryEquipBrandRepair
+			chartEquipBrandRepair: function(filter){
+				var chartId = "chartEquipBrandRepair";
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipBrandRepairUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
+							if(!hash[key]){
+								var index = data.push({
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
+					            });
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index].value = data[index].value + 1;
+							}
+						}
+						var hash = {};
+						var temp = {};
+						for (var i = 0; i < data.length; i++) {
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
+						}
+					});
+				});
+				
+				var option = {
+					    tooltip: {
+					        trigger: 'axis',
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
+					    },
+					    toolbox: {
+					        feature: {
+					            dataView: {show: true, readOnly: false},
+					            magicType: {show: true, type: ['line', 'bar']},
+					            restore: {show: true},
+					            saveAsImage: {show: true}
+					        }
+					    },
+					    xAxis: [
+					        {
+					            type: 'category',
+					            data: xAxisData,
+					            axisPointer: {
+					                type: 'shadow'
+					            }
+					        }
+					    ],
+					    yAxis: [
+					        {
+					            type: 'value',
+					            name: '数量',
+					            interval: 1,
+					            axisLabel: {
+					                formatter: '{value} 个'
+					            }
+					        }
+					    ],
+					    series: [
+					        {
+					            name:'品牌',
+					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption(option);
+
+				$("#"+chartId).resize(function() {
+					myChart.resize();
+				});
+			},
+			queryEquipBrandRepair:function(){
+				this.chartEquipBrandRepair(this.filtersBrandRepair);
+			},
+			resetEquipBrandRepair: function(){
+				this.filtersBrandRepair = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandRepair();
+			},
+			
 			
 			//full
 			handleShowFull: function(){
@@ -781,6 +1145,9 @@ var myvue = new Vue({
 			this.chartEquipStatus();
 			this.chartEquipStore();
 			this.chartEquipBrand();
+			this.chartEquipBrandDump();
+			this.chartEquipBrandUnusual();
+			this.chartEquipBrandRepair();
 		}
 	  });
 	

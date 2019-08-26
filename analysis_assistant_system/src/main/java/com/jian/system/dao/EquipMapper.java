@@ -119,5 +119,38 @@ public interface EquipMapper extends BaseMapper<Equip> {
 			@Param("sEquip_StoreLv2") String sEquip_StoreLv2, 
 			@Param("sEquip_StoreLv3") String sEquip_StoreLv3, 
 			@Param("sEquip_StoreLv4") String sEquip_StoreLv4);
+	
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.\"sEquip_Manufacturer\", a.\"sEquip_MBrand\",a.\"sEquip_MModel\", b.\"sAid_Station\",c.\"sStoreType_Station\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Aid\" b on a.\"sEquip_AidID\" = b.\"sAid_ID\" ",
+		" 	left join \"tBase_StoreType\" c on a.\"sEquip_StoreLv1\" = c.\"sStoreType_ID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and b.\"sAid_Station\" = #{sAid_Station} ",	
+    	" 		and c.\"sStoreType_Station\" = #{sAid_Station} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> brand(@Param("sAid_Station") String sAid_Station);
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.\"sEquip_Manufacturer\", a.\"sEquip_MBrand\",a.\"sEquip_MModel\", b.\"sAid_Station\",c.\"sStoreType_Station\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Aid\" b on a.\"sEquip_AidID\" = b.\"sAid_ID\" ",
+		" 	left join \"tBase_StoreType\" c on a.\"sEquip_StoreLv1\" = c.\"sStoreType_ID\" ",
+		" where a.\"sEquip_Status\" = #{sEquip_Status} ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and b.\"sAid_Station\" = #{sAid_Station} ",	
+    	" 		and c.\"sStoreType_Station\" = #{sAid_Station} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> brandStatus(@Param("sEquip_Status") String sEquip_Status, @Param("sAid_Station") String sAid_Station);
 
 }

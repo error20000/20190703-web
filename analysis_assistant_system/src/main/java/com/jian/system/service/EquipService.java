@@ -1034,4 +1034,48 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		
 		return list;
 	}
+	
+	/**
+	 * 器材品牌
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> brand(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.brand(sAid_Station);
+		
+		return list;
+	}
+	
+	/**
+	 * 器材品牌报废
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> brandDump(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.brandStatus(Constant.EquipStatus_8, sAid_Station);
+		
+		return list;
+	}
+	
+	/**
+	 * 器材品牌故障(异常)
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> brandUnusual(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.brandStatus(Constant.EquipStatus_10, sAid_Station);
+		
+		return list;
+	}
+	
+	/**
+	 * 器材品牌维修
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> brandRepair(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.brandStatus(Constant.EquipStatus_7, sAid_Station);
+		
+		return list;
+	}
 }
