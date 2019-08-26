@@ -299,6 +299,18 @@ public class EquipController extends BaseController<Equip, EquipService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
+	@RequestMapping("/life")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材寿命")
+	public String life(HttpServletRequest req) {
+		String sEquip_MBrand = Tools.getReqParamSafe(req, "sEquip_MBrand");
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		List<Map<String, Object>> res = service.life(sEquip_MBrand, sEquip_Type);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

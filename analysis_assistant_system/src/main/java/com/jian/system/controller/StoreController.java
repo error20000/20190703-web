@@ -188,6 +188,32 @@ public class StoreController extends BaseController<Store, StoreService> {
 	//TODO -------------------------------------------------------------------------------- 前端接口
 
 
+	@RequestMapping("/distribution")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询仓库区域分布")
+	public String distribution(HttpServletRequest req) {
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		List<Map<String, Object>> list = service.distribution(sEquip_Type);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+	@RequestMapping("/time")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询仓库库存变化")
+	public String time(HttpServletRequest req) {
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		String sStore_Level1 = Tools.getReqParamSafe(req, "sStore_Level1");
+		String sStore_Level2 = Tools.getReqParamSafe(req, "sStore_Level2");
+		String sStore_Level3 = Tools.getReqParamSafe(req, "sStore_Level3");
+		String sStore_Level4 = Tools.getReqParamSafe(req, "sStore_Level4");
+		List<Map<String, Object>> list = service.time(sEquip_Type, sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
 	//TODO -------------------------------------------------------------------------------- app接口
 	
 	

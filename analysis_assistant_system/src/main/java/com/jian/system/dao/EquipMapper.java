@@ -153,4 +153,26 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public List<Map<String, Object>> brandStatus(@Param("sEquip_Status") String sEquip_Status, @Param("sAid_Station") String sAid_Station);
 
+	@Select({
+		"<script>",
+		" select ",
+		"	a.\"dELog_CreateDate\", a.\"sELog_EquipID\",a.\"sELog_Type\",  ",
+		"	b.\"sEquip_Type\",b.\"sEquip_Manufacturer\",b.\"sEquip_MBrand\",b.\"sEquip_MModel\", ",
+		"	c.\"sDict_Name\" \"sEquip_TypeName\", ",
+		"	e.\"sDict_Name\" \"sEquip_StationName\" ",
+		" from \"tBase_EquipLog\" a ",
+		" 	inner join \"tBase_Equip\" b on a.\"sELog_EquipID\" = b.\"sEquip_ID\" ",
+		" 	left join \"tBase_Dict\" c on b.\"sEquip_Type\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_StoreType\" d on a.\"sELog_StoreLv1\" = d.\"sStoreType_ID\" ",
+		" 	left join \"tBase_Dict\" e on d.\"sStoreType_Station\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" ='AidStation' ",
+		" where (a.\"sELog_Type\" = '9' or a.\"sELog_Type\" = '8') ",
+    	" 	<if test=\" sEquip_MBrand != null \"> ",
+    	" 		and b.\"sEquip_MBrand\" = #{sEquip_MBrand} ",	
+    	"   </if>", 
+    	" 	<if test=\" sEquip_Type != null \"> ",
+    	" 		and b.\"sEquip_Type\" = #{sEquip_Type} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> life(@Param("sEquip_MBrand") String sEquip_MBrand, @Param("sEquip_Type") String sEquip_Type);
 }

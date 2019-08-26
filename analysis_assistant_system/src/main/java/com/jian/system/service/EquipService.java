@@ -1078,4 +1078,15 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		
 		return list;
 	}
+	
+	/**
+	 * 器材寿命
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> life(String sEquip_MBrand, String sEquip_Type){
+		
+		List<Map<String, Object>> list = baseMapper.life(sEquip_MBrand, sEquip_Type);
+		
+		return list;
+	}
 }

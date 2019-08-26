@@ -3,7 +3,7 @@ var baseUrl = parent.window.baseUrl || '../';
 var dictUrl = baseUrl + "api/dict/findList";
 var equipStoreUrl = baseUrl + "api/store/findList";
 var equipDistributionUrl = baseUrl + "api/equip/distribution";
-
+var equipLifeUrl = baseUrl + "api/equip/life";
 var equipStatusUrl = baseUrl + "api/equip/status";
 var equipInoutStoreUrl = baseUrl + "api/equip/inoutStore";
 var equipBrandUrl = baseUrl + "api/equip/brand";
@@ -42,7 +42,7 @@ var myvue = new Vue({
 				aidStationDictNo: 'AidStation',
 				aidStationOptions: [],
 
-				filters2: {
+				filtersLife: {
 					sEquip_MBrand: '',
 					sEquip_Type: ''
 				},
@@ -373,14 +373,120 @@ var myvue = new Vue({
 			},
 
 			//queryEquipLife 
-			chartEquipLife: function(filters){
-				
+			chartEquipLife: function(filter){
+				var chartId = "chartEquipLife";
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
+
+				var data = [];
+				var allData = [];
+				var xAxisData = [];
+				var legendData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipLifeUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						console.log(res.data);
+						var temp = {}
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sELog_EquipID;
+							if(node.sELog_Type == '9'){ //入库 取最小值
+								if(!temp[key]){
+									temp[key] = {
+										start: node.dELog_CreateDate
+									};
+								}else{
+									var start = temp[key].start ? temp[key].start : 0;
+									if(start == 0 || start > node.dELog_CreateDate){
+										temp[key].start = node.dELog_CreateDate;
+									}
+								}
+							}else if(node.sELog_Type == '8'){ //报废  取最大值 
+								if(!temp[key]){
+									temp[key] = {
+										end: node.dELog_CreateDate
+									};
+								}else{
+									var end = temp[key].end ? temp[key].end : 0;
+									if(end == 0 || end < node.dELog_CreateDate){
+										temp[key].end = node.dELog_CreateDate;
+									}
+								}
+							}
+							temp[key].node = node;
+						}
+						console.log(temp);
+						var hash = {};
+						for (var okey in temp) {
+							var start = temp[okey].start;
+							var end = temp[okey].end;
+							var node = temp[okey].node;
+							var life = (end - start)/(365*24*3600*1000);
+							//海区总平均寿命
+							var key = node.sEquip_StationName;
+							if(!hash[key]){
+								var index = allData.push({
+									station: node.sEquip_StationName,
+									total: life,
+									count: 1,
+									avg: Number(Number(life / 1).toFixed(2))
+								});
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								allData[index].total = allData[index].total + life;
+								allData[index].count = allData[index].count + 1;
+								allData[index].avg = Number(Number(allData[index].total / allData[index].count).toFixed(2));
+							}
+							//海区某品牌平均寿命
+							var key2 = node.sEquip_StationName+"_"+node.sEquip_MBrand;
+							if(!hash[key2]){
+								var index = data.push({
+									station: node.sEquip_StationName,
+									brand: node.sEquip_MBrand,
+									total: life,
+									count: 1,
+									avg: Number(Number(life / 1).toFixed(2))
+								});
+								hash[key2] = index;
+							}else{
+								var index = hash[key2] - 1;
+								data[index].total = data[index].total + life;
+								data[index].count = data[index].count + 1;
+								data[index].avg = Number(Number(data[index].total / data[index].count).toFixed(2));
+							}
+						}
+						console.log(allData);
+						console.log(data);
+					});
+				});
+		        
+				var option = {
+				    xAxis: {
+				        type: 'category',
+				        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				    },
+				    yAxis: {
+				        type: 'value'
+				    },
+				    series: [{
+				        data: [820, 932, 901, 934, 1290, 1330, 1320],
+				        type: 'line',
+				        smooth: true
+				    }]
+				};
+				myChart.setOption(option);
+
+				$("#"+chartId).resize(function() {
+					myChart.resize();
+				});
 			},
 			queryEquipLife:function(){
-				this.chartEquipLife(this.filters2);
+				this.chartEquipLife(this.filtersLife);
 			},
 			resetEquipLife: function(){
-				this.filters2 = {
+				this.filtersLife = {
 					sEquip_MBrand: '',
 					sEquip_Type: ''
 				};
@@ -390,8 +496,8 @@ var myvue = new Vue({
 			//queryEquipStatus 
 			chartEquipStatus: function(filter){
 				var chartId = "chartEquipStatus";
-		        var myChartStatus = echarts.init(document.getElementById(chartId));
-		        myChartStatus.clear();
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
 
 				var data = [];
 				var legendData = [];
@@ -446,10 +552,10 @@ var myvue = new Vue({
 							}
 						]
 				};
-				myChartStatus.setOption(option);
+				myChart.setOption(option);
 
 				$("#"+chartId).resize(function() {
-					myChartStatus.resize();
+					myChart.resize();
 				});
 			},
 			queryEquipStatus:function(){

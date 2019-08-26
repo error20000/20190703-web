@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jian.system.dao.EquipMapper;
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Store;
@@ -25,6 +26,8 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	private StoreTypeService typeService;
 	@Autowired
 	private EquipService equipService;
+	@Autowired
+	private EquipMapper equipMapper;
 	
 	@TargetDataSource
 	public int add(String level, String name, StoreType type, Store obj, User user) {
@@ -229,4 +232,29 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	public List<Map<String, Object>> storeMap() {
 		return typeService.storeMap();
 	}
+	
+	//TODO ------------------------------------------------------------------------------统计
+	
+	/**
+	 * 仓库区域分布
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> distribution(String sEquip_Type){
+		
+		List<Map<String, Object>> list = equipMapper.statisUnused(sEquip_Type);
+		
+		return list;
+	}
+	
+	/**
+	 * 仓库库存变化
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> time(String sEquip_Type, String sStore_Level1, String sStore_Level2, String sStore_Level3, String sStore_Level4){
+		
+		List<Map<String, Object>> list = baseMapper.time(sEquip_Type, sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
+		
+		return list;
+	}
+	
 }
