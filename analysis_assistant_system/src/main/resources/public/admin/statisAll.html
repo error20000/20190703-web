@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <!-- css -->
+  <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
+  <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
+  <link rel="stylesheet" href="css/index.css">
+  <style>
+	  .text {
+	    font-size: 14px;
+	  }
+	
+	  .item {
+	    margin-bottom: 18px;
+	  }
+	
+	  .clearfix:before,
+	  .clearfix:after {
+	    display: table;
+	    content: "";
+	  }
+	  .clearfix:after {
+	    clear: both
+	  }
+	  .box-card{
+	  	margin-bottom: 10px;
+	  }
+	.page-component-up {
+	    background-color: #fff;
+	    position: fixed;
+	    right: 100px;
+	    top: 150px;
+	    width: 40px;
+	    height: 40px;
+	    border-radius: 20px;
+	    cursor: pointer;
+	    transition: .3s;
+	    box-shadow: 0px 0px 6px rgba(0,0,0,0.12);
+	    z-index: 5;
+	}
+	.page-component-up i {
+	    color: #409eff;
+	    display: block;
+	    line-height: 40px;
+	    text-align: center;
+	    font-size: 18px;
+	}
+	
+	
+  </style>
+</head>
+<body class="animated fadeIn">
+  <div id="app">
+  	
+  	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
+	   <div class="el-loading-spinner">
+	    <i class="fa fa-spinner fa-pulse"></i>
+ 	    <p class="el-loading-text">Loading...</p>
+	   </div>
+    </div>
+    
+    <section style="padding: 20px;" v-show="preloading">
+		<!-- filter -->
+		<el-row>
+		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+			<el-col :span="24">
+			<el-tabs value="filter" >
+			    <el-tab-pane label="筛选" name="filter" disabled>
+			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
+					<el-form-item>
+						<el-button type="primary" title="全屏" @click="handleShowFull" icon="fas fa-plus" ></el-button>
+					</el-form-item>
+				</el-form>
+			    </el-tab-pane>
+		    </el-tabs>
+				
+			</el-col>
+		</el-col>
+		</el-row>
+		
+	    <el-tabs v-model="activeTab" >
+		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:map:query" v-show="hasAuth('query')">
+		    
+				<div id="chartView" style="width: 100%;height: 100%; display: inline-block; overflow: auto;">
+				
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>器材区域分布统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filters.used" placeholder="请选择">
+							      <el-option label="已使用" value="1"></el-option>
+							      <el-option label="未使用" value="2"></el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+							    <el-select v-model="filters.sEquip_Type" placeholder="请选择">
+								    <el-option
+								      v-for="item in equipTypeOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipDistribution" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipDistribution"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipDistribution" style="width: 100%;height: 500px;"></div>
+					</el-card>
+					
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>仓库库存变化统计表</span>
+					    <el-form size="mini" :inline="true" :model="filtersStoreTime" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersStoreTime.sStore_Level1" placeholder="请选择">
+								    <el-option
+								      v-for="item in storeLv1Options"
+								      :key="item.sStoreType_ID"
+								      :label="item.sStoreType_Name"
+								      :value="item.sStoreType_ID">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+							    <el-select v-model="filtersStoreTime.sEquip_Type" placeholder="请选择">
+								    <el-option
+								      v-for="item in equipTypeOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryStoreTime" icon="fa fa-search"></el-button>
+								<el-button @click="resetStoreTime"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartStoreTime" style="width: 100%;height: 500px;"></div>
+					</el-card>
+				
+					<el-card class="box-card">
+					  <div slot="header" class="clearfix">
+					    <span>器材寿命统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersLife.sEquip_MBrand" placeholder="请选择">
+								    <el-option
+								      v-for="item in brandOptions"
+								      :key="item.sEquip_MBrand"
+								      :label="item.sEquip_MBrand"
+								      :value="item.sEquip_MBrand">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipLife" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipLife"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipLife" style="width: 49%;height: 500px;display: inline-block;"></div>
+					  <div id="chartEquipLife2" style="width: 50%;height: 500px;display: inline-block;"></div>
+					</el-card>
+					
+					<el-card class="box-card" style="width: 49%; float: left;">
+					  <div slot="header" class="clearfix">
+					    <span>器材品牌、型号统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filtersBrand" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersBrand.sAid_Station" placeholder="请选择">
+								    <el-option
+								      v-for="item in aidStationOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipBrand" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipBrand"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipBrand" style="width: 100%;height: 500px;"></div>
+					</el-card>
+					
+					<el-card class="box-card" style="width: 50%; float: right;">
+					  <div slot="header" class="clearfix">
+					    <span>器材报废统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filtersBrandDump" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersBrandDump.sAid_Station" placeholder="请选择">
+								    <el-option
+								      v-for="item in aidStationOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipBrandDump" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipBrandDump"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipBrandDump" style="width: 100%;height: 500px;"></div>
+					</el-card>
+					
+					<el-card class="box-card" style="width: 49%; float: left;">
+					  <div slot="header" class="clearfix">
+					    <span>器材故障统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择">
+								    <el-option
+								      v-for="item in aidStationOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipBrandUnusual" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipBrandUnusual"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipBrandUnusual" style="width: 100%;height: 500px;"></div>
+					</el-card>
+					
+					<el-card class="box-card" style="width: 50%; float: right;">
+					  <div slot="header" class="clearfix">
+					    <span>器材维修统计图表</span>
+					    <el-form size="mini" :inline="true" :model="filtersBrandRepair" style="float: right;">
+							<el-form-item>
+							    <el-select v-model="filtersBrandRepair.sAid_Station" placeholder="请选择">
+								    <el-option
+								      v-for="item in aidStationOptions"
+								      :key="item.sDict_NO"
+								      :label="item.sDict_Name"
+								      :value="item.sDict_NO">
+								    </el-option>
+							    </el-select>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" title="查询" @click="queryEquipBrandRepair" icon="fa fa-search"></el-button>
+								<el-button @click="resetEquipBrandRepair"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
+							</el-form-item>
+						</el-form>
+					  </div>
+					  <div id="chartEquipBrandRepair" style="width: 100%;height: 500px;"></div>
+					</el-card>
+				
+				</div>
+			</el-tab-pane>
+		  </el-tabs>
+		
+		<div class="page-component-up"  title="全屏"  @click="handleShowFull"><i class="el-icon-caret-top"></i></div>
+		
+	</section>
+  </div>
+</body>
+  <script src="js/jquery-3.4.1.js" type="text/javascript"></script>
+  <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
+  <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
+  <script src="https://cdn.bootcss.com/jquery-resize/1.1/jquery.ba-resize.min.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=Pfkc9evB2nXM9bjaG1bsA6ciN9FQfVKI"></script>
+  <script type="text/javascript" src="js/echarts/echarts.min.js"></script>
+  <script type="text/javascript" src="js/echarts/extension/bmap.js"></script>
+  <script type="text/javascript" src="js/global.js"></script>
+  <script type="text/javascript" src="js/statisAll.js"></script>
+</html>

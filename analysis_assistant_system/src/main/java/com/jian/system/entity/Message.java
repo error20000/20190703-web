@@ -43,7 +43,16 @@ public class Message extends Base<Message> {
 	private String sMsg_Status;
 	@Excel(name="消息标题", sort=0, length="32", isNull=1 )
 	private String sMsg_Title;
-	
+	@Excel(name="一级仓库", sort=0, length="32", isNull=1 )
+	private String sMsg_StoreLv1;
+	@Excel(name="二级仓库", sort=0, length="32", isNull=1 )
+	private String sMsg_StoreLv2;
+	@Excel(name="三级仓库", sort=0, length="32", isNull=1 )
+	private String sMsg_StoreLv3;
+	@Excel(name="四级仓库", sort=0, length="32", isNull=1 )
+	private String sMsg_StoreLv4;
+	@Excel(name="库存数量", sort=0, length="", isNull=1 )
+	private int dMsg_StoreNum;
 	
 
 	public String getsMsg_ID() {
@@ -141,6 +150,36 @@ public class Message extends Base<Message> {
 	}
 	public void setsMsg_Status(String sMsg_Status) {
 		this.sMsg_Status = sMsg_Status;
+	}
+	public String getsMsg_StoreLv1() {
+		return sMsg_StoreLv1;
+	}
+	public void setsMsg_StoreLv1(String sMsg_StoreLv1) {
+		this.sMsg_StoreLv1 = sMsg_StoreLv1;
+	}
+	public String getsMsg_StoreLv2() {
+		return sMsg_StoreLv2;
+	}
+	public void setsMsg_StoreLv2(String sMsg_StoreLv2) {
+		this.sMsg_StoreLv2 = sMsg_StoreLv2;
+	}
+	public String getsMsg_StoreLv3() {
+		return sMsg_StoreLv3;
+	}
+	public void setsMsg_StoreLv3(String sMsg_StoreLv3) {
+		this.sMsg_StoreLv3 = sMsg_StoreLv3;
+	}
+	public String getsMsg_StoreLv4() {
+		return sMsg_StoreLv4;
+	}
+	public void setsMsg_StoreLv4(String sMsg_StoreLv4) {
+		this.sMsg_StoreLv4 = sMsg_StoreLv4;
+	}
+	public int getdMsg_StoreNum() {
+		return dMsg_StoreNum;
+	}
+	public void setdMsg_StoreNum(int dMsg_StoreNum) {
+		this.dMsg_StoreNum = dMsg_StoreNum;
 	}
 	
 }

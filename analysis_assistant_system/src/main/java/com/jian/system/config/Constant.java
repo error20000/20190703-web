@@ -38,9 +38,12 @@ public class Constant {
 	
 	
 	//消息
-	public static final String MsgType_1 = "1";
-	public static final String MsgType_2 = "2";
+	public static final String MsgType_1 = "1"; //库存不足
+	public static final String MsgType_1_Msg = "库存不足";
+	public static final String MsgType_2 = "2"; //航标异常
+	public static final String MsgType_2_Msg = "航标异常";
 	public static final String MsgType_3 = "3"; //器材异常
+	public static final String MsgType_3_Msg = "器材异常";
 	
 	public static final String MsgStatus_1 = "1"; //未读
 	public static final String MsgStatus_2 = "2"; //已读

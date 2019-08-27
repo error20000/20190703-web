@@ -970,7 +970,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		message.setsMsg_Type(Constant.MsgType_3);
 		message.setsMsg_Status(Constant.MsgStatus_1);
 		message.setsMsg_EquipID(sEquip_ID);
-		message.setsMsg_Title("器材异常");
+		message.setsMsg_Title(Constant.MsgType_3_Msg);
 		message.setsMsg_Describe(remarks);
 		if(aid != null) {
 			message.setsMsg_AidID(aid.getsAid_ID());
@@ -988,6 +988,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		messageService.batchInsert(mlist, user);
 		//更新
 		return baseMapper.update(tableName, values, condition);
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> brandOption(){
+		
+		List<Map<String, Object>> list = baseMapper.brandOption();
+		
+		return list;
 	}
 	
 	//TODO ---------------------------------------------------------------------------------统计

@@ -145,9 +145,9 @@ new Vue({
 					self.menus = []; //menu tree
 					for (var i = 0; i < menus.length; i++) {
 						var node = menus[i];
-						if(node.sMenu_Parent != 500 && node.sMenu_ID != 500){
+						/*if(node.sMenu_Parent != 500 && node.sMenu_ID != 500){
 							continue;
-						}
+						}*/
 						if(!node.sMenu_Parent){
 							var children = self.findChildren(node.sMenu_ID, menus);
 							if(children && children.length > 0){

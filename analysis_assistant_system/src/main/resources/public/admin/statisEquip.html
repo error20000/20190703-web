@@ -76,23 +76,13 @@
 				  <div slot="header" class="clearfix">
 				    <span>器材寿命统计图表</span>
 				    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
-						<!-- <el-form-item>
-						    <el-select v-model="filtersLife.sEquip_Type" placeholder="请选择">
-							    <el-option
-							      v-for="item in equipTypeOptions"
-							      :key="item.sDict_NO"
-							      :label="item.sDict_Name"
-							      :value="item.sDict_NO">
-							    </el-option>
-						    </el-select>
-						</el-form-item> -->
 						<el-form-item>
-						    <el-select v-model="filtersLife.sEquip_Type" placeholder="请选择">
+						    <el-select v-model="filtersLife.sEquip_MBrand" placeholder="请选择">
 							    <el-option
-							      v-for="item in equipTypeOptions"
-							      :key="item.sDict_NO"
-							      :label="item.sDict_Name"
-							      :value="item.sDict_NO">
+							      v-for="item in brandOptions"
+							      :key="item.sEquip_MBrand"
+							      :label="item.sEquip_MBrand"
+							      :value="item.sEquip_MBrand">
 							    </el-option>
 						    </el-select>
 						</el-form-item>

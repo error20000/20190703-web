@@ -310,7 +310,17 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		List<Map<String, Object>> res = service.life(sEquip_MBrand, sEquip_Type);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
 	
+	@RequestMapping("/brandOption")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有器材品牌")
+	public String brandOption(HttpServletRequest req) {
+		List<Map<String, Object>> res = service.brandOption();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

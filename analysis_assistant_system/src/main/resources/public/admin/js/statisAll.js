@@ -5,12 +5,12 @@ var equipStoreUrl = baseUrl + "api/store/findList";
 var equipBrandOptionUrl = baseUrl + "api/equip/brandOption";
 var equipDistributionUrl = baseUrl + "api/equip/distribution";
 var equipLifeUrl = baseUrl + "api/equip/life";
-var equipStatusUrl = baseUrl + "api/equip/status";
-var equipInoutStoreUrl = baseUrl + "api/equip/inoutStore";
 var equipBrandUrl = baseUrl + "api/equip/brand";
 var equipBrandDumpUrl = baseUrl + "api/equip/brandDump";
 var equipBrandUnusualUrl = baseUrl + "api/equip/brandUnusual";
 var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
+
+var storeTimeUrl = baseUrl + "api/store/time";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -44,6 +44,11 @@ var myvue = new Vue({
 				aidStationOptions: [],
 				brandOptions: [],
 
+				
+				filtersStoreTime: {
+					sStore_Level1: '',
+					sEquip_Type: ''
+				},
 				filtersLife: {
 					sEquip_MBrand: '',
 					sEquip_Type: ''
@@ -74,6 +79,9 @@ var myvue = new Vue({
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+			},
+			formatDateStr: function(date, str){
+				return parent.window.formatDate(date, str);
 			},
 			handleEquipTypeOptions: function(cb){
 				var self = this;
@@ -118,6 +126,7 @@ var myvue = new Vue({
 				});
 			},
 			
+			//Equip Distribution
 			chartEquipDistribution: function(filter){
 				var chartId = "chartEquipDistribution";
 				var self = this;
@@ -383,6 +392,101 @@ var myvue = new Vue({
 				this.chartEquipDistribution();
 			},
 
+
+			//queryStoreTime
+			chartStoreTime: function(filter){
+				var chartId = "chartStoreTime";
+		        var myChart = echarts.init(document.getElementById(chartId));
+		        myChart.clear();
+
+				var data = [];
+				var legendData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(storeTimeUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = self.formatDateStr(node.dSLog_CreateDate, 'yyyy-MM-dd');
+							if(!hash[key]){
+								var index = data.push([key, node.dSLog_EquipNum]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index][1] = data[index][1] + node.dSLog_EquipNum;
+							}
+						}
+						for (var i = 0; i < data.length; i++) {
+							for (var j = i; j < data.length; j++) {
+								if(data[i][0] > data[j][0]){
+									var temp = data[i];
+									data[i] = data[j];
+									data[j] = temp;
+								}
+							}
+						}
+						console.log(data);
+						for (var i = 0; i < data.length; i++) {
+							legendData.push(data[i][0]);
+						}
+						console.log(legendData);
+					});
+				});
+				
+				var option = {
+			        tooltip: {
+			            trigger: 'axis'
+			        },
+			        xAxis: {
+			            data: legendData
+			        },
+			        yAxis: {
+			            splitLine: {
+			                show: false
+			            }
+			        },
+			        toolbox: {
+			            left: 'right',
+			            feature: {
+			                dataZoom: {
+			                    yAxisIndex: 'none'
+			                },
+			                restore: {},
+			                saveAsImage: {}
+			            }
+			        },
+			        dataZoom: [{
+			        	show: true,
+			            start: 0,
+			            end: 100
+			        },{
+			            type: 'inside'
+			        }],
+			        
+			        series: {
+			            name: '库存',
+			            type: 'line',
+			            data: data
+			        }
+			    };
+				myChart.setOption(option);
+
+				$("#"+chartId).resize(function() {
+					myChart.resize();
+				});
+			},
+			queryStoreTime:function(){
+				this.chartStoreTime(this.filtersStoreTime);
+			},
+			resetStoreTime: function(){
+				this.filtersStoreTime = {
+					sStore_Level1: '',
+					sEquip_Type: ''
+				};
+				this.chartStoreTime();
+			},
+
 			//queryEquipLife 
 			chartEquipLife: function(filter){
 				var chartId = "chartEquipLife";
@@ -398,7 +502,7 @@ var myvue = new Vue({
 				var indicator = [];
 				var radarMax = 0;
 				var seriesRadar = [];
-				
+
 		        var self = this;
 				var params = filter || {};
 				ajaxReqSync(equipLifeUrl, params, function(res){
@@ -521,7 +625,6 @@ var myvue = new Vue({
 								 value : node.data,
 					             name : name
 							});
-							
 						}
 						series.push(seriesAll);
 						legendData.push(seriesAll.name);
@@ -611,191 +714,6 @@ var myvue = new Vue({
 					sEquip_Type: ''
 				};
 				this.chartEquipLife();
-			},
-
-			//queryEquipStatus 
-			chartEquipStatus: function(filter){
-				var chartId = "chartEquipStatus";
-		        var myChart = echarts.init(document.getElementById(chartId));
-		        myChart.clear();
-
-				var data = [];
-				var legendData = [];
-		        var self = this;
-				var params = filter || {};
-				ajaxReqSync(equipStatusUrl, params, function(res){
-					self.handleResQuery(res, function(){
-						var hash = {};
-						for (var i = 0; i < res.data.length; i++) {
-							var node = res.data[i];
-							var key = node.sEquip_Status;
-							if(!hash[key]){
-								var index = data.push({
-				                       name: node.sEquip_StatusName,
-				                       value: 1
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								data[index].value = data[index].value + 1;
-							}
-						}
-						for (var i = 0; i < data.length; i++) {
-							legendData.push(data[i].name);
-						}
-					});
-				});
-				
-				var option = {
-						tooltip : {
-							trigger: 'item',
-							formatter: "{a} <br/>{b} : {c} ({d}%)"
-						},
-					    legend: {
-					        orient: 'vertical',
-					        x: 'right',
-					        data: legendData
-					    },
-						series : [
-							{
-								name:'器材状态',
-								type:'pie',
-								radius : '55%',
-								center: ['50%', '50%'],
-								data: data.sort(function (a, b) { return a.value - b.value; }),
-								roseType: 'radius',
-								animationType: 'scale',
-								animationEasing: 'elasticOut',
-								animationDelay: function (idx) {
-									return Math.random() * 200;
-								}
-							}
-						]
-				};
-				myChart.setOption(option);
-
-				$("#"+chartId).resize(function() {
-					myChart.resize();
-				});
-			},
-			queryEquipStatus:function(){
-				this.chartEquipStatus(this.filters3);
-			},
-			resetEquipStatus: function(){
-				this.filters3 = {
-					sAid_Station: '',
-					sEquip_Type: ''
-				};
-				this.chartEquipStatus();
-			},
-
-			//queryEquipStore
-			chartEquipStore: function(filter){
-				var chartId = "chartEquipStore";
-		        var myChart = echarts.init(document.getElementById(chartId));
-		        myChart.clear();
-		        
-		        var data = [];
-				var legendData = [];
-				var xAxisData = [];
-				var inData = [];
-				var outData = [];
-		        var self = this;
-				var params = filter || {};
-				ajaxReqSync(equipInoutStoreUrl, params, function(res){
-					self.handleResQuery(res, function(){
-						var hash = {};
-						for (var i = 0; i < res.data.length; i++) {
-							var node = res.data[i];
-							var key = node.sDict_Name;
-							if(!hash[key]){
-								var index = data.push({
-				                       name: node.sDict_Name,
-				                       inStore: node.sELog_Type == '1' ? 1 : 0,
-				                       outStore: node.sELog_Type == '2' ? 1 : 0
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								data[index].inStore = node.sELog_Type == '1' ? data[index].inStore + 1 : data[index].inStore;
-								data[index].outStore = node.sELog_Type == '2' ? data[index].outStore + 1 : data[index].outStore;
-							}
-						}
-						for (var i = 0; i < data.length; i++) {
-							xAxisData.push(data[i].name);
-							inData.push(data[i].inStore);
-							outData.push(data[i].outStore);
-						}
-					});
-				});
-				
-				var option = {
-					    tooltip: {
-					        trigger: 'axis',
-					        axisPointer: {
-					            type: 'cross',
-					            crossStyle: {
-					                color: '#999'
-					            }
-					        }
-					    },
-					    toolbox: {
-					        feature: {
-					            dataView: {show: true, readOnly: false},
-					            magicType: {show: true, type: ['line', 'bar']},
-					            restore: {show: true},
-					            saveAsImage: {show: true}
-					        }
-					    },
-					    legend: {
-					        data: ['入库', '出库']
-					    },
-					    xAxis: [
-					        {
-					            type: 'category',
-					            data: xAxisData,
-					            axisPointer: {
-					                type: 'shadow'
-					            }
-					        }
-					    ],
-					    yAxis: [
-					        {
-					            type: 'value',
-					            name: '数量',
-					            interval: 1,
-					            axisLabel: {
-					                formatter: '{value} 个'
-					            }
-					        }
-					    ],
-					    series: [
-					        {
-					            name:'入库',
-					            type:'bar',
-					            data: inData
-					        },
-					        {
-					            name:'出库',
-					            type:'bar',
-					            data: outData
-					        }
-					    ]
-					};
-				myChart.setOption(option);
-
-				$("#"+chartId).resize(function() {
-					myChart.resize();
-				});
-			},
-			queryEquipStore:function(){
-				this.chartEquipStore(this.filtersStore);
-			},
-			resetEquipStore: function(){
-				this.filtersStore = {
-					sEquip_StoreLv1: ''
-				};
-				this.chartEquipStore();
 			},
 
 
@@ -1265,7 +1183,7 @@ var myvue = new Vue({
 			
 			//full
 			handleShowFull: function(){
-				var full = document.getElementById("mapView");
+				var full = document.getElementById("chartView");
 	            launchIntoFullscreen(full);
 			},
 			handleHideFull: function(){
@@ -1368,13 +1286,14 @@ var myvue = new Vue({
 			this.handleBrandOptions();
 			
 			this.chartEquipDistribution();
+			this.chartStoreTime();
 			this.chartEquipLife();
-			this.chartEquipStatus();
-			this.chartEquipStore();
+			
 			this.chartEquipBrand();
 			this.chartEquipBrandDump();
 			this.chartEquipBrandUnusual();
 			this.chartEquipBrandRepair();
+			
 		}
 	  });
 	

@@ -120,6 +120,10 @@ public interface EquipMapper extends BaseMapper<Equip> {
 			@Param("sEquip_StoreLv3") String sEquip_StoreLv3, 
 			@Param("sEquip_StoreLv4") String sEquip_StoreLv4);
 	
+	@Select({
+		"select \"sEquip_MBrand\" from \"tBase_Equip\" group by \"sEquip_MBrand\" "
+	})
+	public List<Map<String, Object>> brandOption();
 
 	@Select({
 		"<script>",

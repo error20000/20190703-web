@@ -41,5 +41,14 @@ public interface StoreMapper extends BaseMapper<Store> {
 			@Param("sEquip_StoreLv2") String sEquip_StoreLv2, 
 			@Param("sEquip_StoreLv3") String sEquip_StoreLv3, 
 			@Param("sEquip_StoreLv4") String sEquip_StoreLv4);
+	
+	@Select({
+		" select ",
+		"	\"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", \"sEquip_Type\", count(1) \"sEquip_Num\" ",
+		" from \"tBase_Equip\" ",
+		" where \"sEquip_StoreLv1\" is not null or \"sEquip_StoreLv1\" != '' ",
+    	" group by \"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", \"sEquip_Type\" "
+	})
+	public List<Map<String, Object>> check();
 
 }

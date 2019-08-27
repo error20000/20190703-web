@@ -233,6 +233,12 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		return typeService.storeMap();
 	}
 	
+	
+	@TargetDataSource
+	public List<Map<String, Object>> check() {
+		return baseMapper.check();
+	}
+	
 	//TODO ------------------------------------------------------------------------------统计
 	
 	/**
