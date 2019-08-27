@@ -1,0 +1,6 @@
+select 
+		a."sEquip_StoreLv1", a."sEquip_StoreLv2", a."sEquip_StoreLv3", a."sEquip_StoreLv4", a."sEquip_Type", count(1) "sEquip_Num" , b."sDict_Name" "sEquip_TypeName"
+		from "tBase_Equip" a
+		left join "tBase_Dict" b on a."sEquip_Type" = b."sDict_NO" and b."sDict_DictTypeNO" = 'EquipType' 
+		 where "sEquip_StoreLv1" is not null or "sEquip_StoreLv1" != '' 
+    	group by a."sEquip_StoreLv1", a."sEquip_StoreLv2", a."sEquip_StoreLv3", a."sEquip_StoreLv4", a."sEquip_Type" , b."sDict_Name"
