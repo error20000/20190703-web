@@ -28,7 +28,6 @@ import com.jian.system.service.StoreService;
 import com.jian.system.service.UserService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.DateTools;
-import com.jian.tools.core.JsonTools;
 
 @WebListener
 @Component
@@ -39,7 +38,7 @@ public class StoreListener implements ServletContextListener {
 	private static Timer timer = null;
 	private static long runTime = 24 * 3600 * 1000;
 	private static Timer msgTimer = null;
-	private static long msgRunTime = 2 * 3600 * 1000;
+	private static long msgRunTime = 24 * 3600 * 1000;
 	
 	@Autowired
 	private StoreService storeService;
@@ -117,7 +116,7 @@ public class StoreListener implements ServletContextListener {
 						e.printStackTrace();
 					}
 				}
-			}, 30, msgRunTime);
+			}, date, msgRunTime);
 			timerStart = true;
 		}
 	}
@@ -132,10 +131,10 @@ public class StoreListener implements ServletContextListener {
 			node = new StoreLog();
 			node.setsSLog_ID(Utils.newSnowflakeIdStr());
 			node.setdSLog_CreateDate(new Date());
-			node.setsSLog_StoreLv1(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") +"" );
-			node.setsSLog_StoreLv2(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") +"" );
-			node.setsSLog_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") +"" );
-			node.setsSLog_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") +"" );
+			node.setsSLog_StoreLv1(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") + "" );
+			node.setsSLog_StoreLv2(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") + "" );
+			node.setsSLog_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") + "" );
+			node.setsSLog_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "" );
 			node.setsSLog_EquipType(temp.get("sEquip_Type") == null ? "" : temp.get("sEquip_Type") +"" );
 			node.setdSLog_EquipNum(Integer.parseInt(String.valueOf(temp.get("sEquip_Num"))) );
 			res.add(node);
@@ -156,7 +155,6 @@ public class StoreListener implements ServletContextListener {
 		for (Store store : storeAll) {
 			tempLimit.put(store.getsStore_ID(), store.getlStore_Limit());
 		}
-		System.out.println(JsonTools.toJsonString(tempLimit));
 		List<Message> res = new ArrayList<>();
 		Message node = null;
 		for (int i = 0; i < list.size(); i++) {
@@ -164,19 +162,18 @@ public class StoreListener implements ServletContextListener {
 			//库存不足
 			Integer limit = null;
 			if(limit == null || limit == 0) {
-				limit = tempLimit.get(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") +"");
+				limit = tempLimit.get(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "");
 			}
 			if(limit == null || limit == 0) {
-				limit = tempLimit.get(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") +"");
+				limit = tempLimit.get(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") + "");
 			}
 			if(limit == null || limit == 0) {
-				limit = tempLimit.get(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") +"");
+				limit = tempLimit.get(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") + "");
 			}
 			if(limit == null || limit == 0) {
-				limit = tempLimit.get(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") +"");
+				limit = tempLimit.get(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") + "");
 			}
 			Integer count = Integer.parseInt(String.valueOf(temp.get("sEquip_Num")));
-			System.out.println(count);
 			if(limit != null && limit != 0 && limit >= count ) {
 				//给所有人，发送消息
 				for (User user : userAll) {
@@ -184,19 +181,19 @@ public class StoreListener implements ServletContextListener {
 					node.setsMsg_ID(Utils.newSnowflakeIdStr());
 					node.setdMsg_CreateDate(new Date());
 					node.setlMsg_Level(1);
+					node.setsMsg_Status(Constant.MsgStatus_1);
 					node.setsMsg_Type(Constant.MsgType_1);
 					node.setsMsg_Title(Constant.MsgType_1_Msg);
-					node.setsMsg_StoreLv1(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") +"" );
-					node.setsMsg_StoreLv2(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") +"" );
-					node.setsMsg_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") +"" );
-					node.setsMsg_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") +"" );
+					node.setsMsg_StoreLv1(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") + "" );
+					node.setsMsg_StoreLv2(temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2") + "" );
+					node.setsMsg_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") + "" );
+					node.setsMsg_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "" );
 					node.setdMsg_StoreNum(count);
 					node.setsMsg_ToUserID(user.getsUser_ID());
 					res.add(node);
 				}
 			}
 		}
-		System.out.println(JsonTools.toJsonString(res));
 		messageService.batchInsert(res, null);
 	}
 }
