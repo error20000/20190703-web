@@ -44,11 +44,21 @@ public interface StoreMapper extends BaseMapper<Store> {
 	
 	@Select({
 		" select ",
-		"	\"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", \"sEquip_Type\", count(1) \"sEquip_Num\" ",
+		"	a.\"sEquip_StoreLv1\", a.\"sEquip_StoreLv2\", a.\"sEquip_StoreLv3\", a.\"sEquip_StoreLv4\", a.\"sEquip_Type\", count(1) \"sEquip_Num\" , b.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a ",
+		"   left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" where a.\"sEquip_StoreLv1\" is not null or a.\"sEquip_StoreLv1\" != '' ",
+    	" group by a.\"sEquip_StoreLv1\", a.\"sEquip_StoreLv2\", a.\"sEquip_StoreLv3\", a.\"sEquip_StoreLv4\", a.\"sEquip_Type\", b.\"sDict_Name\" "
+	})
+	public List<Map<String, Object>> checkEquipType();
+	
+	@Select({
+		" select ",
+		"	\"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", count(1) \"sEquip_Num\" ",
 		" from \"tBase_Equip\" ",
 		" where \"sEquip_StoreLv1\" is not null or \"sEquip_StoreLv1\" != '' ",
-    	" group by \"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", \"sEquip_Type\" "
+    	" group by \"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\" "
 	})
-	public List<Map<String, Object>> check();
+	public List<Map<String, Object>> checkStore();
 
 }

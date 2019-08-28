@@ -124,7 +124,7 @@ public class StoreListener implements ServletContextListener {
 	
 	private void checkInfo(){
 		//盘点库存
-		List<Map<String, Object>> list = storeService.check();
+		List<Map<String, Object>> list = storeService.checkEquipType();
 		List<StoreLog> res = new ArrayList<>();
 		StoreLog node = null;
 		for (int i = 0; i < list.size(); i++) {
@@ -144,7 +144,8 @@ public class StoreListener implements ServletContextListener {
 	}
 
 	private void msgInfo(){
-		List<Map<String, Object>> list = storeService.check();
+		List<Map<String, Object>> list = storeService.checkStore();
+		
 		List<User> userAll = userService.selectAll();
 		List<StoreType> storeTypeAll = storeService.findType();
 		List<Store> storeAll = storeService.selectAll();
