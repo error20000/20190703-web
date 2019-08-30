@@ -489,6 +489,12 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		return baseMapper.search(keywords);
 	}
 
+	
+	@TargetDataSource
+	public Equip nfc(String sNfc_NO) {
+		return baseMapper.nfc(sNfc_NO);
+	}
+
 
 	//TODO ----------------------------------------------------------------------器材操作
 	

@@ -164,4 +164,17 @@ public class NfcController extends BaseController<Nfc, NfcService> {
 		List<Nfc> list = service.unbind();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+
+
+	@RequestMapping("/app/findAndAdd")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询未使用的NFC")
+	public String appFindAndAdd(HttpServletRequest req) {
+		String sNfc_NO = Tools.getReqParamSafe(req, "sNfc_NO");
+		Nfc res = service.findAndAdd(sNfc_NO);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 }

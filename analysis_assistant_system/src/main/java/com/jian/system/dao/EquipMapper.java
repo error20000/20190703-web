@@ -34,6 +34,16 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public List<Equip> search(String keywords);
 	
+
+	@Select({
+		" select  ",
+		"  a.* ",
+		" from \"tBase_Equip\" a",
+		" 	inner join \"tBase_Nfc\" b on a.\"sEquip_NfcID\" = b.\"sNfc_ID\" ",
+		" where ",
+		" 	b.\"sNfc_NO\" = #{sNfc_NO} "
+	})
+	public Equip nfc(String sNfc_NO);
 	
 	
 	//TODO --------------------------------------------------------------------------------- 统计

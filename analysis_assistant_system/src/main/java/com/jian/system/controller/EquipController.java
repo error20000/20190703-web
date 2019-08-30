@@ -538,4 +538,16 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		List<Equip> res = service.search(keywords, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	@RequestMapping("/app/nfc")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app nfc查询器材")
+	public String appNfc(HttpServletRequest req) {
+		String sNfc_NO = Tools.getReqParamSafe(req, "sNfc_NO");
+		Equip res = service.nfc(sNfc_NO);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 }

@@ -1,5 +1,6 @@
 package com.jian.system.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.jian.system.entity.Aid;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
+import com.jian.system.utils.Utils;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
@@ -93,5 +95,26 @@ public class NfcService extends BaseService<Nfc, NfcMapper> {
 		return super.delete(condition, user);
 	}
 
+
+	@TargetDataSource
+	public Nfc findAndAdd(String sNfc_NO) {
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("sNfc_NO", sNfc_NO);
+		Nfc test = baseMapper.selectOne(getTableName(), condition);
+		if(test == null) {
+			Nfc nfc = new Nfc();
+			nfc.setsNfc_ID(Utils.newSnowflakeIdStr());
+			nfc.setsNfc_NO(sNfc_NO);
+			nfc.setsNfc_Name(sNfc_NO);
+			nfc.setlNfc_StatusFlag(0);
+			nfc.setdNfc_CreateDate(new Date());
+			baseMapper.insert(getTableName(), Tools.parseObjectToMap(nfc));
+			return nfc;
+		}
+		if(test.getlNfc_StatusFlag() == 1) {
+			return null;
+		}
+		return test;
+	}
 	
 }
