@@ -92,13 +92,13 @@ var myvue = new Vue({
 					sEquip_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					sEquip_Name: [
+					/*sEquip_Name: [
 		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ],
+		              ],*/
 					sEquip_Type: [
 		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
 		            ],
-		            sEquip_Manufacturer: [
+		            /*sEquip_Manufacturer: [
 		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
 			        ],
 			        sEquip_MModel: [
@@ -106,7 +106,7 @@ var myvue = new Vue({
 			        ],
 			        sEquip_MBrand: [
 		                { required: true, message: '请输入品牌.', trigger: 'blur' },
-			        ]
+			        ]*/
 				},
 				//edit
 				editFormVisible: false,
@@ -116,13 +116,13 @@ var myvue = new Vue({
 					sEquip_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					sEquip_Name: [
+					/*sEquip_Name: [
 		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ],
+		              ],*/
 					sEquip_Type: [
 		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
 		            ],
-		            sEquip_Manufacturer: [
+		            /*sEquip_Manufacturer: [
 		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
 			        ],
 			        sEquip_MModel: [
@@ -130,7 +130,7 @@ var myvue = new Vue({
 			        ],
 			        sEquip_MBrand: [
 		                { required: true, message: '请输入品牌.', trigger: 'blur' },
-			        ]
+			        ]*/
 				},
 				//view
 				viewFormVisible: false,
@@ -522,6 +522,7 @@ var myvue = new Vue({
 							params.sEquip_StoreLv2 = this.addForm.store[1] ? this.addForm.store[1] : " ";
 							params.sEquip_StoreLv3 = this.addForm.store[2] ? this.addForm.store[2] : " ";
 							params.sEquip_StoreLv4 = this.addForm.store[3] ? this.addForm.store[3] : " ";
+							params.sEquip_Name = params.sEquip_NO;
 							delete params.store;
 							var self = this;
 							this.addLoading = true;
@@ -601,6 +602,7 @@ var myvue = new Vue({
 							params.sEquip_StoreLv2 = this.editForm.store[1] ? this.editForm.store[1] : " ";
 							params.sEquip_StoreLv3 = this.editForm.store[2] ? this.editForm.store[2] : " ";
 							params.sEquip_StoreLv4 = this.editForm.store[3] ? this.editForm.store[3] : " ";
+							params.sEquip_Name = params.sEquip_NO;
 							delete params.store;
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;
