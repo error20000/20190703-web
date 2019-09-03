@@ -170,6 +170,36 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
+			formatDegree: function(value) { 
+				var v = value < 0 ? '-' : '';
+				//将度转换成为度分秒                
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分                
+				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
+				return v + v1 + '°' + v2 + '\'' + v3 + '"';            
+			},
+			formatToDegree: function(du, fen, miao) { 
+				return Number(du) + Number(fen)/60 + Number(miao)/3600;            
+			},
+			formatToDu: function(value) { 
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度   
+				return v1;            
+			},
+			formatToFen: function(value) { 
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分
+				return v2;            
+			},
+			formatToMiao: function(value) {           
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分                
+				var v3 = Math.round((value - v1) * 3600 % 60);//秒  
+				return v3;                
+			},
 			stationFormatter: function(row){
 				var name = row.sStoreType_Station;
 				for (var i = 0; i < this.stationOptions.length; i++) {
@@ -406,6 +436,16 @@ var myvue = new Vue({
 					if (valid) {
 						this.$confirm('确定提交吗?', '提示', {}).then(() => {
 							var params = Object.assign({}, this.addForm);
+							if(this.addForm.level == 1){
+								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_Lat_du, params.lStoreType_Lat_fen, params.lStoreType_Lat_miao);
+								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_Lng_du, params.lStoreType_Lng_fen, params.lStoreType_Lng_miao);
+								delete params.lStoreType_Lat_du;
+								delete params.lStoreType_Lat_fen;
+								delete params.lStoreType_Lat_miao;
+								delete params.lStoreType_Lng_du;
+								delete params.lStoreType_Lng_fen;
+								delete params.lStoreType_Lng_miao;
+							}
 							var self = this;
 							this.addLoading = true;
 							ajaxReq(addUrl, params, function(res){
@@ -457,6 +497,13 @@ var myvue = new Vue({
 				switch (lv) {
 				case 1:
 					this.editForm.name = row.sStoreType_Name;
+					this.editForm.lStoreType_Lat_du = this.formatToDu(this.editForm.lStoreType_Lat);
+					this.editForm.lStoreType_Lat_fen = this.formatToFen(this.editForm.lStoreType_Lat);
+					this.editForm.lStoreType_Lat_miao = this.formatToMiao(this.editForm.lStoreType_Lat);
+					this.editForm.lStoreType_Lng_du = this.formatToDu(this.editForm.lStoreType_Lng);
+					this.editForm.lStoreType_Lng_fen = this.formatToFen(this.editForm.lStoreType_Lng);
+					this.editForm.lStoreType_Lng_miao = this.formatToMiao(this.editForm.lStoreType_Lng);
+					console.log(this.editForm);
 					break;
 
 				default:
@@ -476,6 +523,16 @@ var myvue = new Vue({
 							var self = this;
 							this.editLoading = true;
 							var params = Object.assign({}, this.editForm);
+							if(this.editForm.level == 1){
+								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_Lat_du, params.lStoreType_Lat_fen, params.lStoreType_Lat_miao);
+								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_Lng_du, params.lStoreType_Lng_fen, params.lStoreType_Lng_miao);
+								delete params.lStoreType_Lat_du;
+								delete params.lStoreType_Lat_fen;
+								delete params.lStoreType_Lat_miao;
+								delete params.lStoreType_Lng_du;
+								delete params.lStoreType_Lng_fen;
+								delete params.lStoreType_Lng_miao;
+							}
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;
 								self.handleResOperate(res, function(){
@@ -491,22 +548,18 @@ var myvue = new Vue({
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
-					console.log("----->1"+ref);
 					return this.authCache[ref];
 				}
 				let flag = false;
 				if(!this.$refs[ref]){
-					console.log("----->2"+ref);
 					return flag;
 				}
 				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
 				if(!auth){
-					console.log("----->3"+ref);
 					return flag;
 				}
 				for (var i = 0; i < this.menuFuns.length; i++) {
 					if(this.menuFuns[i].sMFun_Button == auth){
-						console.log("----->4"+ref);
 						flag = true;
 						break;
 					}

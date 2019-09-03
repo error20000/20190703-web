@@ -260,11 +260,15 @@
 					  <el-form-item label="仓库地址" prop="sStoreType_Address">
 					    <el-input v-model="addForm.sStoreType_Address"></el-input>
 					  </el-form-item>
-					  <el-form-item label="纬度" prop="lStoreType_Lat">
-					    <el-input v-model="addForm.lStoreType_Lat"></el-input>
+					  <el-form-item label="纬度">
+					    <el-input v-model="addForm.lStoreType_Lat_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
+					    <el-input v-model="addForm.lStoreType_Lat_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+					    <el-input v-model="addForm.lStoreType_Lat_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ N
 					  </el-form-item>
-					  <el-form-item label="经度" prop="lStoreType_Lng">
-					    <el-input v-model="addForm.lStoreType_Lng"></el-input>
+					  <el-form-item label="经度" >
+					    <el-input v-model="addForm.lStoreType_Lng_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
+					    <el-input v-model="addForm.lStoreType_Lng_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+					    <el-input v-model="addForm.lStoreType_Lng_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ E
 					  </el-form-item>
 					  <el-form-item label="归属航标站" prop="sStoreType_Station">
 					    <el-select v-model="addForm.sStoreType_Station" placeholder="请选择归属航标站">
@@ -358,11 +362,15 @@
 					  <el-form-item label="仓库地址" prop="sStoreType_Address">
 					    <el-input v-model="editForm.sStoreType_Address"></el-input>
 					  </el-form-item>
-					  <el-form-item label="纬度" prop="lStoreType_Lat">
-					    <el-input v-model="editForm.lStoreType_Lat"></el-input>
+					  <el-form-item label="纬度">
+					    <el-input v-model="editForm.lStoreType_Lat_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
+					    <el-input v-model="editForm.lStoreType_Lat_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+					    <el-input v-model="editForm.lStoreType_Lat_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ N
 					  </el-form-item>
-					  <el-form-item label="经度" prop="lStoreType_Lng">
-					    <el-input v-model="editForm.lStoreType_Lng"></el-input>
+					  <el-form-item label="经度" >
+					    <el-input v-model="editForm.lStoreType_Lng_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
+					    <el-input v-model="editForm.lStoreType_Lng_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+					    <el-input v-model="editForm.lStoreType_Lng_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ E
 					  </el-form-item>
 					  <el-form-item label="归属航标站" prop="sStoreType_Station">
 					    <el-select v-model="editForm.sStoreType_Station" placeholder="请选择归属航标站">

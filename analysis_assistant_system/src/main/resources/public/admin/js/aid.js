@@ -106,6 +106,36 @@ var myvue = new Vue({
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
+			formatDegree: function(value) { 
+				var v = value < 0 ? '-' : '';
+				//将度转换成为度分秒                
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分                
+				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
+				return v + v1 + '°' + v2 + '\'' + v3 + '"';            
+			},
+			formatToDegree: function(du, fen, miao) { 
+				return Number(du) + Number(fen)/60 + Number(miao)/3600;            
+			},
+			formatToDu: function(value) { 
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度   
+				return v1;            
+			},
+			formatToFen: function(value) { 
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分
+				return v2;            
+			},
+			formatToMiao: function(value) {           
+				value = Math.abs(value);                
+				var v1 = Math.floor(value);//度               
+				var v2 = Math.floor((value - v1) * 60);//分                
+				var v3 = Math.round((value - v1) * 3600 % 60);//秒  
+				return v3;                
+			},
 			aidTypeFormatter: function(row){
 				var name = row.sAid_Type;
 				for (var i = 0; i < this.aidTypeOptions.length; i++) {
@@ -338,7 +368,13 @@ var myvue = new Vue({
 				}
 				this.addFormVisible = true;
 				this.addForm = {
-					sAid_Status: 'normal'
+					sAid_Status: 'normal',
+					lAid_Lat_du: '',
+					lAid_Lat_fen: '',
+					lAid_Lat_miao: '',
+					lAid_Lng_du: '',
+					lAid_Lng_fen: '',
+					lAid_Lng_miao: ''
 				};
 			},
 			addClose: function () {
@@ -351,6 +387,14 @@ var myvue = new Vue({
 					if (valid) {
 						this.$confirm('确定提交吗?', '提示', {}).then(() => {
 							var params = Object.assign({}, this.addForm);
+							params.lAid_Lat = this.formatToDegree(params.lAid_Lat_du, params.lAid_Lat_fen, params.lAid_Lat_miao);
+							params.lAid_Lng = this.formatToDegree(params.lAid_Lng_du, params.lAid_Lng_fen, params.lAid_Lng_miao);
+							delete params.lAid_Lat_du;
+							delete params.lAid_Lat_fen;
+							delete params.lAid_Lat_miao;
+							delete params.lAid_Lng_du;
+							delete params.lAid_Lng_fen;
+							delete params.lAid_Lng_miao;
 							var self = this;
 							this.addLoading = true;
 							ajaxReq(addUrl, params, function(res){
@@ -399,6 +443,12 @@ var myvue = new Vue({
 					self.handleResQuery(res, function(){
 						self.editFormVisible = true;
 						self.editForm = Object.assign({}, res.data)
+						self.editForm.lAid_Lat_du = self.formatToDu(self.editForm.lAid_Lat);
+						self.editForm.lAid_Lat_fen = self.formatToFen(self.editForm.lAid_Lat);
+						self.editForm.lAid_Lat_miao = self.formatToMiao(self.editForm.lAid_Lat);
+						self.editForm.lAid_Lng_du = self.formatToDu(self.editForm.lAid_Lng);
+						self.editForm.lAid_Lng_fen = self.formatToFen(self.editForm.lAid_Lng);
+						self.editForm.lAid_Lng_miao = self.formatToMiao(self.editForm.lAid_Lng);
 					});
 				});
 			},
@@ -414,6 +464,14 @@ var myvue = new Vue({
 							var self = this;
 							this.editLoading = true;
 							var params = Object.assign({}, this.editForm);
+							params.lAid_Lat = this.formatToDegree(params.lAid_Lat_du, params.lAid_Lat_fen, params.lAid_Lat_miao);
+							params.lAid_Lng = this.formatToDegree(params.lAid_Lng_du, params.lAid_Lng_fen, params.lAid_Lng_miao);
+							delete params.lAid_Lat_du;
+							delete params.lAid_Lat_fen;
+							delete params.lAid_Lat_miao;
+							delete params.lAid_Lng_du;
+							delete params.lAid_Lng_fen;
+							delete params.lAid_Lng_miao;
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;
 								self.handleResOperate(res, function(){
