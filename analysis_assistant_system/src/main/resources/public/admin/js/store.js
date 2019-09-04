@@ -200,6 +200,12 @@ var myvue = new Vue({
 				var v3 = Math.round((value - v1) * 3600 % 60);//秒  
 				return v3;                
 			},
+			latFormatter: function(row){
+				return this.formatDegree(row.lStoreType_Lat) + " N";
+			},
+			lngFormatter: function(row){
+				return this.formatDegree(row.lStoreType_Lng) + " E";
+			},
 			stationFormatter: function(row){
 				var name = row.sStoreType_Station;
 				for (var i = 0; i < this.stationOptions.length; i++) {

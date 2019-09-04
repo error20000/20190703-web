@@ -200,9 +200,9 @@
 					</el-table-column>
 					<el-table-column label="仓库地址" prop="sStoreType_Address">
 					</el-table-column>
-					<el-table-column label="纬度" prop="lStoreType_Lat" >
+					<el-table-column label="纬度" prop="lStoreType_Lat" :formatter="latFormatter" >
 					</el-table-column>
-					<el-table-column label="经度" prop="lStoreType_Lng" >
+					<el-table-column label="经度" prop="lStoreType_Lng" :formatter="lngFormatter" >
 					</el-table-column>
 					<el-table-column label="归属航标站" prop="sStoreType_Station" >
 					</el-table-column>

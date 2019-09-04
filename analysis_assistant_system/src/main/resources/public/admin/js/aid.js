@@ -136,6 +136,12 @@ var myvue = new Vue({
 				var v3 = Math.round((value - v1) * 3600 % 60);//秒  
 				return v3;                
 			},
+			latFormatter: function(row){
+				return this.formatDegree(row.lAid_Lat) + " N";
+			},
+			lngFormatter: function(row){
+				return this.formatDegree(row.lAid_Lng) + " E";
+			},
 			aidTypeFormatter: function(row){
 				var name = row.sAid_Type;
 				for (var i = 0; i < this.aidTypeOptions.length; i++) {

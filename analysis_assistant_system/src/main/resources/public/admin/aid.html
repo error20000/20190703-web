@@ -108,9 +108,9 @@
 					</el-table-column>
 					<el-table-column label="航标状态" prop="sAid_Status" :formatter="statusFormatter">
 					</el-table-column>
-					<el-table-column label="纬度" prop="lAid_Lat" >
+					<el-table-column label="纬度" prop="lAid_Lat" :formatter="latFormatter">
 					</el-table-column>
-					<el-table-column label="经度" prop="lAid_Lng" >
+					<el-table-column label="经度" prop="lAid_Lng" :formatter="lngFormatter">
 					</el-table-column>
 					<el-table-column label="归属航标站" prop="sAid_Station" :formatter="stationFormatter">
 					</el-table-column>
