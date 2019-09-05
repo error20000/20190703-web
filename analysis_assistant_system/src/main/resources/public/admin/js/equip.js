@@ -271,15 +271,15 @@ var myvue = new Vue({
 					var item = this.storeOptions[i];
 					if(row.sEquip_StoreLv1 == item.sStore_ID){
 						name1 = item.sStore_Name;
-						for (var j = 0; j < item.children.length; j++) {
+						for (var j = 0; item.children && j < item.children.length; j++) {
 							var item2 = item.children[j];
 							if(row.sEquip_StoreLv2 == item2.sStore_ID){
 								name2 = item2.sStore_Name;
-								for (var m = 0; m < item2.children.length; m++) {
+								for (var m = 0; item2.children && m < item2.children.length; m++) {
 									var item3 = item2.children[m];
 									if(row.sEquip_StoreLv3 == item3.sStore_ID){
 										name3 = item3.sStore_Name;
-										for (var n = 0; n < item3.children.length; n++) {
+										for (var n = 0; item3.children && n < item3.children.length; n++) {
 											var item4 = item3.children[n];
 											if(row.sEquip_StoreLv4 == item4.sStore_ID){
 												name4 = item4.sStore_Name;

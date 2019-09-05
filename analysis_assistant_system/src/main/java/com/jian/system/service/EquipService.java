@@ -102,9 +102,15 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			log.setsELog_Describe("器材入库");
 			log.setsELog_Remarks("");
 			logService.insert(log, user);
-			//
+		}
+		//绑定nfc
+		if(!Tools.isNullOrEmpty(obj.getsEquip_NfcID())) {
+			nfcService.bind(obj.getsEquip_NfcID());
 		}
 		//保存详情
+		if(Tools.isNullOrEmpty(obj.getsEquip_Type())) {
+			throw new ServiceException(Tips.ERROR211, "器材分类");
+		}
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		switch (obj.getsEquip_Type()) {
 		case Constant.EquipType_AIS:
@@ -236,13 +242,56 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 
 		//更新详情
+		if(Tools.isNullOrEmpty(value.get("sEquip_Type"))) {
+			throw new ServiceException(Tips.ERROR211, "器材分类");
+		}
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-		switch (old.getsEquip_Type()) {
+		boolean modify = true;
+		//更改器材分类，先删除旧分类
+		if(!old.getsEquip_Type().equals(value.get("sEquip_Type"))) {
+			modify = false;
+			Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", old.getsEquip_ID()).build();
+			switch (old.getsEquip_Type()) {
+			case Constant.EquipType_AIS:
+				aisService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Battery:
+				batteryService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Lamp:
+				lampService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Radar:
+				radarService.delete(condetail, user);
+				break;
+			case Constant.EquipType_SolarEnergy:
+				solarEnergyService.delete(condetail, user);
+				break;
+			case Constant.EquipType_SpareLamp:
+				spareLampService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Telemetry:
+				telemetryService.delete(condetail, user);
+				break;
+			case Constant.EquipType_ViceLamp:
+				viceLampService.delete(condetail, user);
+				break;
+
+			default:
+				break;
+			}
+		}
+		//添加新分类
+		switch (value.get("sEquip_Type")+"") {
 		case Constant.EquipType_AIS:
 			EquipAis ais = new EquipAis();
 			ais.setsEquip_ID(old.getsEquip_ID());
 			ais.setsAis_MMSIX(request.getParameter("sAis_MMSIX"));
-			aisService.update(ais, user);
+			if(modify) {
+				aisService.update(ais, user);
+			}else {
+				aisService.insert(ais, user);
+			}
 			break;
 		case Constant.EquipType_Battery:
 			EquipBattery battery = new EquipBattery();
@@ -252,7 +301,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			battery.setsBattery_Connect(request.getParameter("sBattery_Connect"));
 			battery.setlBattery_Volt(Float.parseFloat(request.getParameter("lBattery_Volt")));
 			battery.setlBattery_Watt(Float.parseFloat(request.getParameter("lBattery_Watt")));
-			batteryService.update(battery, user);
+			if(modify) {
+				batteryService.update(battery, user);
+			}else {
+				batteryService.insert(battery, user);
+			}
 			break;
 		case Constant.EquipType_Lamp:
 			EquipLamp lamp = new EquipLamp();
@@ -265,14 +318,22 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			lamp.setlLamp_TelemetryFlag(Integer.parseInt(request.getParameter("lLamp_TelemetryFlag")));
 			lamp.setlLamp_InputVolt(Float.parseFloat(request.getParameter("lLamp_InputVolt")));
 			lamp.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
-			lampService.update(lamp, user);
+			if(modify) {
+				lampService.update(lamp, user);
+			}else {
+				lampService.insert(lamp, user);
+			}
 			break;
 		case Constant.EquipType_Radar:
 			EquipRadar radar = new EquipRadar();
 			radar.setsEquip_ID(old.getsEquip_ID());
 			radar.setsRadar_NO(request.getParameter("sRadar_NO"));
 			radar.setsRadar_Band(request.getParameter("sRadar_Band"));
-			radarService.update(radar, user);
+			if(modify) {
+				radarService.update(radar, user);
+			}else {
+				radarService.insert(radar, user);
+			}
 			break;
 		case Constant.EquipType_SolarEnergy:
 			EquipSolarEnergy solar = new EquipSolarEnergy();
@@ -282,13 +343,21 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			solar.setsSolar_Connect(request.getParameter("sSolar_Connect"));
 			solar.setlSolar_Volt(Float.parseFloat(request.getParameter("lSolar_Volt")));
 			solar.setlSolar_Watt(Float.parseFloat(request.getParameter("lSolar_Watt")));
-			solarEnergyService.update(solar, user);
+			if(modify) {
+				solarEnergyService.update(solar, user);
+			}else {
+				solarEnergyService.insert(solar, user);
+			}
 			break;
 		case Constant.EquipType_SpareLamp:
 			EquipSpareLamp spare = new EquipSpareLamp();
 			spare.setsEquip_ID(old.getsEquip_ID());
 			spare.setlSLamp_Watt(Float.parseFloat(request.getParameter("lSLamp_Watt")));
-			spareLampService.update(spare, user);
+			if(modify) {
+				spareLampService.update(spare, user);
+			}else {
+				spareLampService.insert(spare, user);
+			}
 			break;
 		case Constant.EquipType_Telemetry:
 			EquipTelemetry telemetry = new EquipTelemetry();
@@ -298,13 +367,21 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			telemetry.setsTelemetry_SIM(request.getParameter("sTelemetry_SIM"));
 			telemetry.setlTelemetry_Volt(Float.parseFloat(request.getParameter("lTelemetry_Volt")));
 			telemetry.setlTelemetry_Watt(Float.parseFloat(request.getParameter("lTelemetry_Watt")));
-			telemetryService.update(telemetry, user);
+			if(modify) {
+				telemetryService.update(telemetry, user);
+			}else {
+				telemetryService.insert(telemetry, user);
+			}
 			break;
 		case Constant.EquipType_ViceLamp:
 			EquipViceLamp vice = new EquipViceLamp();
 			vice.setsEquip_ID(old.getsEquip_ID());
 			vice.setlVLamp_Watt(Float.parseFloat(request.getParameter("lVLamp_Watt")));
-			viceLampService.update(vice, user);
+			if(modify) {
+				viceLampService.update(vice, user);
+			}else {
+				viceLampService.insert(vice, user);
+			}
 			break;
 
 		default:
@@ -407,7 +484,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 	
 	@TargetDataSource
-	public Object detail(String sEquip_ID){
+	public Map<String, Object> detail(String sEquip_ID){
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR106, "sEquip_ID");
 		}
@@ -421,6 +498,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Tools.isNullOrEmpty(test.getsEquip_Type())) {
 			throw new ServiceException(Tips.ERROR106, "器材分类");
 		}
+		Map<String, Object> res = new HashMap<String, Object>();
+		res.putAll(Tools.parseObjectToMap(test));
 		//查询详情
 		Object detail = null;
 		Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", test.getsEquip_ID()).build();
@@ -453,7 +532,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		default:
 			break;
 		}
-		return detail;
+		if(detail != null) {
+			res.putAll(Tools.parseObjectToMap(detail));
+		}
+		return res;
 	}
 	
 	@TargetDataSource

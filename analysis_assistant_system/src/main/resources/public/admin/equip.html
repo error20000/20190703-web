@@ -70,7 +70,11 @@
 					</el-table-column>
 					<el-table-column label="器材编码" prop="sEquip_NO" width="120" fixed="left">
 					</el-table-column>
-					<el-table-column label="器材名称" prop="sEquip_Name" width="120" fixed="left">
+					<!-- <el-table-column label="器材名称" prop="sEquip_Name" width="120" fixed="left">
+					</el-table-column> -->
+					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter" fixed="left">
+					</el-table-column>
+					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter">
 					</el-table-column>
 					<el-table-column label="NFC标签" prop="sEquip_NfcID" >
 						<template scope="scope">
@@ -81,10 +85,6 @@
 					          </div>
 					        </el-popover>
 					     </template>
-					</el-table-column>
-					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter">
-					</el-table-column>
-					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter">
 					</el-table-column>
 					<el-table-column label="所属航标" prop="sEquip_AidID" >
 					</el-table-column>
@@ -623,11 +623,6 @@
 			  </el-form-item>
 			  <el-form-item label="所属仓库" prop="store">
 					<div v-html="storeFormatter(viewForm)"></div>
-			     <el-cascader v-model="viewForm.store" placeholder="请选择所属仓库" disabled
-				    expand-trigger="hover"
-				    :options="storeOptions"
-				    :props="storeProps">
-				  </el-cascader>
 			  </el-form-item>
 			  <el-form-item label="生产厂家" prop="sEquip_Manufacturer">
 					<div v-for="item in mfOptions" 

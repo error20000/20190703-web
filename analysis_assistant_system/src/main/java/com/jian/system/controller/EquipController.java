@@ -348,6 +348,18 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		return super.findOne(req);
 	}
 	
+	@RequestMapping("/app/detail")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询器材详情")
+	public String appDetail(HttpServletRequest req) {
+		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
+		Map<String, Object> res = service.detail(sEquip_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	@RequestMapping("/app/history")
     @ResponseBody
     @VerifyAppSign
