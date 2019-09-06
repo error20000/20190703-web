@@ -35,7 +35,7 @@ var myvue = new Vue({
 
 				stationDictNo: 'AidStation',
 				stationOptions: [],
-				mapIconDictNo: 'StoreTypeMapIcon',
+				mapIconDictNo: 'StoreMapIcon',
 				mapIconOptions: [],
 				lv1Options: [],
 				lv2Options: [],

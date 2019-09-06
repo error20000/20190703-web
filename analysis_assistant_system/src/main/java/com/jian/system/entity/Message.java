@@ -53,6 +53,9 @@ public class Message extends Base<Message> {
 	private String sMsg_StoreLv4;
 	@Excel(name="库存数量", sort=0, length="", isNull=1 )
 	private int dMsg_StoreNum;
+	@Excel(name="消息原因", sort=0, length="64", isNull=1 )
+	private String sMsg_Reason;
+
 	
 
 	public String getsMsg_ID() {
@@ -180,6 +183,12 @@ public class Message extends Base<Message> {
 	}
 	public void setdMsg_StoreNum(int dMsg_StoreNum) {
 		this.dMsg_StoreNum = dMsg_StoreNum;
+	}
+	public String getsMsg_Reason() {
+		return sMsg_Reason;
+	}
+	public void setsMsg_Reason(String sMsg_Reason) {
+		this.sMsg_Reason = sMsg_Reason;
 	}
 	
 }
