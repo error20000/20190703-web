@@ -15,7 +15,7 @@ public class Dict extends Base<Dict> {
 	private String sDict_ID;
 	@Excel(name="字典编码", sort=0, length="64", isNull=1 )
 	private String sDict_NO;
-	@Excel(name="字典分类名称", sort=0, length="32", isNull=1 )
+	@Excel(name="字典名称", sort=0, length="255", isNull=1 )
 	private String sDict_Name;
 	@Excel(name="创建日期", sort=0, length="", isNull=1 )
 	private Date dDict_CreateDate;

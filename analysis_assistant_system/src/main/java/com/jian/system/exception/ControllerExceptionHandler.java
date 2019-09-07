@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
 
@@ -45,7 +46,7 @@ public class ControllerExceptionHandler {
 		
 		log.error(result.toString());
 		
-		return ResultTools.custom(Tips.ERROR0).toJSONString();
+		return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
 	}
 
 	@ResponseBody
