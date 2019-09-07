@@ -18,7 +18,10 @@ import com.jian.system.annotation.VerifyAppLogin;
 import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
+import com.jian.system.config.Constant;
 import com.jian.system.entity.Message;
+import com.jian.system.entity.User;
+import com.jian.system.exception.ServiceException;
 import com.jian.system.service.MessageService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
@@ -152,6 +155,35 @@ public class MessageController extends BaseController<Message, MessageService> {
 		String sMsg_ID = Tools.getReqParamSafe(req, "sMsg_ID");
 		Map<String, Object> res = service.view(sMsg_ID, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	@RequestMapping("/app/add")
+    @ResponseBody
+	@VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Add, describe="app新增消息")
+	public String appAdd(HttpServletRequest req) {
+		Message obj = Utils.getReqParamsToObject(req, new Message());
+		User loginUser = getAppLoginUser(req);
+		String describe = Tools.getReqParamSafe(req, "describe");
+
+		obj.setsMsg_ID(Utils.newSnowflakeIdStr());
+		obj.setsMsg_Type(Constant.MsgType_4);
+		obj.setsMsg_Title(Constant.MsgType_4_Msg);
+		obj.setsMsg_Status(Constant.MsgStatus_3);
+		obj.setsMsg_Describe(describe);
+		obj.setlMsg_Level(10);
+		obj.setdMsg_CreateDate(new Date());
+		obj.setsMsg_FromUserID(loginUser.getsUser_ID());
+		obj.setsMsg_ToUserID(loginUser.getsUser_ID());
+		
+		int res = service.insert(obj, loginUser);
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).toJSONString();
+		}
 	}
 	
 	

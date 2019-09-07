@@ -181,14 +181,14 @@
 			    <el-input v-model="addForm.sAid_Name"></el-input>
 			  </el-form-item>
 			  <el-form-item label="航标纬度" >
-			    <el-input v-model="addForm.lAid_Lat_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-			    <el-input v-model="addForm.lAid_Lat_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="addForm.lAid_Lat_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ N
+			    <el-input v-model="addForm.lAid_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
+			    <el-input v-model="addForm.lAid_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+			    <el-input v-model="addForm.lAid_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
 			  </el-form-item>
 			  <el-form-item label="航标经度">
-			    <el-input v-model="addForm.lAid_Lng_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-			    <el-input v-model="addForm.lAid_Lng_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="addForm.lAid_Lng_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ E
+			    <el-input v-model="addForm.lAid_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
+			    <el-input v-model="addForm.lAid_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+			    <el-input v-model="addForm.lAid_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
 			    <el-select v-model="addForm.sAid_Station" placeholder="请选择归属航标站">
@@ -275,14 +275,14 @@
 			    <el-input v-model="editForm.sAid_Name"></el-input>
 			  </el-form-item>
 			  <el-form-item label="航标纬度" >
-			    <el-input v-model="editForm.lAid_Lat_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-			    <el-input v-model="editForm.lAid_Lat_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="editForm.lAid_Lat_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ N
+			    <el-input v-model="editForm.lAid_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
+			    <el-input v-model="editForm.lAid_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+			    <el-input v-model="editForm.lAid_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
 			  </el-form-item>
 			  <el-form-item label="航标经度">
-			    <el-input v-model="editForm.lAid_Lng_du" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-			    <el-input v-model="editForm.lAid_Lng_fen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="editForm.lAid_Lng_miao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>″ E
+			    <el-input v-model="editForm.lAid_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
+			    <el-input v-model="editForm.lAid_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
+			    <el-input v-model="editForm.lAid_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
 			    <el-select v-model="editForm.sAid_Station" placeholder="请选择归属航标站">

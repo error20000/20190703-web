@@ -44,6 +44,8 @@ public class Constant {
 	public static final String MsgType_2_Msg = "航标异常";
 	public static final String MsgType_3 = "3"; //器材异常
 	public static final String MsgType_3_Msg = "器材异常";
+	public static final String MsgType_4 = "4"; //自定义消息
+	public static final String MsgType_4_Msg = "自定义消息";
 	
 	public static final String MsgStatus_1 = "1"; //未读
 	public static final String MsgStatus_2 = "2"; //已读

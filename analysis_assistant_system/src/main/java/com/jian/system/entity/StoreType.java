@@ -26,6 +26,20 @@ public class StoreType extends Base<StoreType> {
 	@Excel(name="地图图标", sort=0, length="64", isNull=1 )
 	private String sStoreType_MapIcon;
 	
+
+	@Excel(name="纬度（度", sort=0, length="", isNull=1 )
+	private float lStoreType_LatDu;
+	@Excel(name="纬度（分）", sort=0, length="", isNull=1 )
+	private float lStoreType_LatFen;
+	@Excel(name="纬度（秒）", sort=0, length="", isNull=1 )
+	private float lStoreType_LatMiao;
+	@Excel(name="经度（度", sort=0, length="", isNull=1 )
+	private float lStoreType_LngDu;
+	@Excel(name="经度（分）", sort=0, length="", isNull=1 )
+	private float lStoreType_LngFen;
+	@Excel(name="经度（秒）", sort=0, length="", isNull=1 )
+	private float lStoreType_LngMiao;
+	
 	
 	
 	public String getsStoreType_ID() {
@@ -75,6 +89,42 @@ public class StoreType extends Base<StoreType> {
 	}
 	public void setsStoreType_MapIcon(String sStoreType_MapIcon) {
 		this.sStoreType_MapIcon = sStoreType_MapIcon;
+	}
+	public float getlStoreType_LatDu() {
+		return lStoreType_LatDu;
+	}
+	public void setlStoreType_LatDu(float lStoreType_LatDu) {
+		this.lStoreType_LatDu = lStoreType_LatDu;
+	}
+	public float getlStoreType_LatFen() {
+		return lStoreType_LatFen;
+	}
+	public void setlStoreType_LatFen(float lStoreType_LatFen) {
+		this.lStoreType_LatFen = lStoreType_LatFen;
+	}
+	public float getlStoreType_LatMiao() {
+		return lStoreType_LatMiao;
+	}
+	public void setlStoreType_LatMiao(float lStoreType_LatMiao) {
+		this.lStoreType_LatMiao = lStoreType_LatMiao;
+	}
+	public float getlStoreType_LngDu() {
+		return lStoreType_LngDu;
+	}
+	public void setlStoreType_LngDu(float lStoreType_LngDu) {
+		this.lStoreType_LngDu = lStoreType_LngDu;
+	}
+	public float getlStoreType_LngFen() {
+		return lStoreType_LngFen;
+	}
+	public void setlStoreType_LngFen(float lStoreType_LngFen) {
+		this.lStoreType_LngFen = lStoreType_LngFen;
+	}
+	public float getlStoreType_LngMiao() {
+		return lStoreType_LngMiao;
+	}
+	public void setlStoreType_LngMiao(float lStoreType_LngMiao) {
+		this.lStoreType_LngMiao = lStoreType_LngMiao;
 	}
 	
 }

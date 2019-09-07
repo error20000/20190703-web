@@ -6,6 +6,11 @@
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
+  <style>
+	.el-table tr {
+	    height: 40px;
+	}
+  </style>
 </head>
 <body class="animated fadeIn">
   <div id="app">
@@ -52,11 +57,11 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:dictType:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sDictType_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sDictType_ID" width="120">
 					</el-table-column>
-					<el-table-column label="字典分类编码" prop="sDictType_NO" fixed="left">
+					<el-table-column label="字典分类编码" prop="sDictType_NO">
 					</el-table-column>
-					<el-table-column label="字典分类名称" prop="sDictType_Name" fixed="left">
+					<el-table-column label="字典分类名称" prop="sDictType_Name">
 					</el-table-column>
 					<el-table-column label="创建日期" prop="dDictType_CreateDate" :formatter="(r,c) => {return formatDate(r.dDictType_CreateDate);}">
 					</el-table-column>
@@ -66,7 +71,7 @@
 					</el-table-column>
 					<el-table-column label="更新者" prop="sDictType_UpdateUserID" :formatter="userModFormatter">
 					</el-table-column>
-					<el-table-column fixed="right" label="操作" width="180">
+					<el-table-column fixed="right" label="操作" width="160">
 						<template scope="scope">
 							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)" ref="edit" auth="sys:dictType:update" v-show="hasAuth('edit')">编辑</el-button>
 							<el-button size="mini" type="danger" @click="handleDel(scope.$index, scope.row)" ref="delete" auth="sys:dictType:delete" v-show="hasAuth('delete')">删除</el-button>

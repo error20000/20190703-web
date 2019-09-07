@@ -176,7 +176,8 @@ var myvue = new Vue({
 				value = Math.abs(value);                
 				var v1 = Math.floor(value);//度               
 				var v2 = Math.floor((value - v1) * 60);//分                
-				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
+				//var v3 = Math.round((value - v1) * 3600 % 60);//秒 
+				var v3 = Number(Number((value - v1) * 3600 % 60).toFixed(3));     
 				return v + v1 + '°' + v2 + '\'' + v3 + '"';            
 			},
 			formatToDegree: function(du, fen, miao) { 
@@ -197,14 +198,17 @@ var myvue = new Vue({
 				value = Math.abs(value);                
 				var v1 = Math.floor(value);//度               
 				var v2 = Math.floor((value - v1) * 60);//分                
-				var v3 = Math.round((value - v1) * 3600 % 60);//秒  
+				//var v3 = Math.round((value - v1) * 3600 % 60);//秒 
+				var v3 = Number(Number((value - v1) * 3600 % 60).toFixed(2));   
 				return v3;                
 			},
 			latFormatter: function(row){
-				return this.formatDegree(row.lStoreType_Lat) + " N";
+				//return this.formatDegree(row.lStoreType_Lat) + " N";
+				return row.lStoreType_LatDu + '°' + row.lStoreType_LatFen + '\'' + row.lStoreType_LatMiao + '"' + " N";
 			},
 			lngFormatter: function(row){
-				return this.formatDegree(row.lStoreType_Lng) + " E";
+				//return this.formatDegree(row.lStoreType_Lng) + " E";
+				return row.lStoreType_LngDu + '°' + row.lStoreType_LngFen + '\'' + row.lStoreType_LngMiao + '"' + " E";
 			},
 			stationFormatter: function(row){
 				var name = row.sStoreType_Station;
@@ -443,14 +447,8 @@ var myvue = new Vue({
 						this.$confirm('确定提交吗?', '提示', {}).then(() => {
 							var params = Object.assign({}, this.addForm);
 							if(this.addForm.level == 1){
-								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_Lat_du, params.lStoreType_Lat_fen, params.lStoreType_Lat_miao);
-								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_Lng_du, params.lStoreType_Lng_fen, params.lStoreType_Lng_miao);
-								delete params.lStoreType_Lat_du;
-								delete params.lStoreType_Lat_fen;
-								delete params.lStoreType_Lat_miao;
-								delete params.lStoreType_Lng_du;
-								delete params.lStoreType_Lng_fen;
-								delete params.lStoreType_Lng_miao;
+								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_LatDu, params.lStoreType_LatFen, params.lStoreType_LatMiao);
+								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_LngDu, params.lStoreType_LngFen, params.lStoreType_LngMiao);
 							}
 							var self = this;
 							this.addLoading = true;
@@ -503,13 +501,6 @@ var myvue = new Vue({
 				switch (lv) {
 				case 1:
 					this.editForm.name = row.sStoreType_Name;
-					this.editForm.lStoreType_Lat_du = this.formatToDu(this.editForm.lStoreType_Lat);
-					this.editForm.lStoreType_Lat_fen = this.formatToFen(this.editForm.lStoreType_Lat);
-					this.editForm.lStoreType_Lat_miao = this.formatToMiao(this.editForm.lStoreType_Lat);
-					this.editForm.lStoreType_Lng_du = this.formatToDu(this.editForm.lStoreType_Lng);
-					this.editForm.lStoreType_Lng_fen = this.formatToFen(this.editForm.lStoreType_Lng);
-					this.editForm.lStoreType_Lng_miao = this.formatToMiao(this.editForm.lStoreType_Lng);
-					console.log(this.editForm);
 					break;
 
 				default:
@@ -530,14 +521,8 @@ var myvue = new Vue({
 							this.editLoading = true;
 							var params = Object.assign({}, this.editForm);
 							if(this.editForm.level == 1){
-								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_Lat_du, params.lStoreType_Lat_fen, params.lStoreType_Lat_miao);
-								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_Lng_du, params.lStoreType_Lng_fen, params.lStoreType_Lng_miao);
-								delete params.lStoreType_Lat_du;
-								delete params.lStoreType_Lat_fen;
-								delete params.lStoreType_Lat_miao;
-								delete params.lStoreType_Lng_du;
-								delete params.lStoreType_Lng_fen;
-								delete params.lStoreType_Lng_miao;
+								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_LatDu, params.lStoreType_LatFen, params.lStoreType_LatMiao);
+								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_LngDu, params.lStoreType_LngFen, params.lStoreType_LngMiao);
 							}
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;

@@ -141,8 +141,10 @@ public class TokenUtils {
 			throw new ServiceException(Tips.ERROR111);
 		}
 		return user;*/
+		
 		User uesr = new User();
 		uesr.setsUser_GroupID("1");
+		uesr.setsUser_ID("1");
 		return uesr;
 	}
 	
