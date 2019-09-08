@@ -46,11 +46,13 @@
 	    text-align: center;
 	    font-size: 18px;
 	}
-	
+	.el-tabs__header{
+		display: none;
+	}
 	
   </style>
 </head>
-<body class="animated fadeIn">
+<body class="animated fadeIn" style="overflow: auto;">
   <div id="app">
   	
   	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
@@ -60,9 +62,9 @@
 	   </div>
     </div>
     
-    <section style="padding: 20px;" v-show="preloading">
+    <section style="" v-show="preloading">
 		<!-- filter -->
-		<el-row>
+		<!-- <el-row>
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-col :span="24">
 			<el-tabs value="filter" >
@@ -77,7 +79,7 @@
 				
 			</el-col>
 		</el-col>
-		</el-row>
+		</el-row> -->
 		
 	    <el-tabs v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:map:query" v-show="hasAuth('query')">
@@ -89,7 +91,7 @@
 					    <span>器材区域分布统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filters.used" placeholder="请选择">
+							    <el-select v-model="filters.used" placeholder="请选择" @visible-change="handleVisibleChange">
 							      <el-option label="已使用" value="1"></el-option>
 							      <el-option label="未使用" value="2"></el-option>
 							    </el-select>
@@ -221,7 +223,7 @@
 					    <span>器材故障统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择">
+							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择" @focus="handleVisibleChange" @click="handleTestClick" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in aidStationOptions"
 								      :key="item.sDict_NO"

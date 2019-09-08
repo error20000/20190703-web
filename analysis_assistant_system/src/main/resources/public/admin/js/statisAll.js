@@ -35,6 +35,8 @@ var myvue = new Vue({
 				
 				menuFuns: gMenuFuns,
 				authCache: {},
+				fullScreenEnabled: false, 
+				isFullScreen: false, 
 
 
 				storeLv1Options: [],
@@ -1183,11 +1185,42 @@ var myvue = new Vue({
 			
 			//full
 			handleShowFull: function(){
-				var full = document.getElementById("chartView");
+				var full = document.getElementsByTagName('body')[0];//document.getElementById("chartView");
 	            launchIntoFullscreen(full);
+	            window.location.reload(); 
 			},
 			handleHideFull: function(){
 				
+			},
+			handleVisibleChange: function(val){
+		        /*if (document.fullscreen && val) {
+		        	var top = $("body").scrollTop();
+		        	setTimeout(() => {
+		        		console.log(top);
+		        		var old = $('.el-select-dropdown').css('top');
+		        		var old2 = $('.el-select-dropdown').css('display');
+		        		console.log(old, old2);
+		        		console.log("==================================")
+		        		var el = document.getElementsByClassName('el-select-dropdown')[0];
+		        		console.log(el);
+		        		console.log(el.style);
+		        		//$('.el-select-dropdown').css('top', top+261-55);
+		        		$('.el-select-dropdown').css('position', 'fixed');
+					}, 1000);
+		        	var test = setInterval(function(){
+		        		var old2 = $('.el-select-dropdown').css('display');
+		        		console.log(old2);
+		        	    if(old2 !='none'){
+		        	    	clearInterval(test);
+			        		var old = $('.el-select-dropdown').css('top');
+			        		console.log(old, old2);
+			        		console.log("----------------------------------")
+		        	    }
+		        	},100);
+		        }*/
+			},
+			handleTestClick :function(e){
+				console.log(e || window.event);
 			},
 			
 			//reset
@@ -1293,6 +1326,39 @@ var myvue = new Vue({
 			this.chartEquipBrandDump();
 			this.chartEquipBrandUnusual();
 			this.chartEquipBrandRepair();
+			
+			/*window.onresize = function() {
+				if(this.fullScreenEnabled){
+					console.log("onresize");
+					if (!this.isFullScreen) {
+						$("section").css('padding', '0px');
+						$(".el-tabs__header").hide();
+						this.isFullScreen = true;
+						console.log("onresize true");
+					}else{
+						$("section").css('padding', '20px');
+						$(".el-tabs__header").show();
+						console.log("onresize false");
+			            this.fullScreenEnabled = false;
+					}
+				}
+		    }*/
+			
+			var self = this;
+			$(document).on('keydown', function (e) {
+				//e = e || event || window.event;
+				if(e && e.keyCode == 122){//捕捉F11键盘动作
+					console.log(e);
+					$(".el-header").hide();
+					$(".el-main").css('top', '0px');
+		            $(".el-tabs__header").hide();
+		            $("section").css('padding', '0px');
+		            e.preventDefault();  //阻止F11默认动作
+		            self.handleShowFull();
+				}
+	        });
+
+
 			
 		}
 	  });
