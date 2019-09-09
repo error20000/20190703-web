@@ -268,7 +268,10 @@
 			</el-tab-pane>
 		  </el-tabs>
 		
-		<div class="page-component-up"  title="全屏"  @click="handleShowFull"><i class="el-icon-rank"></i></div>
+		<div id="fullscrean" class="page-component-up"  title="全屏"  @click="handleShowFull"><i class="fas fa-arrows-alt"></i></div>
+		<div id="exitFullscrean" style="display: none;" class="page-component-up"  title="退出全屏"  @click="handleHideFull"><i class="fas fa-compress-arrows-alt"></i></div>
+		<!-- <i class="fas fa-compress-arrows-alt"></i> 
+		<i class="fas fa-arrows-alt"></i> -->
 		
 	</section>
   </div>

@@ -17,6 +17,7 @@ import com.jian.system.annotation.VerifyAppLogin;
 import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
+import com.jian.system.entity.Equip;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.service.StoreService;
@@ -249,6 +250,22 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库(地图)")
 	public String appMap(HttpServletRequest req) {
 		List<Map<String, Object>> list = service.storeMap();
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+
+	@RequestMapping("/app/equip")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库(地图)")
+	public String appEquip(HttpServletRequest req) {
+		String sEquip_StoreLv1 = Tools.getReqParamSafe(req, "sEquip_StoreLv1");
+		String sEquip_StoreLv2 = Tools.getReqParamSafe(req, "sEquip_StoreLv2");
+		String sEquip_StoreLv3 = Tools.getReqParamSafe(req, "sEquip_StoreLv3");
+		String sEquip_StoreLv4 = Tools.getReqParamSafe(req, "sEquip_StoreLv4");
+		List<Equip> list = service.appEquip(sEquip_StoreLv1, sEquip_StoreLv2, sEquip_StoreLv3, sEquip_StoreLv4);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	

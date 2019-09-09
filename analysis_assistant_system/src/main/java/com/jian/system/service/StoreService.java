@@ -1,6 +1,7 @@
 package com.jian.system.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.jian.system.dao.EquipMapper;
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
+import com.jian.system.entity.Equip;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
@@ -231,6 +233,17 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	@TargetDataSource
 	public List<Map<String, Object>> storeMap() {
 		return typeService.storeMap();
+	}
+
+	
+	@TargetDataSource
+	public List<Equip> appEquip(String sEquip_StoreLv1, String sEquip_StoreLv2, String sEquip_StoreLv3, String sEquip_StoreLv4) {
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("sEquip_StoreLv1", sEquip_StoreLv1);
+		condition.put("sEquip_StoreLv2", sEquip_StoreLv2);
+		condition.put("sEquip_StoreLv3", sEquip_StoreLv3);
+		condition.put("sEquip_StoreLv4", sEquip_StoreLv4);
+		return equipService.selectList(condition);
 	}
 	
 	

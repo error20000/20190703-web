@@ -143,10 +143,10 @@
 					    <el-input v-model="detailForm.sAid_TypeName" readonly></el-input>
 					  </el-form-item>
 					  <el-form-item label="经度" prop="lAid_Lng">
-					    <el-input v-model="detailForm.lAid_Lng + '  ('+detailForm.lng+')'" readonly></el-input>
+					    <el-input v-model="detailForm.lng" readonly></el-input>
 					  </el-form-item>
 					  <el-form-item label="纬度" prop="lAid_Lat">
-					    <el-input v-model="detailForm.lAid_Lat + '  ('+detailForm.lat+')'" readonly></el-input>
+					    <el-input v-model="detailForm.lat" readonly></el-input>
 					  </el-form-item>
 					  <el-form-item label="所属航标站" prop="sAid_StationName">
 					    <el-input v-model="detailForm.sAid_StationName" readonly></el-input>
@@ -185,10 +185,10 @@
 				    <el-input v-model="detailForm.sStoreType_Address" readonly></el-input>
 				  </el-form-item>
 				  <el-form-item label="经度" prop="lStoreType_Lng">
-				    <el-input v-model="detailForm.lStoreType_Lng + '  ('+detailForm.lng+')'" readonly></el-input>
+				    <el-input v-model="detailForm.lng" readonly></el-input>
 				  </el-form-item>
 				  <el-form-item label="纬度" prop="lStoreType_Lat">
-				    <el-input v-model="detailForm.lStoreType_Lat + '  ('+detailForm.lat+')'" readonly></el-input>
+				    <el-input v-model="detailForm.lat" readonly></el-input>
 				  </el-form-item>
 				  <el-form-item label="所属航标站" prop="sStoreType_StationName">
 				    <el-input v-model="detailForm.sStoreType_StationName" readonly></el-input>

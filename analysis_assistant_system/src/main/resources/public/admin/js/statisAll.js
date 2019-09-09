@@ -1188,9 +1188,13 @@ var myvue = new Vue({
 				var full = document.getElementsByTagName('body')[0];//document.getElementById("chartView");
 	            launchIntoFullscreen(full);
 	            window.location.reload(); 
+				localStorage.setItem('isFullScreen', 1);
 			},
 			handleHideFull: function(){
-				
+				var full = document.getElementsByTagName('body')[0];
+				//exitFullscreen();
+				full.exitFullscreen();
+				localStorage.setItem('isFullScreen', "");
 			},
 			handleVisibleChange: function(val){
 		        /*if (document.fullscreen && val) {
@@ -1358,7 +1362,14 @@ var myvue = new Vue({
 				}
 	        });
 
-
+			let isFullScreen = localStorage.getItem('isFullScreen');
+			if(isFullScreen){
+				$("#fullscrean").hide();
+				$("#exitFullscrean").show();
+			}else{
+				$("#fullscrean").show();
+				$("#exitFullscrean").hide();
+			}
 			
 		}
 	  });

@@ -65,6 +65,9 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 	
 	@TargetDataSource
 	public Map<String, Object> view(String sMsg_ID, User user, String ip) {
+		if(Tools.isNullOrEmpty(sMsg_ID)) {
+			throw new ServiceException(Tips.ERROR206, "sMsg_ID");
+		}
 		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
 			return baseMapper.view(sMsg_ID, null);
 		}

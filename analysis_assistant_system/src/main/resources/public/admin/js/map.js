@@ -75,6 +75,12 @@ var myvue = new Vue({
 				var v3 = Math.round((value - v1) * 3600 % 60);//秒                
 				return v + v1 + '°' + v2 + '\'' + v3 + '"';            
 			},
+			latFormatter: function(row){
+				return row.lAid_LatDu + '°' + row.lAid_LatFen + '\'' + row.lAid_LatMiao + '"' + " N";
+			},
+			lngFormatter: function(row){
+				return row.lAid_LngDu + '°' + row.lAid_LngFen + '\'' + row.lAid_LngMiao + '"' + " E";
+			},
 			/*handleAidStatusIconOptions: function(cb){
 				var self = this;
 				var params = {sDict_DictTypeNO: this.aidStatusIconDictNo};
@@ -506,8 +512,8 @@ var myvue = new Vue({
 					let node = this.aidOptions[i];
 					if(id == node.sAid_ID){
 						this.detailForm = node;
-						this.detailForm.lat = this.formatDegree(node.lAid_Lat);
-						this.detailForm.lng = this.formatDegree(node.lAid_Lng);
+						this.detailForm.lat = this.latFormatter(node);//this.formatDegree(node.lAid_Lat);
+						this.detailForm.lng = this.lngFormatter(node);//this.formatDegree(node.lAid_Lng);
 						
 						this.detailForm.sAid_TypeName = this.aidTypeFormatter(node);
 						this.detailForm.sAid_StationName = this.stationFormatter(node);
@@ -527,8 +533,8 @@ var myvue = new Vue({
 					let node = this.storeTypeOptions[i];
 					if(id == node.sStoreType_ID){
 						this.detailForm = node;
-						this.detailForm.lat = this.formatDegree(node.lStoreType_Lat);
-						this.detailForm.lng = this.formatDegree(node.lStoreType_Lng);
+						this.detailForm.lat = this.latFormatter(node);//this.formatDegree(node.lStoreType_Lat);
+						this.detailForm.lng = this.lngFormatter(node);//this.formatDegree(node.lStoreType_Lng);
 						let temp = {
 							sAid_Station: node.sStoreType_Station
 						};
