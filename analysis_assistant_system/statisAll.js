@@ -1187,22 +1187,18 @@ var myvue = new Vue({
 			handleShowFull: function(){
 				var full = document.getElementsByTagName('body')[0];//document.getElementById("chartView");
 	            launchIntoFullscreen(full);
-	            //window.location.reload(); 
-				//localStorage.setItem('isFullScreen', 1);
-
-				$("#fullscrean").hide();
-				$("#exitFullscrean").show();
+	            window.location.reload(); 
+				localStorage.setItem('isFullScreen', 1);
 			},
 			handleHideFull: function(){
-				//var full = document.getElementsByTagName('body')[0];
-				exitFullscreen();
-				//localStorage.setItem('isFullScreen', "");
-				$("#fullscrean").show();
-				$("#exitFullscrean").hide();
+				var full = document.getElementsByTagName('body')[0];
+				//exitFullscreen();
+				full.exitFullscreen();
+				localStorage.setItem('isFullScreen', "");
 			},
 			handleVisibleChange: function(val){
-		        if (document.fullscreen && val) {
-		        	/*var top = $("body").scrollTop();
+		        /*if (document.fullscreen && val) {
+		        	var top = $("body").scrollTop();
 		        	setTimeout(() => {
 		        		console.log(top);
 		        		var old = $('.el-select-dropdown').css('top');
@@ -1224,11 +1220,8 @@ var myvue = new Vue({
 			        		console.log(old, old2);
 			        		console.log("----------------------------------")
 		        	    }
-		        	},100);*/
-		        	setTimeout(() => {
-		        		$('.el-select-dropdown').css('position', 'fixed');
-		        	}, 20);
-		        }
+		        	},100);
+		        }*/
 			},
 			handleTestClick :function(e){
 				console.log(e || window.event);
@@ -1355,7 +1348,7 @@ var myvue = new Vue({
 				}
 		    }*/
 			
-			/*var self = this;
+			var self = this;
 			$(document).on('keydown', function (e) {
 				//e = e || event || window.event;
 				if(e && e.keyCode == 122){//捕捉F11键盘动作
@@ -1367,16 +1360,16 @@ var myvue = new Vue({
 		            e.preventDefault();  //阻止F11默认动作
 		            self.handleShowFull();
 				}
-	        });*/
+	        });
 
-			/*let isFullScreen = localStorage.getItem('isFullScreen');
+			let isFullScreen = localStorage.getItem('isFullScreen');
 			if(isFullScreen){
 				$("#fullscrean").hide();
 				$("#exitFullscrean").show();
 			}else{
 				$("#fullscrean").show();
 				$("#exitFullscrean").hide();
-			}*/
+			}
 			
 		}
 	  });

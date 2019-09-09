@@ -91,13 +91,13 @@
 					    <span>器材区域分布统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filters.used" placeholder="请选择" @visible-change="handleVisibleChange">
+							    <el-select v-model="filters.used" placeholder="请选择" >
 							      <el-option label="已使用" value="1"></el-option>
 							      <el-option label="未使用" value="2"></el-option>
 							    </el-select>
 							</el-form-item>
 							<el-form-item>
-							    <el-select v-model="filters.sEquip_Type" placeholder="请选择">
+							    <el-select v-model="filters.sEquip_Type" placeholder="请选择" >
 								    <el-option
 								      v-for="item in equipTypeOptions"
 								      :key="item.sDict_NO"
@@ -120,7 +120,7 @@
 					    <span>仓库库存变化统计表</span>
 					    <el-form size="mini" :inline="true" :model="filtersStoreTime" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersStoreTime.sStore_Level1" placeholder="请选择">
+							    <el-select v-model="filtersStoreTime.sStore_Level1" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in storeLv1Options"
 								      :key="item.sStoreType_ID"
@@ -130,7 +130,7 @@
 							    </el-select>
 							</el-form-item>
 							<el-form-item>
-							    <el-select v-model="filtersStoreTime.sEquip_Type" placeholder="请选择">
+							    <el-select v-model="filtersStoreTime.sEquip_Type" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in equipTypeOptions"
 								      :key="item.sDict_NO"
@@ -153,7 +153,7 @@
 					    <span>器材寿命统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersLife.sEquip_MBrand" placeholder="请选择">
+							    <el-select v-model="filtersLife.sEquip_MBrand" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in brandOptions"
 								      :key="item.sEquip_MBrand"
@@ -177,7 +177,7 @@
 					    <span>器材品牌、型号统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrand" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersBrand.sAid_Station" placeholder="请选择">
+							    <el-select v-model="filtersBrand.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in aidStationOptions"
 								      :key="item.sDict_NO"
@@ -200,7 +200,7 @@
 					    <span>器材报废统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandDump" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersBrandDump.sAid_Station" placeholder="请选择">
+							    <el-select v-model="filtersBrandDump.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in aidStationOptions"
 								      :key="item.sDict_NO"
@@ -223,7 +223,7 @@
 					    <span>器材故障统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择" @focus="handleVisibleChange" @click="handleTestClick" @visible-change="handleVisibleChange">
+							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in aidStationOptions"
 								      :key="item.sDict_NO"
@@ -246,7 +246,7 @@
 					    <span>器材维修统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandRepair" style="float: right;">
 							<el-form-item>
-							    <el-select v-model="filtersBrandRepair.sAid_Station" placeholder="请选择">
+							    <el-select v-model="filtersBrandRepair.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
 								    <el-option
 								      v-for="item in aidStationOptions"
 								      :key="item.sDict_NO"
@@ -270,8 +270,6 @@
 		
 		<div id="fullscrean" class="page-component-up"  title="全屏"  @click="handleShowFull"><i class="fas fa-arrows-alt"></i></div>
 		<div id="exitFullscrean" style="display: none;" class="page-component-up"  title="退出全屏"  @click="handleHideFull"><i class="fas fa-compress-arrows-alt"></i></div>
-		<!-- <i class="fas fa-compress-arrows-alt"></i> 
-		<i class="fas fa-arrows-alt"></i> -->
 		
 	</section>
   </div>
