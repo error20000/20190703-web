@@ -32,7 +32,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 	@TargetDataSource
 	public List<Message> selectPage(Map<String, Object> condition, Date startDate, Date endDate, User user, int start, int rows) {
 		if(user == null) {
-			return new ArrayList<Message>();
+			return new ArrayList<>();
 		}
 		condition = condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
@@ -56,6 +56,9 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 	
 	@TargetDataSource
 	public List<Message> search(String keywords, User user, String ip) {
+		if(user == null) {
+			return new ArrayList<>();
+		}
 		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
 			return baseMapper.search(keywords, null);
 		}
@@ -65,6 +68,9 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 	
 	@TargetDataSource
 	public Map<String, Object> view(String sMsg_ID, User user, String ip) {
+        if(user == null){
+            return new HashMap<>();
+        }
 		if(Tools.isNullOrEmpty(sMsg_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sMsg_ID");
 		}
