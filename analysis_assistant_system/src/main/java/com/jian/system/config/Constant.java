@@ -51,4 +51,7 @@ public class Constant {
 	public static final String MsgStatus_2 = "2"; //已读
 	public static final String MsgStatus_3 = "3"; //待处理
 	public static final String MsgStatus_4 = "4"; //已处理
+	
+	//数据字典
+	
 }

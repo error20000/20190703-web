@@ -259,7 +259,7 @@ public class StoreController extends BaseController<Store, StoreService> {
     @VerifyAppSign
 	@VerifyAppLogin
 	@VerifyAppAuth
-	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库(地图)")
+	@SysLog(type=SystemLogType.Query, describe="app查询仓库器材")
 	public String appEquip(HttpServletRequest req) {
 		String sEquip_StoreLv1 = Tools.getReqParamSafe(req, "sEquip_StoreLv1");
 		String sEquip_StoreLv2 = Tools.getReqParamSafe(req, "sEquip_StoreLv2");
