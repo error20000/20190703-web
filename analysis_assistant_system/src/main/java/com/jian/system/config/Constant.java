@@ -53,5 +53,34 @@ public class Constant {
 	public static final String MsgStatus_4 = "4"; //已处理
 	
 	//数据字典
+	public static final String DictType_MapIcon = "MapIcon"; //	地图图标航标	
+	public static final String DictType_StoreMapIcon = "StoreMapIcon"; //	地图图标仓库	
+	public static final String DictType_SystemLogType = "SystemLogType"; //	系统日志类型	
 	
+	public static final String DictType_MsgLabel = "MsgLabel"; //	消息自定义标签	
+	public static final String DictType_MsgType = "MsgType"; //	消息类型	
+	public static final String DictType_MsgStatus = "MsgStatus"; //	消息状态	
+	public static final String DictType_MsgReason = "MsgReason"; //	消息原因	
+	
+	public static final String DictType_AidStation = "AidStation"; //	航标站	
+	public static final String DictType_AidType = "AidType"; //	航标种类	
+	public static final String DictType_AidLighting = "AidLighting"; //	灯质明灭	
+	public static final String DictType_AidMark = "AidMark"; //	航标设置	
+	public static final String DictType_AidIcon = "AidIcon"; //	航标ICON	
+	public static final String DictType_AidStatus = "AidStatus"; //	航标状态	
+	
+	public static final String DictType_EquipType = "EquipType"; //	器材类型	
+	public static final String DictType_EquipStatus = "EquipStatus"; //	器材状态	
+	public static final String DictType_EquipLogType = "EquipLogType"; //	器材日志类型	
+	public static final String DictType_EquipIcon = "EquipIcon"; //	器材ICON	
+	public static final String DictType_EquipAisMMSIX = "EquipAisMMSIX"; //	AIS MMSIX号	
+	public static final String DictType_EquipRadarNO = "EquipRadarNO"; //	雷达应答器编码	
+	public static final String DictType_EquipRadarBand = "EquipRadarBand"; //	雷达应答器波段	
+	public static final String DictType_EquipBatteryType = "EquipBatteryType"; //	蓄电池种类	
+	public static final String DictType_EquipTelemetryMode = "EquipTelemetryMode"; //	遥控遥测方式	
+	public static final String DictType_EquipSolarEnergyType = "EquipSolarEnergyType"; //	太阳能板种类	
+	public static final String DictType_EquipManufacturer = "EquipManufacturer"; //	生产厂家	
+	public static final String DictType_EquipLampTelemetry = "EquipLampTelemetry"; //	遥测接口类型	
+	public static final String DictType_EquipLampType = "EquipLampType"; //	灯器类型	
+	public static final String DictType_EquipLampLens = "EquipLampLens"; //	透镜形状	
 }
