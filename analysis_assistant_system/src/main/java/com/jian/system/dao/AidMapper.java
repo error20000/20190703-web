@@ -143,6 +143,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		"	d.\"sDict_Picture\" \"sAid_StatusIcon\", e.\"sDict_Picture\" \"sAid_TypeIcon\", ",
 		"	f.\"sDict_Name\" \"sAid_StationName\", ",
 		"	g.\"sDict_Picture\" \"sAid_IconUrl\" ",
+		"	h.\"sDict_Name\" \"sAid_TypeName\" ",
 		" from \"tBase_Aid\" a ",
 		" 	left join \"tBase_AidMapIcon\" b on a.\"sAid_ID\" = b.\"sAidIcon_AidID\" and a.\"sAid_Status\" = b.\"sAidIcon_Status\" ",
 		" 	left join \"tBase_AidTypeMapIcon\" c on a.\"sAid_Type\" = c.\"sAidTypeIcon_Type\" and a.\"sAid_Status\" = c.\"sAidTypeIcon_Status\" ",
@@ -150,6 +151,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" 	left join \"tBase_Dict\" e on c.\"sAidTypeIcon_StatusIcon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'MapIcon' ",
 		" 	left join \"tBase_Dict\" f on a.\"sAid_Station\" = f.\"sDict_NO\" and f.\"sDict_DictTypeNO\" = 'AidStation' ",
 		" 	left join \"tBase_Dict\" g on a.\"sAid_Icon\" = g.\"sDict_NO\" and g.\"sDict_DictTypeNO\" = 'AidIcon' ",
+		" 	left join \"tBase_Dict\" h on a.\"sAid_Type\" = h.\"sDict_NO\" and h.\"sDict_DictTypeNO\" = 'AidType' ",
 	})
 	public List<Map<String, Object>> aidMap();
 
