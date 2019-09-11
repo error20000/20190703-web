@@ -110,8 +110,8 @@ var myvue = new Vue({
 				var name = row.sDict_DictTypeNO;
 				for (var i = 0; i < this.dictTypeOptions.length; i++) {
 					var item = this.dictTypeOptions[i];
-					if(row.sDict_DictTypeNO == item.value){
-						name = item.name;
+					if(row.sDict_DictTypeNO == item.sDictType_NO){
+						name = item.sDictType_Name;
 						break
 					}
 				}

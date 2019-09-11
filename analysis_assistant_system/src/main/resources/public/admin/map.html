@@ -171,8 +171,13 @@
 				  </el-collapse-item>
 				  <el-collapse-item title="器材列表" name="2">
 			  			<!-- 器材 -->
-				  		<!-- <div v-for="">
-				  		</div> -->
+				  		<div v-for="(item, index) in aidEquipOptions" :key="index">
+				  			<el-row>
+				  				<el-col span="8">{{item.sEquip_NO}}</el-col>
+				  				<el-col span="8">{{item.sAidEquip_EquipTypeName}}</el-col>
+				  				<el-col span="8">{{formatDateStr(item.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</el-col>
+				  			</el-row>
+				  		</div>
 				  </el-collapse-item>
 			  </el-collapse>
 			</div>

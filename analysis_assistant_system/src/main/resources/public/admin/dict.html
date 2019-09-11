@@ -64,11 +64,11 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="ID" prop="sDict_ID" width="120" fixed="left">
 					</el-table-column>
-					<el-table-column label="字典编码" prop="sDict_NO" fixed="left">
+					<el-table-column label="字典编码" prop="sDict_NO" width="150" fixed="left">
 					</el-table-column>
-					<el-table-column label="字典名称" prop="sDict_Name" fixed="left">
+					<el-table-column label="字典名称" prop="sDict_Name" width="150" fixed="left">
 					</el-table-column>
-					<el-table-column label="所属分类" prop="sDict_DictTypeNO" :formatter="dictTypeFormatter">
+					<el-table-column label="所属分类" prop="sDict_DictTypeNO" width="150" :formatter="dictTypeFormatter">
 					</el-table-column>
 					<el-table-column label="字典描述" prop="sDict_Describe">
 					</el-table-column>

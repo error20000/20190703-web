@@ -9,10 +9,12 @@ var excelUrl = baseUrl + "api/equip/excel";
 var importUrl = baseUrl + "api/equip/import";
 var nfcUrl = baseUrl + "api/nfc/unbind";
 var nfcAllUrl = baseUrl + "api/nfc/findAll";
+var aidAllUrl = baseUrl + "api/aid/findAll";
 var bindUrl = baseUrl + "api/equip/bind";
 var delBindUrl = baseUrl + "api/equip/delBind";
 var dictUrl = baseUrl + "api/dict/findList";
 var storeUrl = baseUrl + "api/store/findAll";
+var storeListUrl = baseUrl + "api/store/findList";
 var detailUrl = baseUrl + "api/equip/detail";
 
 var ajaxReq = parent.window.ajaxReq || "";
@@ -28,7 +30,12 @@ var myvue = new Vue({
 				filters: {
 					sEquip_NO: '',
 					store: [],
-					sEquip_Status: ''
+					sEquip_Status: '',
+					sEquip_Type: '',
+					sEquip_StoreLv1: '',
+					sEquip_StoreLv2: '',
+					sEquip_StoreLv3: '',
+					sEquip_StoreLv4: ''
 				},
 				list: [],
 				total: 0,
@@ -47,11 +54,16 @@ var myvue = new Vue({
 		          label: 'sStore_Name',
 		          children: 'children'
 		        },
+				filtersLv1Options: [],
+				filtersLv2Options: [],
+				filtersLv3Options: [],
+				filtersLv4Options: [],
 				statusDictNo: 'EquipStatus',
 				statusOptions: [],
 				typeDictNo: 'EquipType',
 				typeOptions: [],
 				nfcAllOptions: [],
+				aidOptions: [],
 				mfDictNo: 'EquipManufacturer',
 				mfOptions: [],
 				
@@ -261,6 +273,30 @@ var myvue = new Vue({
 				});
 			},
 
+			aidFormatter: function(row){
+				var name = row.sEquip_AidID;
+				for (var i = 0; i < this.aidOptions.length; i++) {
+					var item = this.aidOptions[i];
+					if(row.sEquip_AidID == item.sAid_ID){
+						name = item.sAid_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleAidOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(aidAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.aidOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+
 			storeFormatter: function(row){
 				var name = "";
 				var name1 = "";
@@ -301,6 +337,26 @@ var myvue = new Vue({
 				name = name + (name3 ? " / "+name3 : "");
 				name = name + (name4 ? " / "+name4 : "");
 				return name;
+			},
+			store1Formatter: function(row){
+				let str = this.storeFormatter(row);
+				let strArray = str.split(" / ");
+				return strArray[0];
+			},
+			store2Formatter: function(row){
+				let str = this.storeFormatter(row);
+				let strArray = str.split(" / ");
+				return strArray.length < 2 ? "" : strArray[1];
+			},
+			store3Formatter: function(row){
+				let str = this.storeFormatter(row);
+				let strArray = str.split(" / ");
+				return strArray.length < 3 ? "" : strArray[2];
+			},
+			store4Formatter: function(row){
+				let str = this.storeFormatter(row);
+				let strArray = str.split(" / ");
+				return strArray.length < 4 ? "" : strArray[3];
 			},
 			handleTypeChange: function(sEquip_Type){
 				var type = sEquip_Type ||  this.addForm.sEquip_Type;
@@ -439,6 +495,58 @@ var myvue = new Vue({
 					});
 				});
 			},
+			//filter store
+			handleFiltersInitOptions: function(){
+				var self = this;
+				var params = {};
+				ajaxReq(storeListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv1Options = res.data;
+						self.filtersLv2Options = [];
+						self.filtersLv3Options = [];
+						self.filtersLv4Options = [];
+						self.filters.sEquip_StoreLv2 = "";
+						self.filters.sEquip_StoreLv3 = "";
+						self.filters.sEquip_StoreLv4 = "";
+					});
+				});
+			},
+			handleFiltersLV1Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(storeListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv2Options = res.data;
+						self.filtersLv3Options = [];
+						self.filtersLv4Options = [];
+						self.filters.sEquip_StoreLv2 = "";
+						self.filters.sEquip_StoreLv3 = "";
+						self.filters.sEquip_StoreLv4 = "";
+					});
+				});
+			},
+			handleFiltersLV2Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(storeListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv3Options = res.data;
+						self.filtersLv4Options = [];
+						self.filters.sEquip_StoreLv3 = "";
+						self.filters.sEquip_StoreLv4 = "";
+					});
+				});
+			},
+			handleFiltersLV3Options: function(id){
+				var self = this;
+				var params = {parent: id};
+				ajaxReq(storeListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.filtersLv4Options = res.data;
+						self.filters.sEquip_StoreLv4 = "";
+					});
+				});
+			},
 			
 			handleSizeChange: function (val) {
 				this.rows = val;
@@ -466,10 +574,10 @@ var myvue = new Vue({
 				for ( var key in this.filters) {
 					if(this.filters[key]){
 						if(key == 'store'){
-							this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
-							this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
-							this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
-							this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
+//							this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
+//							this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
+//							this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
+//							this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
 						}else{
 							params[key] = this.filters[key];
 						}
@@ -493,7 +601,12 @@ var myvue = new Vue({
 				this.filters = {
 					sEquip_NO: '',
 					store: [],
-					sEquip_Status: ''
+					sEquip_Status: '',
+					sEquip_Type: '',
+					sEquip_StoreLv1: '',
+					sEquip_StoreLv2: '',
+					sEquip_StoreLv3: '',
+					sEquip_StoreLv4: ''
 				};
 				this.getList();
 			},
@@ -787,7 +900,9 @@ var myvue = new Vue({
 			this.handleStatusOptions();
 			this.handleTypeOptions();
 			this.handleNfcAllOptions();
+			this.handleAidOptions();
 			this.handleMfOptions();
+			this.handleFiltersInitOptions();
 			this.handleStoreOptions(this.getList);
 		}
 	  });

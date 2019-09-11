@@ -24,16 +24,79 @@
 			<el-col :span="24">
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
-			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
+			    <el-form size="mini" :inline="true" :model="filters">
+			    	<el-row>
+			    	<el-form-item>
+					    <el-select v-model="filters.sEquip_StoreLv1" placeholder="一级仓库" @change="handleFiltersLV1Options(filters.sEquip_StoreLv1)">
+						    <el-option
+						      v-for="item in filtersLv1Options"
+						      :key="item.sStoreType_ID"
+						      :label="item.sStoreType_Name"
+						      :value="item.sStoreType_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sEquip_StoreLv2" placeholder="二级仓库" @change="handleFiltersLV2Options(filters.sEquip_StoreLv2)">
+						    <el-option
+						      v-for="item in filtersLv2Options"
+						      :key="item.sStore_ID"
+						      :label="item.sStore_Name"
+						      :value="item.sStore_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sEquip_StoreLv3" placeholder="三级仓库" @change="handleFiltersLV3Options(filters.sEquip_StoreLv3)">
+						    <el-option
+						      v-for="item in filtersLv3Options"
+						      :key="item.sStore_ID"
+						      :label="item.sStore_Name"
+						      :value="item.sStore_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sEquip_StoreLv4" placeholder="四级仓库">
+						    <el-option
+						      v-for="item in filtersLv4Options"
+						      :key="item.sStore_ID"
+						      :label="item.sStore_Name"
+						      :value="item.sStore_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					</el-row>
+					<el-row style="float: right;">
 					<el-form-item>
 						  <el-input v-model="filters.sEquip_NO" placeholder="请输入器材编码" clearable></el-input>
 					</el-form-item>
-					<el-form-item>
+					<!-- <el-form-item>
 					    <el-cascader v-model="filters.store" placeholder="请选择仓库"
 						    expand-trigger="hover"
 						    :options="storeOptions"
 						    :props="storeProps">
 						  </el-cascader>
+					</el-form-item> -->
+					<el-form-item>
+					    <el-select v-model="filters.sEquip_AidID" placeholder="请选择航标">
+						    <el-option
+						      v-for="item in aidOptions"
+						      :key="item.sAid_ID"
+						      :label="item.sAid_Name"
+						      :value="item.sAid_ID">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sEquip_Type" placeholder="请选择分类">
+						    <el-option
+						      v-for="item in typeOptions"
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
+						    </el-option>
+					    </el-select>
 					</el-form-item>
 					<el-form-item>
 					    <el-select v-model="filters.sEquip_Status" placeholder="请选择状态">
@@ -54,6 +117,7 @@
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<el-button type="primary" title="新增" @click="handleAdd" icon="fas fa-plus" ref="add" auth="sys:equip:add" v-show="hasAuth('add')"></el-button>
 					</el-form-item>
+					</el-row>
 				</el-form>
 			    </el-tab-pane>
 		    </el-tabs>
@@ -86,15 +150,15 @@
 					        </el-popover>
 					     </template>
 					</el-table-column>
-					<el-table-column label="所属航标" prop="sEquip_AidID" >
+					<el-table-column label="所属航标" prop="sEquip_AidID"  :formatter="aidFormatter">
 					</el-table-column>
-					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" >
+					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" :formatter="store1Formatter">
 					</el-table-column>
-					<el-table-column label="所属仓库二级" prop="sEquip_StoreLv2" >
+					<el-table-column label="所属仓库二级" prop="sEquip_StoreLv2" :formatter="store2Formatter">
 					</el-table-column>
-					<el-table-column label="所属仓库三级" prop="sEquip_StoreLv3" >
+					<el-table-column label="所属仓库三级" prop="sEquip_StoreLv3" :formatter="store3Formatter">
 					</el-table-column>
-					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" >
+					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" :formatter="store4Formatter">
 					</el-table-column>
 					<el-table-column label="创建日期" prop="dEquip_CreateDate" :formatter="(r,c) => {return formatDate(r.dEquip_CreateDate);}">
 					</el-table-column>

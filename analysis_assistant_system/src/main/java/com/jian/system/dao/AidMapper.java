@@ -142,7 +142,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		"	a.*, ",
 		"	d.\"sDict_Picture\" \"sAid_StatusIcon\", e.\"sDict_Picture\" \"sAid_TypeIcon\", ",
 		"	f.\"sDict_Name\" \"sAid_StationName\", ",
-		"	g.\"sDict_Picture\" \"sAid_IconUrl\" ",
+		"	g.\"sDict_Picture\" \"sAid_IconUrl\", ",
 		"	h.\"sDict_Name\" \"sAid_TypeName\" ",
 		" from \"tBase_Aid\" a ",
 		" 	left join \"tBase_AidMapIcon\" b on a.\"sAid_ID\" = b.\"sAidIcon_AidID\" and a.\"sAid_Status\" = b.\"sAidIcon_Status\" ",
