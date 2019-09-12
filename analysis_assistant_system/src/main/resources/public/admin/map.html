@@ -170,6 +170,11 @@
 					
 				  </el-collapse-item>
 				  <el-collapse-item title="器材列表" name="2">
+				  			<el-row>
+				  				<el-col :span="8">编码</el-col>
+				  				<el-col :span="8">分类</el-col>
+				  				<el-col :span="8">使用日期</el-col>
+				  			</el-row>
 			  			<!-- 器材 -->
 				  		<div v-for="(item, index) in aidEquipOptions" :key="index">
 				  			<el-row>
