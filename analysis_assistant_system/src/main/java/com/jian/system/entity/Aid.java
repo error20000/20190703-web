@@ -43,15 +43,15 @@ public class Aid extends Base<Aid> {
 	private String sAid_Status;
 
 	@Excel(name="纬度（度）", sort=0, length="", isNull=1 )
-	private float lAid_LatDu;
+	private int lAid_LatDu;
 	@Excel(name="纬度（分）", sort=0, length="", isNull=1 )
-	private float lAid_LatFen;
+	private int lAid_LatFen;
 	@Excel(name="纬度（秒）", sort=0, length="", isNull=1 )
 	private float lAid_LatMiao;
 	@Excel(name="经度（度）", sort=0, length="", isNull=1 )
-	private float lAid_LngDu;
+	private int lAid_LngDu;
 	@Excel(name="经度（分）", sort=0, length="", isNull=1 )
-	private float lAid_LngFen;
+	private int lAid_LngFen;
 	@Excel(name="经度（秒）", sort=0, length="", isNull=1 )
 	private float lAid_LngMiao;
 	
@@ -147,16 +147,16 @@ public class Aid extends Base<Aid> {
 	public void setsAid_Status(String sAid_Status) {
 		this.sAid_Status = sAid_Status;
 	}
-	public float getlAid_LatDu() {
+	public int getlAid_LatDu() {
 		return lAid_LatDu;
 	}
-	public void setlAid_LatDu(float lAid_LatDu) {
+	public void setlAid_LatDu(int lAid_LatDu) {
 		this.lAid_LatDu = lAid_LatDu;
 	}
-	public float getlAid_LatFen() {
+	public int getlAid_LatFen() {
 		return lAid_LatFen;
 	}
-	public void setlAid_LatFen(float lAid_LatFen) {
+	public void setlAid_LatFen(int lAid_LatFen) {
 		this.lAid_LatFen = lAid_LatFen;
 	}
 	public float getlAid_LatMiao() {
@@ -165,16 +165,16 @@ public class Aid extends Base<Aid> {
 	public void setlAid_LatMiao(float lAid_LatMiao) {
 		this.lAid_LatMiao = lAid_LatMiao;
 	}
-	public float getlAid_LngDu() {
+	public int getlAid_LngDu() {
 		return lAid_LngDu;
 	}
-	public void setlAid_LngDu(float lAid_LngDu) {
+	public void setlAid_LngDu(int lAid_LngDu) {
 		this.lAid_LngDu = lAid_LngDu;
 	}
-	public float getlAid_LngFen() {
+	public int getlAid_LngFen() {
 		return lAid_LngFen;
 	}
-	public void setlAid_LngFen(float lAid_LngFen) {
+	public void setlAid_LngFen(int lAid_LngFen) {
 		this.lAid_LngFen = lAid_LngFen;
 	}
 	public float getlAid_LngMiao() {

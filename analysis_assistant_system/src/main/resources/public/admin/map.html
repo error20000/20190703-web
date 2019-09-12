@@ -170,19 +170,30 @@
 					
 				  </el-collapse-item>
 				  <el-collapse-item title="器材列表" name="2">
-				  			<el-row>
-				  				<el-col :span="8">编码</el-col>
-				  				<el-col :span="8">分类</el-col>
-				  				<el-col :span="8">使用日期</el-col>
-				  			</el-row>
 			  			<!-- 器材 -->
+			  			<!-- <el-row>
+			  				<el-col :span="8">编码</el-col>
+			  				<el-col :span="8">分类</el-col>
+			  				<el-col :span="8">使用日期</el-col>
+			  			</el-row>
 				  		<div v-for="(item, index) in aidEquipOptions" :key="index">
 				  			<el-row>
 				  				<el-col :span="8">{{item.sEquip_NO}}</el-col>
 				  				<el-col :span="8">{{item.sAidEquip_EquipTypeName}}</el-col>
 				  				<el-col :span="8">{{formatDateStr(item.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</el-col>
 				  			</el-row>
-				  		</div>
+				  		</div> -->
+				  		<el-table size="mini" :data="aidEquipOptions" highlight-current-row border style="width: 100%;" class="mytable">
+							<el-table-column label="编码" prop="sEquip_NO">
+							</el-table-column>
+							<el-table-column label="分类" prop="sAidEquip_EquipTypeName">
+							</el-table-column>
+							<el-table-column label="使用日期">
+								<template scope="scope">
+									<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+								</template>
+							</el-table-column>
+						</el-table>
 				  </el-collapse-item>
 			  </el-collapse>
 			</div>
