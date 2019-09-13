@@ -4,6 +4,9 @@ var aidUrl = baseUrl + "api/aid/map";
 var storeTypeUrl = baseUrl + "api/store/map";
 var dictUrl = baseUrl + "api/dict/findList";
 var aidEquipUrl = baseUrl + "api/aid/equip";
+var storeEquipUrl = baseUrl + "api/store/equip";
+var msgAidUrl = baseUrl + "api/aid/msg";
+var msgStoreUrl = baseUrl + "api/store/msg";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -31,8 +34,9 @@ var myvue = new Vue({
 				authCache: {},
 
 				aidOptions: [],
-				aidEquipOptions: [],
+				aidEquipData: [],
 				storeTypeOptions: [],
+				storeEquipData: [],
 				//aidStatusIconDictNo: 'MapIcon',
 				//aidStatusIconOptions: [],
 				//storeMapIconDictNo: 'MapIcon',
@@ -57,7 +61,23 @@ var myvue = new Vue({
 				detailForm: {},
 				detailType: "aid",
 				detailTitle: "",
-				activeNames: ['1', '2'],
+				activeAidDetailName: '1',
+				activeStoreDetailName: '1',
+				aidId: '',
+				storeId: '',
+				detailStoreEquipTotal: 0,
+				detailStoreEquipPage: 1,
+				detailStoreEquipRows: 10,
+				
+				msgStoreData: [],
+				msgStoreTotal: 0,
+				msgStorePage: 1,
+				msgStoreRows: 10,
+				
+				msgAidData: [],
+				msgAidTotal: 0,
+				msgAidPage: 1,
+				msgAidRows: 10,
 				
 				user: ''
 			}
@@ -297,6 +317,7 @@ var myvue = new Vue({
 					});
 				});
 			},
+			
 			initMap: function(){
 				var self = this;
 				 require([
@@ -328,13 +349,44 @@ var myvue = new Vue({
 					 
 					 ArGis.view.on("click", function(evt){
 						 console.log(evt);
-							ArGis.view.hitTest(evt).then(function(response) {
-							    var result = response.results[0];
-							    if (result) {
-							    	self.handleDetail(result);
-							    }
-						    });
+						 ArGis.view.hitTest(evt).then(function(response) {
+						    var result = response.results[0];
+							 console.log(result);
+						    if (result) {
+						    	//self.activeAidDetailName = '1';
+						    	//self.activeStoreDetailName = '1';
+						    	self.handleDetail(result);
+						    }
+						 });
 					 });
+					 /*$('#mapView').on('mousemove', function(evt) {
+						 ArGis.view.hitTest(new ScreenPoint({
+						        x: evt.x,
+						        y: evt.y
+						    })).then(function(response) {
+						        var graphics = response.results;
+						        console.log(graphics);
+						    });
+						});*/
+
+					 ArGis.view.on("pointer-move", function(evt){
+						 if(evt.x < 5){ //解决鼠标移动到左边报错的问题。
+							 return;
+						 }
+						 ArGis.view.hitTest(evt).then(function(response) {
+						    var result = response.results[0];
+						    if (result) {
+								 let name = result.graphic.attributes.name;
+								 ArGis.view.popup.open({
+						    	    title: name,
+						    	    location: result.mapPoint 
+						    	 });
+						    }else{
+						    	 ArGis.view.popup.close();
+						    }
+						 });
+					 });
+					 
 					 
 					 self.initData();
 					 
@@ -531,7 +583,9 @@ var myvue = new Vue({
 						this.detailForm.sAid_MarkName = this.markFormatter(node);
 						this.detailForm.sAid_StatusName = this.statusFormatter(node);
 						
-						this.detailEquip(id, result);
+						this.aidId = id;
+						this.detailEquipAid(id, result);
+						this.msgAid(id, result);
 						break;
 					}
 				}
@@ -547,21 +601,90 @@ var myvue = new Vue({
 							sAid_Station: node.sStoreType_Station
 						};
 						this.detailForm.sStoreType_StationName = this.stationFormatter(temp);
+
+						this.storeId = id;
+						this.detailEquipStore();
+						this.msgStore();
 						break;
 					}
 				}
 			},
-			detailEquip: function(id, result){
+			detailEquipAid: function(){
 				var self = this;
-				var params = {sAid_ID: id};
+				var params = {sAid_ID: this.aidId};
 				ajaxReq(aidEquipUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						self.aidEquipOptions = res.data;
-						if(typeof cb == 'function'){
-							cb();
-						}
+						self.aidEquipData = res.data;
 					});
 				});
+			},
+			detailEquipStore: function(){
+				var self = this;
+				var params = {
+						page: this.detailStoreEquipPage,
+						rows: this.detailStoreEquipRows,
+						sEquip_StoreLv1: this.storeId
+				};
+				ajaxReq(storeEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.storeEquipData = res.data;
+						self.detailStoreEquipTotal = res.total;
+					});
+				});
+			},
+			handleDetailStoreEquipSizeChange: function (val) {
+				this.detailStoreEquipRows = val;
+				this.detailEquipStore();
+			},
+			handleDetailStoreEquipCurrentChange: function (val) {
+				this.detailStoreEquipPage = val;
+				this.detailEquipStore();
+			},
+			
+			msgAid: function(){
+				var self = this;
+				var params = {
+						page: this.msgAidPage,
+						rows: this.msgAidRows,
+						sMsg_AidID: this.aidId
+				};
+				ajaxReq(msgAidUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.msgAidData = res.data;
+						self.msgAidTotal = res.total;
+					});
+				});
+			},	
+			handleMsgAidSizeChange: function (val) {
+				this.msgAidRows = val;
+				this.msgAid();
+			},
+			handleMsgAidCurrentChange: function (val) {
+				this.msgAidPage = val;
+				this.msgAid();
+			},
+			
+			msgStore: function(){
+				var self = this;
+				var params = {
+						page: this.msgStorePage,
+						rows: this.msgStoreRows,
+						sMsg_StoreLv1: this.storeId
+				};
+				ajaxReq(msgStoreUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.msgStoreData = res.data;
+						self.msgStoreTotal = res.total;
+					});
+				});
+			},
+			handleMsgStoreSizeChange: function (val) {
+				this.msgStoreRows = val;
+				this.msgStore();
+			},
+			handleMsgStoreCurrentChange: function (val) {
+				this.msgStorePage = val;
+				this.msgStore();
 			},
 
 			detailClose: function () {

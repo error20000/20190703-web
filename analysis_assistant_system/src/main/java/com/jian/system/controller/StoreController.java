@@ -18,9 +18,11 @@ import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.service.StoreService;
+import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
@@ -33,7 +35,6 @@ import com.jian.tools.core.Tools;
 @API(name="仓库管理")
 public class StoreController extends BaseController<Store, StoreService> {
 
-	
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -183,6 +184,64 @@ public class StoreController extends BaseController<Store, StoreService> {
 	public String map(HttpServletRequest req) {
 		List<Map<String, Object>> list = service.storeMap();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+
+	@RequestMapping("/equip")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询仓库器材")
+	public String equip(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Equip.class);
+		
+		List<Map<String, Object>> list = service.equipPage(condition, start, Tools.parseInt(rows));
+		long total = service.equipSize(condition);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
+	}
+
+
+	@RequestMapping("/msg")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询仓库信息")
+	public String msg(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Message.class);
+		
+		List<Message> list = service.msgPage(condition, getLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.msgSize(condition, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 	
 	

@@ -45,6 +45,63 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public Equip nfc(String sNfc_NO);
 	
+	@Select({
+		"<script>",
+		" select ",
+		" 	a.*, ",
+		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
+		" minus  ",
+		" select ",
+		" 	a.*, ",
+		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${start}",
+		"</script>"
+	})
+	public List<Map<String, Object>> selectPageByCustom(@Param("map") Map<String, Object> condition, @Param("start") int start, @Param("rows") int rows);
+	
+	
+	@Select({
+		"<script>",
+		" select count(*) ",
+		" from \"tBase_Equip\" ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" map == null \"> ",
+    	" 		1 = 1 ",	
+    	"   </if>",
+		"</script>"
+	})
+	public long sizeByCustom(@Param("map") Map<String, Object> condition);
+	
 	
 	//TODO --------------------------------------------------------------------------------- 统计
 

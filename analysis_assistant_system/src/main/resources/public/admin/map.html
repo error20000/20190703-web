@@ -129,10 +129,9 @@
 		    </el-button>
 		  </div>
 	      <div v-if="detailType == 'aid'" class="text item">
-			  <el-collapse v-model="activeNames" >
-				  <el-collapse-item title="基础信息" name="1">
-			  		<!-- base -->
-				    <el-form size="mini" :model="detailForm" ref="detailForm" label-width="120px">
+	      	  <el-tabs v-model="activeAidDetailName">
+			    <el-tab-pane label="基础信息" name="1">
+			    	<el-form size="mini" :model="detailForm" ref="detailForm" label-width="120px">
 					  <el-form-item label="航标名称" prop="sAid_Name">
 					    <el-input v-model="detailForm.sAid_Name" readonly></el-input>
 					  </el-form-item>
@@ -167,54 +166,116 @@
 					    <el-input v-model="detailForm.sAid_StatusName" readonly></el-input>
 					  </el-form-item>
 					</el-form>
-					
-				  </el-collapse-item>
-				  <el-collapse-item title="器材列表" name="2">
-			  			<!-- 器材 -->
-			  			<!-- <el-row>
-			  				<el-col :span="8">编码</el-col>
-			  				<el-col :span="8">分类</el-col>
-			  				<el-col :span="8">使用日期</el-col>
-			  			</el-row>
-				  		<div v-for="(item, index) in aidEquipOptions" :key="index">
-				  			<el-row>
-				  				<el-col :span="8">{{item.sEquip_NO}}</el-col>
-				  				<el-col :span="8">{{item.sAidEquip_EquipTypeName}}</el-col>
-				  				<el-col :span="8">{{formatDateStr(item.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</el-col>
-				  			</el-row>
-				  		</div> -->
-				  		<el-table size="mini" :data="aidEquipOptions" highlight-current-row border style="width: 100%;" class="mytable">
-							<el-table-column label="编码" prop="sEquip_NO">
+				</el-tab-pane>
+			    <el-tab-pane label="器材列表" name="2">
+			    	<el-table size="mini" :data="aidEquipData" highlight-current-row border style="width: 100%;" class="mytable">
+						<el-table-column label="编码" prop="sEquip_NO">
+						</el-table-column>
+						<el-table-column label="分类" prop="sAidEquip_EquipTypeName">
+						</el-table-column>
+						<el-table-column label="使用日期">
+							<template scope="scope">
+								<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-tab-pane>
+				    <el-tab-pane label="消息列表" name="3">
+				    	<el-table size="mini" :data="msgAidData" highlight-current-row border style="width: 100%;" class="mytable">
+							<el-table-column label="标题" prop="sMsg_Title">
 							</el-table-column>
-							<el-table-column label="分类" prop="sAidEquip_EquipTypeName">
+							<el-table-column label="描述" prop="sMsg_Describe">
 							</el-table-column>
-							<el-table-column label="使用日期">
+							<el-table-column label="创建日期">
 								<template scope="scope">
-									<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+									<div>{{formatDateStr(scope.row.dMsg_CreateDate, 'yyyy-MM-dd')}}</div>
 								</template>
 							</el-table-column>
 						</el-table>
-				  </el-collapse-item>
-			  </el-collapse>
+						<!-- page tool -->
+						<el-col :span="24" class="toolbar">
+							<el-pagination layout="total, prev, pager, next" 
+								@size-change="handleMsgAidSizeChange" 
+								@current-change="handleMsgAidCurrentChange" 
+								:page-sizes="[10, 20, 50, 100]" 
+								:page-size="msgAidRows" 
+								:pager-count="5"
+								:total="msgAidTotal" style="float:right;">
+							</el-pagination>
+						</el-col>
+				    </el-tab-pane>
+			  </el-tabs>
 			</div>
 			  <div v-if="detailType == 'store'" class="text item">
-			    <el-form size="mini" :model="detailForm" ref="detailForm" label-width="120px">
-				  <el-form-item label="仓库名称" prop="sStoreType_Name">
-				    <el-input v-model="detailForm.sStoreType_Name" readonly></el-input>
-				  </el-form-item>
-				  <el-form-item label="仓库地址" prop="sStoreType_Address">
-				    <el-input v-model="detailForm.sStoreType_Address" readonly></el-input>
-				  </el-form-item>
-				  <el-form-item label="经度" prop="lStoreType_Lng">
-				    <el-input v-model="detailForm.lng" readonly></el-input>
-				  </el-form-item>
-				  <el-form-item label="纬度" prop="lStoreType_Lat">
-				    <el-input v-model="detailForm.lat" readonly></el-input>
-				  </el-form-item>
-				  <el-form-item label="所属航标站" prop="sStoreType_StationName">
-				    <el-input v-model="detailForm.sStoreType_StationName" readonly></el-input>
-				  </el-form-item>
-				</el-form>
+		      	  <el-tabs v-model="activeStoreDetailName">
+				    <el-tab-pane label="仓库信息" name="1">
+					    <el-form size="mini" :model="detailForm" ref="detailForm" label-width="120px">
+						  <el-form-item label="仓库名称" prop="sStoreType_Name">
+						    <el-input v-model="detailForm.sStoreType_Name" readonly></el-input>
+						  </el-form-item>
+						  <el-form-item label="仓库地址" prop="sStoreType_Address">
+						    <el-input v-model="detailForm.sStoreType_Address" readonly></el-input>
+						  </el-form-item>
+						  <el-form-item label="经度" prop="lStoreType_Lng">
+						    <el-input v-model="detailForm.lng" readonly></el-input>
+						  </el-form-item>
+						  <el-form-item label="纬度" prop="lStoreType_Lat">
+						    <el-input v-model="detailForm.lat" readonly></el-input>
+						  </el-form-item>
+						  <el-form-item label="所属航标站" prop="sStoreType_StationName">
+						    <el-input v-model="detailForm.sStoreType_StationName" readonly></el-input>
+						  </el-form-item>
+						</el-form>
+					</el-tab-pane>
+				    <el-tab-pane label="器材列表" name="2">
+				    	<el-table size="mini" :data="storeEquipData" highlight-current-row border style="width: 100%;" class="mytable">
+							<el-table-column label="编码" prop="sEquip_NO">
+							</el-table-column>
+							<el-table-column label="分类" prop="sEquip_TypeName">
+							</el-table-column>
+							<el-table-column label="入库日期">
+								<template scope="scope">
+									<div>{{formatDateStr(scope.row.dEquip_StoreDate, 'yyyy-MM-dd')}}</div>
+								</template>
+							</el-table-column>
+						</el-table>
+						<!-- page tool -->
+						<el-col :span="24" class="toolbar">
+							<el-pagination layout="total, prev, pager, next" 
+								@size-change="handleDetailStoreEquipSizeChange" 
+								@current-change="handleDetailStoreEquipCurrentChange" 
+								:page-sizes="[10, 20, 50, 100]" 
+								:page-size="detailStoreEquipRows" 
+								:pager-count="5"
+								:total="detailStoreEquipTotal" style="float:right;">
+							</el-pagination>
+						</el-col>
+					</el-tab-pane>
+				    <el-tab-pane label="消息列表" name="3">
+				    	<el-table size="mini" :data="msgStoreData" highlight-current-row border style="width: 100%;" class="mytable">
+							<el-table-column label="标题" prop="sMsg_Title">
+							</el-table-column>
+							<el-table-column label="描述" prop="sMsg_Describe">
+							</el-table-column>
+							<el-table-column label="创建日期">
+								<template scope="scope">
+									<div>{{formatDateStr(scope.row.dMsg_CreateDate, 'yyyy-MM-dd')}}</div>
+								</template>
+							</el-table-column>
+						</el-table>
+						<!-- page tool -->
+						<el-col :span="24" class="toolbar">
+							<el-pagination layout="total, prev, pager, next" 
+								@size-change="handleMsgStoreSizeChange" 
+								@current-change="handleMsgStoreCurrentChange" 
+								:page-sizes="[10, 20, 50, 100]" 
+								:page-size="msgStoreRows" 
+								:pager-count="5"
+								:total="msgStoreTotal" style="float:right;">
+							</el-pagination>
+						</el-col>
+				    </el-tab-pane>
+				  </el-tabs>
 			  </div>	
 		  
 		</el-card>

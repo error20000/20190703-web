@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jian.system.dao.EquipMapper;
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
@@ -29,7 +29,7 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	@Autowired
 	private EquipService equipService;
 	@Autowired
-	private EquipMapper equipMapper;
+	private MessageService msgService;
 	
 	@TargetDataSource
 	public int add(String level, String name, StoreType type, Store obj, User user) {
@@ -257,6 +257,26 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	public List<Map<String, Object>> checkStore() {
 		return baseMapper.checkStore();
 	}
+
+	@TargetDataSource
+	public List<Map<String, Object>> equipPage(Map<String, Object> condition, int start, int rows){
+		return equipService.selectPageByCustom(condition, start, rows);
+	}
+	
+	@TargetDataSource
+	public long equipSize(Map<String, Object> condition) {
+		return equipService.sizeByCustom(condition);
+	}
+
+	@TargetDataSource
+	public List<Message> msgPage(Map<String, Object> condition, User user, int start, int rows){
+		return msgService.selectPage(condition, null, null, user, start, rows);
+	}
+	
+	@TargetDataSource
+	public long msgSize(Map<String, Object> condition, User user) {
+		return msgService.size(condition, null, null, user);
+	}
 	
 	//TODO ------------------------------------------------------------------------------统计
 	
@@ -266,7 +286,7 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	@TargetDataSource
 	public List<Map<String, Object>> distribution(String sEquip_Type){
 		
-		List<Map<String, Object>> list = equipMapper.statisUnused(sEquip_Type);
+		List<Map<String, Object>> list = equipService.statisUnused(sEquip_Type);
 		
 		return list;
 	}

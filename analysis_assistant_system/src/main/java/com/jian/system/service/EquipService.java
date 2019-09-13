@@ -576,7 +576,17 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	public Equip nfc(String sNfc_NO) {
 		return baseMapper.nfc(sNfc_NO);
 	}
-
+	
+	@TargetDataSource
+	public List<Map<String, Object>> selectPageByCustom(Map<String, Object> condition, int start, int rows) {
+		return baseMapper.selectPageByCustom(condition, start, rows);
+	}
+	
+	@TargetDataSource
+	public long sizeByCustom(Map<String, Object> condition) {
+		return baseMapper.sizeByCustom(condition);
+	}
+	
 
 	//TODO ----------------------------------------------------------------------器材操作
 	
@@ -1092,6 +1102,23 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 	
 	//TODO ---------------------------------------------------------------------------------统计
+	
+	/**
+	 * 未使用器材
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> statisUnused(String sEquip_Type){
+		return baseMapper.statisUnused(sEquip_Type);
+	}
+	
+	/**
+	 * 正使用器材
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> statisUsed(String sEquip_Type){
+		return baseMapper.statisUsed(sEquip_Type);
+	}
+	
 	
 	/**
 	 * 器材区域分布

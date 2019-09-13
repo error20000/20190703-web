@@ -16,9 +16,10 @@ public interface MessageMapper extends BaseMapper<Message> {
 	
 	@Select({
 		"<script>",
+		" select * ",
+		" from ( ",
 		" select rownum, t.* ",
-		" from ",
-		"	(",
+		" from (",
 		" select * ",
 		" from \"tBase_Message\" ",
 		" where ",
@@ -40,9 +41,11 @@ public interface MessageMapper extends BaseMapper<Message> {
     	" 		and \"dMsg_CreateDate\" <![CDATA[<=]]> #{endDate} ",	
     	"   </if>",
     	"   order by \"dMsg_CreateDate\" desc",
-		"	) t ",
+		"	) t )",
 		"	 where rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
+		" select * ",
+		" from ( ",
 		" select rownum, t1.* ",
 		" from ",
 		"	(",
@@ -67,7 +70,7 @@ public interface MessageMapper extends BaseMapper<Message> {
     	" 		and \"dMsg_CreateDate\" <![CDATA[<=]]> #{endDate} ",	
     	"   </if>",
     	"   order by \"dMsg_CreateDate\" desc",
-		"	) t1 ",
+		"	) t1 )",
 		"	 where rownum <![CDATA[<=]]> ${start}",
 		"</script>"
 	})
