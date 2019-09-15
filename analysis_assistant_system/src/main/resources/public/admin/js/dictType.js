@@ -54,6 +54,10 @@ var myvue = new Vue({
 		              ]
 				},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -262,11 +266,29 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sDictType_NO: 'AidStation', 
+						sDictType_Name: '航标站', 
+						lDictType_SysFlag: 1 
+					},
+					{
+						sDictType_NO: 'AidType', 
+						sDictType_Name: '航标种类', 
+						lDictType_SysFlag: 1 
+					},
+					{
+						sDictType_NO: 'AidLighting', 
+						sDictType_Name: '灯质明灭', 
+						lDictType_SysFlag: 0 
+					}
+				];
 			},
 			
 			selsChange: function (sels) {
