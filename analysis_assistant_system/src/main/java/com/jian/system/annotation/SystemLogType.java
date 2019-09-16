@@ -2,7 +2,7 @@ package com.jian.system.annotation;
 
 public enum SystemLogType {
 
-	Query("query"), Update("update"), Delete("delete"), Add("add"), Other("other"), Upload("upload"), Login("login");
+	Query("query"), Update("update"), Delete("delete"), Add("add"), Other("other"), Upload("upload"), Login("login"), Export("export");
 	
 	public String value;
 	

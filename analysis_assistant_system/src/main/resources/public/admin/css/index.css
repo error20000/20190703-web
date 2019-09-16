@@ -100,4 +100,21 @@ iframe {
     overflow-y: auto;
 } */
 
-
+/* import */
+.el-upload{
+	width: 100%; 
+}
+.el-upload-dragger{
+	width: 100%; 
+}
+.tipsCol{
+    display: inline-block;
+    line-height: 32px;
+    text-align: left;
+    color: #fff;
+    background: rgba(81,130,228, 0.6);
+    padding-left: 10px;
+}
+.tipColBorder{
+   	border-right: solid 1px #fff;
+}

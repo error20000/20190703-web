@@ -98,4 +98,10 @@ public class DictTypeService extends BaseService<DictType, DictTypeMapper> {
 		return baseMapper.delete(tableName, condition);
 	}
 
+	@TargetDataSource
+	public List<Map<String, Object>> export() {
+		return baseMapper.export();
+	}
+	
+
 }

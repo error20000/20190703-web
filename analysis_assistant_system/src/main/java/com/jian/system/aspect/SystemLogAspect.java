@@ -79,6 +79,7 @@ public class SystemLogAspect {
 		case Add:
 		case Update:
 		case Delete:
+		case Export:
 			String str = JsonTools.toJsonString(request.getParameterMap());
 			str = str.substring(0, str.length() > 255 ? 255 : str.length());
 			slog.setsSLog_Request(str);
@@ -107,6 +108,7 @@ public class SystemLogAspect {
 		case Add:
 		case Update:
 		case Login:
+		case Export:
 			String str = String.valueOf(obj);
 			slog.setsSLog_Response(str.substring(0, str.length() > 255 ? 255 : str.length()) );
 	    	logService.update(slog, null);

@@ -5,28 +5,29 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFComment;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFPalette;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,11 +43,9 @@ import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.DictType;
 import com.jian.system.entity.User;
 import com.jian.system.service.DictTypeService;
-import com.jian.tools.core.JsonTools;
-import com.jian.tools.core.ResultKey;
+import com.jian.system.utils.Utils;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
-import com.jian.tools.core.Tools;
 
 
 @Controller
@@ -122,56 +121,53 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="导入字典分类")
 	public String imports(HttpServletRequest req, HttpServletResponse resp, @RequestParam("file") MultipartFile file) {
 		try {
+			
+			User loginUser = getLoginUser(req);
+			
 			InputStream in = file.getInputStream();
 			Workbook workbook = WorkbookFactory.create(in);
             Sheet sheet = workbook.getSheetAt(0);
             //获取sheet的行数
+            List<DictType> list = new ArrayList<DictType>();
+            DictType node = null;
             int rows = sheet.getPhysicalNumberOfRows();
             for (int i = 0; i < rows; i++) {
+                //过滤表头行
+                if (i == 0) {
+                    continue;
+                }
                 //获取当前行的数据
                 Row row = sheet.getRow(i);
-                String str = "";
-                for (Cell cell : row) {
-                    if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
-                    	str += "," + cell.getNumericCellValue();
-                    }
-                    if (cell.getCellTypeEnum().equals(CellType.STRING)) {
-                    	str += "," + cell.getStringCellValue();
-                    }
-                    if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {
-                    	str += "," + cell.getBooleanCellValue();
-                    }
-                    if (cell.getCellTypeEnum().equals(CellType.ERROR)) {
-                    	str += "," + cell.getErrorCellValue();
-                    }
-                    if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
-                    	str += ", ";
-                    }
-                    /*switch(cell.getCellTypeEnum()) {
-	                    case CellType.STRING:
-	                        data.get(i).add(cell.getRichStringCellValue().getString());
-	                        break;
-	                    case CellType.NUMERIC:
-	                        if(DateUtil.isCellDateFormatted(cell)) {
-	                            data.get(i).add(cell.getDateCellValue));
-	                        } else {
-	                            data.get(i).add(cell.getNumericCellValue());
-	                        }
-	                        break;
-	                    case CellType.BOOLEAN:
-	                        data.get(i).add(cell.getBooleanCellValue());
-	                        break;
-	                    case CellType.FORMULA:
-	                        data.get(i).add(cell.getCellFormula());
-	                        break;
-	                    case CellType.BLANK:
-	                        data.get(i).add("")
-	                        break;
-	                 }*/
+                node = new DictType();
+                node.setsDictType_ID(Utils.newSnowflakeIdStr());
+                node.setsDictType_NO(row.getCell(0) == null ? "" : row.getCell(0).getStringCellValue());
+                node.setsDictType_Name(row.getCell(1) == null ? "" : row.getCell(1).getStringCellValue());
+                node.setlDictType_SysFlag(row.getCell(2) == null ? 0 : ((Double)row.getCell(2).getNumericCellValue()).intValue());
+                node.setdDictType_CreateDate(new Date());
+                if(loginUser != null) {
+                	node.setsDictType_UserID(loginUser.getsUser_ID());
                 }
-                System.out.println(str);
+                list.add(node);
+            }
+            //去重
+            //1、自身
+            list = list.stream()
+            		.filter(Utils.distinctByKey(e -> e.getsDictType_NO()))
+            		.collect(Collectors.toList());
+            //2、数据库
+            List<DictType> all = service.selectAll();
+            list = list.stream()
+            		.filter(t-> !all.stream()
+            				.map(e -> e.getsDictType_NO())
+            				.collect(Collectors.toList())
+            				.contains(t.getsDictType_NO()))
+            		.collect(Collectors.toList());
+            //保存
+            if(list.size() > 0) {
+            	service.batchInsert(list, loginUser);
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,11 +180,12 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
+	@SysLog(type=SystemLogType.Export, describe="导出字典分类")
 	public String excel(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String filename = "DictType";
 		//查询
-		List<DictType> list = service.selectAll();
+		List<Map<String, Object>> list = service.export();
 
 		//执行
 		resp.addHeader("Content-Disposition","attachment;filename="+filename+".xls");
@@ -215,20 +212,33 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
             font.setBold(true);
             style.setFont(font);
             style.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy/MM/dd HH:mm:ss"));
+            //创建批注
+        	HSSFPatriarch patr = sheet.createDrawingPatriarch();
+        	HSSFClientAnchor anchor = patr.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);//创建批注位置
             //创建表头名称
             HSSFCell cell;
             for (int j = 0; j < heads.length; j++) {
                 cell = row.createCell(j);
                 cell.setCellValue(heads[j]);
                 cell.setCellStyle(style);
+                //创建批注
+                if(j == 1) {
+                	HSSFComment comment = patr.createCellComment(anchor);//创建批注
+                	comment.setString(new HSSFRichTextString("数据唯一"));//设置批注内容
+                	cell.setCellComment(comment);
+                }else if(j == 7) {
+                	HSSFComment comment = patr.createCellComment(anchor);//创建批注
+                	comment.setString(new HSSFRichTextString("1：是，0：否"));//设置批注内容
+                	cell.setCellComment(comment);
+                }
             }
 
 			//遍历导出数据
 			for (int i = 0; i < list.size(); i++) {
-				DictType node = list.get(i);
+				Map<String, Object> node = list.get(i);
 
 				HSSFRow rowc = sheet.createRow(i+1);
-				rowc.createCell(0).setCellValue(node.getsDictType_ID());
+				rowc.createCell(0).setCellValue(node.get("sDictType_ID"));
 				rowc.createCell(1).setCellValue(node.getsDictType_NO());
 				rowc.createCell(2).setCellValue(node.getsDictType_Name());
 				if(node.getdDictType_CreateDate() != null) {
