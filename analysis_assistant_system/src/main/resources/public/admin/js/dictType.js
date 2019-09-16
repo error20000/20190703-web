@@ -269,6 +269,12 @@ var myvue = new Vue({
 				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+				});
+			},
 			getImport: function(){
 				this.importUrl = importUrl + "?token=" + loginToken;
 				this.uploadVisible = true;

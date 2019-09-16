@@ -42,19 +42,21 @@ public class SystemLogAspect {
 	
     private long startTime = 0;
     private SystemLog slog = null;
+    private HttpServletRequest request;
+    private HttpSession session;
     private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
     
 
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)")
     public void before(JoinPoint joinPoint, SysLog log){
     	startTime = System.currentTimeMillis();
+    	request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+    	session = request.getSession();
     }
 
 
     @After("execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)")
     public void after(JoinPoint joinPoint, SysLog log){
-    	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-    	HttpSession session = request.getSession();
 		User user = (User) session.getAttribute(config.login_session_key);
     	//日志
 		slog = new SystemLog();

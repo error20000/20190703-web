@@ -326,28 +326,46 @@ var myvue = new Vue({
 				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+				});
+			},
 			getImport: function(){
 				this.importUrl = importUrl + "?token=" + loginToken;
 				this.uploadVisible = true;
 				this.uploadTemp = [
 					{
-						sDict_NO: 'AidStation', 
-						sDict_Name: '航标站', 
-						lDictType_SysFlag: 1 
+						sDict_NO: 'test1', 
+						sDict_Name: '测试一', 
+						sDict_DictTypeNO: 'AidType', 
+						lDict_SysFlag: 1 , 
+						sDict_Describe: '' , 
+						sDict_Picture: '' , 
+						sDict_Link: '' , 
+						sDict_Color: '' 
 					},
 					{
-						sDictType_NO: 'AidType', 
-						sDictType_Name: '航标种类', 
-						lDictType_SysFlag: 1 
+						sDict_NO: 'test2', 
+						sDict_Name: '测试二', 
+						sDict_DictTypeNO: 'AidType', 
+						lDict_SysFlag: 1 , 
+						sDict_Describe: '' , 
+						sDict_Picture: '' , 
+						sDict_Link: '' , 
+						sDict_Color: '#ffffff' 
 					},
 					{
-						sDictType_NO: 'AidLighting', 
-						sDictType_Name: '灯质明灭', 
-						lDictType_SysFlag: 0 
+						sDict_NO: 'test3', 
+						sDict_Name: '测试三', 
+						sDict_DictTypeNO: 'AidType', 
+						lDict_SysFlag: 0 , 
+						sDict_Describe: '' , 
+						sDict_Picture: '' , 
+						sDict_Link: '' , 
+						sDict_Color: '#000000' 
 					}
-					700002	2	出库			EquipStatus			1				#3B7FD4
-					700003	3	拆除			EquipStatus			1				#3B7FD4
-					700004	4	运输			EquipStatus			1				#3B7FD4
 				];
 			},
 			

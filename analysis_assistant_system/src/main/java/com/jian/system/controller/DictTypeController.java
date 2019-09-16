@@ -17,13 +17,13 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFComment;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -211,7 +211,8 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
             HSSFFont font = workbook.createFont();
             font.setBold(true);
             style.setFont(font);
-            style.setDataFormat(HSSFDataFormat.getBuiltinFormat("yyyy/MM/dd HH:mm:ss"));
+            HSSFCellStyle styleDate = workbook.createCellStyle();
+            styleDate.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("yyyy/MM/dd HH:mm:ss"));
             //创建批注
         	HSSFPatriarch patr = sheet.createDrawingPatriarch();
         	HSSFClientAnchor anchor = patr.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);//创建批注位置
@@ -238,18 +239,22 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
 				Map<String, Object> node = list.get(i);
 
 				HSSFRow rowc = sheet.createRow(i+1);
-				rowc.createCell(0).setCellValue(node.get("sDictType_ID"));
-				rowc.createCell(1).setCellValue(node.getsDictType_NO());
-				rowc.createCell(2).setCellValue(node.getsDictType_Name());
-				if(node.getdDictType_CreateDate() != null) {
-					rowc.createCell(3).setCellValue(node.getdDictType_CreateDate());
+				rowc.createCell(0).setCellValue(node.get("sDictType_ID") == null ? "" : String.valueOf(node.get("sDictType_ID")) );
+				rowc.createCell(1).setCellValue(node.get("sDictType_NO") == null ? "" : String.valueOf(node.get("sDictType_NO")) );
+				rowc.createCell(2).setCellValue(node.get("sDictType_Name") == null ? "" : String.valueOf(node.get("sDictType_Name")) );
+				if(node.get("dDictType_CreateDate") != null) {
+					Cell cell3 = rowc.createCell(3);
+					cell3.setCellStyle(styleDate);
+					cell3.setCellValue((Date) node.get("dDictType_CreateDate"));
 				}
-				rowc.createCell(4).setCellValue(node.getsDictType_UserID());
-				if(node.getdDictType_UpdateDate() != null) {
-					rowc.createCell(5).setCellValue(node.getdDictType_UpdateDate());
+				rowc.createCell(4).setCellValue(node.get("sDictType_UserName") == null ? "" : String.valueOf(node.get("sDictType_UserName")) );
+				if(node.get("dDictType_UpdateDate") != null) {
+					Cell cell5 = rowc.createCell(5);
+					cell5.setCellStyle(styleDate);
+					cell5.setCellValue((Date) node.get("dDictType_UpdateDate"));
 				}
-				rowc.createCell(6).setCellValue(node.getsDictType_UpdateUserID());
-				rowc.createCell(7).setCellValue(node.getlDictType_SysFlag());
+				rowc.createCell(6).setCellValue(node.get("sDictType_UpdateUserName") == null ? "" : String.valueOf(node.get("sDictType_UpdateUserName")) );
+				rowc.createCell(7).setCellValue(node.get("lDictType_SysFlag") == null ? 0 : Integer.parseInt(String.valueOf(node.get("lDictType_SysFlag"))) );
 			}
 			workbook.write(toClient);
 			workbook.close();

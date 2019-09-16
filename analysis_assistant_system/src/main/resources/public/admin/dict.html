@@ -208,7 +208,9 @@
 		
 		<!-- upload -->
 		<el-dialog title="导入" width="80%" :visible.sync="uploadVisible" :close-on-click-modal="false">	
-			<el-upload class="upload-demo" drag :action="importUrl">
+			<el-upload  class="upload-demo" drag 
+				:action="importUrl"
+				:on-success="handleImportSuccess">
 			  <i class="el-icon-upload"></i>
 			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
 			  <div class="el-upload__tip" slot="tip">
@@ -217,16 +219,31 @@
 				<p>2.请上传有标准行列的一维数据表格。（有合并单元格的数据请处理过后再上传，否则可能出现表头识别有误）</p>
 				<p>3.日期字段需包含年月日（如2019/1/1），或年月日时分秒。（如2019/1/1 00:00:00）</p>
 				<el-row style="margin-bottom: 10px;">
-					<el-col class="tipsCol tipColBorder" :span="8">第1列</el-col>
-					<el-col class="tipsCol tipColBorder" :span="8">第2列</el-col>
-					<el-col class="tipsCol tipColBorder" :span="8">第3列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第1列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第2列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第3列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第4列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第5列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第6列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第7列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="3">第8列</el-col>
 				</el-row>
 			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
-					<el-table-column label="分类编码" prop="sDictType_NO">
+					<el-table-column label="字典编码" prop="sDict_NO">
 					</el-table-column>
-					<el-table-column label="分类名称" prop="sDictType_Name">
+					<el-table-column label="字典名称" prop="sDict_Name">
 					</el-table-column>
-					<el-table-column label="系统默认" prop="lDictType_SysFlag">
+					<el-table-column label="分类编码" prop="sDict_DictTypeNO">
+					</el-table-column>
+					<el-table-column label="系统默认" prop="lDict_SysFlag">
+					</el-table-column>
+					<el-table-column label="描述" prop="sDict_Describe">
+					</el-table-column>
+					<el-table-column label="图片" prop="sDict_Picture">
+					</el-table-column>
+					<el-table-column label="链接" prop="sDict_Link">
+					</el-table-column>
+					<el-table-column label="颜色" prop="sDict_Color">
 					</el-table-column>
 				</el-table>
 			  </div>
