@@ -323,5 +323,11 @@ public class UserService extends BaseService<User, UserMapper> {
 		}
 		return userAidService.batchInsert(list, null);
 	}
+
+	@TargetDataSource
+	public List<Map<String, Object>> export() {
+		return baseMapper.export();
+	}
+	
 	
 }

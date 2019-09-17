@@ -51,6 +51,10 @@ public class UploadUtils {
 	public static String uploadImg(String fileName, InputStream in, String outDir){
 		return upload(fileName, in, outDir, imgFiles);
 	}
+	
+	public static Map<String, Object> uploadImgRes(String fileName, InputStream in, String outDir){
+		return uploadRes(fileName, in, outDir, imgFiles);
+	}
 
 	//--------------------------------------------------------------------------------------------------上传文档
 	/**
@@ -63,6 +67,10 @@ public class UploadUtils {
 	 */
 	public static String uploadDoc(String fileName, InputStream in, String outDir){
 		return upload(fileName, in, outDir, docFiles);
+	}
+	
+	public static Map<String, Object> uploadDocRes(String fileName, InputStream in, String outDir){
+		return uploadRes(fileName, in, outDir, docFiles);
 	}
 
 	//--------------------------------------------------------------------------------------------------上传文件
@@ -77,6 +85,10 @@ public class UploadUtils {
 	public static String uploadFile(String fileName, InputStream in, String outDir){
 		return upload(fileName, in, outDir, allowFiles);
 	}
+	
+	public static Map<String, Object> uploadFileRes(String fileName, InputStream in, String outDir){
+		return uploadRes(fileName, in, outDir, allowFiles);
+	}
 
 	//--------------------------------------------------------------------------------------------------上传视频
 	/**
@@ -89,6 +101,10 @@ public class UploadUtils {
 	 */
 	public static String uploadMov(String fileName, InputStream in, String outDir){
 		return upload(fileName, in, outDir, movFiles);
+	}
+	
+	public static Map<String, Object> uploadMovRes(String fileName, InputStream in, String outDir){
+		return uploadRes(fileName, in, outDir, movFiles);
 	}
 	
 	
@@ -115,6 +131,18 @@ public class UploadUtils {
 			return  ResultTools.custom(Tips.ERROR0).toJSONString();
 		}
 		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
+	public static Map<String, Object> uploadRes(String fileName, InputStream in, String outDir, String limit){
+		Map<String, Object> res = null;
+		//判断类型
+		String suffix = fileName.substring(fileName.lastIndexOf(".")+1);
+		if(!(limit.toLowerCase()+",").contains(suffix.toLowerCase()+",")){
+			return res;
+		}
+		//上传
+		res = upload(fileName, in, outDir, false);
+		return res;
 	}
 	
 	/**

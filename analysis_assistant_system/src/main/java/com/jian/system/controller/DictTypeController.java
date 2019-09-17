@@ -44,6 +44,7 @@ import com.jian.system.entity.DictType;
 import com.jian.system.entity.User;
 import com.jian.system.service.DictTypeService;
 import com.jian.system.utils.Utils;
+import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
 
@@ -171,6 +172,7 @@ public class DictTypeController extends BaseController<DictType, DictTypeService
             }
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
 		}
 		return ResultTools.custom(Tips.ERROR1).toJSONString();
 	}

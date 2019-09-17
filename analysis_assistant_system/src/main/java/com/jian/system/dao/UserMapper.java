@@ -27,4 +27,15 @@ public interface UserMapper extends BaseMapper<User> {
 		" from \"tBase_Aid\" ",
 	})
 	public List<Map<String, Object>> aidAll();
+	
+	@Select({
+		" select ",
+		"	a.*, ",
+		" 	d.\"sUser_Nick\" \"sUser_UserName\",  ",
+		" 	b.\"sGroup_Name\" \"sUser_GroupName\"  ",
+		" from \"tBase_User\" a ",
+		" 	left join \"tBase_Group\" b on a.\"sUser_GroupID\" = b.\"sGroup_ID\" ",
+		" 	left join \"tBase_User\" d on a.\"sUser_UserID\" = d.\"sUser_ID\" ",
+	})
+	public List<Map<String, Object>> export();
 }

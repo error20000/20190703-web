@@ -330,7 +330,11 @@ var myvue = new Vue({
 				var self = this;
 				this.handleResOperate(res, function(){
 					self.uploadVisible = false;
+					self.getList();
 				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
 			},
 			getImport: function(){
 				this.importUrl = importUrl + "?token=" + loginToken;

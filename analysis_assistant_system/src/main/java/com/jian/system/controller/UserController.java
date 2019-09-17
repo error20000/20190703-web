@@ -1,16 +1,40 @@
 package com.jian.system.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFComment;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jian.annotation.API;
 import com.jian.system.annotation.SysLog;
@@ -22,10 +46,13 @@ import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Config;
 import com.jian.system.config.RedisCacheKey;
+import com.jian.system.entity.Group;
 import com.jian.system.entity.User;
+import com.jian.system.service.GroupService;
 import com.jian.system.service.UserService;
 import com.jian.system.utils.RedisUtils;
 import com.jian.system.utils.TokenUtils;
+import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
@@ -44,6 +71,9 @@ public class UserController extends BaseController<User, UserService> {
 	private Config config;
 	@Autowired
 	private RedisCacheKey cacheKey;
+	@Autowired
+	private GroupService groupService;
+	
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -331,6 +361,164 @@ public class UserController extends BaseController<User, UserService> {
 		String token = Tools.md5(str + config.tokenSecretKey); // userId + time + expire + key
 		String tokenStr = token + "." + str;
 		return tokenStr;
+	}
+	
+	@RequestMapping("/import")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Add, describe="导入用户")
+	public String imports(HttpServletRequest req, HttpServletResponse resp, @RequestParam("file") MultipartFile file) {
+		try {
+			
+			User loginUser = getLoginUser(req);
+			List<Group> groups = groupService.selectAll();
+			
+			InputStream in = file.getInputStream();
+			Workbook workbook = WorkbookFactory.create(in);
+            Sheet sheet = workbook.getSheetAt(0);
+            //获取sheet的行数
+            List<User> list = new ArrayList<User>();
+            User node = null;
+            int rows = sheet.getPhysicalNumberOfRows();
+            for (int i = 0; i < rows; i++) {
+                //过滤表头行
+                if (i == 0) {
+                    continue;
+                }
+                //获取当前行的数据
+                Row row = sheet.getRow(i);
+                node = new User();
+                node.setsUser_ID(Utils.newSnowflakeIdStr());
+                node.setsUser_UserName(Utils.getCellValue(row.getCell(0)));
+                node.setsUser_PassWord(Utils.getCellValue(row.getCell(1)));
+                node.setsUser_Nick(Utils.getCellValue(row.getCell(2)));
+                
+                String groupName = Utils.getCellValue(row.getCell(3));
+                List<Group> tempGroups = groups.stream()
+                		.filter(e -> e.getsGroup_Name().equals(groupName))
+                		.collect(Collectors.toList());
+                if(tempGroups.size() > 0) {
+                	node.setsUser_GroupID(tempGroups.get(0).getsGroup_ID());
+                }
+                
+                node.setlUser_StatusFlag(1);
+                node.setdUser_CreateDate(new Date());
+                if(loginUser != null) {
+                	node.setsUser_UserID(loginUser.getsUser_ID());
+                }
+                list.add(node);
+            }
+            //去重
+            //1、自身
+            list = list.stream()
+            		.filter(Utils.distinctByKey(e -> e.getsUser_UserName()))
+            		.collect(Collectors.toList());
+            //2、数据库
+            List<User> all = service.selectAll();
+            list = list.stream()
+            		.filter(t-> !all.stream()
+            				.map(e -> e.getsUser_UserName())
+            				.collect(Collectors.toList())
+            				.contains(t.getsUser_UserName()))
+            		.collect(Collectors.toList());
+            //保存
+            if(list.size() > 0) {
+            	service.batchInsert(list, loginUser);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
+		}
+		return ResultTools.custom(Tips.ERROR1).toJSONString();
+	}
+
+	
+	@RequestMapping("/excel")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Export, describe="导出用户")
+	public String excel(HttpServletRequest req, HttpServletResponse resp) {
+		
+		String filename = "User";
+		//查询
+		List<Map<String, Object>> list = service.export();
+
+		//执行
+		resp.addHeader("Content-Disposition","attachment;filename="+filename+".xls");
+		// response.addHeader("Content-Length", "" + JSONArray.fromObject(list).toString().getBytes().length);
+		resp.setContentType("application/vnd.ms-excel;charset=utf-8");
+		try {
+			OutputStream toClient = new BufferedOutputStream(resp.getOutputStream());
+			//实例化HSSFWorkbook
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            //创建一个Excel表单，参数为sheet的名字
+            HSSFSheet sheet = workbook.createSheet("sheet");
+
+			//设置表头
+			String head = "ID,用户名,密码（md5）,用户昵称,状态,用户组,QQ号,邮箱,手机号,第三方ID,创建日期,创建人";
+			String[] heads = head.split(",");
+            HSSFRow row = sheet.createRow(0);
+            //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
+            for (int i = 0; i < heads.length; i++) {
+                sheet.setColumnWidth(i, (int)(( 15 + 0.72) * 256)); // 15 在EXCEL文档中实际列宽为14.29
+            }
+            //设置为居中加粗,格式化时间格式
+            HSSFCellStyle style = workbook.createCellStyle();
+            HSSFFont font = workbook.createFont();
+            font.setBold(true);
+            style.setFont(font);
+            HSSFCellStyle styleDate = workbook.createCellStyle();
+            styleDate.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("yyyy/MM/dd HH:mm:ss"));
+            //创建批注
+        	HSSFPatriarch patr = sheet.createDrawingPatriarch();
+        	HSSFClientAnchor anchor = patr.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);//创建批注位置
+            //创建表头名称
+            HSSFCell cell;
+            for (int j = 0; j < heads.length; j++) {
+                cell = row.createCell(j);
+                cell.setCellValue(heads[j]);
+                cell.setCellStyle(style);
+                //创建批注
+                if(j == 4) {
+                	HSSFComment comment = patr.createCellComment(anchor);//创建批注
+                	comment.setString(new HSSFRichTextString("0：禁用，1：启用"));//设置批注内容
+                	cell.setCellComment(comment);
+                }
+            }
+
+			//遍历导出数据
+			for (int i = 0; i < list.size(); i++) {
+				Map<String, Object> node = list.get(i);
+
+				HSSFRow rowc = sheet.createRow(i+1);
+				rowc.createCell(0).setCellValue(node.get("sUser_ID") == null ? "" : String.valueOf(node.get("sUser_ID")) );
+				rowc.createCell(1).setCellValue(node.get("sUser_UserName") == null ? "" : String.valueOf(node.get("sUser_UserName")) );
+				rowc.createCell(2).setCellValue(node.get("sUser_PassWord") == null ? "" : String.valueOf(node.get("sUser_PassWord")) );
+				rowc.createCell(3).setCellValue(node.get("sUser_Nick") == null ? "" : String.valueOf(node.get("sUser_Nick")) );
+				rowc.createCell(4).setCellValue(node.get("lUser_StatusFlag") == null ? 0 : Integer.parseInt(String.valueOf(node.get("lUser_StatusFlag"))) );
+				rowc.createCell(5).setCellValue(node.get("sUser_GroupName") == null ? "" : String.valueOf(node.get("sUser_GroupName")) );
+				rowc.createCell(6).setCellValue(node.get("sUser_QQ") == null ? "" : String.valueOf(node.get("sUser_QQ")) );
+				rowc.createCell(7).setCellValue(node.get("sUser_Email") == null ? "" : String.valueOf(node.get("sUser_Email")) );
+				rowc.createCell(8).setCellValue(node.get("sUser_Phone") == null ? "" : String.valueOf(node.get("sUser_Phone")) );
+				rowc.createCell(9).setCellValue(node.get("sUser_ThirdID") == null ? "" : String.valueOf(node.get("sUser_ThirdID")) );
+				if(node.get("dUser_CreateDate") != null) {
+					Cell cell10 = rowc.createCell(10);
+					cell10.setCellStyle(styleDate);
+					cell10.setCellValue((Date) node.get("dUser_CreateDate"));
+				}
+				rowc.createCell(11).setCellValue(node.get("sUser_UserName") == null ? "" : String.valueOf(node.get("sUser_UserName")) );
+			}
+			workbook.write(toClient);
+			workbook.close();
+			
+			toClient.flush();
+			toClient.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 	//TODO -------------------------------------------------------------------------------- 前端接口

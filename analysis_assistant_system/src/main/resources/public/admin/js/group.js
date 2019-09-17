@@ -61,6 +61,11 @@ var myvue = new Vue({
 				authFormRules: {},
 				menuAuthOptions:[],
 				
+				//excel
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				//Tips
 				tips: {
 				    name: 'tips',
@@ -374,16 +379,37 @@ var myvue = new Vue({
 					}
 				}
 				this.authCache[ref] = flag;
-				console.log(flag);
 				return flag;
 			},
 			//excel
 			getExcel: function(){
-				
+				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sGroup_Name: '超级管理组'
+					},
+					{
+						sGroup_Name: '管理员组'
+					},
+					{
+						sGroup_Name: '普通用户组'
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

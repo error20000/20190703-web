@@ -29,6 +29,7 @@ public class Config {
 	
 	
 	public String superGroupId = "1"; //超管组
+	public String managerGroupId = "2"; //管理组
 	public String defualtUserName = "admin"; //默认用户
 	
 	public int maxLoginCount = 5; //登录密码错误次数限制

@@ -168,6 +168,10 @@ var myvue = new Vue({
 				    }
 				},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -645,11 +649,42 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sUser_UserName: 'test1', 
+						sUser_PassWord: 'e10adc3949ba59abbe56e057f20f883e', 
+						sUser_Nick: '张三', 
+						sUser_GroupID: '超级管理组' 
+					},
+					{
+						sUser_UserName: 'test2', 
+						sUser_PassWord: 'e10adc3949ba59abbe56e057f20f883e', 
+						sUser_Nick: '李四', 
+						sUser_GroupID: '管理员组'  
+					},
+					{
+						sUser_UserName: 'test3', 
+						sUser_PassWord: 'e10adc3949ba59abbe56e057f20f883e', 
+						sUser_Nick: '王五', 
+						sUser_GroupID: '普通用户组'
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

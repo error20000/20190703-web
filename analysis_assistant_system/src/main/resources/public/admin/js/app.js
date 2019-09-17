@@ -70,6 +70,10 @@ var myvue = new Vue({
 				authFormRules: {},
 				menuAuthOptions:[],
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -421,11 +425,42 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sApp_Name: '应用一', 
+						sApp_NO: 'test1', 
+						sApp_SecretKey: 'e10adc3949ba59abbe56e057f20f883e', 
+						lApp_StatusFlag: 1 
+					},
+					{
+						sApp_Name: '应用二', 
+						sApp_NO: 'test2', 
+						sApp_SecretKey: 'e10adc3949ba59abbe56e057f20f883e', 
+						lApp_StatusFlag: 1   
+					},
+					{
+						sApp_Name: '应用三', 
+						sApp_NO: 'test3', 
+						sApp_SecretKey: 'e10adc3949ba59abbe56e057f20f883e', 
+						lApp_StatusFlag: 0 
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

@@ -92,4 +92,9 @@ public class AppService extends BaseService<App, AppMapper> {
 		return baseMapper.update(tableName, value, condition);
 	}
 
+	@TargetDataSource
+	public List<Map<String, Object>> export() {
+		return baseMapper.export();
+	}
+
 }

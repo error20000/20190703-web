@@ -35,7 +35,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 			return new ArrayList<>();
 		}
 		condition = condition.isEmpty() ? null : condition;
-		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
 			return baseMapper.selectPageByUser(condition, startDate, endDate, null, start, rows);
 		}
 		return baseMapper.selectPageByUser(condition, startDate, endDate, user.getsUser_ID(), start, rows);
@@ -47,7 +47,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 			return 0;
 		}
 		condition = condition.isEmpty() ? null : condition;
-		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
 			return baseMapper.sizeByUser(condition, startDate, endDate, null);
 		}
 		return baseMapper.sizeByUser(condition, startDate, endDate, user.getsUser_ID());
@@ -59,7 +59,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		if(user == null) {
 			return new ArrayList<>();
 		}
-		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
 			return baseMapper.search(keywords, null);
 		}
 		return baseMapper.search(keywords, user.getsUser_ID());
@@ -74,7 +74,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		if(Tools.isNullOrEmpty(sMsg_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sMsg_ID");
 		}
-		if(config.superGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组搜索所有消息
 			return baseMapper.view(sMsg_ID, null);
 		}
 		return baseMapper.view(sMsg_ID, user.getsUser_ID());

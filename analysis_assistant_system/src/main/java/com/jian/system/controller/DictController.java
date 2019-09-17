@@ -2,14 +2,15 @@ package com.jian.system.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -30,15 +30,17 @@ import org.apache.poi.hssf.usermodel.HSSFPicture;
 import org.apache.poi.hssf.usermodel.HSSFPictureData;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFShape;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,9 +59,13 @@ import com.jian.system.entity.Dict;
 import com.jian.system.entity.DictType;
 import com.jian.system.entity.User;
 import com.jian.system.service.DictService;
+import com.jian.system.service.DictTypeService;
+import com.jian.system.utils.UploadUtils;
 import com.jian.system.utils.Utils;
+import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
+import com.jian.tools.core.Tools;
 
 
 @Controller
@@ -67,6 +73,8 @@ import com.jian.tools.core.Tips;
 @API(name="字典管理")
 public class DictController extends BaseController<Dict, DictService> {
 
+	@Autowired
+	private DictTypeService dictTypeService;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -152,9 +160,35 @@ public class DictController extends BaseController<Dict, DictService> {
 			
 			User loginUser = getLoginUser(req);
 			
+			List<DictType> types = dictTypeService.selectAll();
+			
+			Map<String, HSSFPictureData> allPic = new HashMap<>();
+			Map<String, HSSFPictureData> cachePic = new HashMap<>();
+			
 			InputStream in = file.getInputStream();
 			Workbook workbook = WorkbookFactory.create(in);
             Sheet sheet = workbook.getSheetAt(0);
+            //获取图片
+            HSSFPatriarch hssfPatriarch = (HSSFPatriarch) sheet.getDrawingPatriarch();
+            List<HSSFShape> shapes = hssfPatriarch.getChildren();
+            for(HSSFShape sp : shapes){
+                if(sp instanceof HSSFPicture){
+                    //转换
+                    HSSFPicture picture = (HSSFPicture)sp;
+                    //获取图片数据
+                    HSSFPictureData pictureData = picture.getPictureData();
+                    //图形定位
+                    if(picture.getAnchor() instanceof HSSFClientAnchor){
+                        HSSFClientAnchor anchor = (HSSFClientAnchor)picture.getAnchor();
+                        //获取图片所在行作为key值,插入图片时，默认图片只占一行的单个格子，不能超出格子边界
+                        int row1 = anchor.getRow1();
+                        short col1 = anchor.getCol1();
+                        String key = String.valueOf(row1) + String.valueOf(col1);
+                        allPic.put(key, pictureData);
+                    }
+                }
+            }
+
             //获取sheet的行数
             List<Dict> list = new ArrayList<>();
             Dict node = null;
@@ -165,16 +199,32 @@ public class DictController extends BaseController<Dict, DictService> {
                     continue;
                 }
                 //获取当前行的数据
-                /*Row row = sheet.getRow(i);
-                node = new DictType();
-                node.setsDictType_ID(Utils.newSnowflakeIdStr());
-                node.setsDictType_NO(row.getCell(0) == null ? "" : row.getCell(0).getStringCellValue());
-                node.setsDictType_Name(row.getCell(1) == null ? "" : row.getCell(1).getStringCellValue());
-                node.setlDictType_SysFlag(row.getCell(2) == null ? 0 : ((Double)row.getCell(2).getNumericCellValue()).intValue());
-                node.setdDictType_CreateDate(new Date());
+                Row row = sheet.getRow(i);
+                node = new Dict();
+                node.setsDict_ID(Utils.newSnowflakeIdStr());
+                node.setsDict_NO(Utils.getCellValueNumStr(row.getCell(0)));
+                node.setsDict_Name(Utils.getCellValue(row.getCell(1)));
+                
+                String typeName = Utils.getCellValue(row.getCell(2));
+                List<DictType> tempTypes = types.stream().filter(e -> e.getsDictType_Name().equals(typeName)).collect(Collectors.toList());
+                if(tempTypes.size() > 0) {
+                	node.setsDict_DictTypeNO(tempTypes.get(0).getsDictType_NO());
+                }
+                node.setlDict_SysFlag(Tools.parseInt(Utils.getCellValue(row.getCell(3))));
+                node.setsDict_Describe(Utils.getCellValue(row.getCell(4)));
+                
+                String key = String.valueOf(i) + String.valueOf(5);
+                HSSFPictureData picData = allPic.get(key);
+                if(picData != null) {
+                	cachePic.put(node.getsDict_ID(), picData);
+                }
+                node.setsDict_Picture("");
+                node.setsDict_Link(Utils.getCellValue(row.getCell(6)));
+                node.setsDict_Color(Utils.getCellValue(row.getCell(7)));
+                node.setdDict_CreateDate(new Date());
                 if(loginUser != null) {
-                	node.setsDictType_UserID(loginUser.getsUser_ID());
-                }*/
+                	node.setsDict_UserID(loginUser.getsUser_ID());
+                }
                 list.add(node);
             }
             //去重
@@ -190,12 +240,26 @@ public class DictController extends BaseController<Dict, DictService> {
             				.collect(Collectors.toList())
             				.contains(t.getsDict_NO() + t.getsDict_DictTypeNO()))
             		.collect(Collectors.toList());
+            //上传图片
+            for (int i = 0; i < list.size(); i++) {
+            	Dict dict = list.get(i);
+            	HSSFPictureData picData = cachePic.get(dict.getsDict_ID());
+            	if(picData != null) {
+            		String fileName = "import_" + i + "." + picData.suggestFileExtension();
+            		ByteArrayInputStream byteArrayIn  = new ByteArrayInputStream(picData.getData());
+            		Map<String, Object> res = UploadUtils.uploadImgRes(fileName, byteArrayIn, "");
+            		if(res != null) {
+            			dict.setsDict_Picture(res.get("path") + "");
+            		}
+            	}
+			}
             //保存
             if(list.size() > 0) {
             	service.batchInsert(list, loginUser);
             }
 		} catch (Exception e) {
 			e.printStackTrace();
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
 		}
 		return ResultTools.custom(Tips.ERROR1).toJSONString();
 	}
@@ -238,7 +302,7 @@ public class DictController extends BaseController<Dict, DictService> {
             style.setFont(font);
             HSSFCellStyle styleDate = workbook.createCellStyle();
             styleDate.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("yyyy/MM/dd HH:mm:ss"));
-            HSSFCellStyle stylePic = workbook.createCellStyle();
+            styleDate.setVerticalAlignment(VerticalAlignment.CENTER);
             //创建批注
         	HSSFPatriarch patr = sheet.createDrawingPatriarch();
         	HSSFClientAnchor anchor = patr.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);//创建批注位置
@@ -266,10 +330,6 @@ public class DictController extends BaseController<Dict, DictService> {
 
 				HSSFRow rowc = sheet.createRow(i+1);
 
-	            HSSFCellStyle styleRow = workbook.createCellStyle();
-	            styleRow.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
-	            rowc.setRowStyle(styleRow);
-	            
 				rowc.createCell(0).setCellValue(node.get("sDict_ID") == null ? "" : String.valueOf(node.get("sDict_ID")) );
 				rowc.createCell(1).setCellValue(node.get("sDict_NO") == null ? "" : String.valueOf(node.get("sDict_NO")) );
 				rowc.createCell(2).setCellValue(node.get("sDict_Name") == null ? "" : String.valueOf(node.get("sDict_Name")) );
@@ -290,30 +350,35 @@ public class DictController extends BaseController<Dict, DictService> {
 
 				rowc.createCell(9).setCellValue(node.get("sDict_Describe") == null ? "" : String.valueOf(node.get("sDict_Describe")) );
 				if(node.get("sDict_Picture") != null) {
+					//String picUrl = req.getRequestURL().toString().split("api/")[0] + String.valueOf(node.get("sDict_Picture"));
 					File file = new File(config.out_static_path + node.get("sDict_Picture"));
 					if(file.exists()) {
 						ByteArrayOutputStream byteArrayOut  = new ByteArrayOutputStream();
 						BufferedImage bufferImg = ImageIO.read(file);
-						bufferImg.getWidth();
-						bufferImg.getHeight();
-						file.getName();
-						System.out.println(bufferImg.getWidth());
-						System.out.println(bufferImg.getHeight());
-						System.out.println(file.getName());
-						System.out.println(req.getRequestURL().toString());
+						//bufferImg = Utils.resizeBufferedImage(bufferImg, 60, 60, true);
+						int width = bufferImg.getWidth();
+						int height = bufferImg.getHeight();
+						int dx2 = 0;
+						int dy2 = 0;
+						if(width < height) {
+							dx2 = 200;
+							dy2 = height * dx2 / width;
+						}else {
+							dy2 = 200;
+							dx2 = width * dy2 / height;
+						}
+						
 						ImageIO.write(bufferImg, file.getName().split("[.]")[1], byteArrayOut);
-//						FileInputStream stream = new FileInputStream(file);
-//						byte[] bytes = new byte[(int)stream.getChannel().size()];
-//						stream.read(bytes);//读取图片到二进制数组
+
 						byte[] bytes = byteArrayOut.toByteArray();
 						int pictureIdx = workbook.addPicture(bytes, HSSFWorkbook.PICTURE_TYPE_PNG);
 						HSSFPatriarch patriarch = sheet.createDrawingPatriarch();
-						HSSFClientAnchor anchorPic = new HSSFClientAnchor(0, 0, 0, 0, (short)10, i+1, (short)10, i+1);
+						HSSFClientAnchor anchorPic = new HSSFClientAnchor(0, 0, Utils.getAnchorX(dx2, 16000), Utils.getAnchorY(dy2, 8000), (short)10, i+1, (short)10, i+1);
 						HSSFPicture pict = patriarch.createPicture(anchorPic, pictureIdx);
-						pict.resize();
-						sheet.setColumnWidth(10, 60 * 256);
+						//pict.resize();
 						rowc.setHeightInPoints(60);
-						rowc.createCell(10).setCellValue(req.getRequestURL().toString().split("api/")[0] + String.valueOf(node.get("sDict_Picture")) );
+						//居中
+						rowc.getCell(0).getCellStyle().setVerticalAlignment(VerticalAlignment.CENTER);
 					}
 				}
 				if(node.get("sDict_Link") != null) {
@@ -324,7 +389,31 @@ public class DictController extends BaseController<Dict, DictService> {
 					cell11.setHyperlink(link);
 					cell11.setCellValue(url);
 				}
-				rowc.createCell(12).setCellValue(node.get("sDict_Color") == null ? "" : String.valueOf(node.get("sDict_Color")) );
+				if(node.get("sDict_Color") != null) {
+					String color = String.valueOf(node.get("sDict_Color"));
+					/*if(!Tools.isNullOrEmpty(color)) {
+						byte r = (byte)Integer.parseInt(color.substring(1, 3), 16); 
+						byte g = (byte)Integer.parseInt(color.substring(3, 5), 16); 
+						byte b = (byte)Integer.parseInt(color.substring(5, 7), 16); 
+						//调色板  版号：8-64
+						HSSFPalette customPalette = workbook.getCustomPalette();
+						customPalette.setColorAtIndex((short)(8+i), r, g, b);
+						HSSFCellStyle s = workbook.createCellStyle();
+						s.setVerticalAlignment(VerticalAlignment.CENTER);
+						//前景色
+						//s.setFillForegroundColor((short)(8+node.getPid()));
+						//s.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+						//字体色
+						HSSFFont f = workbook.createFont();
+						f.setColor((short)(8+i));
+						s.setFont(f);
+						
+						HSSFCell cell12 = rowc.createCell(12);
+						cell12.setCellStyle(s);
+						cell12.setCellValue(color);
+					}*/
+					rowc.createCell(12).setCellValue(color);
+				}
 			}
 			workbook.write(toClient);
 			workbook.close();
