@@ -47,6 +47,7 @@ import com.jian.system.utils.Utils;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
+import com.jian.tools.core.Tools;
 
 
 @Controller
@@ -122,7 +123,7 @@ public class AppController extends BaseController<App, AppService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	@SysLog(type=SystemLogType.Add, describe="导入用户")
+	@SysLog(type=SystemLogType.Add, describe="导入应用")
 	public String imports(HttpServletRequest req, HttpServletResponse resp, @RequestParam("file") MultipartFile file) {
 		try {
 			
@@ -147,7 +148,7 @@ public class AppController extends BaseController<App, AppService> {
                 node.setsApp_Name(Utils.getCellValue(row.getCell(0)));
                 node.setsApp_NO(Utils.getCellValue(row.getCell(1)));
                 node.setsApp_SecretKey(Utils.getCellValue(row.getCell(2)));
-                node.setlApp_StatusFlag(Integer.parseInt(Utils.getCellValue(row.getCell(3))));
+                node.setlApp_StatusFlag(Tools.parseInt(Utils.getCellValue(row.getCell(3))));
                 node.setdApp_CreateDate(new Date());
                 if(loginUser != null) {
                 	node.setsApp_UserID(loginUser.getsUser_ID());
@@ -183,10 +184,10 @@ public class AppController extends BaseController<App, AppService> {
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	@SysLog(type=SystemLogType.Export, describe="导出用户")
+	@SysLog(type=SystemLogType.Export, describe="导出应用")
 	public String excel(HttpServletRequest req, HttpServletResponse resp) {
 		
-		String filename = "User";
+		String filename = "App";
 		//查询
 		List<Map<String, Object>> list = service.export();
 
@@ -241,15 +242,14 @@ public class AppController extends BaseController<App, AppService> {
 				rowc.createCell(0).setCellValue(node.get("sApp_ID") == null ? "" : String.valueOf(node.get("sApp_ID")) );
 				rowc.createCell(1).setCellValue(node.get("sApp_Name") == null ? "" : String.valueOf(node.get("sApp_Name")) );
 				rowc.createCell(2).setCellValue(node.get("sApp_NO") == null ? "" : String.valueOf(node.get("sApp_NO")) );
-				rowc.createCell(3).setCellValue(node.get("sUser_Nick") == null ? "" : String.valueOf(node.get("sUser_Nick")) );
-				rowc.createCell(4).setCellValue(node.get("sApp_SecretKey") == null ? "" : String.valueOf(node.get("sApp_SecretKey")) );
-				rowc.createCell(5).setCellValue(node.get("lApp_StatusFlag") == null ? 0 : Integer.parseInt(String.valueOf(node.get("lApp_StatusFlag"))) );
+				rowc.createCell(3).setCellValue(node.get("sApp_SecretKey") == null ? "" : String.valueOf(node.get("sApp_SecretKey")) );
+				rowc.createCell(4).setCellValue(node.get("lApp_StatusFlag") == null ? 0 : Integer.parseInt(String.valueOf(node.get("lApp_StatusFlag"))) );
 				if(node.get("dApp_CreateDate") != null) {
-					Cell cell6 = rowc.createCell(6);
-					cell6.setCellStyle(styleDate);
-					cell6.setCellValue((Date) node.get("dApp_CreateDate"));
+					Cell cell5 = rowc.createCell(5);
+					cell5.setCellStyle(styleDate);
+					cell5.setCellValue((Date) node.get("dApp_CreateDate"));
 				}
-				rowc.createCell(7).setCellValue(node.get("sApp_UserName") == null ? "" : String.valueOf(node.get("sApp_UserName")) );
+				rowc.createCell(6).setCellValue(node.get("sApp_UserName") == null ? "" : String.valueOf(node.get("sApp_UserName")) );
 			}
 			workbook.write(toClient);
 			workbook.close();

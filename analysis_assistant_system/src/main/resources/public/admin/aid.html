@@ -181,14 +181,14 @@
 			    <el-input v-model="addForm.sAid_Name"></el-input>
 			  </el-form-item>
 			  <el-form-item label="航标纬度" >
-			    <el-input v-model="addForm.lAid_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-			    <el-input v-model="addForm.lAid_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="addForm.lAid_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
+			    <el-input v-model="addForm.lAid_LatDu" style="width:100px;" @keyup.native="handleKeyupLatDu('add')" maxlength=2></el-input>°
+			    <el-input v-model="addForm.lAid_LatFen" style="width:100px;" @keyup.native="handleKeyupLatFen('add')" maxlength=2></el-input>′
+			    <el-input v-model="addForm.lAid_LatMiao" style="width:100px;" @keyup.native="handleKeyupLatMiao('add')" maxlength=6></el-input>″ N
 			  </el-form-item>
 			  <el-form-item label="航标经度">
-			    <el-input v-model="addForm.lAid_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-			    <el-input v-model="addForm.lAid_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="addForm.lAid_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
+			    <el-input v-model="addForm.lAid_LngDu" style="width:100px;" @keyup.native="handleKeyupLngDu('add')" maxlength=3></el-input>°
+			    <el-input v-model="addForm.lAid_LngFen" style="width:100px;" @keyup.native="handleKeyupLngFen('add')" maxlength=2></el-input>′
+			    <el-input v-model="addForm.lAid_LngMiao" style="width:100px;" @keyup.native="handleKeyupLngMiao('add')" maxlength=6></el-input>″ E
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
 			    <el-select v-model="addForm.sAid_Station" placeholder="请选择归属航标站">
@@ -275,14 +275,14 @@
 			    <el-input v-model="editForm.sAid_Name"></el-input>
 			  </el-form-item>
 			  <el-form-item label="航标纬度" >
-			    <el-input v-model="editForm.lAid_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-			    <el-input v-model="editForm.lAid_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="editForm.lAid_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
+			    <el-input v-model="editForm.lAid_LatDu" style="width:100px;" @keyup.native="handleKeyupLatDu('edit')" maxlength=2></el-input>°
+			    <el-input v-model="editForm.lAid_LatFen" style="width:100px;" @keyup.native="handleKeyupLatFen('edit')" maxlength=2></el-input>′
+			    <el-input v-model="editForm.lAid_LatMiao" style="width:100px;" @keyup.native="handleKeyupLatMiao('edit')" maxlength=6 ></el-input>″ N
 			  </el-form-item>
 			  <el-form-item label="航标经度">
-			    <el-input v-model="editForm.lAid_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-			    <el-input v-model="editForm.lAid_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-			    <el-input v-model="editForm.lAid_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
+			    <el-input v-model="editForm.lAid_LngDu" style="width:100px;" @keyup.native="handleKeyupLngDu('edit')" maxlength=3></el-input>°
+			    <el-input v-model="editForm.lAid_LngFen" style="width:100px;" @keyup.native="handleKeyupLngFen('edit')" maxlength=2></el-input>′
+			    <el-input v-model="editForm.lAid_LngMiao" style="width:100px;" @keyup.native="handleKeyupLngMiao('edit')" maxlength=6></el-input>″ E
 			  </el-form-item>
 			  <el-form-item label="归属航标站" prop="sAid_Station">
 			    <el-select v-model="editForm.sAid_Station" placeholder="请选择归属航标站">
@@ -395,6 +395,62 @@
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="userClose">取消</el-button>
 				<el-button size="mini" type="primary" @click="userSubmit" :loading="userLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!-- upload -->
+		<el-dialog title="导入" width="80%" :visible.sync="uploadVisible" :close-on-click-modal="false">	
+			<el-upload class="upload-demo" drag :show-file-list="false"
+				:action="importUrl"
+				:on-success="handleImportSuccess">
+			  <i class="el-icon-upload"></i>
+			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+			  <div class="el-upload__tip" slot="tip">
+			  	<p>表格示例 :</p>
+			  	<p>1.支持Excel文件</p>
+				<p>2.请上传有标准行列的一维数据表格。（有合并单元格的数据请处理过后再上传，否则可能出现表头识别有误）</p>
+				<p>3.日期字段需包含年月日（如2019/1/1），或年月日时分秒。（如2019/1/1 00:00:00）</p>
+			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
+					<el-table-column label="航标名称" prop="sAid_Name" width="100">
+					</el-table-column>
+					<el-table-column label="航标编码" prop="sAid_NO" width="100">
+					</el-table-column>
+					<el-table-column label="归属航标站" prop="sAid_Station" width="100">
+					</el-table-column>		
+					<el-table-column label="航标种类" prop="sAid_Type" width="100">
+					</el-table-column>	
+					<el-table-column label="航标图标" prop="sAid_Icon" width="100">
+					</el-table-column>	
+					<el-table-column label="始建时间" prop="dAid_BuildDate" width="100">
+					</el-table-column>	
+					<el-table-column label="撤除时间" prop="dAid_DelDate" width="100">
+					</el-table-column>	
+					<el-table-column label="灯质明灭" prop="sAid_Lighting" width="100">
+					</el-table-column>	
+					<el-table-column label="航标设置" prop="sAid_Mark" width="100">
+					</el-table-column>	
+					<el-table-column label="NFC标签" prop="sAid_NfcID" width="100">
+					</el-table-column>	
+					<el-table-column label="航标状态" prop="sAid_Status" width="100">
+					</el-table-column>	
+					<el-table-column label="纬度（度）" prop="lAid_LatDu" width="100">
+					</el-table-column>	
+					<el-table-column label="纬度（分）" prop="lAid_LatFen" width="100">
+					</el-table-column>	
+					<el-table-column label="纬度（秒）" prop="lAid_LatMiao" width="100">
+					</el-table-column>	
+					<el-table-column label="经度（度）" prop="lAid_LngDu" width="100">
+					</el-table-column>	
+					<el-table-column label="经度（分）" prop="lAid_LngFen" width="100">
+					</el-table-column>	
+					<el-table-column label="经度（秒）" prop="lAid_LngMiao" width="100">
+					</el-table-column>
+				</el-table>
+				
+			  </div>
+			</el-upload>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="importClose">取消</el-button>
 			</div>
 		</el-dialog>
 		

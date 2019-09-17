@@ -99,6 +99,10 @@ var myvue = new Vue({
 				},
 				userFormRules: {},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -319,6 +323,99 @@ var myvue = new Vue({
 					});
 				});
 			},
+			
+			handleKeyupLatDu: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LatDu = String(this.addForm.lAid_LatDu).replace(/[^\d]/g,'');
+					this.addForm.lAid_LatDu = this.addForm.lAid_LatDu > 90 ? 90 : this.addForm.lAid_LatDu;
+					break;
+				case 'edit':
+					this.editForm.lAid_LatDu = String(this.editForm.lAid_LatDu).replace(/[^\d]/g,'');
+					this.editForm.lAid_LatDu = this.editForm.lAid_LatDu > 90 ? 90 : this.editForm.lAid_LatDu;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLatFen: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LatFen = String(this.addForm.lAid_LatFen).replace(/[^\d]/g,'');
+					this.addForm.lAid_LatFen = this.addForm.lAid_LatFen >= 60 ? 59 : this.addForm.lAid_LatFen;
+					break;
+				case 'edit':
+					this.editForm.lAid_LatFen = String(this.editForm.lAid_LatFen).replace(/[^\d]/g,'');
+					this.editForm.lAid_LatFen = this.editForm.lAid_LatFen >= 60 ? 59 : this.editForm.lAid_LatFen;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLatMiao: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LatMiao = String(this.addForm.lAid_LatMiao).replace(/[^\d.]/g,'');
+					this.addForm.lAid_LatMiao = this.addForm.lAid_LatMiao >= 60 ? 59.999 : this.addForm.lAid_LatMiao;
+					break;
+				case 'edit':
+					this.editForm.lAid_LatMiao = String(this.editForm.lAid_LatMiao).replace(/[^\d.]/g,'');
+					this.editForm.lAid_LatMiao = this.editForm.lAid_LatMiao >= 60 ? 59.999 : this.editForm.lAid_LatMiao;
+					break;
+
+				default:
+					break;
+				}
+			},
+
+			handleKeyupLngDu: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LngDu = String(this.addForm.lAid_LngDu).replace(/[^\d]/g,'');
+					this.addForm.lAid_LngDu = this.addForm.lAid_LngDu > 180 ? 180 : this.addForm.lAid_LngDu;
+					break;
+				case 'edit':
+					this.editForm.lAid_LngDu = String(this.editForm.lAid_LngDu).replace(/[^\d]/g,'');
+					this.editForm.lAid_LngDu = this.editForm.lAid_LngDu > 180 ? 180 : this.editForm.lAid_LngDu;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLngFen: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LngFen = String(this.addForm.lAid_LngFen).replace(/[^\d]/g,'');
+					this.addForm.lAid_LngFen = this.addForm.lAid_LngFen >= 60 ? 59 : this.addForm.lAid_LngFen;
+					break;
+				case 'edit':
+					this.editForm.lAid_LngFen = String(this.editForm.lAid_LngFen).replace(/[^\d]/g,'');
+					this.editForm.lAid_LngFen = this.editForm.lAid_LngFen >= 60 ? 59 : this.editForm.lAid_LngFen;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLngMiao: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lAid_LngMiao = String(this.addForm.lAid_LngMiao).replace(/[^\d.]/g,'');
+					this.addForm.lAid_LngMiao = this.addForm.lAid_LngMiao >= 60 ? 59.999 : this.addForm.lAid_LngMiao;
+					break;
+				case 'edit':
+					this.editForm.lAid_LngMiao = String(this.editForm.lAid_LngMiao).replace(/[^\d.]/g,'');
+					this.editForm.lAid_LngMiao = this.editForm.lAid_LngMiao >= 60 ? 59.999 : this.editForm.lAid_LngMiao;
+					break;
+
+				default:
+					break;
+				}
+			},
+			
 			handleSizeChange: function (val) {
 				this.rows = val;
 				this.getList();
@@ -600,11 +697,88 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				var params = "";
+				for ( var key in this.filters) {
+					if(this.filters[key]){
+						params += "&"+key+"="+this.filters[key];
+					}
+				}
+				parent.window.open(excelUrl + "?token=" + loginToken + params);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sAid_Name: '测试1', 
+						sAid_NO: 'test1', 
+						sAid_Station: '厦门' , 
+						sAid_Type: '灯塔' , 
+						sAid_Icon: '' , 
+						dAid_BuildDate: '2019/01/01' , 
+						dAid_DelDate: '2020/01/01' , 
+						sAid_Lighting: '互顿蓝黄3秒' , 
+						sAid_Mark: '' , 
+						sAid_NfcID: '' , 
+						sAid_Status: '正常' , 
+						lAid_LatDu: 24 , 
+						lAid_LatFen: 27 , 
+						lAid_LatMiao: 36.733 , 
+						lAid_LngDu: 118 , 
+						lAid_LngFen: 6 , 
+						lAid_LngMiao: 0 
+					},
+					{
+						sAid_Name: '测试2', 
+						sAid_NO: 'test2', 
+						sAid_Station: '厦门' , 
+						sAid_Type: '灯塔' , 
+						sAid_Icon: '' , 
+						dAid_BuildDate: '2019/01/01' , 
+						dAid_DelDate: '2020/01/01' , 
+						sAid_Lighting: '互顿蓝黄3秒' , 
+						sAid_Mark: '' , 
+						sAid_NfcID: '' , 
+						sAid_Status: '正常' , 
+						lAid_LatDu: 24 , 
+						lAid_LatFen: 27 , 
+						lAid_LatMiao: 36.844 , 
+						lAid_LngDu: 118 , 
+						lAid_LngFen: 6 , 
+						lAid_LngMiao: 0    
+					},
+					{
+						sAid_Name: '测试3', 
+						sAid_NO: 'test3', 
+						sAid_Station: '厦门' , 
+						sAid_Type: '灯塔' , 
+						sAid_Icon: '' , 
+						dAid_BuildDate: '2019/01/01' , 
+						dAid_DelDate: '2020/01/01' , 
+						sAid_Lighting: '互顿蓝黄3秒' , 
+						sAid_Mark: '' , 
+						sAid_NfcID: '' , 
+						sAid_Status: '正常' , 
+						lAid_LatDu: 24 , 
+						lAid_LatFen: 27 , 
+						lAid_LatMiao: 36.966 , 
+						lAid_LngDu: 118 , 
+						lAid_LngFen: 6 , 
+						lAid_LngMiao: 0 
+					}
+
+				];
 			},
 			
 			selsChange: function (sels) {

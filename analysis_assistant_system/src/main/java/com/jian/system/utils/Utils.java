@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -24,6 +25,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -254,7 +256,18 @@ public class Utils {
     		return str;
     	}
     	if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
-        	str += cell.getNumericCellValue();
+    		// 先判断是否是科学计数法
+            String regx = "^((-?\\d+.?\\d*)[Ee]{1}(-?\\d+))$";//科学计数法正则表达式
+            Pattern pattern = Pattern.compile(regx);
+            double v = cell.getNumericCellValue();
+            if (pattern.matcher(String.valueOf(v)).matches()) {
+                // 将科学计数法数字转成字符串，再转成Long
+                DecimalFormat df = new DecimalFormat("0");
+                String cellValue = df.format(cell.getNumericCellValue());
+                str += cellValue;
+            } else {
+            	str += cell.getNumericCellValue();
+            }
         }else if (cell.getCellTypeEnum().equals(CellType.STRING)) {
         	str += cell.getStringCellValue();
         }else if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {
@@ -288,7 +301,18 @@ public class Utils {
     		return str;
     	}
     	if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
-        	str += ((Double)cell.getNumericCellValue()).longValue();
+    		// 先判断是否是科学计数法
+            String regx = "^((-?\\d+.?\\d*)[Ee]{1}(-?\\d+))$";//科学计数法正则表达式
+            Pattern pattern = Pattern.compile(regx);
+            double v = cell.getNumericCellValue();
+            if (pattern.matcher(String.valueOf(v)).matches()) {
+                // 将科学计数法数字转成字符串，再转成Long
+                DecimalFormat df = new DecimalFormat("0");
+                String cellValue = df.format(cell.getNumericCellValue());
+                str += Long.parseLong(cellValue);
+            } else {
+            	str += ((Double)cell.getNumericCellValue()).longValue();
+            }
         }else if (cell.getCellTypeEnum().equals(CellType.STRING)) {
         	str += cell.getStringCellValue();
         }else if (cell.getCellTypeEnum().equals(CellType.BOOLEAN)) {

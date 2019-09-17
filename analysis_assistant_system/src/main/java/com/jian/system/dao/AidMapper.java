@@ -170,4 +170,37 @@ public interface AidMapper extends BaseMapper<Aid> {
 	})
 	public List<Map<String, Object>> statis(@Param("sAid_Station") String sAid_Station);
 	
+	@Select({
+		" select ",
+		"	a.*, ",
+		"	d.\"sDict_Picture\" \"sAid_StatusIcon\", e.\"sDict_Picture\" \"sAid_TypeIcon\", ",
+		"	f.\"sDict_Name\" \"sAid_StationName\", ",
+		"	g.\"sDict_Picture\" \"sAid_IconUrl\", ",
+		"	h.\"sDict_Name\" \"sAid_TypeName\", ",
+		"	i.\"sDict_Name\" \"sAid_LightingName\", ",
+		"	j.\"sDict_Name\" \"sAid_MarkName\" ",
+		" from \"tBase_Aid\" a ",
+		" 	left join \"tBase_AidMapIcon\" b on a.\"sAid_ID\" = b.\"sAidIcon_AidID\" and a.\"sAid_Status\" = b.\"sAidIcon_Status\" ",
+		" 	left join \"tBase_AidTypeMapIcon\" c on a.\"sAid_Type\" = c.\"sAidTypeIcon_Type\" and a.\"sAid_Status\" = c.\"sAidTypeIcon_Status\" ",
+		" 	left join \"tBase_Dict\" d on b.\"sAidIcon_StatusIcon\" = d.\"sDict_NO\"  and d.\"sDict_DictTypeNO\" = 'MapIcon' ",
+		" 	left join \"tBase_Dict\" e on c.\"sAidTypeIcon_StatusIcon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'MapIcon' ",
+		" 	left join \"tBase_Dict\" f on a.\"sAid_Station\" = f.\"sDict_NO\" and f.\"sDict_DictTypeNO\" = 'AidStation' ",
+		" 	left join \"tBase_Dict\" g on a.\"sAid_Icon\" = g.\"sDict_NO\" and g.\"sDict_DictTypeNO\" = 'AidIcon' ",
+		" 	left join \"tBase_Dict\" h on a.\"sAid_Type\" = h.\"sDict_NO\" and h.\"sDict_DictTypeNO\" = 'AidType' ",
+		" 	left join \"tBase_Dict\" i on a.\"sAid_Lighting\" = i.\"sDict_NO\" and i.\"sDict_DictTypeNO\" = 'AidLighting' ",
+		" 	left join \"tBase_Dict\" j on a.\"sAid_Mark\" = j.\"sDict_NO\" and j.\"sDict_DictTypeNO\" = 'AidMark' ",
+		"   left join \"tBase_UserAid\" k on a.\"sAid_ID\" = k.\"sUserAid_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and k.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> export(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
+	
 }

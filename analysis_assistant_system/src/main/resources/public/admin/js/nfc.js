@@ -80,6 +80,10 @@ var myvue = new Vue({
 				bindForm: {},
 				bindFormRules: {},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -374,19 +378,47 @@ var myvue = new Vue({
 				};
 				this.getList();
 			},
+			//excel
 			getExcel: function(){
-				this.query();
 				var params = "";
 				for ( var key in this.filters) {
 					if(this.filters[key]){
 						params += "&"+key+"="+this.filters[key];
 					}
 				}
-				params += "&userId="+this.user.pid;
-				parent.window.open(excelUrl+(params ? "?"+params.substring(1) : ""));
+				parent.window.open(excelUrl + "?token=" + loginToken + params);
+			},
+			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
 			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sNfc_Name: '04A2DEC2C64880', 
+						sNfc_NO: '04A2DEC2C64880', 
+						lNfc_StatusFlag: 0 
+					},
+					{
+						sNfc_Name: '04A2DEC2C64880', 
+						sNfc_NO: '04A2DEC2C64880', 
+						lNfc_StatusFlag: 0   
+					},
+					{
+						sNfc_Name: '04A2DEC2C64880', 
+						sNfc_NO: '04A2DEC2C64880', 
+						lNfc_StatusFlag: 1 
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

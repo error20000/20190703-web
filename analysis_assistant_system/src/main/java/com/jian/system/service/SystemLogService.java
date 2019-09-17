@@ -27,7 +27,11 @@ public class SystemLogService extends BaseService<SystemLog, SystemLogMapper> {
 		return baseMapper.sizeByDate(tableName, condition, startDate, endDate);
 	}
 
-
+	@TargetDataSource
+	public List<SystemLog> selectByDate(Map<String, Object> condition, Date startDate, Date endDate) {
+		condition = condition.isEmpty() ? null : condition;
+		return baseMapper.selectByDate(condition, startDate, endDate);
+	}
 	
 	
 }

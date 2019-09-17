@@ -151,7 +151,13 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				var params = "";
+				for ( var key in this.filters) {
+					if(this.filters[key]){
+						params += "&"+key+"="+this.filters[key];
+					}
+				}
+				parent.window.open(excelUrl + "?token=" + loginToken + params);
 			},
 			
 			selsChange: function (sels) {

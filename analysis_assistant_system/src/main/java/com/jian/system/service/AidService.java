@@ -185,6 +185,14 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		return baseMapper.aidMap();
 	}
 
+	@TargetDataSource
+	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.export(condition, user.getsUser_ID());
+		}
+		return baseMapper.export(condition, user.getsUser_ID());
+	}
+
 	
 	//TODO ---------------------------------------------------------------------------------统计
 	
