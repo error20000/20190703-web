@@ -118,22 +118,22 @@ public interface BaseMapper<T> {
     })    
     public int update(@Param("tableName") String tableName, @Param("vmap") Map<String, Object> value, @Param("map") Map<String, Object> condition);
 
-    @Update({        
-    	"<script>",
-    	"update \"${tableName}\" ",  
-    	" set ", 
-    	"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\",\">",
-    	" 		<if test=\" vmap[item] != null \"> ",
-    	" 			\"${item}\" = #{vmap[${item}]} ",
-    	"       </if>",   
-    	"	</foreach>",
-    	" where ",
-    	"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
-    	" 		\"${item}\" = #{map[${item}]} ",
-    	"	</foreach>",
-    	"</script>"
-    })    
-    public int batchUpdate(@Param("tableName") String tableName, @Param("list") List<Map<String, Object>> list);
+	/*@Update({        
+		"<script>",
+		"update \"${tableName}\" ",  
+		" set ", 
+		"	<foreach collection=\"vmap.keys\" item=\"item\"  index=\"i\" separator=\",\">",
+		" 		<if test=\" vmap[item] != null \"> ",
+		" 			\"${item}\" = #{vmap[${item}]} ",
+		"       </if>",   
+		"	</foreach>",
+		" where ",
+		"	<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+		" 		\"${item}\" = #{map[${item}]} ",
+		"	</foreach>",
+		"</script>"
+	})    
+	public int batchUpdate(@Param("tableName") String tableName, @Param("list") List<Map<String, Object>> list);*/
     
 	//TODO ----------------------------------------------------------------------select
     

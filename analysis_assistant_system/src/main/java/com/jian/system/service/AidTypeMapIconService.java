@@ -74,4 +74,9 @@ public class AidTypeMapIconService extends BaseService<AidTypeMapIcon, AidTypeMa
 	}
 
 
+	@TargetDataSource
+	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
+		return baseMapper.export(condition);
+	}
+	
 }

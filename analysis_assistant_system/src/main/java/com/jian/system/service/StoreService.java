@@ -202,7 +202,10 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 			node = Tools.parseObjectToMap(type);
 			node.put("sStore_ID", type.getsStoreType_ID());
 			node.put("sStore_Name", type.getsStoreType_Name());
-			node.put("children", findChildren(type.getsStoreType_ID(), list));
+			List<Map<String, Object>>  children = findChildren(type.getsStoreType_ID(), list);
+			if(children != null && children.size() > 0) {
+				node.put("children", children);
+			}
 			res.add(node);
 		}
 		return res;

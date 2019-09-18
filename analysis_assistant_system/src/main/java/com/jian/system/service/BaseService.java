@@ -84,6 +84,18 @@ public class BaseService<T, M extends BaseMapper<T>> {
 		return baseMapper.update(tableName, value, condition);
 	}
 
+
+	/*@TargetDataSource
+	public int batchUpdate(List<T> objs) {
+		String tableName =  getTableName();
+		List<Map<String, Object>> list = new ArrayList<>();
+		for (T obj : objs) {
+			Map<String, Object> value = Tools.parseObjectToMap(obj);
+			list.add(value);
+		}
+		return baseMapper.batchUpdate(tableName, list);
+	}*/
+
 	//TODO ----------------------------------------------------------------------select
 
 	@TargetDataSource

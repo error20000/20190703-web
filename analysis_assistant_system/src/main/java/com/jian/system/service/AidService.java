@@ -13,6 +13,7 @@ import com.jian.system.config.Config;
 import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.exception.ServiceException;
@@ -149,6 +150,17 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	}
 
 
+	@TargetDataSource
+	public List<Aid> selectAll(User user) {
+		if(user == null) {
+			return new ArrayList<Aid>();
+		}
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.selectAllByUser(null);
+		}
+		return baseMapper.selectAllByUser(user.getsUser_ID());
+	}
+
 	
 	@TargetDataSource
 	public List<Aid> search(String keywords, User user, String ip) {
@@ -188,11 +200,20 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	@TargetDataSource
 	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
-			return baseMapper.export(condition, user.getsUser_ID());
+			return baseMapper.export(condition, null);
 		}
 		return baseMapper.export(condition, user.getsUser_ID());
 	}
 
+
+	@TargetDataSource
+	@Transactional
+	public void imports(List<Aid> aids, List<Nfc> nfcs, User user) {
+		for (Nfc nfc : nfcs) {
+			nfcService.update(nfc, user);
+		}
+		batchInsert(aids, user);
+	}
 	
 	//TODO ---------------------------------------------------------------------------------统计
 	

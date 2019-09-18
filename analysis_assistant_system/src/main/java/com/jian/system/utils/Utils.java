@@ -289,7 +289,7 @@ public class Utils {
     	}
     	if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
     		if(DateUtil.isCellDateFormatted(cell)) {
-    			date = new Date(((Double)cell.getNumericCellValue()).longValue());
+    			date = cell.getDateCellValue();
     		}
         }
     	return date;
