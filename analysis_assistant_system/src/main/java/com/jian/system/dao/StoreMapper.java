@@ -61,4 +61,32 @@ public interface StoreMapper extends BaseMapper<Store> {
 	})
 	public List<Map<String, Object>> checkStore();
 
+	
+	@Select({
+		" <script> ",
+		" select ",
+		"	a.*, ",
+		"	b.\"sDict_Name\" \"sStoreType_MapIconName\", ",
+		"	b.\"sDict_Picture\" \"sStoreType_MapIconPic\", ",
+		" 	c.\"sStore_Name\" \"sStoreType_Lv2\",  ",
+		" 	c.\"lStore_Limit\" \"sStoreType_Limit2\",  ",
+		" 	d.\"sStore_Name\" \"sStoreType_Lv3\",  ",
+		" 	d.\"lStore_Limit\" \"sStoreType_Limit3\",  ",
+		" 	e.\"sStore_Name\" \"sStoreType_Lv4\",  ",
+		" 	e.\"lStore_Limit\" \"sStoreType_Limit4\"  ",
+		" from \"tBase_StoreType\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sStoreType_MapIcon\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'StoreMapIcon' ",
+		" 	left join \"tBase_Store\" c on c.\"sStore_Parent\" = a.\"sStoreType_ID\" ",
+		" 	left join \"tBase_Store\" d on d.\"sStore_Parent\" = c.\"sStore_ID\" ",
+		" 	left join \"tBase_Store\" e on e.\"sStore_Parent\" = d.\"sStore_ID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",
+		" </script> "
+	})
+	public List<Map<String, Object>> export(@Param("map") Map<String, Object> condition);
+
 }

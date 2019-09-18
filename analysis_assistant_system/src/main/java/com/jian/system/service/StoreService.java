@@ -280,6 +280,12 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	public long msgSize(Map<String, Object> condition, User user) {
 		return msgService.size(condition, null, null, user);
 	}
+
+
+	@TargetDataSource
+	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
+		return baseMapper.export(condition);
+	}
 	
 	//TODO ------------------------------------------------------------------------------统计
 	

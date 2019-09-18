@@ -222,7 +222,7 @@ public class AidTypeMapIconController extends BaseController<AidTypeMapIcon, Aid
             HSSFSheet sheet = workbook.createSheet("sheet");		
 
 			//设置表头
-			String head = "ID,航标分类,航标状态,状态图标";
+			String head = "ID,航标分类,分类状态,状态图标";
 			String[] heads = head.split(",");
             HSSFRow row = sheet.createRow(0);
             //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度

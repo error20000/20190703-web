@@ -4,6 +4,8 @@ var queryUrl = baseUrl + "api/store/findAll";
 var addUrl = baseUrl + "api/store/add";
 var modUrl = baseUrl + "api/store/update";
 var delUrl = baseUrl + "api/store/delete";
+var excelUrl = baseUrl + "api/store/excel";
+var importUrl = baseUrl + "api/store/import";
 var dictUrl = baseUrl + "api/dict/findList";
 var listUrl = baseUrl + "api/store/findList";
 
@@ -162,6 +164,10 @@ var myvue = new Vue({
 				//has auth
 				hasEditAuth: false,
 				hasDeleteAuth: false,
+				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
 				
 				user: ''
 			}
@@ -566,11 +572,75 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				var params = "";
+				for ( var key in this.filters) {
+					if(this.filters[key]){
+						params += "&"+key+"="+this.filters[key];
+					}
+				}
+				parent.window.open(excelUrl + "?token=" + loginToken + params);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sStoreType_Name: '测试1', 
+						sStoreType_Address: 'test1', 
+						sStoreType_Station: '厦门' , 
+						lStoreType_Limit: 10 , 
+						sStoreType_MapIcon: '' , 
+						lStoreType_Lat: '0°0′00.000″ N' , 
+						lStoreType_Lng: '0°0′00.000″ E', 
+						sStoreType_Lv2: '易耗品库', 
+						sStoreType_Limit2: 5,
+						sStoreType_Lv3: 'A货架',  
+						sStoreType_Limit3: 0,
+						sStoreType_Lv4: '三排',
+						sStoreType_Limit4: 10
+					},
+					{
+						sStoreType_Name: '测试2', 
+						sStoreType_Address: 'test2', 
+						sStoreType_Station: '厦门' , 
+						lStoreType_Limit: 10 , 
+						sStoreType_MapIcon: '' , 
+						lStoreType_Lat: '0°0′00.000″ N' , 
+						lStoreType_Lng: '0°0′00.000″ E',  
+						sStoreType_Lv2: '易耗品库', 
+						sStoreType_Limit2: 0,
+						sStoreType_Lv3: 'B货架', 
+						sStoreType_Limit3: 0,
+						sStoreType_Lv4: '三排',
+						sStoreType_Limit4: 0
+					},
+					{
+						sStoreType_Name: '测试3', 
+						sStoreType_Address: 'test3', 
+						sStoreType_Station: '厦门' , 
+						lStoreType_Limit: 10 , 
+						sStoreType_MapIcon: '' , 
+						lStoreType_Lat: '0°0′00.000″ N' , 
+						lStoreType_Lng: '0°0′00.000″ E', 
+						sStoreType_Lv2: '易耗品库', 
+						sStoreType_Limit2: 0,
+						sStoreType_Lv3: 'C货架',  
+						sStoreType_Limit3: 0,
+						sStoreType_Lv4: '一排',
+						sStoreType_Limit4: 10   
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

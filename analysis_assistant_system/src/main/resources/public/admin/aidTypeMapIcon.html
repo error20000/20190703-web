@@ -68,11 +68,11 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="ID" prop="sAidTypeIcon_ID" >
 					</el-table-column>
-					<el-table-column label="航标种类" prop="sAidTypeIcon_Type" :formatter="aidTypeFormatter">
+					<el-table-column label="航标分类" prop="sAidTypeIcon_Type" :formatter="aidTypeFormatter">
 					</el-table-column>
-					<el-table-column label="状态" prop="sAidTypeIcon_Status" :formatter="statusFormatter">
+					<el-table-column label="分类状态" prop="sAidTypeIcon_Status" :formatter="statusFormatter">
 					</el-table-column>
-					<el-table-column label="图标" prop="sAidTypeIcon_StatusIcon" :formatter="mapIconFormatter">
+					<el-table-column label="状态图标" prop="sAidTypeIcon_StatusIcon" :formatter="mapIconFormatter">
 					</el-table-column>
 					<el-table-column label="图标图片" prop="sAidTypeIcon_StatusIcon">
 						<template scope="scope">
@@ -199,7 +199,7 @@
 			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
 					<el-table-column label="航标分类" prop="sAidTypeIcon_Type">
 					</el-table-column>
-					<el-table-column label="分类的状态" prop="sAidTypeIcon_Status">
+					<el-table-column label="分类状态" prop="sAidTypeIcon_Status">
 					</el-table-column>
 					<el-table-column label="状态图标" prop="sAidTypeIcon_StatusIcon">
 					</el-table-column>

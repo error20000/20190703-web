@@ -66,6 +66,10 @@ var myvue = new Vue({
 		              ]
 				},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -313,11 +317,41 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				parent.window.open(excelUrl + "?token=" + loginToken);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sAidIcon_AidID: '航标1', 
+						sAidIcon_Status: '正常', 
+						sAidIcon_StatusIcon: '正常', 
+					},
+					{
+
+						sAidIcon_AidID: '航标1', 
+						sAidIcon_Status: '异常', 
+						sAidIcon_StatusIcon: '异常',  
+					},
+					{
+
+						sAidIcon_AidID: '航标2', 
+						sAidIcon_Status: '正常', 
+						sAidIcon_StatusIcon: '正常', 
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

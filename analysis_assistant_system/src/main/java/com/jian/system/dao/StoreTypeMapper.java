@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import com.jian.system.config.Constant;
 import com.jian.system.entity.StoreType;
 
 @Mapper

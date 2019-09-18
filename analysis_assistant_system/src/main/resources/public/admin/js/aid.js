@@ -732,12 +732,8 @@ var myvue = new Vue({
 						sAid_Mark: '' , 
 						sAid_NfcID: '' , 
 						sAid_Status: '正常' , 
-						lAid_LatDu: 24 , 
-						lAid_LatFen: 27 , 
-						lAid_LatMiao: 36.733 , 
-						lAid_LngDu: 118 , 
-						lAid_LngFen: 6 , 
-						lAid_LngMiao: 0 
+						lAid_Lat: '0°0′00.000″ N' , 
+						lAid_Lng: '0°0′00.000″ E'  
 					},
 					{
 						sAid_Name: '测试2', 
@@ -751,12 +747,8 @@ var myvue = new Vue({
 						sAid_Mark: '' , 
 						sAid_NfcID: '' , 
 						sAid_Status: '正常' , 
-						lAid_LatDu: 24 , 
-						lAid_LatFen: 27 , 
-						lAid_LatMiao: 36.844 , 
-						lAid_LngDu: 118 , 
-						lAid_LngFen: 6 , 
-						lAid_LngMiao: 0    
+						lAid_Lat: '0°0′00.000″ N' , 
+						lAid_Lng: '0°0′00.000″ E'   
 					},
 					{
 						sAid_Name: '测试3', 
@@ -770,12 +762,8 @@ var myvue = new Vue({
 						sAid_Mark: '' , 
 						sAid_NfcID: '' , 
 						sAid_Status: '正常' , 
-						lAid_LatDu: 24 , 
-						lAid_LatFen: 27 , 
-						lAid_LatMiao: 36.966 , 
-						lAid_LngDu: 118 , 
-						lAid_LngFen: 6 , 
-						lAid_LngMiao: 0 
+						lAid_Lat: '0°0′00.000″ N' , 
+						lAid_Lng: '0°0′00.000″ E'
 					}
 
 				];

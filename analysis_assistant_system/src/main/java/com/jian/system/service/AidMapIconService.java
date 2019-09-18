@@ -73,6 +73,12 @@ public class AidMapIconService extends BaseService<AidMapIcon, AidMapIconMapper>
 		return baseMapper.update(tableName, value, condition);
 	}
 
+
+
+	@TargetDataSource
+	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
+		return baseMapper.export(condition);
+	}
 	
 
 }

@@ -68,13 +68,13 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column label="ID" prop="sAidIcon_ID" >
 					</el-table-column>
-					<el-table-column label="航标" prop="sAidIcon_AidID" :formatter="aidFormatter">
+					<el-table-column label="航标名称" prop="sAidIcon_AidID" :formatter="aidFormatter">
 					</el-table-column>
-					<el-table-column label="状态" prop="sAidIcon_Status" :formatter="statusFormatter">
+					<el-table-column label="航标状态" prop="sAidIcon_Status" :formatter="statusFormatter">
 					</el-table-column>
-					<el-table-column label="图标" prop="sAidIcon_StatusIcon" :formatter="mapIconFormatter">
+					<el-table-column label="状态图标" prop="sAidIcon_StatusIcon" :formatter="mapIconFormatter">
 					</el-table-column>
-					<el-table-column label="图标" prop="sAidIcon_StatusIcon">
+					<el-table-column label="图标图片" prop="sAidIcon_StatusIcon">
 						<template scope="scope">
 							<div style="width: 45px; height: 45px;" v-for="item in mapIconOptions" v-if="scope.row.sAidIcon_StatusIcon == item.sDict_NO">
 								<img v-if="item.sDict_Picture" :src="'/'+item.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>
@@ -176,6 +176,38 @@
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="editClose">取消</el-button>
 				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!-- upload -->
+		<el-dialog title="导入" width="80%" :visible.sync="uploadVisible" :close-on-click-modal="false">	
+			<el-upload class="upload-demo" drag :show-file-list="false"
+				:action="importUrl"
+				:on-success="handleImportSuccess">
+			  <i class="el-icon-upload"></i>
+			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+			  <div class="el-upload__tip" slot="tip">
+			  	<p>表格示例 :</p>
+			  	<p>1.支持Excel文件</p>
+				<p>2.请上传有标准行列的一维数据表格。（有合并单元格的数据请处理过后再上传，否则可能出现表头识别有误）</p>
+				<p>3.日期字段需包含年月日（如2019/1/1），或年月日时分秒。（如2019/1/1 00:00:00）</p>
+				<el-row style="margin-bottom: 10px;">
+					<el-col class="tipsCol tipColBorder" :span="8">第1列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="8">第2列</el-col>
+					<el-col class="tipsCol tipColBorder" :span="8">第3列</el-col>
+				</el-row>
+			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
+					<el-table-column label="航标名称" prop="sAidIcon_AidID">
+					</el-table-column>
+					<el-table-column label="航标状态" prop="sAidIcon_Status">
+					</el-table-column>
+					<el-table-column label="状态图标" prop="sAidIcon_StatusIcon">
+					</el-table-column>
+				</el-table>
+			  </div>
+			</el-upload>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="importClose">取消</el-button>
 			</div>
 		</el-dialog>
 		
