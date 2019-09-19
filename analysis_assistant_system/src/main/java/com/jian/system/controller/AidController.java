@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -464,9 +462,6 @@ public class AidController extends BaseController<Aid, AidService> {
             style.setFont(font);
             HSSFCellStyle styleDate = workbook.createCellStyle();
             styleDate.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("yyyy/MM/dd HH:mm:ss"));
-            //创建批注
-        	HSSFPatriarch patr = sheet.createDrawingPatriarch();
-        	HSSFClientAnchor anchor = patr.createAnchor(0, 0, 0, 0, 5, 1, 8, 3);//创建批注位置
             //创建表头名称
             HSSFCell cell;
             for (int j = 0; j < heads.length; j++) {

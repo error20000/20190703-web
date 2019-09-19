@@ -298,6 +298,99 @@ var myvue = new Vue({
 					});
 				});
 			},
+			
+			handleKeyupLatDu: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LatDu = String(this.addForm.lStoreType_LatDu).replace(/[^\d]/g,'');
+					this.addForm.lStoreType_LatDu = this.addForm.lStoreType_LatDu > 90 ? 90 : this.addForm.lStoreType_LatDu;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LatDu = String(this.editForm.lStoreType_LatDu).replace(/[^\d]/g,'');
+					this.editForm.lStoreType_LatDu = this.editForm.lStoreType_LatDu > 90 ? 90 : this.editForm.lStoreType_LatDu;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLatFen: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LatFen = String(this.addForm.lStoreType_LatFen).replace(/[^\d]/g,'');
+					this.addForm.lStoreType_LatFen = this.addForm.lStoreType_LatFen >= 60 ? 59 : this.addForm.lStoreType_LatFen;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LatFen = String(this.editForm.lStoreType_LatFen).replace(/[^\d]/g,'');
+					this.editForm.lStoreType_LatFen = this.editForm.lStoreType_LatFen >= 60 ? 59 : this.editForm.lStoreType_LatFen;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLatMiao: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LatMiao = String(this.addForm.lStoreType_LatMiao).replace(/[^\d.]/g,'');
+					this.addForm.lStoreType_LatMiao = this.addForm.lStoreType_LatMiao >= 60 ? 59.999 : this.addForm.lStoreType_LatMiao;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LatMiao = String(this.editForm.lStoreType_LatMiao).replace(/[^\d.]/g,'');
+					this.editForm.lStoreType_LatMiao = this.editForm.lStoreType_LatMiao >= 60 ? 59.999 : this.editForm.lStoreType_LatMiao;
+					break;
+
+				default:
+					break;
+				}
+			},
+
+			handleKeyupLngDu: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LngDu = String(this.addForm.lStoreType_LngDu).replace(/[^\d]/g,'');
+					this.addForm.lStoreType_LngDu = this.addForm.lStoreType_LngDu > 180 ? 180 : this.addForm.lStoreType_LngDu;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LngDu = String(this.editForm.lStoreType_LngDu).replace(/[^\d]/g,'');
+					this.editForm.lStoreType_LngDu = this.editForm.lStoreType_LngDu > 180 ? 180 : this.editForm.lStoreType_LngDu;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLngFen: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LngFen = String(this.addForm.lStoreType_LngFen).replace(/[^\d]/g,'');
+					this.addForm.lStoreType_LngFen = this.addForm.lStoreType_LngFen >= 60 ? 59 : this.addForm.lStoreType_LngFen;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LngFen = String(this.editForm.lStoreType_LngFen).replace(/[^\d]/g,'');
+					this.editForm.lStoreType_LngFen = this.editForm.lStoreType_LngFen >= 60 ? 59 : this.editForm.lStoreType_LngFen;
+					break;
+
+				default:
+					break;
+				}
+			},
+			handleKeyupLngMiao: function(type){
+				switch (type) {
+				case 'add':
+					this.addForm.lStoreType_LngMiao = String(this.addForm.lStoreType_LngMiao).replace(/[^\d.]/g,'');
+					this.addForm.lStoreType_LngMiao = this.addForm.lStoreType_LngMiao >= 60 ? 59.999 : this.addForm.lStoreType_LngMiao;
+					break;
+				case 'edit':
+					this.editForm.lStoreType_LngMiao = String(this.editForm.lStoreType_LngMiao).replace(/[^\d.]/g,'');
+					this.editForm.lStoreType_LngMiao = this.editForm.lStoreType_LngMiao >= 60 ? 59.999 : this.editForm.lStoreType_LngMiao;
+					break;
+
+				default:
+					break;
+				}
+			},
+			
 			//filter
 			handleFiltersInitOptions: function(){
 				var self = this;

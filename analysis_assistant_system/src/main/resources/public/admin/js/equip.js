@@ -158,6 +158,10 @@ var myvue = new Vue({
 			        ]
 				},
 				
+				uploadVisible: false,
+				uploadTemp: [],
+				importUrl: "",
+				
 				user: ''
 			}
 		},
@@ -838,11 +842,78 @@ var myvue = new Vue({
 			},
 			//excel
 			getExcel: function(){
-				
+				var params = "";
+				for ( var key in this.filters) {
+					if(key == 'store'){
+						continue;
+					}
+					if(this.filters[key]){
+						params += "&"+key+"="+this.filters[key];
+					}
+				}
+				parent.window.open(excelUrl + "?token=" + loginToken + params);
 			},
 			//import
+			handleImportSuccess: function(res){
+				var self = this;
+				this.handleResOperate(res, function(){
+					self.uploadVisible = false;
+					self.getList();
+				});
+			},
+			importClose: function(){
+				this.uploadVisible = false;
+			},
 			getImport: function(){
-				
+				this.importUrl = importUrl + "?token=" + loginToken;
+				this.uploadVisible = true;
+				this.uploadTemp = [
+					{
+						sEquip_Name: '测试1', 
+						sEquip_NO: 'test1', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '',  
+						sEquip_MModel: '',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: ''
+					},
+					{
+						sEquip_Name: '测试2', 
+						sEquip_NO: 'test2', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '',  
+						sEquip_MModel: '',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: ''
+					},
+					{
+						sEquip_Name: '测试3', 
+						sEquip_NO: 'test3', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '',  
+						sEquip_MModel: '',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: ''    
+					}
+				];
 			},
 			
 			selsChange: function (sels) {

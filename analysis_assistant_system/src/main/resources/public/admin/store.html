@@ -261,14 +261,14 @@
 					    <el-input v-model="addForm.sStoreType_Address"></el-input>
 					  </el-form-item>
 					  <el-form-item label="纬度">
-					    <el-input v-model="addForm.lStoreType_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-					    <el-input v-model="addForm.lStoreType_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-					    <el-input v-model="addForm.lStoreType_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
+					    <el-input v-model="addForm.lStoreType_LatDu" style="width:100px;" @keyup.native="handleKeyupLatDu('add')" maxlength=2></el-input>°
+					    <el-input v-model="addForm.lStoreType_LatFen" style="width:100px;" @keyup.native="handleKeyupLatFen('add')" maxlength=2></el-input>′
+					    <el-input v-model="addForm.lStoreType_LatMiao" style="width:100px;" @keyup.native="handleKeyupLatMiao('add')" maxlength=6></el-input>″ N
 					  </el-form-item>
 					  <el-form-item label="经度" >
-					    <el-input v-model="addForm.lStoreType_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-					    <el-input v-model="addForm.lStoreType_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-					    <el-input v-model="addForm.lStoreType_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
+					    <el-input v-model="addForm.lStoreType_LngDu" style="width:100px;" @keyup.native="handleKeyupLngDu('add')" maxlength=3></el-input>°
+					    <el-input v-model="addForm.lStoreType_LngFen" style="width:100px;" @keyup.native="handleKeyupLngFen('add')" maxlength=2></el-input>′
+					    <el-input v-model="addForm.lStoreType_LngMiao" style="width:100px;" @keyup.native="handleKeyupLngMiao('add')" maxlength=6></el-input>″ E
 					  </el-form-item>
 					  <el-form-item label="归属航标站" prop="sStoreType_Station">
 					    <el-select v-model="addForm.sStoreType_Station" placeholder="请选择归属航标站">
@@ -363,14 +363,14 @@
 					    <el-input v-model="editForm.sStoreType_Address"></el-input>
 					  </el-form-item>
 					  <el-form-item label="纬度">
-					    <el-input v-model="editForm.lStoreType_LatDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>°
-					    <el-input v-model="editForm.lStoreType_LatFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-					    <el-input v-model="editForm.lStoreType_LatMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ N
+					    <el-input v-model="editForm.lStoreType_LatDu" style="width:100px;" @keyup.native="handleKeyupLatDu('edit')" maxlength=2></el-input>°
+					    <el-input v-model="editForm.lStoreType_LatFen" style="width:100px;" @keyup.native="handleKeyupLatFen('edit')" maxlength=2></el-input>′
+					    <el-input v-model="editForm.lStoreType_LatMiao" style="width:100px;" @keyup.native="handleKeyupLatMiao('edit')" maxlength=6></el-input>″ N
 					  </el-form-item>
 					  <el-form-item label="经度" >
-					    <el-input v-model="editForm.lStoreType_LngDu" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=3></el-input>°
-					    <el-input v-model="editForm.lStoreType_LngFen" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=2></el-input>′
-					    <el-input v-model="editForm.lStoreType_LngMiao" style="width:100px;" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" maxlength=6></el-input>″ E
+					    <el-input v-model="editForm.lStoreType_LngDu" style="width:100px;" @keyup.native="handleKeyupLngDu('edit')" maxlength=3></el-input>°
+					    <el-input v-model="editForm.lStoreType_LngFen" style="width:100px;" @keyup.native="handleKeyupLngFen('edit')" maxlength=2></el-input>′
+					    <el-input v-model="editForm.lStoreType_LngMiao" style="width:100px;" @keyup.native="handleKeyupLngMiao('edit')" maxlength=6></el-input>″ E
 					  </el-form-item>
 					  <el-form-item label="归属航标站" prop="sStoreType_Station">
 					    <el-select v-model="editForm.sStoreType_Station" placeholder="请选择归属航标站">
@@ -485,7 +485,6 @@
 					</el-table-column>	
 					<el-table-column label="四级仓库预警值" prop="sStoreType_Limit4" width="120">
 					</el-table-column>	
-					
 				</el-table>
 			  </div>
 			</el-upload>

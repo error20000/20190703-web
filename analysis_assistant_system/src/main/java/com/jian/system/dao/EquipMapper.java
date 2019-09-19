@@ -101,6 +101,56 @@ public interface EquipMapper extends BaseMapper<Equip> {
 		"</script>"
 	})
 	public long sizeByCustom(@Param("map") Map<String, Object> condition);
+
+	
+	@Select({
+		"<script>",
+		" select ",
+		"	a.*, ",
+		"	b.\"sStoreType_Name\" \"sEquip_StoreLv1Name\", ",
+		"	c.\"sStore_Name\" \"sEquip_StoreLv2Name\", ",
+		"	d.\"sStore_Name\" \"sEquip_StoreLv3Name\", ",
+		"	e.\"sStore_Name\" \"sEquip_StoreLv4Name\", ",
+		"	f.\"sNfc_NO\" \"sEquip_NfcNO\", ",
+		"	g.\"sAid_Name\" \"sEquip_AidName\", ",
+		"	h.\"sDict_Name\" \"sEquip_TypeName\", ",
+		"	i.\"sDict_Name\" \"sEquip_StatusName\", ",
+		"	j.\"sDict_Name\" \"sEquip_IconName\", ",
+		"	n.\"sDict_Name\" \"sEquip_ManufacturerName\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_StoreType\" b on a.\"sEquip_StoreLv1\" = b.\"sStoreType_ID\" ",
+		" 	left join \"tBase_Store\" c on a.\"sEquip_StoreLv2\" = c.\"sStore_ID\" ",
+		" 	left join \"tBase_Store\" d on a.\"sEquip_StoreLv3\" = d.\"sStore_ID\" ",
+		" 	left join \"tBase_Store\" e on a.\"sEquip_StoreLv4\" = e.\"sStore_ID\" ",
+		" 	left join \"tBase_Nfc\" f on a.\"sEquip_NfcID\" = f.\"sNfc_ID\" ",
+		" 	left join \"tBase_Aid\" g on a.\"sEquip_AidID\" = g.\"sAid_ID\" ",
+		" 	left join \"tBase_Dict\" h on a.\"sEquip_Type\" = h.\"sDict_NO\" and h.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" i on a.\"sEquip_Status\" = i.\"sDict_NO\" and i.\"sDict_DictTypeNO\" = 'EquipStatus' ",
+		" 	left join \"tBase_Dict\" j on a.\"sEquip_Icon\" = j.\"sDict_NO\" and j.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" 	left join \"tBase_Dict\" n on a.\"sEquip_Manufacturer\" = n.\"sDict_NO\" and n.\"sDict_DictTypeNO\" = 'EquipManufacturer' ",
+		"   left join ",
+		"		(select * from ",
+		"			(select o.*, row_number() over(partition by \"sUserAid_AidID\" order by \"sUserAid_ID\") r from \"tBase_UserAid\" o ) ",
+		"		where ", 
+    	" 			<if test=\" sUser_ID != null \"> ",
+    	" 				\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   		</if>",
+    	" 			<if test=\" sUser_ID == null \"> ",
+    	" 				r = 1 ",	
+    	"   		</if>",
+		" 		) k on a.\"sEquip_AidID\" = k.\"sUserAid_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and k.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> export(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
 	
 	
 	//TODO --------------------------------------------------------------------------------- 统计

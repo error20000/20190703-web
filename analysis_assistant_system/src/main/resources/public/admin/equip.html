@@ -875,6 +875,53 @@
 			</div>
 		</el-dialog>
 		
+		<!-- upload -->
+		<el-dialog title="导入" width="80%" :visible.sync="uploadVisible" :close-on-click-modal="false">	
+			<el-upload class="upload-demo" drag :show-file-list="false"
+				:action="importUrl"
+				:on-success="handleImportSuccess">
+			  <i class="el-icon-upload"></i>
+			  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+			  <div class="el-upload__tip" slot="tip">
+			  	<p>表格示例 :</p>
+			  	<p>1.支持Excel文件</p>
+				<p>2.请上传有标准行列的一维数据表格。（有合并单元格的数据请处理过后再上传，否则可能出现表头识别有误）</p>
+				<p>3.日期字段需包含年月日（如2019/1/1），或年月日时分秒。（如2019/1/1 00:00:00）</p>
+				<p>4.Excel同一sheet只能填一种类型的器材。</p>
+				<p>5.器材的仓库信息和航标信息不能同时存在。有仓库信息会生成入库信息；有航标信息会生成使用信息；如果同时存在会先生成一条入库信息，再生成一条使用信息。</p>
+			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
+					<el-table-column label="器材编码" prop="sEquip_NO" width="100">
+					</el-table-column>
+					<el-table-column label="NFC标签" prop="sEquip_NfcID" width="100">
+					</el-table-column>	
+					<el-table-column label="一级仓库" prop="sEquip_StoreLv1" width="100">
+					</el-table-column>
+					<el-table-column label="二级仓库" prop="sEquip_StoreLv2" width="100">
+					</el-table-column>	
+					<el-table-column label="三级仓库" prop="sEquip_StoreLv3" width="100">
+					</el-table-column>	
+					<el-table-column label="四级仓库" prop="sEquip_StoreLv4" width="100">
+					</el-table-column>	
+					<el-table-column label="航标" prop="sEquip_AidID" width="100">
+					</el-table-column>	
+					<el-table-column label="生产厂家" prop="sEquip_Manufacturer" width="100">
+					</el-table-column>	
+					<el-table-column label="厂方型号" prop="sEquip_MModel" width="100">
+					</el-table-column>
+					<el-table-column label="品牌" prop="sEquip_MBrand" width="100">
+					</el-table-column>
+					<el-table-column label="到货日期" prop="dEquip_ArrivalDate" width="100">
+					</el-table-column>
+					<el-table-column label="器材类型" prop="sEquip_Type" width="100">
+					</el-table-column>
+				</el-table>
+			  </div>
+			</el-upload>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="importClose">取消</el-button>
+			</div>
+		</el-dialog>
+		
 	</section>
   </div>
 </body>

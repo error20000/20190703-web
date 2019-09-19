@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
@@ -285,6 +286,17 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	@TargetDataSource
 	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
 		return baseMapper.export(condition);
+	}
+
+	@TargetDataSource
+	@Transactional
+	public void imports(List<StoreType> types, List<Store> stores, User user) {
+		if(types.size() > 0) {
+			typeService.batchInsert(types, user);
+		}
+		if(stores.size() > 0) {
+			batchInsert(stores, user);
+		}
 	}
 	
 	//TODO ------------------------------------------------------------------------------统计

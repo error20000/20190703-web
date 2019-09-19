@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.jian.system.config.Config;
 import com.jian.system.config.Constant;
 import com.jian.system.dao.EquipMapper;
 import com.jian.system.datasource.TargetDataSource;
@@ -69,6 +70,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private EquipTelemetryService telemetryService;
 	@Autowired
 	private EquipViceLampService viceLampService;
+	@Autowired
+	private Config config;
 	
 	
 	@Transactional
@@ -586,7 +589,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	public long sizeByCustom(Map<String, Object> condition) {
 		return baseMapper.sizeByCustom(condition);
 	}
-	
+
+	@TargetDataSource
+	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.export(condition, null);
+		}
+		return baseMapper.export(condition, user.getsUser_ID());
+	}
 
 	//TODO ----------------------------------------------------------------------器材操作
 	

@@ -22,6 +22,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,15 +38,15 @@ import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Constant;
-import com.jian.system.entity.Aid;
-import com.jian.system.entity.AidMapIcon;
 import com.jian.system.entity.Dict;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
+import com.jian.system.service.DictService;
 import com.jian.system.service.StoreService;
+import com.jian.system.service.StoreTypeService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
@@ -60,6 +61,10 @@ import com.jian.tools.core.Tools;
 @API(name="仓库管理")
 public class StoreController extends BaseController<Store, StoreService> {
 
+	@Autowired
+	private StoreTypeService typeService;
+	@Autowired
+	private DictService dictService;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -278,69 +283,172 @@ public class StoreController extends BaseController<Store, StoreService> {
 		try {
 			
 			User loginUser = getLoginUser(req);
-			List<Aid> aids = aidService.selectAll();
-			List<Dict> statuss = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidStatus).build());
-			List<Dict> mapIcons = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_MapIcon).build());
+			List<Dict> stations = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidStation).build());
+			List<Dict> mapIcons = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_StoreMapIcon).build());
+
+			List<Store> alls = service.selectAll();
+			List<StoreType> allt = typeService.selectAll();
 			
 			InputStream in = file.getInputStream();
 			Workbook workbook = WorkbookFactory.create(in);
-            Sheet sheet = workbook.getSheetAt(0);
-            //获取sheet的行数
-            List<AidMapIcon> list = new ArrayList<>();
-            AidMapIcon node = null;
-            int rows = sheet.getPhysicalNumberOfRows();
-            for (int i = 0; i < rows; i++) {
-                //过滤表头行
-                if (i == 0) {
-                    continue;
-                }
-                //获取当前行的数据
-                Row row = sheet.getRow(i);
-                node = new AidMapIcon();
-                node.setsAidIcon_ID(Utils.newSnowflakeIdStr());
+			Sheet sheet = workbook.getSheetAt(0);
+			//获取sheet的行数
+			List<StoreType> list = new ArrayList<>();
+			StoreType node = null;
+			List<Store> slist = new ArrayList<>();
+			int rows = sheet.getPhysicalNumberOfRows();
+			for (int i = 0; i < rows; i++) {
+			    //过滤表头行
+			    if (i == 0) {
+			        continue;
+			    }
+			    //获取当前行的数据
+			    Row row = sheet.getRow(i);
+			    node = new StoreType();
 			    
-			    String aidName = Utils.getCellValue(row.getCell(0));
-			    List<Aid> tempAids = aids.stream()
-			    		.filter(e -> e.getsAid_Name().equals(aidName))
+			    String typeName = Utils.getCellValue(row.getCell(0));
+			    List<StoreType> tempTypes = allt.stream()
+			    		.filter(e -> e.getsStoreType_Name().equals(typeName))
 			    		.collect(Collectors.toList());
-                if(tempAids.size() > 0) {
-                	node.setsAidIcon_AidID(tempAids.get(0).getsAid_ID());
-                }
-                
-			    String statusName = Utils.getCellValue(row.getCell(1));
-			    List<Dict> tempStatuss = statuss.stream()
-			    		.filter(e -> e.getsDict_Name().equals(statusName))
+			    //判断一级仓库是否存在
+			    if(tempTypes.size() > 0) {
+			    	node.setsStoreType_ID(tempTypes.get(0).getsStoreType_ID());
+			    }else {
+				    node.setsStoreType_ID(Utils.newSnowflakeIdStr());
+				    node.setsStoreType_Name(Utils.getCellValue(row.getCell(0)) );
+				    node.setsStoreType_Address(Utils.getCellValue(row.getCell(1)) );
+				    
+				    String stationName = Utils.getCellValue(row.getCell(2));
+				    List<Dict> tempStations = stations.stream()
+				    		.filter(e -> e.getsDict_Name().equals(stationName))
+				    		.collect(Collectors.toList());
+	                if(tempStations.size() > 0) {
+	                	node.setsStoreType_Station(tempStations.get(0).getsDict_NO());
+	                }
+	                
+				    node.setlStoreType_Limit(Tools.parseInt(Utils.getCellValue(row.getCell(3))) );
+				    
+				    String mapIconName = Utils.getCellValue(row.getCell(4));
+				    List<Dict> tempMapIcons = mapIcons.stream()
+				    		.filter(e -> e.getsDict_Name().equals(mapIconName))
+				    		.collect(Collectors.toList());
+	                if(tempMapIcons.size() > 0) {
+	                	node.setsStoreType_MapIcon(tempMapIcons.get(0).getsDict_NO());
+	                }
+	                
+				    String latStr = Utils.getCellValue(row.getCell(5));
+				    latStr = latStr.replace( "°", "°").replace("'", "′").replace("\"", "″"); //字符转换
+				    latStr = latStr.replace("°", "#").replace("′", "#").replace("″", "#"); //字符转换
+				    String[] latStrs = latStr.split("#");
+				    String latDu = latStrs.length < 1 ? "0" : latStrs[0];
+				    String latFen = latStrs.length < 2 ? "0" : latStrs[1];
+				    String latMiao = latStrs.length < 3 ? "0" : latStrs[2];
+				    node.setlStoreType_LatDu(Tools.parseInt(latDu));
+				    node.setlStoreType_LatFen(Tools.parseInt(latFen));
+				    node.setlStoreType_LatMiao(Tools.parseFloat(latMiao));
+				    node.setlStoreType_Lat(Tools.parseFloat(latDu) + Tools.parseFloat(latFen)/60 + Tools.parseFloat(latMiao)/3600);
+	                
+				    String lngStr = Utils.getCellValue(row.getCell(6));
+				    lngStr = lngStr.replace( "°", "°").replace("'", "′").replace("\"", "″"); //字符转换
+				    lngStr = lngStr.replace("°", "#").replace("′", "#").replace("″", "#"); //字符转换
+				    String[] lngStrs = lngStr.split("#");
+				    String lngDu = lngStrs.length < 1 ? "0" : lngStrs[0];
+				    String lngFen = lngStrs.length < 2 ? "0" : lngStrs[1];
+				    String lngMiao = lngStrs.length < 3 ? "0" : lngStrs[2];
+				    node.setlStoreType_LngDu(Tools.parseInt(lngDu));
+				    node.setlStoreType_LngFen(Tools.parseInt(lngFen));
+				    node.setlStoreType_LngMiao(Tools.parseFloat(lngMiao));
+				    node.setlStoreType_Lng(Tools.parseFloat(lngDu) + Tools.parseFloat(lngFen)/60 + Tools.parseFloat(lngMiao)/3600);
+				    list.add(node);
+			    }
+			    String typeId = node.getsStoreType_ID();
+
+			    //添加二级仓库
+				Store snode2 = new Store();
+				snode2.setsStore_ID(Utils.newSnowflakeIdStr());
+				String name2 = Utils.getCellValue(row.getCell(7));
+				if(Tools.isNullOrEmpty(name2)) {
+					continue;
+				}
+				snode2.setsStore_Name(name2);
+				snode2.setsStore_Parent(typeId);
+				snode2.setsStore_Level1(typeId);
+				snode2.setlStore_Limit(Tools.parseInt(Utils.getCellValue(row.getCell(8))) );
+				//去重
+				List<Store> tempStore2 = slist.stream()
+						.filter(e -> e.getsStore_Name().equals(name2) && e.getsStore_Parent().equals(typeId))
+						.collect(Collectors.toList());
+				List<Store> tempStore22 = alls.stream()
+						.filter(e -> e.getsStore_Name().equals(name2) && e.getsStore_Parent().equals(typeId))
+						.collect(Collectors.toList());
+				if(tempStore2.size() == 0 && tempStore22.size() == 0) {
+					slist.add(snode2);
+				}else if(tempStore22.size() != 0) { //数据库
+					snode2.setsStore_ID(tempStore22.get(0).getsStore_ID()); //重置回原ID
+				}else if(tempStore2.size() != 0) {
+					snode2.setsStore_ID(tempStore2.get(0).getsStore_ID()); //重置回原ID
+				}
+			    //添加三级仓库
+				Store snode3 = new Store();
+				snode3.setsStore_ID(Utils.newSnowflakeIdStr());
+				String name3 = Utils.getCellValue(row.getCell(9));
+				if(Tools.isNullOrEmpty(name3)) {
+					continue;
+				}
+				snode3.setsStore_Name(name3);
+				snode3.setsStore_Parent(snode2.getsStore_ID());
+				snode3.setsStore_Level1(typeId);
+				snode3.setsStore_Level2(snode2.getsStore_ID());
+				snode3.setlStore_Limit(Tools.parseInt(Utils.getCellValue(row.getCell(10))) );
+				//去重
+				List<Store> tempStore3 = slist.stream()
+						.filter(e -> e.getsStore_Name().equals(name3) && e.getsStore_Parent().equals(snode2.getsStore_ID()))
+						.collect(Collectors.toList());
+				List<Store> tempStore33 = alls.stream()
+						.filter(e -> e.getsStore_Name().equals(name3) && e.getsStore_Parent().equals(snode2.getsStore_ID()))
+						.collect(Collectors.toList());
+				if(tempStore3.size() == 0 && tempStore33.size() == 0) {
+					slist.add(snode3);
+				}else if(tempStore33.size() != 0) { //数据库
+					snode3.setsStore_ID(tempStore33.get(0).getsStore_ID()); //重置回原ID
+				}else if(tempStore3.size() != 0) {
+					snode3.setsStore_ID(tempStore3.get(0).getsStore_ID()); //重置回原ID
+				}
+			    //添加四级仓库
+				Store snode4 = new Store();
+				snode4.setsStore_ID(Utils.newSnowflakeIdStr());
+				String name4 = Utils.getCellValue(row.getCell(11));
+				if(Tools.isNullOrEmpty(name4)) {
+					continue;
+				}
+				snode4.setsStore_Name(name4);
+				snode4.setsStore_Parent(snode3.getsStore_ID());
+				snode4.setsStore_Level1(typeId);
+				snode4.setsStore_Level2(snode2.getsStore_ID());
+				snode4.setsStore_Level3(snode3.getsStore_ID());
+				snode4.setlStore_Limit(Tools.parseInt(Utils.getCellValue(row.getCell(12))) );
+				//去重
+			    List<Store> tempStore4 = slist.stream()
+			    		.filter(e -> e.getsStore_Name().equals(name4) && e.getsStore_Parent().equals(snode3.getsStore_ID()))
 			    		.collect(Collectors.toList());
-                if(tempStatuss.size() > 0) {
-                	node.setsAidIcon_Status(tempStatuss.get(0).getsDict_NO());
-                }
+			    List<Store> tempStore44 = alls.stream()
+			    		.filter(e -> e.getsStore_Name().equals(name4) && e.getsStore_Parent().equals(snode3.getsStore_ID()))
+			    		.collect(Collectors.toList());
+			    if(tempStore4.size() == 0 && tempStore44.size() == 0) {
+			    	slist.add(snode4);
+			    }else if(tempStore44.size() != 0) { //数据库
+			    	snode4.setsStore_ID(tempStore44.get(0).getsStore_ID()); //重置回原ID
+			    }else if(tempStore4.size() != 0) {
+			    	snode4.setsStore_ID(tempStore4.get(0).getsStore_ID()); //重置回原ID
+			    }
 			    
-			    String iconName = Utils.getCellValue(row.getCell(2));
-			    List<Dict> tempIcons = mapIcons.stream()
-			    		.filter(e -> e.getsDict_Name().equals(iconName))
-			    		.collect(Collectors.toList());
-                if(tempIcons.size() > 0) {
-                	node.setsAidIcon_StatusIcon(tempIcons.get(0).getsDict_NO());
-                }
-                list.add(node);
-            }
-            //去重
-            //1、自身
-            list = list.stream()
-            		.filter(Utils.distinctByKey(e -> e.getsAidIcon_AidID() + e.getsAidIcon_Status()))
-            		.collect(Collectors.toList());
-            //2、数据库
-            List<AidMapIcon> all = service.selectAll();
-            list = list.stream()
-            		.filter(t-> !all.stream()
-            				.map(e -> e.getsAidIcon_AidID() + e.getsAidIcon_Status())
-            				.collect(Collectors.toList())
-            				.contains(t.getsAidIcon_AidID() + t.getsAidIcon_Status()))
-            		.collect(Collectors.toList());
-            //保存
-            if(list.size() > 0) {
-            	service.batchInsert(list, loginUser);
-            }
+			}
+			System.out.println(list.size());
+			System.out.println(JsonTools.toJsonString(list));
+			System.out.println(slist.size());
+			System.out.println(JsonTools.toJsonString(slist));
+			//保存
+			service.imports(list, slist, loginUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
@@ -356,7 +464,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@SysLog(type=SystemLogType.Export, describe="导出仓库")
 	public String excel(HttpServletRequest req, HttpServletResponse resp) {
 		
-		String filename = "AidMapIcon";
+		String filename = "Store";
 		//查询
 		List<Map<String, Object>> list = service.export(null, getLoginUser(req));
 
@@ -372,7 +480,7 @@ public class StoreController extends BaseController<Store, StoreService> {
             HSSFSheet sheet = workbook.createSheet("sheet");		
 
 			//设置表头
-			String head = "ID,航标名称,航标状态,状态图标";
+			String head = "ID,仓库名称,仓库地址,归属航标站,库存预警值,地图图标,纬度,经度,二级仓库,二级仓库预警值,三级仓库,三级仓库预警值,四级仓库,四级仓库预警值";
 			String[] heads = head.split(",");
             HSSFRow row = sheet.createRow(0);
             //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
@@ -399,10 +507,37 @@ public class StoreController extends BaseController<Store, StoreService> {
 				Map<String, Object> node = list.get(i);
 				
 				HSSFRow rowc = sheet.createRow(i+1);
-				rowc.createCell(0).setCellValue(node.get("sAidIcon_ID") == null ? "" : String.valueOf(node.get("sAidIcon_ID")) );
-				rowc.createCell(1).setCellValue(node.get("sAidIcon_AidName") == null ? "" : String.valueOf(node.get("sAidIcon_AidName")) );
-				rowc.createCell(2).setCellValue(node.get("sAidIcon_StatusName") == null ? "" : String.valueOf(node.get("sAidIcon_StatusName")) );
-				rowc.createCell(3).setCellValue(node.get("sAidIcon_StatusIconName") == null ? "" : String.valueOf(node.get("sAidIcon_StatusIconName")) );
+				rowc.createCell(0).setCellValue(node.get("sStoreType_ID") == null ? "" : String.valueOf(node.get("sStoreType_ID")) );
+				rowc.createCell(1).setCellValue(node.get("sStoreType_Name") == null ? "" : String.valueOf(node.get("sStoreType_Name")) );
+				rowc.createCell(2).setCellValue(node.get("sStoreType_Address") == null ? "" : String.valueOf(node.get("sStoreType_Address")) );
+				rowc.createCell(3).setCellValue(node.get("sStoreType_StationName") == null ? "" : String.valueOf(node.get("sStoreType_StationName")) );
+				rowc.createCell(4).setCellValue(node.get("lStoreType_Limit") == null ? 0 : Integer.parseInt(String.valueOf(node.get("lStoreType_Limit"))) );
+				rowc.createCell(5).setCellValue(node.get("sStoreType_MapIconName") == null ? "" : String.valueOf(node.get("sStoreType_MapIconName")) );
+				
+				String latStr = "";
+				latStr += node.get("lStoreType_LatDu") == null ? "0" : String.valueOf(node.get("lStoreType_LatDu"));
+				latStr += "°";
+				latStr += node.get("lStoreType_LatFen") == null ? "0" : String.valueOf(node.get("lStoreType_LatFen"));
+				latStr += "′";
+				latStr += node.get("lStoreType_LatMiao") == null ? "0" : String.valueOf(node.get("lStoreType_LatMiao"));
+				latStr += "″ N";
+				rowc.createCell(6).setCellValue(latStr);
+				
+				String lngStr = "";
+				lngStr += node.get("lStoreType_LngDu") == null ? "0" : String.valueOf(node.get("lStoreType_LngDu"));
+				lngStr += "°";
+				lngStr += node.get("lStoreType_LngFen") == null ? "0" : String.valueOf(node.get("lStoreType_LngFen"));
+				lngStr += "′";
+				lngStr += node.get("lStoreType_LngMiao") == null ? "0" : String.valueOf(node.get("lStoreType_LngMiao"));
+				lngStr += "″ E";
+				rowc.createCell(7).setCellValue(lngStr);
+				
+				rowc.createCell(8).setCellValue(node.get("sStoreType_Lv2") == null ? "" : String.valueOf(node.get("sStoreType_Lv2")) );
+				rowc.createCell(9).setCellValue(node.get("sStoreType_Limit2") == null ? 0 : Integer.parseInt(String.valueOf(node.get("sStoreType_Limit2"))) );
+				rowc.createCell(10).setCellValue(node.get("sStoreType_Lv3") == null ? "" : String.valueOf(node.get("sStoreType_Lv3")) );
+				rowc.createCell(11).setCellValue(node.get("sStoreType_Limit3") == null ? 0 : Integer.parseInt(String.valueOf(node.get("sStoreType_Limit3"))) );
+				rowc.createCell(12).setCellValue(node.get("sStoreType_Lv4") == null ? "" : String.valueOf(node.get("sStoreType_Lv4")) );
+				rowc.createCell(13).setCellValue(node.get("sStoreType_Limit4") == null ? 0 : Integer.parseInt(String.valueOf(node.get("sStoreType_Limit4"))) );
 			}
 			workbook.write(toClient);
 			workbook.close();
