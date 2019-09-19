@@ -31,6 +31,7 @@ import com.jian.system.entity.EquipSpareLamp;
 import com.jian.system.entity.EquipTelemetry;
 import com.jian.system.entity.EquipViceLamp;
 import com.jian.system.entity.Message;
+import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.exception.ServiceException;
@@ -596,6 +597,50 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			return baseMapper.export(condition, null);
 		}
 		return baseMapper.export(condition, user.getsUser_ID());
+	}
+
+	@TargetDataSource
+	@Transactional
+	public void imports(List<Equip> list, List<Nfc> nfcs, List<EquipLog> logs, List<AidEquip> aidEquips, 
+			List<EquipAis> listAis, List<EquipBattery> listBattery, List<EquipLamp> listLamp,
+			List<EquipRadar> listRadar, List<EquipSolarEnergy> listSolarEnergy, List<EquipSpareLamp> listSpareLamp,
+			List<EquipTelemetry> listTelemetry, List<EquipViceLamp> listViceLamp,
+			User user) {
+		for (Nfc nfc : nfcs) {
+			nfcService.update(nfc, user);
+		}
+		if(logs.size() > 0) {
+			logService.batchInsert(logs, user);
+		}
+		if(aidEquips.size() > 0) {
+			aidEquipService.batchInsert(aidEquips, user);
+		}
+		
+		if(listAis.size() > 0) {
+			aisService.batchInsert(listAis, user);
+		}
+		if(listBattery.size() > 0) {
+			batteryService.batchInsert(listBattery, user);
+		}
+		if(listLamp.size() > 0) {
+			lampService.batchInsert(listLamp, user);
+		}
+		if(listRadar.size() > 0) {
+			radarService.batchInsert(listRadar, user);
+		}
+		if(listSolarEnergy.size() > 0) {
+			solarEnergyService.batchInsert(listSolarEnergy, user);
+		}
+		if(listSpareLamp.size() > 0) {
+			spareLampService.batchInsert(listSpareLamp, user);
+		}
+		if(listTelemetry.size() > 0) {
+			telemetryService.batchInsert(listTelemetry, user);
+		}
+		if(listViceLamp.size() > 0) {
+			viceLampService.batchInsert(listViceLamp, user);
+		}
+		batchInsert(list, user);
 	}
 
 	//TODO ----------------------------------------------------------------------器材操作

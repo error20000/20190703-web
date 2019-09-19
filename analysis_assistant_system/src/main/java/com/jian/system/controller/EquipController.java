@@ -25,6 +25,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,12 +42,28 @@ import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Constant;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.AidEquip;
 import com.jian.system.entity.Dict;
 import com.jian.system.entity.Equip;
+import com.jian.system.entity.EquipAis;
+import com.jian.system.entity.EquipBattery;
+import com.jian.system.entity.EquipLamp;
 import com.jian.system.entity.EquipLog;
+import com.jian.system.entity.EquipRadar;
+import com.jian.system.entity.EquipSolarEnergy;
+import com.jian.system.entity.EquipSpareLamp;
+import com.jian.system.entity.EquipTelemetry;
+import com.jian.system.entity.EquipViceLamp;
 import com.jian.system.entity.Nfc;
+import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
+import com.jian.system.service.AidService;
+import com.jian.system.service.DictService;
 import com.jian.system.service.EquipService;
+import com.jian.system.service.NfcService;
+import com.jian.system.service.StoreService;
+import com.jian.system.service.StoreTypeService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
@@ -61,7 +78,16 @@ import com.jian.tools.core.Tools;
 @API(name="器材管理")
 public class EquipController extends BaseController<Equip, EquipService> {
 
-	
+	@Autowired
+	private NfcService nfcService;
+	@Autowired
+	private StoreTypeService storeTypeService;
+	@Autowired
+	private StoreService storeService;
+	@Autowired
+	private AidService aidService;
+	@Autowired
+	private DictService dictService;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -350,164 +376,405 @@ public class EquipController extends BaseController<Equip, EquipService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
-	/*@RequestMapping("/import")
+	@RequestMapping("/import")
 	@ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	@SysLog(type=SystemLogType.Add, describe="导入航标")
+	@SysLog(type=SystemLogType.Add, describe="导入器材")
 	public String imports(HttpServletRequest req, HttpServletResponse resp, @RequestParam("file") MultipartFile file) {
 		try {
 			
 			User loginUser = getLoginUser(req);
+			List<Dict> types = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipType).build());
+			//List<Dict> statuss = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipStatus).build());
+			//List<Dict> icons = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipIcon).build());
+			List<Dict> manufacturers = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipManufacturer).build());
+			
+			List<Dict> aiss = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipAisMMSIX).build());
+			List<Dict> batteryTypes = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipBatteryType).build());
+			List<Dict> lampTypes = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipLampType).build());
+			List<Dict> lampLenss = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipLampLens).build());
+			List<Dict> lampTelemetrys = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipLampTelemetry).build());
+			List<Dict> radarNOs = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipRadarNO).build());
+			List<Dict> radarBands = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipRadarBand).build());
+			List<Dict> solarTypes = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipSolarEnergyType).build());
+			List<Dict> telemetryModes = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_EquipTelemetryMode).build());
+
 			List<Nfc> nfcs = nfcService.selectList(MapTools.custom().put("lNfc_StatusFlag", 0).build());
-			List<Dict> types = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidType).build());
-			List<Dict> stations = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidStation).build());
-			List<Dict> lightings = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidLighting).build());
-			List<Dict> marks = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidMark).build());
-			List<Dict> statuss = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidStatus).build());
-			List<Dict> icons = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidIcon).build());
+			List<Store> alls = storeService.selectAll();
+			List<StoreType> allt = storeTypeService.selectAll();
+			List<Aid> aids = aidService.selectAll(getLoginUser(req));
+			List<Equip> all = service.selectAll();
 			
 			List<Nfc> usedNfcs = new ArrayList<>();
+			List<EquipLog> elogs = new ArrayList<>();
+			List<AidEquip> aidEquips = new ArrayList<>();
+			List<Equip> list = new ArrayList<>();
+			Equip node = null;
+			List<EquipAis> listAis = new ArrayList<>();
+			List<EquipBattery> listBattery = new ArrayList<>();
+			List<EquipLamp> listLamp = new ArrayList<>();
+			List<EquipRadar> listRadar = new ArrayList<>();
+			List<EquipSolarEnergy> listSolarEnergy = new ArrayList<>();
+			List<EquipSpareLamp> listSpareLamp = new ArrayList<>();
+			List<EquipTelemetry> listTelemetry = new ArrayList<>();
+			List<EquipViceLamp> listViceLamp = new ArrayList<>();
 			
 			InputStream in = file.getInputStream();
 			Workbook workbook = WorkbookFactory.create(in);
-			Sheet sheet = workbook.getSheetAt(0);
-			//获取sheet的行数
-			List<Aid> list = new ArrayList<>();
-			Aid node = null;
-			int rows = sheet.getPhysicalNumberOfRows();
-			for (int i = 0; i < rows; i++) {
-			    //过滤表头行
-			    if (i == 0) {
-			        continue;
-			    }
-			    //获取当前行的数据
-			    Row row = sheet.getRow(i);
-			    node = new Aid();
-			    node.setsAid_ID(Utils.newSnowflakeIdStr());
-			    node.setsAid_Name(Utils.getCellValue(row.getCell(0)));
-			    node.setsAid_NO(Utils.getCellValue(row.getCell(1)));
-			    
-			    String stationName = Utils.getCellValue(row.getCell(2));
-			    List<Dict> tempStations = stations.stream()
-			    		.filter(e -> e.getsDict_Name().equals(stationName))
-			    		.collect(Collectors.toList());
-	            if(tempStations.size() > 0) {
-	            	node.setsAid_Station(tempStations.get(0).getsDict_NO());
-	            }
-			    
-			    String typeName = Utils.getCellValue(row.getCell(3));
-			    List<Dict> tempTypes = types.stream()
-			    		.filter(e -> e.getsDict_Name().equals(typeName))
-			    		.collect(Collectors.toList());
-	            if(tempTypes.size() > 0) {
-	            	node.setsAid_Type(tempTypes.get(0).getsDict_NO());
-	            }
-			    
-			    String iconName = Utils.getCellValue(row.getCell(4));
-			    List<Dict> tempIcons = icons.stream()
-			    		.filter(e -> e.getsDict_Name().equals(iconName))
-			    		.collect(Collectors.toList());
-	            if(tempIcons.size() > 0) {
-	            	node.setsAid_Icon(tempIcons.get(0).getsDict_NO());
-	            }
-			    node.setdAid_BuildDate(Utils.getCellValueDate(row.getCell(5)));
-			    node.setdAid_DelDate(Utils.getCellValueDate(row.getCell(6)));
-			    
-			    String lightingName = Utils.getCellValue(row.getCell(7));
-			    List<Dict> tempLightings = lightings.stream()
-			    		.filter(e -> e.getsDict_Name().equals(lightingName))
-			    		.collect(Collectors.toList());
-	            if(tempLightings.size() > 0) {
-	            	node.setsAid_Lighting(tempLightings.get(0).getsDict_NO());
-	            }
-			    
-			    String markName = Utils.getCellValue(row.getCell(8));
-			    List<Dict> tempMarks = marks.stream()
-			    		.filter(e -> e.getsDict_Name().equals(markName))
-			    		.collect(Collectors.toList());
-	            if(tempMarks.size() > 0) {
-	            	node.setsAid_Mark(tempMarks.get(0).getsDict_NO());
-	            }
-			    
-			    String nfcNO = Utils.getCellValue(row.getCell(9));
-			    List<Nfc> tempNfcs = nfcs.stream()
-			    		.filter(e -> e.getsNfc_NO().equals(nfcNO))
-			    		.collect(Collectors.toList());
-	            if(tempNfcs.size() > 0) {
-	            	Nfc temp = tempNfcs.get(0);
-	            	node.setsAid_NfcID(temp.getsNfc_ID());
-	            	//标记nfc已使用
-	            	temp.setlNfc_StatusFlag(1);
-	            	usedNfcs.add(temp);
-	            }
-	
-			    String statusName = Utils.getCellValue(row.getCell(10));
-			    List<Dict> tempStatuss = statuss.stream()
-			    		.filter(e -> e.getsDict_Name().equals(statusName))
-			    		.collect(Collectors.toList());
-	            if(tempStatuss.size() > 0) {
-	            	node.setsAid_Status(tempStatuss.get(0).getsDict_NO());
-	            }
-	            
-			    String latStr = Utils.getCellValue(row.getCell(11));
-			    latStr = latStr.replace( "°", "°").replace("'", "′").replace("\"", "″"); //字符转换
-			    latStr = latStr.replace("°", "#").replace("′", "#").replace("″", "#"); //字符转换
-			    String[] latStrs = latStr.split("#");
-			    String latDu = latStrs.length < 1 ? "0" : latStrs[0];
-			    String latFen = latStrs.length < 2 ? "0" : latStrs[1];
-			    String latMiao = latStrs.length < 3 ? "0" : latStrs[2];
-			    node.setlAid_LatDu(Tools.parseInt(latDu));
-			    node.setlAid_LatFen(Tools.parseInt(latFen));
-			    node.setlAid_LatMiao(Tools.parseFloat(latMiao));
-			    node.setlAid_Lat(Tools.parseFloat(latDu) + Tools.parseFloat(latFen)/60 + Tools.parseFloat(latMiao)/3600);
-	            
-			    String lngStr = Utils.getCellValue(row.getCell(12));
-			    lngStr = lngStr.replace( "°", "°").replace("'", "′").replace("\"", "″"); //字符转换
-			    lngStr = lngStr.replace("°", "#").replace("′", "#").replace("″", "#"); //字符转换
-			    String[] lngStrs = lngStr.split("#");
-			    String lngDu = lngStrs.length < 1 ? "0" : lngStrs[0];
-			    String lngFen = lngStrs.length < 2 ? "0" : lngStrs[1];
-			    String lngMiao = lngStrs.length < 3 ? "0" : lngStrs[2];
-			    node.setlAid_LngDu(Tools.parseInt(lngDu));
-			    node.setlAid_LngFen(Tools.parseInt(lngFen));
-			    node.setlAid_LngMiao(Tools.parseFloat(lngMiao));
-			    node.setlAid_Lng(Tools.parseFloat(lngDu) + Tools.parseFloat(lngFen)/60 + Tools.parseFloat(lngMiao)/3600);
-			    
-			    node.setdAid_CreateDate(new Date());
-	
-			    list.add(node);
+			int total = workbook.getNumberOfSheets();
+			for (int i = 0; i < total; i++) {
+				
+				Sheet sheet = workbook.getSheetAt(i);
+				//获取sheet的行数
+				int rows = sheet.getPhysicalNumberOfRows();
+				for (int j = 0; j < rows; j++) {
+					//过滤表头行
+					if (j == 0) {
+						continue;
+					}
+					//获取当前行的数据
+					Row row = sheet.getRow(j);
+					node = new Equip();
+					
+					String equipNO = Utils.getCellValue(row.getCell(0));
+					if(Tools.isNullOrEmpty(equipNO)) {
+						continue;
+					}
+					//去重
+					//1、自身
+					List<Equip> tempLists = list.stream()
+				    		.filter(e -> equipNO.equals(e.getsEquip_NO()))
+				    		.collect(Collectors.toList());
+					if(tempLists.size() > 0) {
+				    	continue;
+				    }
+					//2、数据库
+				    List<Equip> tempAlls = all.stream()
+				    		.filter(e -> equipNO.equals(e.getsEquip_NO()))
+				    		.collect(Collectors.toList());
+				    
+				    if(tempAlls.size() > 0) {
+				    	continue;
+				    }
+					
+					node.setsEquip_ID(Utils.newSnowflakeIdStr());
+					node.setsEquip_Name(equipNO);
+					node.setsEquip_NO(equipNO);
+                	node.setsEquip_Status(Constant.EquipStatus_0);
+					
+					String nfcNO = Utils.getCellValue(row.getCell(1));
+				    List<Nfc> tempNfcs = nfcs.stream()
+				    		.filter(e -> e.getsNfc_NO().equals(nfcNO))
+				    		.collect(Collectors.toList());
+	                if(tempNfcs.size() > 0) {
+	                	Nfc temp = tempNfcs.get(0);
+	                	node.setsEquip_NfcID(temp.getsNfc_ID());
+	                	//标记nfc已使用
+	                	temp.setlNfc_StatusFlag(1);
+	                	usedNfcs.add(temp);
+	                }
+	                
+				    String storeLv1Name = Utils.getCellValue(row.getCell(2));
+				    String storeLv1Id = "";
+				    List<StoreType> tempStoreLv1s = allt.stream()
+				    		.filter(e -> e.getsStoreType_Name().equals(storeLv1Name))
+				    		.collect(Collectors.toList());
+	                if(tempStoreLv1s.size() > 0) {
+	                	storeLv1Id = tempStoreLv1s.get(0).getsStoreType_ID();
+	                	node.setsEquip_StoreLv1(storeLv1Id);
+	                }
+	                
+	                String storeLv1IdTemp = storeLv1Id;
+				    String storeLv2Name = Utils.getCellValue(row.getCell(3));
+				    String storeLv2Id = "";
+				    List<Store> tempStoreLv2s = alls.stream()
+				    		.filter(e -> e.getsStore_Name().equals(storeLv2Name) && e.getsStore_Parent().equals(storeLv1IdTemp))
+				    		.collect(Collectors.toList());
+	                if(tempStoreLv2s.size() > 0) {
+	                	storeLv2Id = tempStoreLv2s.get(0).getsStore_ID();
+	                	node.setsEquip_StoreLv2(storeLv2Id);
+	                }
+	                
+	                String storeLv2IdTemp = storeLv2Id;
+				    String storeLv3Name = Utils.getCellValue(row.getCell(4));
+				    String storeLv3Id = "";
+				    List<Store> tempStoreLv3s = alls.stream()
+				    		.filter(e -> e.getsStore_Name().equals(storeLv3Name) && e.getsStore_Parent().equals(storeLv2IdTemp))
+				    		.collect(Collectors.toList());
+	                if(tempStoreLv3s.size() > 0) {
+	                	storeLv3Id = tempStoreLv3s.get(0).getsStore_ID();
+	                	node.setsEquip_StoreLv3(storeLv3Id);
+	                }
+	                
+	                String storeLv3IdTemp = storeLv3Id;
+				    String storeLv4Name = Utils.getCellValue(row.getCell(5));
+				    String storeLv4Id = "";
+				    List<Store> tempStoreLv4s = alls.stream()
+				    		.filter(e -> e.getsStore_Name().equals(storeLv4Name) && e.getsStore_Parent().equals(storeLv3IdTemp))
+				    		.collect(Collectors.toList());
+	                if(tempStoreLv4s.size() > 0) {
+	                	storeLv4Id = tempStoreLv4s.get(0).getsStore_ID();
+	                	node.setsEquip_StoreLv4(storeLv4Id);
+	                }
+	                //添加入库记录
+	                if(!Tools.isNullOrEmpty(storeLv1Id)) {
+	                	Date date = new Date();
+	                	node.setdEquip_StoreDate(date);
+	                	node.setsEquip_Status(Constant.EquipStatus_1);
+	                	//日志
+	                	EquipLog log = new EquipLog();
+	            		log.setsELog_ID(Utils.newSnowflakeIdStr());
+	            		log.setdELog_CreateDate(date);
+	            		log.setsELog_EquipID(node.getsEquip_ID());
+	            		log.setsELog_IP(Tools.getIp(req));			
+	            		log.setsELog_StoreLv1(storeLv1Id);
+	            		log.setsELog_StoreLv2(storeLv2Id);
+	            		log.setsELog_StoreLv3(storeLv3Id);
+	            		log.setsELog_StoreLv4(storeLv4Id);
+	            		if(loginUser != null) {
+	            			log.setsELog_UserID(loginUser.getsUser_ID());
+	            		}
+	            		log.setsELog_Type(Constant.EquipLogType_1); // 仓库待用
+	            		log.setsELog_Describe("器材入库");
+	            		log.setsELog_Remarks("");
+	            		elogs.add(log);
+	                }
+					
+					String aidName = Utils.getCellValue(row.getCell(6));
+					List<Aid> tempAids = aids.stream()
+							.filter(e -> e.getsAid_Name().equals(aidName))
+							.collect(Collectors.toList());
+					if(tempAids.size() > 0) {
+						String aidID = tempAids.get(0).getsAid_ID();
+						node.setsEquip_AidID(aidID);
+						//添加使用记录
+	                	Date date = new Date();
+	                	node.setdEquip_UseDate(date);
+	                	node.setsEquip_Status(Constant.EquipStatus_9);
+						//日志
+						EquipLog log = new EquipLog();
+						log.setsELog_ID(Utils.newSnowflakeIdStr());
+						log.setdELog_CreateDate(date);
+						log.setsELog_EquipID(node.getsEquip_ID());
+						log.setsELog_IP(Tools.getIp(req));
+						if(loginUser != null) {
+							log.setsELog_UserID(loginUser.getsUser_ID());
+						}
+						log.setsELog_Type(Constant.EquipLogType_9); // 使用
+						log.setsELog_Describe("器材使用中");
+						log.setsELog_Remarks("");
+						elogs.add(log);
+						//记录
+						AidEquip aidEquip = new AidEquip();
+						aidEquip.setsAidEquip_ID(Utils.newSnowflakeIdStr());
+						aidEquip.setsAidEquip_AidID(aidID);
+						aidEquip.setsAidEquip_EquipID(node.getsEquip_ID());
+						aidEquip.setdAidEquip_CreateDate(date);
+						aidEquips.add(aidEquip);
+					}
+
+					String manufacturerName = Utils.getCellValue(row.getCell(7));
+					List<Dict> tempManufacturers = manufacturers.stream()
+							.filter(e -> e.getsDict_Name().equals(manufacturerName))
+							.collect(Collectors.toList());
+					if(tempManufacturers.size() > 0) {
+						node.setsEquip_Manufacturer(tempManufacturers.get(0).getsDict_NO());
+					}
+					node.setsEquip_MModel(Utils.getCellValue(row.getCell(8)));
+					node.setsEquip_MBrand(Utils.getCellValue(row.getCell(9)));
+					node.setdEquip_ArrivalDate(Utils.getCellValueDate(row.getCell(10)));
+					
+					String typeName = Utils.getCellValue(row.getCell(11));
+					String typeNO = "";
+					List<Dict> tempTypes = types.stream()
+							.filter(e -> e.getsDict_Name().equals(typeName))
+							.collect(Collectors.toList());
+					if(tempTypes.size() > 0) {
+						typeNO = tempTypes.get(0).getsDict_NO();
+						node.setsEquip_Type(typeNO);
+					}
+					
+					node.setdEquip_CreateDate(new Date());
+					
+					list.add(node);
+					
+					String sEquip_ID = node.getsEquip_ID();
+					//额外属性
+					switch (typeNO) {
+					case Constant.EquipType_AIS:
+						EquipAis ais = new EquipAis();
+						ais.setsEquip_ID(sEquip_ID);
+						
+						String aisName = Utils.getCellValue(row.getCell(12));
+						List<Dict> tempAiss = aiss.stream()
+								.filter(e -> e.getsDict_Name().equals(aisName))
+								.collect(Collectors.toList());
+						if(tempAiss.size() > 0) {
+							ais.setsAis_MMSIX(tempAiss.get(0).getsDict_NO());
+						}
+						listAis.add(ais);
+						break;
+					case Constant.EquipType_Battery:
+						EquipBattery battery = new EquipBattery();
+						battery.setsEquip_ID(sEquip_ID);
+						battery.setsBattery_NO(Utils.getCellValue(row.getCell(12)));
+						
+						String batteryTypeName = Utils.getCellValue(row.getCell(13));
+						List<Dict> tempBatteryTypes = batteryTypes.stream()
+								.filter(e -> e.getsDict_Name().equals(batteryTypeName))
+								.collect(Collectors.toList());
+						if(tempBatteryTypes.size() > 0) {
+							battery.setsBattery_Type(tempBatteryTypes.get(0).getsDict_NO());
+						}
+						battery.setlBattery_Volt(Tools.parseFloat(Utils.getCellValue(row.getCell(14))) ); 
+						battery.setlBattery_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(15))) ); 
+						battery.setsBattery_Connect(Utils.getCellValue(row.getCell(16)) ); 
+						listBattery.add(battery);
+						break;
+					case Constant.EquipType_Lamp:
+						EquipLamp lamp = new EquipLamp();
+						lamp.setsEquip_ID(sEquip_ID);
+						lamp.setsLamp_NO(Utils.getCellValue(row.getCell(12)));
+						
+						String lampTypeName = Utils.getCellValue(row.getCell(13));
+						List<Dict> tempLampTypes = lampTypes.stream()
+								.filter(e -> e.getsDict_Name().equals(lampTypeName))
+								.collect(Collectors.toList());
+						if(tempLampTypes.size() > 0) {
+							lamp.setsLamp_Type(tempLampTypes.get(0).getsDict_NO());
+						}
+						lamp.setlLamp_InputVolt(Tools.parseFloat(Utils.getCellValue(row.getCell(14))) ); 
+						lamp.setlLamp_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(15))) ); 
+						
+						String lampLensName = Utils.getCellValue(row.getCell(16));
+						List<Dict> tempLampLenss = lampLenss.stream()
+								.filter(e -> e.getsDict_Name().equals(lampLensName))
+								.collect(Collectors.toList());
+						if(tempLampLenss.size() > 0) {
+							lamp.setsLamp_Lens(tempLampLenss.get(0).getsDict_NO());
+						}
+						int flag = "是".equals(Utils.getCellValue(row.getCell(17)) ) ? 1 : 0;
+						lamp.setlLamp_TelemetryFlag(flag); 
+						if(flag == 1) {
+							String lampTelemetryName = Utils.getCellValue(row.getCell(16));
+							List<Dict> tempLampTelemetrys = lampTelemetrys.stream()
+									.filter(e -> e.getsDict_Name().equals(lampTelemetryName))
+									.collect(Collectors.toList());
+							if(tempLampTelemetrys.size() > 0) {
+								lamp.setsLamp_Telemetry(tempLampTelemetrys.get(0).getsDict_NO());
+							}
+						}
+						listLamp.add(lamp);
+						break;
+					case Constant.EquipType_Radar:
+						EquipRadar radar = new EquipRadar();
+						radar.setsEquip_ID(sEquip_ID);
+						
+						String radarNOName = Utils.getCellValue(row.getCell(12));
+						List<Dict> tempRadarNOs = radarNOs.stream()
+								.filter(e -> e.getsDict_Name().equals(radarNOName))
+								.collect(Collectors.toList());
+						if(tempRadarNOs.size() > 0) {
+							radar.setsRadar_NO(tempRadarNOs.get(0).getsDict_NO());
+						}
+						
+						String radarBandName = Utils.getCellValue(row.getCell(13));
+						List<Dict> tempRadarBands = radarBands.stream()
+								.filter(e -> e.getsDict_Name().equals(radarBandName))
+								.collect(Collectors.toList());
+						if(tempRadarBands.size() > 0) {
+							radar.setsRadar_Band(tempRadarBands.get(0).getsDict_NO());
+						}
+						listRadar.add(radar);
+						break;
+					case Constant.EquipType_SolarEnergy:
+						EquipSolarEnergy solarEnergy = new EquipSolarEnergy();
+						solarEnergy.setsEquip_ID(sEquip_ID);
+						solarEnergy.setsSolar_NO(Utils.getCellValue(row.getCell(12)));
+						
+						String solarTypeName = Utils.getCellValue(row.getCell(13));
+						List<Dict> tempSolarTypes = solarTypes.stream()
+								.filter(e -> e.getsDict_Name().equals(solarTypeName))
+								.collect(Collectors.toList());
+						if(tempSolarTypes.size() > 0) {
+							solarEnergy.setsSolar_Type(tempSolarTypes.get(0).getsDict_NO());
+						}
+						solarEnergy.setlSolar_Volt(Tools.parseFloat(Utils.getCellValue(row.getCell(14))) ); 
+						solarEnergy.setlSolar_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(15))) ); 
+						solarEnergy.setsSolar_Connect(Utils.getCellValue(row.getCell(16)) ); 
+						listSolarEnergy.add(solarEnergy);
+						break;
+					case Constant.EquipType_SpareLamp:
+						EquipSpareLamp spareLamp = new EquipSpareLamp();
+						spareLamp.setsEquip_ID(sEquip_ID);
+						spareLamp.setlSLamp_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(12))) );
+						listSpareLamp.add(spareLamp);
+						break;
+					case Constant.EquipType_Telemetry:
+						EquipTelemetry telemetry = new EquipTelemetry();
+						telemetry.setsEquip_ID(sEquip_ID);
+						
+						String telemetryModeName = Utils.getCellValue(row.getCell(12));
+						List<Dict> tempTelemetryModes = telemetryModes.stream()
+								.filter(e -> e.getsDict_Name().equals(telemetryModeName))
+								.collect(Collectors.toList());
+						if(tempTelemetryModes.size() > 0) {
+							telemetry.setsTelemetry_Mode(tempTelemetryModes.get(0).getsDict_NO());
+						}
+						telemetry.setsTelemetry_NO(Utils.getCellValue(row.getCell(13)));
+						telemetry.setlTelemetry_Volt(Tools.parseFloat(Utils.getCellValue(row.getCell(14))) ); 
+						telemetry.setlTelemetry_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(15))) ); 
+						telemetry.setsTelemetry_SIM(Utils.getCellValue(row.getCell(16)) ); 
+						listTelemetry.add(telemetry);
+						break;
+					case Constant.EquipType_ViceLamp:
+						EquipViceLamp viceLamp = new EquipViceLamp();
+						viceLamp.setsEquip_ID(sEquip_ID);
+						viceLamp.setlVLamp_Watt(Tools.parseFloat(Utils.getCellValue(row.getCell(12))) );
+						listViceLamp.add(viceLamp);
+						break;
+
+					default:
+						break;
+					}
+				}
 			}
-			//去重
-			//1、自身
-			list = list.stream()
-					.filter(Utils.distinctByKey(e -> e.getsAid_NO() + e.getsAid_Station()))
-					.collect(Collectors.toList());
-			//2、数据库
-			List<Aid> all = service.selectAll();
-			list = list.stream()
-					.filter(t-> !all.stream()
-							.map(e -> e.getsAid_NO() + e.getsAid_Station())
-							.collect(Collectors.toList())
-							.contains(t.getsAid_NO() + t.getsAid_Station()))
-					.collect(Collectors.toList());
+			System.out.println(list.size());
+			System.out.println(JsonTools.toJsonString(list));
+			System.out.println(usedNfcs.size());
+			System.out.println(elogs.size());
+			System.out.println(JsonTools.toJsonString(elogs));
+			System.out.println(aidEquips.size());
+			System.out.println(JsonTools.toJsonString(aidEquips));
+			
+			System.out.println(listAis.size());
+			System.out.println(listBattery.size());
+			System.out.println(listLamp.size());
+			System.out.println(listRadar.size());
+			System.out.println(listSolarEnergy.size());
+			System.out.println(listSpareLamp.size());
+			System.out.println(listTelemetry.size());
+			System.out.println(listViceLamp.size());
 			//保存
 			if(list.size() > 0) {
-				service.imports(list, usedNfcs, loginUser);
+				service.imports(list, usedNfcs, elogs, aidEquips, 
+						listAis, listBattery, listLamp, listRadar, listSolarEnergy, listSpareLamp, listTelemetry, listViceLamp,
+						loginUser);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResultTools.custom(Tips.ERROR0).put(ResultKey.MSG, e.getMessage()).toJSONString();
 		}
 		return ResultTools.custom(Tips.ERROR1).toJSONString();
-	}*/
+	}
 
 	
 	@RequestMapping("/excel")
     @ResponseBody
 	@VerifyLogin
 	@VerifyAuth
-	//@SysLog(type=SystemLogType.Export, describe="导出器材")
+	@SysLog(type=SystemLogType.Export, describe="导出器材")
 	public String excel(HttpServletRequest req, HttpServletResponse resp) {
 		
 		String filename = "Equip";
@@ -515,24 +782,23 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		List<Map<String, Object>> list = service.export(null, getLoginUser(req));
 		Map<String, String> types = new HashMap<>();
 		for (Map<String, Object> map : list) {
-			String typeKey = (String) map.get("sEquip_Type");
+			String typeKey = map.get("sEquip_Type") + "";
 			String typeName = (String) map.get("sEquip_TypeName");
 			String typeVal = types.get(typeKey);
 			if(Tools.isNullOrEmpty(typeVal)) {
 				types.put(typeKey, Tools.isNullOrEmpty(typeName) ? typeKey : typeName);
 			}
 		}
-
 		String comHead = "ID,器材名称,器材编码,器材状态,NFC标签,一级仓库,二级仓库,三级仓库,四级仓库,航标,生产厂家,厂方型号,品牌,到货日期,创建日期,入库日期,使用日期,报废日期,器材类型";
 		Map<String, String> headMap = new HashMap<>();
 		headMap.put(Constant.EquipType_AIS, comHead + ",MMSIX号");
-		headMap.put(Constant.EquipType_Battery, comHead + ",蓄电池编码,蓄电池种类,工作电压（V）,容量（W）,连接方式");
-		headMap.put(Constant.EquipType_Lamp, comHead + "");
-		headMap.put(Constant.EquipType_Radar, comHead + "");
-		headMap.put(Constant.EquipType_SolarEnergy, comHead + "");
-		headMap.put(Constant.EquipType_SpareLamp, comHead + "");
-		headMap.put(Constant.EquipType_Telemetry, comHead + "");
-		headMap.put(Constant.EquipType_ViceLamp, comHead + "");
+		headMap.put(Constant.EquipType_Battery, comHead + ",编码,种类,工作电压（V）,容量（W）,连接方式");
+		headMap.put(Constant.EquipType_Lamp, comHead + ",编码,类型,输入电压（V）,功率（W）,透镜形状,遥测遥控接口,遥测接口类型");
+		headMap.put(Constant.EquipType_Radar, comHead + ",编码,波段");
+		headMap.put(Constant.EquipType_SolarEnergy, comHead + ",编码,种类,额定电压（V）,功率（W）,连接方式");
+		headMap.put(Constant.EquipType_SpareLamp, comHead + ",功率（W）");
+		headMap.put(Constant.EquipType_Telemetry, comHead + ",遥控遥测方式,遥控遥测编码,电压（V）,功率（W）,SIM(MMIS)卡号");
+		headMap.put(Constant.EquipType_ViceLamp, comHead + ",功率（W）");
 
 		//执行
 		resp.addHeader("Content-Disposition","attachment;filename="+filename+".xls");
@@ -546,7 +812,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
             for (String type : types.keySet()) {
 				//筛选数据
             	List<Map<String, Object>> listType = list.stream()
-            			.filter(e -> e.get("sEquip_Type") != null && type.equals(e.get("sEquip_Type")))
+            			.filter(e -> type.equals(e.get("sEquip_Type")+""))
             			.collect(Collectors.toList());
             	
             	//创建一个Excel表单，参数为sheet的名字
@@ -619,7 +885,55 @@ public class EquipController extends BaseController<Equip, EquipService> {
             			cell17.setCellValue((Date) node.get("dEquip_DumpDate"));
             		}
             		rowc.createCell(18).setCellValue(node.get("sEquip_TypeName") == null ? "" : String.valueOf(node.get("sEquip_TypeName")) );
-            		
+            		//额外属性
+            		switch (type) {
+					case Constant.EquipType_AIS:
+						rowc.createCell(19).setCellValue(node.get("sAis_MMSIXName") == null ? "" : String.valueOf(node.get("sAis_MMSIXName")) );
+						break;
+					case Constant.EquipType_Battery:
+						rowc.createCell(19).setCellValue(node.get("sBattery_NO") == null ? "" : String.valueOf(node.get("sBattery_NO")) );
+						rowc.createCell(20).setCellValue(node.get("sBattery_TypeName") == null ? "" : String.valueOf(node.get("sBattery_TypeName")) );
+						rowc.createCell(21).setCellValue(node.get("lBattery_Volt") == null ? "" : String.valueOf(node.get("lBattery_Volt")) );
+						rowc.createCell(22).setCellValue(node.get("lBattery_Watt") == null ? "" : String.valueOf(node.get("lBattery_Watt")) );
+						rowc.createCell(23).setCellValue(node.get("sBattery_Connect") == null ? "" : String.valueOf(node.get("sBattery_Connect")) );
+						break;
+					case Constant.EquipType_Lamp:
+						rowc.createCell(19).setCellValue(node.get("sLamp_NO") == null ? "" : String.valueOf(node.get("sLamp_NO")) );
+						rowc.createCell(20).setCellValue(node.get("sLamp_TypeName") == null ? "" : String.valueOf(node.get("sLamp_TypeName")) );
+						rowc.createCell(21).setCellValue(node.get("lLamp_InputVolt") == null ? "" : String.valueOf(node.get("lLamp_InputVolt")) );
+						rowc.createCell(22).setCellValue(node.get("lLamp_Watt") == null ? "" : String.valueOf(node.get("lLamp_Watt")) );
+						rowc.createCell(23).setCellValue(node.get("sLamp_LensName") == null ? "" : String.valueOf(node.get("sLamp_LensName")) );
+						rowc.createCell(24).setCellValue(node.get("lLamp_TelemetryFlag") == null ? "" : Tools.parseInt(String.valueOf(node.get("lLamp_TelemetryFlag"))) == 1 ? "是":"否" );
+						rowc.createCell(25).setCellValue(node.get("sLamp_TelemetryName") == null ? "" : String.valueOf(node.get("sLamp_TelemetryName")) );
+						break;
+					case Constant.EquipType_Radar:
+						rowc.createCell(19).setCellValue(node.get("sRadar_NOName") == null ? "" : String.valueOf(node.get("sRadar_NOName")) );
+						rowc.createCell(20).setCellValue(node.get("sRadar_BandName") == null ? "" : String.valueOf(node.get("sRadar_BandName")) );
+						break;
+					case Constant.EquipType_SolarEnergy:
+						rowc.createCell(19).setCellValue(node.get("sSolar_NO") == null ? "" : String.valueOf(node.get("sSolar_NO")) );
+						rowc.createCell(20).setCellValue(node.get("sSolar_TypeName") == null ? "" : String.valueOf(node.get("sSolar_TypeName")) );
+						rowc.createCell(21).setCellValue(node.get("lSolar_Volt") == null ? "" : String.valueOf(node.get("lSolar_Volt")) );
+						rowc.createCell(22).setCellValue(node.get("lSolar_Watt") == null ? "" : String.valueOf(node.get("lSolar_Watt")) );
+						rowc.createCell(23).setCellValue(node.get("sSolar_Connect") == null ? "" : String.valueOf(node.get("sSolar_Connect")) );
+						break;
+					case Constant.EquipType_SpareLamp:
+						rowc.createCell(19).setCellValue(node.get("lSLamp_Watt") == null ? "" : String.valueOf(node.get("lSLamp_Watt")) );
+						break;
+					case Constant.EquipType_Telemetry:
+						rowc.createCell(19).setCellValue(node.get("sTelemetry_ModeName") == null ? "" : String.valueOf(node.get("sTelemetry_ModeName")) );
+						rowc.createCell(20).setCellValue(node.get("sTelemetry_NO") == null ? "" : String.valueOf(node.get("sTelemetry_NO")) );
+						rowc.createCell(21).setCellValue(node.get("lTelemetry_Volt") == null ? "" : String.valueOf(node.get("lTelemetry_Volt")) );
+						rowc.createCell(22).setCellValue(node.get("lTelemetry_Watt") == null ? "" : String.valueOf(node.get("lTelemetry_Watt")) );
+						rowc.createCell(23).setCellValue(node.get("sTelemetry_SIM") == null ? "" : String.valueOf(node.get("sTelemetry_SIM")) );
+						break;
+					case Constant.EquipType_ViceLamp:
+						rowc.createCell(19).setCellValue(node.get("lVLamp_Watt") == null ? "" : String.valueOf(node.get("lVLamp_Watt")) );
+						break;
+
+					default:
+						break;
+					}
             	}
 			}
             

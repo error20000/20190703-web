@@ -285,7 +285,6 @@ public class StoreController extends BaseController<Store, StoreService> {
 			User loginUser = getLoginUser(req);
 			List<Dict> stations = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_AidStation).build());
 			List<Dict> mapIcons = dictService.selectList(MapTools.custom().put("sDict_DictTypeNO", Constant.DictType_StoreMapIcon).build());
-
 			List<Store> alls = service.selectAll();
 			List<StoreType> allt = typeService.selectAll();
 			
@@ -443,10 +442,6 @@ public class StoreController extends BaseController<Store, StoreService> {
 			    }
 			    
 			}
-			System.out.println(list.size());
-			System.out.println(JsonTools.toJsonString(list));
-			System.out.println(slist.size());
-			System.out.println(JsonTools.toJsonString(slist));
 			//保存
 			service.imports(list, slist, loginUser);
 		} catch (Exception e) {
