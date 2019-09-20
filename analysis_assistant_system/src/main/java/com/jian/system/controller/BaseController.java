@@ -186,7 +186,7 @@ public class BaseController<T, S extends BaseService<T, ?>> {
 	
 	
     public String findList(HttpServletRequest req) {
-		
+
 		//参数
 		Map<String, Object> condition = Utils.getReqParamsToMap(req, getObejctClass());
 		if(condition == null || condition.isEmpty()){

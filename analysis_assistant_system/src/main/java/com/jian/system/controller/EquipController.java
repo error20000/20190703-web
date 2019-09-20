@@ -657,7 +657,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 						int flag = "是".equals(Utils.getCellValue(row.getCell(17)) ) ? 1 : 0;
 						lamp.setlLamp_TelemetryFlag(flag); 
 						if(flag == 1) {
-							String lampTelemetryName = Utils.getCellValue(row.getCell(16));
+							String lampTelemetryName = Utils.getCellValue(row.getCell(18));
 							List<Dict> tempLampTelemetrys = lampTelemetrys.stream()
 									.filter(e -> e.getsDict_Name().equals(lampTelemetryName))
 									.collect(Collectors.toList());

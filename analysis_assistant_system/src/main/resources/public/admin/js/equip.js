@@ -159,8 +159,11 @@ var myvue = new Vue({
 				},
 				
 				uploadVisible: false,
-				uploadTemp: [],
+				uploadTemp1: [],
+				uploadTemp2: [],
+				uploadTemp3: [],
 				importUrl: "",
+				uploadActiveName: 'first',
 				
 				user: ''
 			}
@@ -867,7 +870,7 @@ var myvue = new Vue({
 			getImport: function(){
 				this.importUrl = importUrl + "?token=" + loginToken;
 				this.uploadVisible = true;
-				this.uploadTemp = [
+				this.uploadTemp1 = [
 					{
 						sEquip_Name: '测试1', 
 						sEquip_NO: 'test1', 
@@ -877,11 +880,12 @@ var myvue = new Vue({
 						sEquip_StoreLv3: '', 
 						sEquip_StoreLv4: '', 
 						sEquip_AidID: '',
-						sEquip_Manufacturer: '',  
-						sEquip_MModel: '',
+						sEquip_Manufacturer: '生产厂商1',  
+						sEquip_MModel: 'abc',
 						sEquip_MBrand: '',
 						dEquip_ArrivalDate: '' ,
-						sEquip_Type: ''
+						sEquip_Type: 'AIS',
+						sAis_MMSIX: 'MMSIX1'
 					},
 					{
 						sEquip_Name: '测试2', 
@@ -892,11 +896,12 @@ var myvue = new Vue({
 						sEquip_StoreLv3: '', 
 						sEquip_StoreLv4: '', 
 						sEquip_AidID: '',
-						sEquip_Manufacturer: '',  
-						sEquip_MModel: '',
+						sEquip_Manufacturer: '生产厂商2',  
+						sEquip_MModel: 'abc',
 						sEquip_MBrand: '',
 						dEquip_ArrivalDate: '' ,
-						sEquip_Type: ''
+						sEquip_Type: 'AIS',
+						sAis_MMSIX: 'MMSIX2'
 					},
 					{
 						sEquip_Name: '测试3', 
@@ -907,11 +912,127 @@ var myvue = new Vue({
 						sEquip_StoreLv3: '', 
 						sEquip_StoreLv4: '', 
 						sEquip_AidID: '',
-						sEquip_Manufacturer: '',  
-						sEquip_MModel: '',
+						sEquip_Manufacturer: '生产厂商3',  
+						sEquip_MModel: 'abc',
 						sEquip_MBrand: '',
 						dEquip_ArrivalDate: '' ,
-						sEquip_Type: ''    
+						sEquip_Type: 'AIS',
+						sAis_MMSIX: 'MMSIX3'   
+					}
+				];
+				this.uploadTemp2 = [
+					{
+						sEquip_Name: '测试1', 
+						sEquip_NO: 'test1', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商1',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '雷达应答器',
+						sRadar_NO: '编码1' ,
+						sRadar_Band: '波段1'  
+					},
+					{
+						sEquip_Name: '测试2', 
+						sEquip_NO: 'test2', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商2',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '雷达应答器',
+						sRadar_NO: '编码1' ,
+						sRadar_Band: '波段1'  
+					},
+					{
+						sEquip_Name: '测试3', 
+						sEquip_NO: 'test3', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商3',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '雷达应答器',
+						sRadar_NO: '编码1' ,
+						sRadar_Band: '波段1'    
+					}
+				];
+				this.uploadTemp3 = [
+					{
+						sEquip_Name: '测试1', 
+						sEquip_NO: 'test1', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商1',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '蓄电池',
+						sBattery_NO: '编码1' ,
+						sBattery_Type: '锂电池'  ,
+						lBattery_Volt: '24'  ,
+						lBattery_Watt: '60'  ,
+						sBattery_Connect: '连接方式1'  
+					},
+					{
+						sEquip_Name: '测试2', 
+						sEquip_NO: 'test2', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商2',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '蓄电池',
+						sBattery_NO: '编码1' ,
+						sBattery_Type: '锂电池'  ,
+						lBattery_Volt: '24'  ,
+						lBattery_Watt: '60'  ,
+						sBattery_Connect: '连接方式1' 
+					},
+					{
+						sEquip_Name: '测试3', 
+						sEquip_NO: 'test3', 
+						sEquip_NfcID: '' , 
+						sEquip_StoreLv1: '' , 
+						sEquip_StoreLv2: '' , 
+						sEquip_StoreLv3: '', 
+						sEquip_StoreLv4: '', 
+						sEquip_AidID: '',
+						sEquip_Manufacturer: '生产厂商3',  
+						sEquip_MModel: 'abc',
+						sEquip_MBrand: '',
+						dEquip_ArrivalDate: '' ,
+						sEquip_Type: '蓄电池',
+						sBattery_NO: '编码1' ,
+						sBattery_Type: '锂电池'  ,
+						lBattery_Volt: '24'  ,
+						lBattery_Watt: '60'  ,
+						sBattery_Connect: '连接方式1' 
 					}
 				];
 			},

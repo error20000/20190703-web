@@ -343,17 +343,17 @@ var myvue = new Vue({
 					{
 						sDict_NO: 'test1', 
 						sDict_Name: '测试一', 
-						sDict_DictTypeNO: 'AidType', 
+						sDict_DictTypeNO: '航标种类', 
 						lDict_SysFlag: 1 , 
 						sDict_Describe: '' , 
 						sDict_Picture: '' , 
 						sDict_Link: '' , 
-						sDict_Color: '' 
+						sDict_Color: '#000000' 
 					},
 					{
 						sDict_NO: 'test2', 
 						sDict_Name: '测试二', 
-						sDict_DictTypeNO: 'AidType', 
+						sDict_DictTypeNO: '航标种类', 
 						lDict_SysFlag: 1 , 
 						sDict_Describe: '' , 
 						sDict_Picture: '' , 
@@ -363,12 +363,12 @@ var myvue = new Vue({
 					{
 						sDict_NO: 'test3', 
 						sDict_Name: '测试三', 
-						sDict_DictTypeNO: 'AidType', 
+						sDict_DictTypeNO: '灯质明灭', 
 						lDict_SysFlag: 0 , 
 						sDict_Describe: '' , 
 						sDict_Picture: '' , 
 						sDict_Link: '' , 
-						sDict_Color: '#000000' 
+						sDict_Color: '' 
 					}
 				];
 			},

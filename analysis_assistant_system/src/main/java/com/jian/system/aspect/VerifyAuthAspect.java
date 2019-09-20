@@ -63,8 +63,6 @@ public class VerifyAuthAspect {
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(auth)")
     public void before(JoinPoint joinPoint, VerifyAuth auth){
     	
-    	System.out.println(cacheKey.userAuthCacheKey);
-    	
     	long start = System.currentTimeMillis();
     	//1、获取登录用户
     	HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();

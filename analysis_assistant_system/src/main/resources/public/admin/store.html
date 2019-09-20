@@ -457,33 +457,33 @@
 			  	<p>1.支持Excel文件</p>
 				<p>2.请上传有标准行列的一维数据表格。（有合并单元格的数据请处理过后再上传，否则可能出现表头识别有误）</p>
 				<p>3.日期字段需包含年月日（如2019/1/1），或年月日时分秒。（如2019/1/1 00:00:00）</p>
-				<p>4.预警值优先级：四级仓库预警值 > 三级仓库预警值 > 二级仓库预警值 > 库存预警值。当四级仓库没有预警值时，会找三级仓库的预警值，依次类推。默认值0。</p>
+				<p style="color:blue;">4.预警值优先级：四级仓库预警值 > 三级仓库预警值 > 二级仓库预警值 > 库存预警值。当四级仓库没有预警值时，会找三级仓库的预警值，依次类推。默认值0。</p>
 			  	<el-table size="mini" :data="uploadTemp" highlight-current-row border style="width: 100%;" class="mytable" >
-					<el-table-column label="仓库名称" prop="sStoreType_Name" width="100">
+					<el-table-column label="仓库名称【文本】" prop="sStoreType_Name" width="120">
 					</el-table-column>
-					<el-table-column label="仓库地址" prop="sStoreType_Address" width="100">
+					<el-table-column label="仓库地址【文本】" prop="sStoreType_Address" width="120">
 					</el-table-column>
-					<el-table-column label="归属航标站" prop="sStoreType_Station" width="100">
+					<el-table-column label="归属航标站【文本】" prop="sStoreType_Station" width="140">
 					</el-table-column>		
-					<el-table-column label="库存预警值" prop="lStoreType_Limit" width="100">
+					<el-table-column label="库存预警值【数字】" prop="lStoreType_Limit" width="140">
 					</el-table-column>	
-					<el-table-column label="地图图标" prop="sStoreType_MapIcon" width="100">
+					<el-table-column label="地图图标【文本】" prop="sStoreType_MapIcon" width="120">
 					</el-table-column>	
-					<el-table-column label="纬度" prop="lStoreType_Lat" width="100">
+					<el-table-column label="纬度【文本】" prop="lStoreType_Lat" width="100">
 					</el-table-column>	
-					<el-table-column label="经度" prop="lStoreType_Lng" width="100">
+					<el-table-column label="经度【文本】" prop="lStoreType_Lng" width="100">
 					</el-table-column>
-					<el-table-column label="二级仓库" prop="sStoreType_Lv2" width="100">
+					<el-table-column label="二级仓库【文本】" prop="sStoreType_Lv2" width="120">
 					</el-table-column>	
-					<el-table-column label="二级仓库预警值" prop="sStoreType_Limit2" width="120">
+					<el-table-column label="二级仓库预警值【数字】" prop="sStoreType_Limit2" width="160">
 					</el-table-column>	
-					<el-table-column label="三级仓库" prop="sStoreType_Lv3" width="100">
+					<el-table-column label="三级仓库【文本】" prop="sStoreType_Lv3" width="120">
 					</el-table-column>	
-					<el-table-column label="三级仓库预警值" prop="sStoreType_Limit3" width="120">
+					<el-table-column label="三级仓库预警值【数字】" prop="sStoreType_Limit3" width="160">
 					</el-table-column>	
-					<el-table-column label="四级仓库" prop="sStoreType_Lv4" width="100">
+					<el-table-column label="四级仓库【文本】" prop="sStoreType_Lv4" width="120">
 					</el-table-column>	
-					<el-table-column label="四级仓库预警值" prop="sStoreType_Limit4" width="120">
+					<el-table-column label="四级仓库预警值【数字】" prop="sStoreType_Limit4" width="160">
 					</el-table-column>	
 				</el-table>
 			  </div>
