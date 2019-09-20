@@ -740,22 +740,6 @@ public class EquipController extends BaseController<Equip, EquipService> {
 					}
 				}
 			}
-			System.out.println(list.size());
-			System.out.println(JsonTools.toJsonString(list));
-			System.out.println(usedNfcs.size());
-			System.out.println(elogs.size());
-			System.out.println(JsonTools.toJsonString(elogs));
-			System.out.println(aidEquips.size());
-			System.out.println(JsonTools.toJsonString(aidEquips));
-			
-			System.out.println(listAis.size());
-			System.out.println(listBattery.size());
-			System.out.println(listLamp.size());
-			System.out.println(listRadar.size());
-			System.out.println(listSolarEnergy.size());
-			System.out.println(listSpareLamp.size());
-			System.out.println(listTelemetry.size());
-			System.out.println(listViceLamp.size());
 			//保存
 			if(list.size() > 0) {
 				service.imports(list, usedNfcs, elogs, aidEquips, 
