@@ -56,6 +56,9 @@ var myvue = new Vue({
 				statusOptions: [],
 				
 				pointArray: [],
+				defaultAidStatus: 'normal',
+				defaultStoreStatus: 'normal',
+				maxZoom: 10,
 				
 				detailFormVisible: false,
 				detailForm: {},
@@ -387,6 +390,11 @@ var myvue = new Vue({
 						 });
 					 });
 					 
+					 ArGis.view.on("mouse-wheel", function(evt){
+						 console.log(evt);
+						 console.log(ArGis.view.zoom);
+						 self.changePoint(evt);
+				   	 });
 					 
 					 self.initData();
 					 
@@ -409,6 +417,7 @@ var myvue = new Vue({
 							no: node.sAid_NO,
 							type: 'aid',
 							//status: this.findAidStatusIcon(node.sAid_Status || "normal")
+							status: node.sAid_Status || this.defaultAidStatus,
 							pic: node.sAid_StatusIcon ? node.sAid_StatusIcon : node.sAid_TypeIcon
 						},
 						color: "blue",
@@ -425,6 +434,7 @@ var myvue = new Vue({
 							name: node.sStoreType_Name,
 							type: 'store',
 							//status: this.findStoreMapIcon(node.sStoreType_MapIcon)
+							status: node.status,
 							pic: node.sStoreType_MapIconPic
 						},
 						color: "red",
@@ -464,7 +474,12 @@ var myvue = new Vue({
 				    }
 		  		  };*/
 				//var iconUrl = params.attr.status ? params.attr.status.sDict_Picture ? "/"+params.attr.status.sDict_Picture : "/admin/images/map.png" : "/admin/images/map.png";
-				var iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
+				var iconUrl = "";
+				if(ArGis.view.zoom <= this.maxZoom){
+					iconUrl = params.attr.status == this.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+				}else{
+					iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
+				}
 				var symbol = {};
 					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
@@ -501,6 +516,22 @@ var myvue = new Vue({
 			drawPoint: function(params){
 				var point = this.createPoint(params);
 				ArGis.view.graphics.add(point)
+			},
+			changePoint: function(evt){
+				var self = this;
+				var graphics = ArGis.view.graphics;
+				var zoom = evt.deltaY > 0 ? ArGis.view.zoom - 1 : ArGis.view.zoom + 1;
+				graphics.forEach(function(item, i){
+					var status = item.attributes.status
+					var pic = item.attributes.pic
+					var iconUrl = "";
+					if(zoom <= self.maxZoom){
+						iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+					}else{
+						iconUrl = pic ? "/" + pic : "/admin/images/map.png";
+					} 
+					item.symbol.url = iconUrl;
+				});
 			},
 			//query
 			query:function(){
@@ -639,6 +670,13 @@ var myvue = new Vue({
 			handleDetailStoreEquipCurrentChange: function (val) {
 				this.detailStoreEquipPage = val;
 				this.detailEquipStore();
+			},
+			handleIconMaskShow: function(evt){
+				console.log(evt);
+				$(evt.target).css("opacity", "0.5");
+			},
+			handleIconMaskHide: function(evt){
+				$(evt.target).css("opacity", "0");
 			},
 			
 			msgAid: function(){
