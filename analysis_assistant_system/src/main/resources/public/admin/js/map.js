@@ -75,6 +75,9 @@ var myvue = new Vue({
 				iconBatteryData: [],
 				iconSolarData: [],
 				iconLampData: [],
+				iconBodyData: [],
+				iconAnchorData: [],
+				iconStoneData: [],
 				
 				msgStoreData: [],
 				msgStoreTotal: 0,

@@ -152,6 +152,9 @@
 							    <el-dropdown-item @click.native="handleUser(scope.$index, scope.row)" ref="user" auth="sys:aid:user" v-show="hasAuth('user')">
 							    	<i class="fas fa-map-pin"></i>&nbsp;分配用户
 							    </el-dropdown-item>
+							    <!-- <el-dropdown-item @click.native="handleEquip(scope.$index, scope.row)" ref="equip" auth="sys:aid:equip" v-show="hasAuth('equip')">
+							    	<i class="fas fa-map-pin"></i>&nbsp;使用器材
+							    </el-dropdown-item> -->
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;" ref="delete" auth="sys:aid:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 							    </el-dropdown-item>
