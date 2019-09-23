@@ -152,7 +152,7 @@
 	      <div v-if="detailType == 'aid'" class="text item">
 	      	  <el-tabs v-model="activeAidDetailName">
 			    <el-tab-pane label="图标信息" name="0">
-			    	<div class="icon-container">
+			    	<div class="icon-container" v-if="detailIcon == 'leftLabel'">
 			    		<div class="part" style="width: 109px; margin-top: 68px; margin-left: 0.4px;">
 						    <img alt="" src="images/leftLabel/anchor.png" style="max-width: 100%; max-height: 100%;" />
 			    		</div>
@@ -162,10 +162,17 @@
 			    		<div class="part" style="width: 22px; margin-top: -81px; margin-left: -19px;">
 			    			<el-popover
 							    placement="left"
-							    title="标题"
-							    width="200"
-							    trigger="hover"
-							    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
 							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
 						    		<img alt="" src="images/leftLabel/battery.png" style="max-width: 100%; max-height: 100%;" />
 							  		<div class="mask"></div>
@@ -175,10 +182,17 @@
 			    		<div class="part" style="width: 66px; margin-top: -154px; margin-left: -19px;">
 			    			<el-popover
 							    placement="left"
-							    title="标题"
-							    width="200"
-							    trigger="hover"
-							    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
 							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
 								    <img alt="" src="images/leftLabel/solar.png" style="max-width: 100%; max-height: 100%;" />
 							  		<div class="mask"></div>
@@ -188,10 +202,17 @@
 			    		<div class="part" style="width: 17px; margin-top: -160px; margin-left: -19px;">
 			    			<el-popover
 							    placement="left"
-							    title="标题"
-							    width="200"
-							    trigger="hover"
-							    content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。">
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
 							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
 						    		<img alt="" src="images/leftLabel/lamp.png" style="max-width: 100%; max-height: 100%;" />
 							  		<div class="mask"></div>

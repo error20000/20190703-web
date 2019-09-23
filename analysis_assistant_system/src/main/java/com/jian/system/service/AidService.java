@@ -13,6 +13,7 @@ import com.jian.system.config.Config;
 import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
@@ -31,6 +32,8 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	private NfcService nfcService;
 	@Autowired
 	private UserAidService userAidService;
+	@Autowired
+	private MessageService msgService;
 	
 	@Transactional
 	@TargetDataSource
@@ -193,8 +196,21 @@ public class AidService extends BaseService<Aid, AidMapper> {
 
 	
 	@TargetDataSource
-	public List<Map<String, Object>> aidMap() {
-		return baseMapper.aidMap();
+	public List<Map<String, Object>> aidMap(User user) {
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.aidMap(null);
+		}
+		return baseMapper.aidMap(user.getsUser_ID());
+	}
+
+	@TargetDataSource
+	public List<Message> msgPage(Map<String, Object> condition, User user, int start, int rows){
+		return msgService.selectPage(condition, null, null, user, start, rows);
+	}
+	
+	@TargetDataSource
+	public long msgSize(Map<String, Object> condition, User user) {
+		return msgService.size(condition, null, null, user);
 	}
 
 	@TargetDataSource

@@ -42,6 +42,7 @@ import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Constant;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.Dict;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.service.AidService;
@@ -268,8 +269,37 @@ public class AidController extends BaseController<Aid, AidService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="查询航标（地图）")
 	public String map(HttpServletRequest req) {
-		List<Map<String, Object>> list = service.aidMap();
+		List<Map<String, Object>> list = service.aidMap(getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+
+	@RequestMapping("/msg")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="分页查询航标信息")
+	public String msg(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Message.class);
+		
+		List<Message> list = service.msgPage(condition, getLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.msgSize(condition, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 	
 	@RequestMapping("/import")
@@ -652,8 +682,7 @@ public class AidController extends BaseController<Aid, AidService> {
 	@VerifyAppAuth
 	@SysLog(type=SystemLogType.Query, describe="app查询所有航标(地图)")
 	public String appMap(HttpServletRequest req) {
-		
-		List<Map<String, Object>> list = service.aidMap();
+		List<Map<String, Object>> list = service.aidMap(getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 }

@@ -138,6 +138,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 
 
 	@Select({
+		"<script>",
 		" select ",
 		"	a.*, ",
 		"	d.\"sDict_Picture\" \"sAid_StatusIcon\", e.\"sDict_Picture\" \"sAid_TypeIcon\", ",
@@ -152,8 +153,24 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" 	left join \"tBase_Dict\" f on a.\"sAid_Station\" = f.\"sDict_NO\" and f.\"sDict_DictTypeNO\" = 'AidStation' ",
 		" 	left join \"tBase_Dict\" g on a.\"sAid_Icon\" = g.\"sDict_NO\" and g.\"sDict_DictTypeNO\" = 'AidIcon' ",
 		" 	left join \"tBase_Dict\" h on a.\"sAid_Type\" = h.\"sDict_NO\" and h.\"sDict_DictTypeNO\" = 'AidType' ",
+		"   left join ",
+		"		(select * from ",
+		"			(select o.*, row_number() over(partition by \"sUserAid_AidID\" order by \"sUserAid_ID\") r from \"tBase_UserAid\" o ) ",
+		"		where ", 
+    	" 			<if test=\" sUser_ID != null \"> ",
+    	" 				\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   		</if>",
+    	" 			<if test=\" sUser_ID == null \"> ",
+    	" 				r = 1 ",	
+    	"   		</if>",
+		" 		) k on a.\"sAid_ID\" = k.\"sUserAid_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and k.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
 	})
-	public List<Map<String, Object>> aidMap();
+	public List<Map<String, Object>> aidMap(@Param("sUser_ID") String sUser_ID);
 
 	@Select({
 		"<script>",

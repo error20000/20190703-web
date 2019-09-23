@@ -158,7 +158,27 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="分页查询器材")
 	public String findPage(HttpServletRequest req) {
-		return super.findPage(req);
+		
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Equip.class);
+		
+		List<Map<String, Object>> list = service.selectPageByUser(condition, getLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.sizeByUser(condition, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 
 	@Override
@@ -945,7 +965,27 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	@VerifyAppAuth
 	@SysLog(type=SystemLogType.Query, describe="app分页查询器材")
 	public String appFindPage(HttpServletRequest req) {
-		return super.findPage(req);
+		
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Equip.class);
+		
+		List<Map<String, Object>> list = service.selectPageByUser(condition, getAppLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.sizeByUser(condition, getAppLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 
 	@RequestMapping("/app/findOne")

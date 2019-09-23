@@ -592,6 +592,30 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 
 	@TargetDataSource
+	public List<Map<String, Object>> selectPageByUser(Map<String, Object> condition, User user, int start, int rows) {
+		if(user == null) {
+			return new ArrayList<>();
+		}
+		condition = condition.isEmpty() ? null : condition;
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
+			return baseMapper.selectPageByUser(condition, null, start, rows);
+		}
+		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
+	}
+
+	@TargetDataSource
+	public long sizeByUser(Map<String, Object> condition, User user) {
+		if(user == null) {
+			return 0;
+		}
+		condition = condition.isEmpty() ? null : condition;
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
+			return baseMapper.sizeByUser(condition, null);
+		}
+		return baseMapper.sizeByUser(condition, user.getsUser_ID());
+	}
+
+	@TargetDataSource
 	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
 			return baseMapper.export(condition, null);

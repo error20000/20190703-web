@@ -71,6 +71,10 @@ var myvue = new Vue({
 				detailStoreEquipTotal: 0,
 				detailStoreEquipPage: 1,
 				detailStoreEquipRows: 10,
+				detailIcon: '',
+				iconBatteryData: [],
+				iconSolarData: [],
+				iconLampData: [],
 				
 				msgStoreData: [],
 				msgStoreTotal: 0,
@@ -617,6 +621,7 @@ var myvue = new Vue({
 						this.aidId = id;
 						this.detailEquipAid(id, result);
 						this.msgAid(id, result);
+						this.detailIcon = node.sAid_Type;
 						break;
 					}
 				}
@@ -646,6 +651,20 @@ var myvue = new Vue({
 				ajaxReq(aidEquipUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.aidEquipData = res.data;
+						//分类
+						self.iconBatteryData = [];
+						self.iconSolarData = [];
+						self.iconLampData = [];
+						for (var i = 0; i < res.data.length; i++) {
+							let node = res.data[i];
+							if(node.sEquip_Type == 'EquipBattery'){
+								self.iconBatteryData.push(node);
+							}else if(node.sEquip_Type == 'EquipSolarEnergy'){
+								self.iconSolarData.push(node);
+							}else if(node.sEquip_Type == 'EquipSpareLamp' ||　node.sEquip_Type == 'EquipViceLamp'　||　node.sEquip_Type == 'EquipLamp'){
+								self.iconLampData.push(node);
+							}
+						}
 					});
 				});
 			},
@@ -672,7 +691,6 @@ var myvue = new Vue({
 				this.detailEquipStore();
 			},
 			handleIconMaskShow: function(evt){
-				console.log(evt);
 				$(evt.target).css("opacity", "0.5");
 			},
 			handleIconMaskHide: function(evt){

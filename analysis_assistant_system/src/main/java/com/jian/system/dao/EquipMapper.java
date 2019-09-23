@@ -102,6 +102,71 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public long sizeByCustom(@Param("map") Map<String, Object> condition);
 
+	@Select({
+		"<script>",
+		" select ",
+		" 	a.*, ",
+		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" 	left join \"tBase_AidEquip\" e on a.\"sEquip_ID\" = e.\"sAidEquip_EquipID\" ",
+		" 	left join \"tBase_UserAid\" f on f.\"sUserAid_AidID\" = e.\"sAidEquip_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and f.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
+		" minus  ",
+		" select ",
+		" 	a.*, ",
+		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" 	left join \"tBase_AidEquip\" e on a.\"sEquip_ID\" = e.\"sAidEquip_EquipID\" ",
+		" 	left join \"tBase_UserAid\" f on f.\"sUserAid_AidID\" = e.\"sAidEquip_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and f.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"	 and rownum <![CDATA[<=]]> ${start}",
+		"</script>"
+	})
+	public List<Map<String, Object>> selectPageByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID,  @Param("start") int start, @Param("rows") int rows);
+
+	@Select({
+		"<script>",
+		" select ",
+		" 	count(*) ",
+		" from \"tBase_Equip\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
+		" 	left join \"tBase_AidEquip\" e on a.\"sEquip_ID\" = e.\"sAidEquip_EquipID\" ",
+		" 	left join \"tBase_UserAid\" f on f.\"sUserAid_AidID\" = e.\"sAidEquip_AidID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",   
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and f.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public long sizeByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
+
 	
 	@Select({
 		"<script>",
