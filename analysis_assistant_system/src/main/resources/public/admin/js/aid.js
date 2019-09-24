@@ -56,6 +56,8 @@ var myvue = new Vue({
 				statusOptions: [],
 				nfcAllOptions: [],
 				userOptions: [],
+				equipTypeDictNo: 'EquipType',
+				equipTypeOptions: [],
 				
 				//add
 				addFormVisible: false,
@@ -91,6 +93,13 @@ var myvue = new Vue({
 		                { required: true, message: '请选择NFC标签.', trigger: 'blur' },
 			        ]
 				},
+				//equip
+				equipFormVisible: false,
+				equipLoading: false,
+				equipForm: {
+					data: []
+				},
+				equipFormRules: {},
 				//user
 				userFormVisible: false,
 				userLoading: false,
@@ -282,6 +291,18 @@ var myvue = new Vue({
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.statusDictNo}, function(res){
 					self.handleResQuery(res, function(){
 						self.statusOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleEquipTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.equipTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.equipTypeOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -631,6 +652,70 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//equip
+			handleDelEquip: function(index, row){
+				this.$confirm('确定解除使用吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					var params = {
+							sNfc_ID: row.sAid_NfcID,
+							id: row.sAid_ID
+					};
+					ajaxReq(delBindUrl, params, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
+			},
+			handleEquip: function(index, row){
+				var self = this;
+				/*ajaxReq(nfcUrl, {}, function(res){
+					self.handleResQuery(res, function(){
+						self.nfcOptions = res.data;
+						self.equipFormVisible = true;
+						self.equipForm = {
+								sNfc_ID: '',
+								type: 'aid',
+								id: row.sAid_ID
+						};
+					});
+				});*/
+				self.equipFormVisible = true;
+				self.equipForm.data = [];
+				self.equipForm.data.push({typeOptions: self.equipTypeOptions, equipOptions:[], type: '', equip: ''});
+			},
+			equipAddItem: function () {
+				
+			},
+			equipClose: function () {
+				this.equipFormVisible = false;
+				this.equipLoading = false;
+				this.$refs.equipForm.resetFields();
+			},
+			equipSubmit: function () {
+				this.$refs.bindForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.bindLoading = true;
+							var params = Object.assign({}, this.bindForm);
+							ajaxReq(bindUrl, params, function(res){
+								self.bindLoading = false;
+								self.handleResOperate(res, function(){
+									self.bindFormVisible = false;
+									self.getList();
+								});
+							});
+						});
+					}
+				});
+			},
 			//user
 			handleUser: function(index, row){
 				if(!this.hasAuth('user')){
@@ -828,6 +913,7 @@ var myvue = new Vue({
 			this.handleMarkOptions();
 			this.handleNfcAllOptions();
 			this.handleStatusOptions();
+			this.handleEquipTypeOptions();
 			this.getList();
 			this.handleUserOptions();
 		}
