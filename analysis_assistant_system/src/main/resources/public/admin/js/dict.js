@@ -10,6 +10,7 @@ var importUrl = baseUrl + "api/dict/import";
 var userUrl = baseUrl + "api/user/findAll";
 var dictTypeUrl = baseUrl + "api/dictType/findAll";
 var uploadImgUrl = baseUrl + "api/file/uploadImg";
+var delBatchUrl = baseUrl + "api/dict/delBatch";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -249,6 +250,32 @@ var myvue = new Vue({
 					var self = this;
 					this.listLoading = true;
 					ajaxReq(delUrl, {sDict_ID: row.sDict_ID }, function(res){
+						self.listLoading = false;
+						self.handleResOperate(res, function(){
+							self.getList();
+						});
+					});
+					
+				}).catch(() => {
+				});
+			},
+			//BatchDel
+			handleBatchDel: function(index, row){
+				if(!this.hasAuth('delBatch')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				var ids = "";
+				for (var i = 0; i < this.sels.length; i++) {
+					ids += "," + this.sels[i].sDict_ID;
+				}
+				ids = ids ? ids.substring(1) : "";
+				this.$confirm('确定删除这些记录吗? ', '提示', {
+					type: 'warning'
+				}).then(() => {
+					var self = this;
+					this.listLoading = true;
+					ajaxReq(delBatchUrl, {ids: ids }, function(res){
 						self.listLoading = false;
 						self.handleResOperate(res, function(){
 							self.getList();

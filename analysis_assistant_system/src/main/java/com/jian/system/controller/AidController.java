@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,31 @@ public class AidController extends BaseController<Aid, AidService> {
 	@SysLog(type=SystemLogType.Delete, describe="删除航标")
 	public String delete(HttpServletRequest req) {
 		return super.delete(req);
+	}
+
+
+	@RequestMapping("/delBatch")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Delete, describe="批量删除数据字典")
+	public String delBatch(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String ids = Tools.getReqParamSafe(req, "ids");
+		vMap = Tools.verifyParam("ids", ids, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		//保存
+		int res = service.deleteBatchById(Arrays.asList(ids.split(",")), getLoginUser(req));
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
+		}
 	}
 
 	@Override

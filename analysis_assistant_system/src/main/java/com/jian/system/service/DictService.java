@@ -100,6 +100,12 @@ public class DictService extends BaseService<Dict, DictMapper> {
 		
 		return baseMapper.delete(tableName, condition);
 	}
+	
+	@TargetDataSource
+	public int deleteBatchById(List<String> ids, User user) {
+		String tableName =  getTableName();
+		return baseMapper.deleteBatch(tableName, "sDict_ID", ids);
+	}
 
 	@TargetDataSource
 	public List<Map<String, Object>> export() {

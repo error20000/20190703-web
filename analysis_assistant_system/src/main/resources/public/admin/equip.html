@@ -181,10 +181,10 @@
 							    	<i class="fas fa-info-circle"></i>&nbsp;详情
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDelBind(scope.$index, scope.row)" divided :disabled="scope.row.sEquip_NfcID ? false : true ">
-							    	<i class="fas fa-unlink"></i>&nbsp;解绑
+							    	<i class="fas fa-unlink"></i>&nbsp;解绑NFC
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleBind(scope.$index, scope.row)" :disabled="scope.row.sEquip_NfcID ? true : false ">
-							    	<i class="fas fa-link"></i>&nbsp;绑定
+							    	<i class="fas fa-link"></i>&nbsp;绑定NFC
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;" ref="delete" auth="sys:equip:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除

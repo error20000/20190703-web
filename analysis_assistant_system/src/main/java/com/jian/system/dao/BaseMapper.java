@@ -88,6 +88,7 @@ public interface BaseMapper<T> {
 	
 	
 	//TODO ----------------------------------------------------------------------delete
+	
 	@Delete({
     	"<script>",
         " delete from \"${tableName}\" ",
@@ -98,6 +99,17 @@ public interface BaseMapper<T> {
     	"</script>"
     })
 	public int delete(@Param("tableName") String tableName, @Param("map") Map<String, Object> condition);
+	
+	@Delete({
+    	"<script>",
+        " delete from \"${tableName}\" ",
+        " where \"${column}\" in ",
+		"	<foreach collection=\"list\" item=\"item\"  index=\"i\" open=\"(\" separator=\",\" close=\")\" >",
+		" 		#{item} ",	
+		"	</foreach>",
+    	"</script>"
+    })
+	public int deleteBatch(@Param("tableName") String tableName, @Param("column") String column, @Param("list") List<String> values);
 
 	//TODO ----------------------------------------------------------------------update
 	

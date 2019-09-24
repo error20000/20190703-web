@@ -84,6 +84,11 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		return baseMapper.delete(tableName, condition); //删除
 	}
 	
+	@TargetDataSource
+	public int deleteBatchById(List<String> ids, User user) {
+		String tableName =  getTableName();
+		return baseMapper.deleteBatch(tableName, "sAid_ID", ids);
+	}
 	
 	@TargetDataSource
 	public List<Aid> unuser() {

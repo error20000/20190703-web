@@ -32,7 +32,7 @@
 	  }
 	  .icon-container{
 	  	width: 100%;
-	    height: 350px;
+	    height: 370px;
 	    text-align: center;
 	    position: relative;
 	  }
@@ -153,6 +153,9 @@
 	      	  <el-tabs v-model="activeAidDetailName">
 			    <el-tab-pane label="图标信息" name="0">
 			    	<div class="icon-container" v-if="detailIcon == 'leftLabel'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/leftLabel/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
 			    		<div class="part" style="width: 71px; margin-top: -93px; margin-left: -19px;">
 			    			<el-popover
 							    placement="left"
@@ -236,7 +239,7 @@
 			    		<div class="part" style="width: 67px; margin-top: 6.5px; margin-left: -18.5px;">
 						    <img alt="" src="images/leftLabel/anchor1.png" style="max-width: 100%; max-height: 100%;" />
 						</div>
-			    		<div class="part" style="width: 105px; margin-top: 85px; margin-left: 2px;">
+			    		<div class="part" style="width: 105px; margin-top: 76px; margin-left: 2px;">
 			    			<el-popover
 							    placement="left"
 							    title="锚链"
@@ -272,6 +275,1296 @@
 								</el-table>
 							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
 								    <img alt="" src="images/leftLabel/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Safe Water'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/safeWater/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 71px; margin-top: -93px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/safeWater/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 22px; margin-top: -81px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/safeWater/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 66px; margin-top: -154px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/safeWater/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 17px; margin-top: -160px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/safeWater/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 6.5px; margin-left: -18.5px;">
+						    <img alt="" src="images/safeWater/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 76px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/safeWater/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 20px; margin-top: 167px; margin-left: 46px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/safeWater/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Preferred Channel Starboard Hand'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/preferredChannelStarboardHand/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 71px; margin-top: -93px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/preferredChannelStarboardHand/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 22px; margin-top: -81px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/preferredChannelStarboardHand/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 66px; margin-top: -154px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelStarboardHand/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 17px; margin-top: -160px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/preferredChannelStarboardHand/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 6.5px; margin-left: -18.5px;">
+						    <img alt="" src="images/preferredChannelStarboardHand/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 76px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelStarboardHand/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 20px; margin-top: 167px; margin-left: 46px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelStarboardHand/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Preferred Channel Port Hand'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/preferredChannelPortHand/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 71px; margin-top: -93px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/preferredChannelPortHand/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 22px; margin-top: -81px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/preferredChannelPortHand/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 66px; margin-top: -154px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelPortHand/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 17px; margin-top: -160px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/preferredChannelPortHand/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 6.5px; margin-left: -18.5px;">
+						    <img alt="" src="images/preferredChannelPortHand/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 76px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelPortHand/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 20px; margin-top: 167px; margin-left: 46px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/preferredChannelPortHand/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Starboard Hand Mark'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/starboardHandMark/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 71px; margin-top: -93px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/starboardHandMark/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 22px; margin-top: -81px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/starboardHandMark/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 66px; margin-top: -154px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/starboardHandMark/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 17px; margin-top: -160px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/starboardHandMark/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 6.5px; margin-left: -18.5px;">
+						    <img alt="" src="images/starboardHandMark/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 76px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/starboardHandMark/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 20px; margin-top: 167px; margin-left: 46px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/starboardHandMark/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Cardinal Mark N'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/cardinalMarkN/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -107px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/cardinalMarkN/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkN/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkN/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkN/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/cardinalMarkN/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkN/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkN/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Cardinal Mark E'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/cardinalMarkE/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -107px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/cardinalMarkE/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkE/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkE/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkE/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/cardinalMarkE/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkE/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkE/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Cardinal Mark S'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/cardinalMarkS/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -107px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/cardinalMarkS/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkS/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkS/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkS/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/cardinalMarkS/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkS/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkS/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Cardinal Mark W'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/cardinalMarkW/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -107px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/cardinalMarkW/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkW/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkW/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/cardinalMarkW/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/cardinalMarkW/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkW/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/cardinalMarkW/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'Isolated Danger'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/isolatedDanger/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -106px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/isolatedDanger/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/isolatedDanger/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/isolatedDanger/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/isolatedDanger/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/isolatedDanger/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/isolatedDanger/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/isolatedDanger/stone.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    	</div>
+			    	
+			    	<div class="icon-container" v-if="detailIcon == 'SpecialMark'">
+			    		<!-- <div class="part" style="width: 109px; margin-top: 0px; margin-left: 0px;">
+			    			<img alt="" src="images/specialMark/bg.png" style="max-width: 100%; max-height: 100%;" />
+			    		</div> -->
+			    		<div class="part" style="width: 69px; margin-top: -105px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="浮体"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBodyData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+					    			<img alt="" src="images/specialMark/body.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 21px; margin-top: -77px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="蓄电池"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconBatteryData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/specialMark/battery.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 54px; margin-top: -147px; margin-left: -19px;">
+			    			<el-popover
+							    placement="left"
+							    title="太阳能板"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconSolarData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/specialMark/solar.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							  </el-popover>
+			    		</div>
+			    		<div class="part" style="width: 12px; margin-top: -151px; margin-left: -20px;">
+			    			<el-popover
+							    placement="left"
+							    title="灯器"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconLampData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+						    		<img alt="" src="images/specialMark/lamp.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 67px; margin-top: 10px; margin-left: -20px;">
+						    <img alt="" src="images/specialMark/anchor1.png" style="max-width: 100%; max-height: 100%;" />
+						</div>
+			    		<div class="part" style="width: 105px; margin-top: 79px; margin-left: 2px;">
+			    			<el-popover
+							    placement="left"
+							    title="锚链"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconAnchorData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/specialMark/anchor2.png" style="max-width: 100%; max-height: 100%;" />
+							  		<div class="mask"></div>
+							    </div>
+							</el-popover>
+			    		</div>
+			    		<div class="part" style="width: 18px; margin-top: 171px; margin-left: 45px;">
+			    			<el-popover
+							    placement="left"
+							    title="沉块"
+							    width="300"
+							    trigger="hover">
+							    <el-table :data="iconStoneData">
+								    <el-table-column label="器材编码" property="sEquip_NO"></el-table-column>
+								    <el-table-column label="使用日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dAidEquip_CreateDate, 'yyyy-MM-dd')}}</div>
+										</template>
+								    </el-table-column>
+								</el-table>
+							    <div  slot="reference" @mouseover="handleIconMaskShow" @mouseout="handleIconMaskHide">
+								    <img alt="" src="images/specialMark/stone.png" style="max-width: 100%; max-height: 100%;" />
 							  		<div class="mask"></div>
 							    </div>
 							</el-popover>

@@ -109,6 +109,7 @@ public class SystemLogAspect {
 			break;
 		case Add:
 		case Update:
+		case Delete:
 		case Login:
 		case Export:
 			String str = String.valueOf(obj);
