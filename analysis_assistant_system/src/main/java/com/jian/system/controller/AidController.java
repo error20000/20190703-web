@@ -693,7 +693,7 @@ public class AidController extends BaseController<Aid, AidService> {
     @VerifyAppSign
 	@VerifyAppLogin
 	@VerifyAppAuth
-	@SysLog(type=SystemLogType.Update, describe="app器材异常")
+	@SysLog(type=SystemLogType.Update, describe="app航标异常")
 	public String appUnusual(HttpServletRequest req) {
 		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
 		int res = service.unusual(sAid_ID, getAppLoginUser(req), Tools.getIp(req));
