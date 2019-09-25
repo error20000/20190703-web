@@ -287,6 +287,17 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		Object res = service.detail(sEquip_ID);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	@RequestMapping("/type")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材列表")
+	public String type(HttpServletRequest req) {
+		String sEquip_Type = Tools.getReqParamSafe(req, "sEquip_Type");
+		List<Equip> list = service.type(sEquip_Type, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 	
 	//TODO -------------------------------------------------------------------------------- 统计接口
 

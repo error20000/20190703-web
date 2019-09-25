@@ -17,6 +17,10 @@
   		font-size: 12px;
   	}
   	
+  	a{
+  		text-decoration:none
+  	}
+  	
   	.main-form {
 		position: relative;
 		float: left;
@@ -30,18 +34,19 @@
 		width: 80px;
 		font-weight: 700;
 		line-height: 24px;
+		text-align: right;
 	}
 	
 	.main-form>a {
 		position: absolute;
-		right: 5%;
-		bottom: 15px;
+		right: -40px;
+		bottom: 10px;
 		background: #20A0FF;
 		color: #fff;
 		text-align: center;
 		width: 30px;
 		height: 30px;
-		line-height: 26px;
+		line-height: 30px;
 		font-size: 26px;
 		border-radius: 100%;
 	}
@@ -49,7 +54,6 @@
 	.main-container {
 		position: relative;
 		float: left;
-		width: 80%;
 		margin-left: 85px;
 		display: inline-block;
 		border: dashed 1px #bbb;
@@ -62,7 +66,7 @@
 		right: -9px;
 		width: 18px;
 		height: 18px;
-		line-height: 16px;
+		line-height: 18px;
 		font-size: 18px;
 		background: #20A0FF;
 		color: #fff;
@@ -208,9 +212,9 @@
 							    <el-dropdown-item @click.native="handleUser(scope.$index, scope.row)" ref="user" auth="sys:aid:user" v-show="hasAuth('user')">
 							    	<i class="fas fa-map-pin"></i>&nbsp;分配用户
 							    </el-dropdown-item>
-							    <!-- <el-dropdown-item @click.native="handleEquip(scope.$index, scope.row)" ref="equip" auth="sys:aid:equip" v-show="hasAuth('equip')">
+							    <el-dropdown-item @click.native="handleEquip(scope.$index, scope.row)" ref="equip" auth="sys:aid:equip" v-show="hasAuth('equip')">
 							    	<i class="fas fa-map-pin"></i>&nbsp;使用器材
-							    </el-dropdown-item> -->
+							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;" ref="delete" auth="sys:aid:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 							    </el-dropdown-item>
@@ -459,30 +463,38 @@
 		
 		
 		<!-- equip -->
-		<el-dialog title="使用器材" :visible.sync="equipFormVisible" :close-on-click-modal="false">
+		<el-dialog title="使用器材" :visible.sync="equipFormVisible" :close-on-click-modal="false" width="80%">
 			<el-form size="mini" :model="equipForm" :rules="equipFormRules" ref="equipForm" :inline="true">
 				<el-form-item v-for="(item, index) in equipForm.data" :key="index" style="margin-top: 20px;">
 					<div class="main-form">
 						<span>序号{{index}}：</span>
 						<div class="main-container">
 							分类：
-							<el-select v-model="item.type" placeholder="请选择" style="width: 65%; margin-right: 20px;">
-								<el-option v-for="(item2, index2) in item.typeOptions" :key="index2" :label="item2.sDict_Name" :value="item2.sDict_NO"></el-option>
+							<el-select v-model="item.type" placeholder="请选择" @change="equipTypeChange(item)">
+								<el-option v-for="(item2, index2) in item.typeOptions" 
+									:key="index2" 
+									:label="item2.sDict_Name" 
+									:value="item2.sDict_NO">
+								</el-option>
 							</el-select>
 							器材：
-							<el-select v-model="item.equip" placeholder="请选择" style="width: 65%; margin-right: 20px;">
-								<el-option v-for="(item2, index2) in item.equipOptions" :key="index2" :label="item2.sEquip_NO" :value="item2.sEquip_ID"></el-option>
+							<el-select v-model="item.equip" placeholder="请选择">
+								<el-option v-for="(item2, index2) in item.equipOptions" 
+									:key="index2" 
+									:label="item2.sEquip_NO" 
+									:value="item2.sEquip_ID">
+								</el-option>
 							</el-select>
-							<a v-if="index > 0" href="javascript:;" @click="removeData(index, index2)">-</a>
+							<a v-if="index > 0" href="javascript:;" @click="equipRemoveItem(index)">-</a>
 						</div>
-						<a href="javascript:;" @click="equipAddItem(index)">+</a>
+						<a v-if="index == equipForm.data.length - 1" href="javascript:;" @click="equipAddItem(index)">+</a>
 					</div>
 				</el-form-item>
 				
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="equipClose">取消</el-button>
-				<el-button size="mini" type="primary" @click="equipSubmit" :loading="bindLoading">提交</el-button>
+				<el-button size="mini" type="primary" @click="equipSubmit" :loading="equipLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

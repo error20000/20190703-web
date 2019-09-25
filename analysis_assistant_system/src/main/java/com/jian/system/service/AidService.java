@@ -1,18 +1,23 @@
 package com.jian.system.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.config.Config;
+import com.jian.system.config.Constant;
 import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.AidEquip;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
@@ -34,6 +39,10 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	private UserAidService userAidService;
 	@Autowired
 	private MessageService msgService;
+	@Autowired
+	private AidEquipService aidEquipService;
+	@Autowired
+	private EquipService equipService;
 	
 	@Transactional
 	@TargetDataSource
@@ -182,6 +191,56 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	@TargetDataSource
 	public List<Map<String, Object>> equip(String sAid_ID, User user, String ip) {
 		return baseMapper.equip(sAid_ID);
+	}
+	
+
+	@Transactional
+	@TargetDataSource
+	public int useEquip(String sAid_ID, String sEquip_IDs, User user) {
+		Map<String, Object> condition = MapTools.custom().put("sAidEquip_AidID", sAid_ID).build();
+		//查询已使用的
+		List<AidEquip> old = aidEquipService.selectList(condition);
+		//删除已使用
+		aidEquipService.delete(condition, user);
+		//新增
+		List<String> equipIds = Arrays.asList(sEquip_IDs.split(","));
+		equipIds = equipIds.stream().distinct().collect(Collectors.toList());
+		
+		List<String> oldIds = old.stream()
+				.map(e -> e.getsAidEquip_EquipID())
+				.collect(Collectors.toList());
+		
+		List<String> tempUpdate = equipIds.stream()
+				.filter(e -> !oldIds.contains(e))
+				.collect(Collectors.toList());
+		
+		List<AidEquip> res = new ArrayList<>();
+		AidEquip node = null;
+		for (String equipId : equipIds) {
+			node = new AidEquip();
+			node.setsAidEquip_ID(Utils.newSnowflakeIdStr());
+			node.setsAidEquip_AidID(sAid_ID);
+			node.setsAidEquip_EquipID(equipId);
+			Date date = new Date();
+			List<AidEquip> test = old.stream()
+					.filter(e -> equipId.equals(e.getsAidEquip_EquipID()))
+					.collect(Collectors.toList());
+			if(test != null && test.size() > 0) {
+				date = test.get(0).getdAidEquip_CreateDate();
+			}
+			node.setdAidEquip_CreateDate(date);
+			res.add(node);
+		}
+		//修改器材状态
+		Map<String, Object> condEquip = new HashMap<>();
+		Map<String, Object> valueEquip = new HashMap<>();
+		for (String equipId : tempUpdate) {
+			condEquip.put("sEquip_ID", equipId);
+			valueEquip.put("sEquip_Status", Constant.EquipStatus_9);
+			equipService.update(valueEquip, condEquip, user);
+		}
+		
+		return aidEquipService.batchInsert(res, user);
 	}
 
 

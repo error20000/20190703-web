@@ -16,6 +16,9 @@ var userUrl = baseUrl + "api/user/findAll";
 var aidUserUrl = baseUrl + "api/aid/user";
 var aidUpdateUserUrl = baseUrl + "api/aid/updateUser";
 var delBatchUrl = baseUrl + "api/aid/delBatch";
+var equipUrl = baseUrl + "api/equip/type";
+var aidEquipUrl = baseUrl + "api/aid/equip";
+var useEquipUrl = baseUrl + "api/aid/useEquip";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -101,6 +104,7 @@ var myvue = new Vue({
 					data: []
 				},
 				equipFormRules: {},
+				equipOptionsCache: {},
 				//user
 				userFormVisible: false,
 				userLoading: false,
@@ -702,23 +706,57 @@ var myvue = new Vue({
 			},
 			handleEquip: function(index, row){
 				var self = this;
-				/*ajaxReq(nfcUrl, {}, function(res){
+				self.equipForm.sAid_ID = row.sAid_ID;
+				ajaxReq(aidEquipUrl, {sAid_ID: row.sAid_ID}, function(res){
 					self.handleResQuery(res, function(){
-						self.nfcOptions = res.data;
 						self.equipFormVisible = true;
-						self.equipForm = {
-								sNfc_ID: '',
-								type: 'aid',
-								id: row.sAid_ID
-						};
+						self.equipForm.data = [];
+						if(res.data.length == 0){
+							self.equipForm.data.push({
+								typeOptions: self.equipTypeOptions, 
+								equipOptions:[], 
+								type: '', 
+								equip: ''
+							});
+							return;
+						}
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var item = {
+									typeOptions: self.equipTypeOptions, 
+									equipOptions:[], 
+									type: node.sEquip_Type, 
+									equip: node.sEquip_ID
+							};
+							self.equipTypeChange(item, {sEquip_ID: node.sEquip_ID, sEquip_NO: node.sEquip_NO});
+							self.equipForm.data.push(item);
+						}
 					});
-				});*/
-				self.equipFormVisible = true;
-				self.equipForm.data = [];
-				self.equipForm.data.push({typeOptions: self.equipTypeOptions, equipOptions:[], type: '', equip: ''});
+				});
 			},
 			equipAddItem: function () {
-				
+				this.equipForm.data.push({typeOptions: this.equipTypeOptions, equipOptions:[], type: '', equip: ''});
+			},
+			equipRemoveItem: function (index) {
+				this.equipForm.data.splice(index, 1);
+			},
+			equipTypeChange: function(item, defItem){
+				item.equip = defItem ? defItem.sEquip_ID : '';
+				var equipOptions = this.equipOptionsCache[item.type];
+				if(equipOptions){
+					item.equipOptions = equipOptions;
+					return;
+				}
+				var self = this;
+				ajaxReq(equipUrl, {sEquip_Type: item.type}, function(res){
+					self.handleResQuery(res, function(){
+						item.equipOptions = res.data;
+						if(defItem){
+							item.equipOptions.push(defItem);
+						}
+						self.equipOptionsCache[item.type] = item.equipOptions;
+					});
+				});
 			},
 			equipClose: function () {
 				this.equipFormVisible = false;
@@ -726,17 +764,26 @@ var myvue = new Vue({
 				this.$refs.equipForm.resetFields();
 			},
 			equipSubmit: function () {
-				this.$refs.bindForm.validate((valid) => {
+				this.$refs.equipForm.validate((valid) => {
 					if (valid) {
 						this.$confirm('确认提交吗?', '提示', {}).then(() => {
 							var self = this;
-							this.bindLoading = true;
-							var params = Object.assign({}, this.bindForm);
-							ajaxReq(bindUrl, params, function(res){
-								self.bindLoading = false;
+							this.equipLoading = true;
+							var params = {
+								sAid_ID: this.equipForm.sAid_ID,
+								sEquip_IDs: []
+							};
+							for (var i = 0; i < this.equipForm.data.length; i++) {
+								var equip = this.equipForm.data[i].equip;
+								if(equip){
+									params.sEquip_IDs.push(this.equipForm.data[i].equip);
+								}
+							}
+							params.sEquip_IDs = params.sEquip_IDs.join(',');
+							ajaxReq(useEquipUrl, params, function(res){
+								self.equipLoading = false;
 								self.handleResOperate(res, function(){
-									self.bindFormVisible = false;
-									self.getList();
+									self.equipFormVisible = false;
 								});
 							});
 						});

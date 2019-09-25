@@ -289,6 +289,18 @@ public class AidController extends BaseController<Aid, AidService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
+	@RequestMapping("/useEquip")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="航标使用器材")
+	public String useEquip(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		String sEquip_IDs = Tools.getReqParamSafe(req, "sEquip_IDs");
+		int res = service.useEquip(sAid_ID, sEquip_IDs, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
 	@RequestMapping("/map")
     @ResponseBody
 	@VerifyLogin

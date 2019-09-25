@@ -434,6 +434,17 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	public List<Equip> unbind() {
 		return baseMapper.unbind();
 	}
+	
+	@TargetDataSource
+	public List<Equip> type(String sEquip_Type, User user) {
+		if(user == null) {
+			return new ArrayList<>();
+		}
+		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
+			return baseMapper.selectByType(sEquip_Type, null);
+		}
+		return baseMapper.selectByType(sEquip_Type, user.getsUser_ID());
+	}
 
 
 	@Override

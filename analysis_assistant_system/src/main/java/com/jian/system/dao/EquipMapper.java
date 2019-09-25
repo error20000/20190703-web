@@ -45,6 +45,18 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	})
 	public Equip nfc(String sNfc_NO);
 	
+
+
+	@Select({
+		" select  ",
+		"  a.* ",
+		" from \"tBase_Equip\" a",
+		//" 	left join \"tBase_Nfc\" b on a.\"sEquip_NfcID\" = b.\"sNfc_ID\" ",
+		" where ",
+		" 	a.\"sEquip_Type\" = #{sEquip_Type} and a.\"sEquip_Status\" = '1' ",
+	})
+	public List<Equip> selectByType(@Param("sEquip_Type") String sEquip_Type, @Param("sUser_ID") String sUser_ID);
+	
 	@Select({
 		"<script>",
 		" select ",
