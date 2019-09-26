@@ -332,10 +332,10 @@ public class UserService extends BaseService<User, UserMapper> {
 		return baseMapper.store(sUser_ID);
 	}
 	
-	@TargetDataSource
+	/*@TargetDataSource
 	public List<Map<String, Object>> storeAll() {
 		return baseMapper.storeAll();
-	}
+	}*/
 	
 	@Transactional
 	@TargetDataSource
