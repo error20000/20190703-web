@@ -18,6 +18,7 @@ import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
+import com.jian.system.entity.EquipLog;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
@@ -43,6 +44,8 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	private AidEquipService aidEquipService;
 	@Autowired
 	private EquipService equipService;
+	@Autowired
+	private EquipLogService logService;
 	
 	@Transactional
 	@TargetDataSource
@@ -196,10 +199,10 @@ public class AidService extends BaseService<Aid, AidMapper> {
 
 	@Transactional
 	@TargetDataSource
-	public int useEquip(String sAid_ID, String sEquip_IDs, User user) {
+	public int useEquip(String sAid_ID, String sEquip_IDs, User user, String ip) {
 		Map<String, Object> condition = MapTools.custom().put("sAidEquip_AidID", sAid_ID).build();
 		//查询已使用的
-		List<AidEquip> old = aidEquipService.selectList(condition);
+		List<Map<String, Object>> old = baseMapper.equip(sAid_ID);
 		//删除已使用
 		aidEquipService.delete(condition, user);
 		//新增
@@ -207,7 +210,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		equipIds = equipIds.stream().distinct().collect(Collectors.toList());
 		
 		List<String> oldIds = old.stream()
-				.map(e -> e.getsAidEquip_EquipID())
+				.map(e -> String.valueOf(e.get("sEquip_ID")) )
 				.collect(Collectors.toList());
 		
 		List<String> tempUpdate = equipIds.stream()
@@ -216,29 +219,60 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		
 		List<AidEquip> res = new ArrayList<>();
 		AidEquip node = null;
-		for (String equipId : equipIds) {
+		for (String sEquip_ID : equipIds) {
 			node = new AidEquip();
 			node.setsAidEquip_ID(Utils.newSnowflakeIdStr());
 			node.setsAidEquip_AidID(sAid_ID);
-			node.setsAidEquip_EquipID(equipId);
+			node.setsAidEquip_EquipID(sEquip_ID);
 			Date date = new Date();
-			List<AidEquip> test = old.stream()
-					.filter(e -> equipId.equals(e.getsAidEquip_EquipID()))
+			List<Map<String, Object>> test = old.stream()
+					.filter(e -> sEquip_ID.equals(e.get("sEquip_ID")))
 					.collect(Collectors.toList());
 			if(test != null && test.size() > 0) {
-				date = test.get(0).getdAidEquip_CreateDate();
+				date = (Date) test.get(0).get("dAidEquip_CreateDate");
 			}
 			node.setdAidEquip_CreateDate(date);
 			res.add(node);
 		}
 		//修改器材状态
+		List<EquipLog> logs = new ArrayList<>();
 		Map<String, Object> condEquip = new HashMap<>();
 		Map<String, Object> valueEquip = new HashMap<>();
-		for (String equipId : tempUpdate) {
-			condEquip.put("sEquip_ID", equipId);
+		for (String sEquip_ID : tempUpdate) {
+			Date date = new Date();
+			condEquip.put("sEquip_ID", sEquip_ID);
+//			valueEquip.put("sEquip_StoreLv1", " ");
+//			valueEquip.put("sEquip_StoreLv2", " ");
+//			valueEquip.put("sEquip_StoreLv3", " ");
+//			valueEquip.put("sEquip_StoreLv4", " ");
+			valueEquip.put("sEquip_AidID", sAid_ID);
 			valueEquip.put("sEquip_Status", Constant.EquipStatus_9);
+			List<Map<String, Object>> test = old.stream()
+					.filter(e -> sEquip_ID.equals(e.get("sEquip_ID")))
+					.collect(Collectors.toList());
+			if(test != null && test.size() > 0) {
+				Date oldDate = (Date) test.get(0).get("dEquip_UseDate");
+				if(oldDate != null) {
+					date = oldDate;
+				}
+			}
+			valueEquip.put("dEquip_UseDate", date);
 			equipService.update(valueEquip, condEquip, user);
+			//日志
+			EquipLog log = new EquipLog();
+			log.setsELog_ID(Utils.newSnowflakeIdStr());
+			log.setdELog_CreateDate(date);
+			log.setsELog_EquipID(sEquip_ID);
+			log.setsELog_IP(ip);
+			if(user != null) {
+				log.setsELog_UserID(user.getsUser_ID());
+			}
+			log.setsELog_Type(Constant.EquipLogType_9); // 使用
+			log.setsELog_Describe("器材使用中");
+			log.setsELog_Remarks("");
+			logs.add(log);
 		}
+		logService.batchInsert(logs, user);
 		
 		return aidEquipService.batchInsert(res, user);
 	}

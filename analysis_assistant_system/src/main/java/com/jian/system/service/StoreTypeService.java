@@ -14,8 +14,14 @@ public class StoreTypeService extends BaseService<StoreType, StoreTypeMapper> {
 
 	
 	@TargetDataSource
-	public List<Map<String, Object>> storeMap() {
-		return baseMapper.storeMap();
+	public List<Map<String, Object>> storeMap(String sUser_ID) {
+		return baseMapper.storeMap(sUser_ID);
 	}
+	
+	@TargetDataSource
+	public List<StoreType> selectAllByUser(String sUser_ID) {
+		return baseMapper.selectAllByUser(sUser_ID);
+	}
+	
 
 }

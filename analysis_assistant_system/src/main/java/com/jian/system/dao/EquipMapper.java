@@ -48,12 +48,20 @@ public interface EquipMapper extends BaseMapper<Equip> {
 
 
 	@Select({
+		"<script>",
 		" select  ",
 		"  a.* ",
 		" from \"tBase_Equip\" a",
-		//" 	left join \"tBase_Nfc\" b on a.\"sEquip_NfcID\" = b.\"sNfc_ID\" ",
+		" 	left join \"tBase_UserStore\" b on a.\"sEquip_StoreLv1\" = b.\"sUserStore_StoreLv1ID\" ",
+		" 		and a.\"sEquip_StoreLv2\" = b.\"sUserStore_StoreLv2ID\" ",
+		" 		and a.\"sEquip_StoreLv3\" = b.\"sUserStore_StoreLv3ID\" ",
+		" 		and a.\"sEquip_StoreLv4\" = b.\"sUserStore_StoreLv4ID\" ",
 		" where ",
 		" 	a.\"sEquip_Type\" = #{sEquip_Type} and a.\"sEquip_Status\" = '1' ",
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	"		and b.\"sUserStore_UserID\"= #{sUser_ID}",
+    	"   </if>",
+		"</script>"
 	})
 	public List<Equip> selectByType(@Param("sEquip_Type") String sEquip_Type, @Param("sUser_ID") String sUser_ID);
 	
@@ -124,6 +132,10 @@ public interface EquipMapper extends BaseMapper<Equip> {
 		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
 		" 	left join \"tBase_AidEquip\" e on a.\"sEquip_ID\" = e.\"sAidEquip_EquipID\" ",
 		" 	left join \"tBase_UserAid\" f on f.\"sUserAid_AidID\" = e.\"sAidEquip_AidID\" ",
+		" 	left join \"tBase_UserStore\" e on a.\"sEquip_StoreLv1\" = e.\"sUserStore_StoreLv1ID\" ",
+		" 		and a.\"sEquip_StoreLv2\" = e.\"sUserStore_StoreLv2ID\" ",
+		" 		and a.\"sEquip_StoreLv3\" = e.\"sUserStore_StoreLv3ID\" ",
+		" 		and a.\"sEquip_StoreLv4\" = e.\"sUserStore_StoreLv4ID\" ",
 		" where 1 = 1 ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
@@ -131,7 +143,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	"		</foreach>",
     	"   </if>",   
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and f.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	" 		and ( f.\"sUserAid_UserID\" = #{sUser_ID} or e.\"sUserStore_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
@@ -143,6 +155,10 @@ public interface EquipMapper extends BaseMapper<Equip> {
 		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
 		" 	left join \"tBase_AidEquip\" e on a.\"sEquip_ID\" = e.\"sAidEquip_EquipID\" ",
 		" 	left join \"tBase_UserAid\" f on f.\"sUserAid_AidID\" = e.\"sAidEquip_AidID\" ",
+		" 	left join \"tBase_UserStore\" e on a.\"sEquip_StoreLv1\" = e.\"sUserStore_StoreLv1ID\" ",
+		" 		and a.\"sEquip_StoreLv2\" = e.\"sUserStore_StoreLv2ID\" ",
+		" 		and a.\"sEquip_StoreLv3\" = e.\"sUserStore_StoreLv3ID\" ",
+		" 		and a.\"sEquip_StoreLv4\" = e.\"sUserStore_StoreLv4ID\" ",
 		" where 1 = 1 ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
@@ -150,7 +166,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	"		</foreach>",
     	"   </if>",   
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and f.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	" 		and ( f.\"sUserAid_UserID\" = #{sUser_ID} or e.\"sUserStore_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${start}",
 		"</script>"

@@ -297,7 +297,7 @@ public class AidController extends BaseController<Aid, AidService> {
 	public String useEquip(HttpServletRequest req) {
 		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
 		String sEquip_IDs = Tools.getReqParamSafe(req, "sEquip_IDs");
-		int res = service.useEquip(sAid_ID, sEquip_IDs, getLoginUser(req));
+		int res = service.useEquip(sAid_ID, sEquip_IDs, getLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 

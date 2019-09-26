@@ -25,6 +25,7 @@ import com.jian.system.entity.User;
 import com.jian.system.service.MessageService;
 import com.jian.system.service.StoreLogService;
 import com.jian.system.service.StoreService;
+import com.jian.system.service.StoreTypeService;
 import com.jian.system.service.UserService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.DateTools;
@@ -42,6 +43,8 @@ public class StoreListener implements ServletContextListener {
 	
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private StoreTypeService storeTypeService;
 	@Autowired
 	private StoreLogService storeLogService;
 	@Autowired
@@ -146,7 +149,7 @@ public class StoreListener implements ServletContextListener {
 		List<Map<String, Object>> list = storeService.checkStore();
 		
 		List<User> userAll = userService.selectAll();
-		List<StoreType> storeTypeAll = storeService.findType();
+		List<StoreType> storeTypeAll = storeTypeService.selectAll();
 		List<Store> storeAll = storeService.selectAll();
 		Map<String, Integer> tempLimit = new HashMap<String, Integer>();
 		for (StoreType stype : storeTypeAll) {

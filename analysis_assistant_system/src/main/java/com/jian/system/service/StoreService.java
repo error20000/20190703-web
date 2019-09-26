@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jian.system.config.Config;
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
@@ -31,6 +32,8 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	private EquipService equipService;
 	@Autowired
 	private MessageService msgService;
+	@Autowired
+	private Config config;
 	
 	@TargetDataSource
 	public int add(String level, String name, StoreType type, Store obj, User user) {
@@ -126,19 +129,25 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	}
 	
 	@TargetDataSource
-	public List<Map<String, Object>> storeList(String parent) {
+	public List<Map<String, Object>> storeList(String parent, User user) {
 		
-		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
+		List<Map<String, Object>> res = new ArrayList<>();
 		Map<String, Object> node = null;
 		
 		if(Tools.isNullOrEmpty(parent)) {
-			List<StoreType> typeList = typeService.selectAll();
+			List<StoreType> typeList = new ArrayList<>();
+			if(config.superGroupId.equals(user.getsUser_GroupID()) 
+					|| config.managerGroupId.equals(user.getsUser_GroupID())) { 
+				typeList = typeService.selectAllByUser(null);
+			}else {
+				typeList = typeService.selectAllByUser(user.getsUser_ID());
+			}
 			for (StoreType type : typeList) {
 				node = Tools.parseObjectToMap(type);
 				res.add(node);
 			}
 		}else {
-			List<Store> list = this.selectList(MapTools.custom().put("sStore_Parent", parent).build());
+			List<Store> list = this.selectListByUser(MapTools.custom().put("sStore_Parent", parent).build(), user);
 			for (Store store : list) {
 				node = Tools.parseObjectToMap(store);
 				res.add(node);
@@ -147,20 +156,31 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		return res;
 	}
 	
+
 	@TargetDataSource
-	public List<Map<String, Object>> storeListApp(String parent) {
+	public List<Store> selectListByUser(Map<String, Object> contion, User user) {
+		contion = contion != null && contion.isEmpty() ? null : contion;
+		if(config.superGroupId.equals(user.getsUser_GroupID()) 
+				|| config.managerGroupId.equals(user.getsUser_GroupID())) { 
+			return baseMapper.selectListByUser(contion, null);
+		}
+		return baseMapper.selectListByUser(contion, user.getsUser_ID());
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> storeListApp(String parent, User user) {
 		
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		Map<String, Object> node = null;
 		
 		if(Tools.isNullOrEmpty(parent)) {
-			List<Store> list = this.selectAll();
+			List<Store> list = this.selectListByUser(null, user);
 			for (Store store : list) {
 				node = Tools.parseObjectToMap(store);
 				res.add(node);
 			}
 		}else {
-			List<Store> list = this.selectList(MapTools.custom().put("sStore_Parent", parent).build());
+			List<Store> list = this.selectListByUser(MapTools.custom().put("sStore_Parent", parent).build(), user);
 			for (Store store : list) {
 				node = Tools.parseObjectToMap(store);
 				res.add(node);
@@ -171,14 +191,22 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 
 
 	@TargetDataSource
-	public List<Map<String, Object>> storeTree(String sStore_Level1, String sStore_Level2, String sStore_Level3, String sStore_Level4) {
-		List<StoreType> typeList = typeService.selectAll();
+	public List<Map<String, Object>> storeTree(String sStore_Level1, String sStore_Level2, String sStore_Level3, String sStore_Level4, User user) {
+		
+		List<StoreType> typeList = new ArrayList<>();
+		if(config.superGroupId.equals(user.getsUser_GroupID()) 
+				|| config.managerGroupId.equals(user.getsUser_GroupID())) { 
+			typeList = typeService.selectAllByUser(null);
+		}else {
+			typeList = typeService.selectAllByUser(user.getsUser_ID());
+		}
 		if(!Tools.isNullOrEmpty(sStore_Level1)) {
 			typeList = typeList.stream()
 					.filter(e -> e.getsStoreType_ID().equals(sStore_Level1))
 					.collect(Collectors.toList());
 		}
-		List<Store> list = this.selectAll();
+		
+		List<Store> list = this.selectListByUser(null, user);
 		if(!Tools.isNullOrEmpty(sStore_Level2)) {
 			list = list.stream()
 					.filter(e -> e.getsStore_ID().equals(sStore_Level2) || sStore_Level2.equals(e.getsStore_Level2()))
@@ -230,13 +258,21 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	}
 	
 	@TargetDataSource
-	public List<StoreType> findType() {
-		return typeService.selectAll();
+	public List<StoreType> findType(User user) {
+		if(config.superGroupId.equals(user.getsUser_GroupID()) 
+				|| config.managerGroupId.equals(user.getsUser_GroupID())) { 
+			return typeService.selectAllByUser(null);
+		}
+		return typeService.selectAllByUser(user.getsUser_ID());
 	}
 	
 	@TargetDataSource
-	public List<Map<String, Object>> storeMap() {
-		return typeService.storeMap();
+	public List<Map<String, Object>> storeMap(User user) {
+		if(config.superGroupId.equals(user.getsUser_GroupID()) 
+				|| config.managerGroupId.equals(user.getsUser_GroupID())) { 
+			return typeService.storeMap(null);
+		}
+		return typeService.storeMap(user.getsUser_ID());
 	}
 
 	

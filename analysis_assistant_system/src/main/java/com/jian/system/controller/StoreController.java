@@ -179,7 +179,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 		String sStore_Level2 = Tools.getReqParamSafe(req, "sStore_Level2");
 		String sStore_Level3 = Tools.getReqParamSafe(req, "sStore_Level3");
 		String sStore_Level4 = Tools.getReqParamSafe(req, "sStore_Level4");
-		List<Map<String, Object>> list = service.storeTree(sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
+		List<Map<String, Object>> list = service.storeTree(sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -191,7 +191,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@SysLog(type=SystemLogType.Query, describe="查询仓库列表")
 	public String findList(HttpServletRequest req) {
 		String parent = Tools.getReqParamSafe(req, "parent");
-		List<Map<String, Object>> list = service.storeList(parent);
+		List<Map<String, Object>> list = service.storeList(parent, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -201,7 +201,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="查询一级仓库")
 	public String findType(HttpServletRequest req) {
-		List<StoreType> list = service.findType();
+		List<StoreType> list = service.findType(getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	
@@ -212,7 +212,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="查询一级仓库(地图)")
 	public String map(HttpServletRequest req) {
-		List<Map<String, Object>> list = service.storeMap();
+		List<Map<String, Object>> list = service.storeMap(getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -586,7 +586,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@SysLog(type=SystemLogType.Query, describe="app查询仓库列表")
 	public String appFindList(HttpServletRequest req) {
 		String parent = Tools.getReqParamSafe(req, "parent");
-		List<Map<String, Object>> list = service.storeListApp(parent);
+		List<Map<String, Object>> list = service.storeListApp(parent, getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -597,7 +597,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyAppAuth
 	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库")
 	public String appFindType(HttpServletRequest req) {
-		List<StoreType> list = service.findType();
+		List<StoreType> list = service.findType(getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -609,7 +609,7 @@ public class StoreController extends BaseController<Store, StoreService> {
 	@VerifyAppAuth
 	@SysLog(type=SystemLogType.Query, describe="app查询一级仓库(地图)")
 	public String appMap(HttpServletRequest req) {
-		List<Map<String, Object>> list = service.storeMap();
+		List<Map<String, Object>> list = service.storeMap(getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 

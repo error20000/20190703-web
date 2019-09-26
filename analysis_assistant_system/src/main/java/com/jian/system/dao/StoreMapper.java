@@ -42,6 +42,32 @@ public interface StoreMapper extends BaseMapper<Store> {
 			@Param("sEquip_StoreLv3") String sEquip_StoreLv3, 
 			@Param("sEquip_StoreLv4") String sEquip_StoreLv4);
 	
+	
+	@Select({
+		"<script>",
+		" select ",
+		"	distinct a.* ",
+		" from \"tBase_Store\" a ",
+		"   left join \"tBase_UserStore\" k on (",
+		"		a.\"sStore_ID\" = k.\"sUserStore_StoreLv2ID\" or  a.\"sStore_ID\" = k.\"sUserStore_StoreLv3ID\" or a.\"sStore_ID\" = k.\"sUserStore_StoreLv4ID\" ",
+		"	) ",
+		" where ",
+    	" 	<if test=\" map != null \"> ",
+    	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
+    	" 			a.\"${item}\" = #{map[${item}]}",	
+    	"		</foreach>",
+    	"   </if>",
+    	" 	<if test=\" map == null \"> ",
+    	"   	1 = 1 ",
+    	"   </if>",
+    	" 	<if test=\" sUser_ID != null \"> ",
+    	" 		and k.\"sUserStore_UserID\" = #{sUser_ID} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Store> selectListByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
+	
+	
 	@Select({
 		" select ",
 		"	a.\"sEquip_StoreLv1\", a.\"sEquip_StoreLv2\", a.\"sEquip_StoreLv3\", a.\"sEquip_StoreLv4\", a.\"sEquip_Type\", count(1) \"sEquip_Num\" , b.\"sDict_Name\" \"sEquip_TypeName\" ",
@@ -81,11 +107,14 @@ public interface StoreMapper extends BaseMapper<Store> {
 		" 	left join \"tBase_Store\" c on c.\"sStore_Parent\" = a.\"sStoreType_ID\" ",
 		" 	left join \"tBase_Store\" d on d.\"sStore_Parent\" = c.\"sStore_ID\" ",
 		" 	left join \"tBase_Store\" e on e.\"sStore_Parent\" = d.\"sStore_ID\" ",
-		" where 1 = 1 ",
+		" where ",
     	" 	<if test=\" map != null \"> ",
     	"		<foreach collection=\"map.keys\" item=\"item\"  index=\"i\" separator=\"and\">",
     	" 			a.\"${item}\" = #{map[${item}]}",	
     	"		</foreach>",
+    	"   </if>",
+    	" 	<if test=\" map == null \"> ",
+    	"   	1 = 1 ",
     	"   </if>",
 		" </script> "
 	})

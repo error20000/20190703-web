@@ -219,9 +219,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			return 0;
 		}
 		
-		if(Tools.isNullOrEmpty(old.getsEquip_StoreLv1())
-				&& !"".equals(value.get("sEquip_StoreLv1"))) {
-			//器材仓库不为空，入库操作
+		if((Tools.isNullOrEmpty(old.getsEquip_StoreLv1())
+				&& !"".equals(value.get("sEquip_StoreLv1")))
+				|| (!old.getsEquip_StoreLv1().equals(value.get("sEquip_StoreLv1")) 
+						&& !old.getsEquip_StoreLv2().equals(value.get("sEquip_StoreLv2"))
+						&& !old.getsEquip_StoreLv3().equals(value.get("sEquip_StoreLv3"))
+						&& !old.getsEquip_StoreLv4().equals(value.get("sEquip_StoreLv4"))) ) {
+			//器材仓库不为空,或者仓库信息不一致时,记录入库操作
 			value.put("sEquip_Status", Constant.EquipStatus_1); // 入库
 			if(old.getdEquip_StoreDate() == null) {
 				value.put("dEquip_StoreDate", new Date()); //第一次入库时间
@@ -441,7 +445,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			return new ArrayList<>();
 		}
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
-			return baseMapper.selectByType(sEquip_Type, null);
+			return baseMapper.selectByType(sEquip_Type, user.getsUser_ID());
 		}
 		return baseMapper.selectByType(sEquip_Type, user.getsUser_ID());
 	}
@@ -609,7 +613,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		condition = condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
-			return baseMapper.selectPageByUser(condition, null, start, rows);
+			return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
 		}
 		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
 	}
@@ -762,10 +766,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		//出库
 		values.put("sEquip_Status", Constant.EquipStatus_2);
-		values.put("sEquip_StoreLv1", " ");
-		values.put("sEquip_StoreLv2", " ");
-		values.put("sEquip_StoreLv3", " ");
-		values.put("sEquip_StoreLv4", " ");
+//		values.put("sEquip_StoreLv1", " ");
+//		values.put("sEquip_StoreLv2", " ");
+//		values.put("sEquip_StoreLv3", " ");
+//		values.put("sEquip_StoreLv4", " ");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -824,7 +828,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_Describe("器材拆除");
 		log.setsELog_Remarks(remarks);
 		logService.insert(log, user);
-		//保存
+		//解除关系
 		aidEquipService.delete(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build(), user);
 		return baseMapper.update(tableName, values, condition);
 	}
