@@ -351,6 +351,43 @@ public class UserController extends BaseController<User, UserService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
+
+	@RequestMapping("/store")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询分配给用户的仓库")
+	public String store(HttpServletRequest req) {
+
+		Map<String, Object> vMap = null;
+		//参数
+		String sUser_ID = Tools.getReqParamSafe(req, "sUser_ID");
+		vMap = Tools.verifyParam("sUser_ID", sUser_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		List<Map<String, Object>> list = service.store(sUser_ID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+	@RequestMapping("/updateStore")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新分配给用户的仓库")
+	public String updateStore(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sUser_ID = Tools.getReqParamSafe(req, "sUser_ID");
+		String store = Tools.getReqParamSafe(req, "store");
+		vMap = Tools.verifyParam("sUser_ID", sUser_ID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int res = service.updateStore(sUser_ID, store);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
 	private String newToken(User user){
 		return newToken(user, config.expireTime);
 	}

@@ -19,6 +19,7 @@ import com.jian.system.entity.MenuFun;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.entity.UserMenu;
+import com.jian.system.entity.UserStore;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
@@ -41,6 +42,8 @@ public class UserService extends BaseService<User, UserMapper> {
 	private UserMenuService userMenuService;
 	@Autowired
 	private UserAidService userAidService;
+	@Autowired
+	private UserStoreService userStoreService;
 	
 	@Override
 	@TargetDataSource
@@ -322,6 +325,44 @@ public class UserService extends BaseService<User, UserMapper> {
 			return 1;
 		}
 		return userAidService.batchInsert(list, null);
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> store(String sUser_ID) {
+		return baseMapper.store(sUser_ID);
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> storeAll() {
+		return baseMapper.storeAll();
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateStore(String sUser_ID, String storeIds) {
+		//删除分配
+		userStoreService.delete(MapTools.custom().put("sUserStore_UserID", sUser_ID).build(), null);
+		//重新分配
+		if(Tools.isNullOrEmpty(storeIds)) {
+			return 1;
+		}
+		List<Map<String, Object>> storeList = JsonTools.jsonToList(storeIds);
+		List<UserStore> list = new ArrayList<>();
+		UserStore node = null;
+		for (Map<String, Object> map : storeList) {
+			node = new UserStore();
+			node.setsUserStore_ID(Utils.newSnowflakeIdStr());
+			node.setsUserStore_UserID(sUser_ID);
+			node.setsUserStore_StoreLv1ID((String)map.get("sStore_Level1"));
+			node.setsUserStore_StoreLv2ID((String)map.get("sStore_Level2"));
+			node.setsUserStore_StoreLv3ID((String)map.get("sStore_Level3"));
+			node.setsUserStore_StoreLv4ID((String)map.get("sStore_Level4"));
+			list.add(node);
+		}
+		if(list.size() == 0) { //空分配
+			return 1;
+		}
+		return userStoreService.batchInsert(list, null);
 	}
 
 	@TargetDataSource

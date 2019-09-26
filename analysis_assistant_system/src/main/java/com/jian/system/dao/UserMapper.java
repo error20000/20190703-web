@@ -30,6 +30,14 @@ public interface UserMapper extends BaseMapper<User> {
 	
 	@Select({
 		" select ",
+		" a.* ",
+		" from \"tBase_UserStore\" a  ",
+		" where a.\"sUserStore_UserID\" = #{sUser_ID}"
+	})
+	public List<Map<String, Object>> store(String sUser_ID);
+	
+	@Select({
+		" select ",
 		"	a.*, ",
 		" 	d.\"sUser_Nick\" \"sUser_UserName\",  ",
 		" 	b.\"sGroup_Name\" \"sUser_GroupName\"  ",

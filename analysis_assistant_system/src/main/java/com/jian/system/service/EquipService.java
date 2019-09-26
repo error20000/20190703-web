@@ -445,7 +445,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			return new ArrayList<>();
 		}
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
-			return baseMapper.selectByType(sEquip_Type, user.getsUser_ID());
+			return baseMapper.selectByType(sEquip_Type, null);
 		}
 		return baseMapper.selectByType(sEquip_Type, user.getsUser_ID());
 	}
@@ -613,7 +613,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		condition = condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
-			return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
+			return baseMapper.selectPageByUser(condition, null, start, rows);
 		}
 		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
 	}

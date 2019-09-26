@@ -16,6 +16,9 @@ var getGroupAuthUrl = baseUrl + "api/menu/groupMenuAuth";
 var aidAllUrl = baseUrl + "api/aid/findAll";
 var userAidUrl = baseUrl + "api/user/aid";
 var userUpdateAidUserUrl = baseUrl + "api/user/updateAid";
+var storeAllUrl = baseUrl + "api/store/findAll";
+var userStoreUrl = baseUrl + "api/user/store";
+var userUpdateStoreUserUrl = baseUrl + "api/user/updateStore";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -155,6 +158,17 @@ var myvue = new Vue({
 					aid: []
 				},
 				aidFormRules: {},
+				//store
+				storeFormVisible: false,
+				storeLoading: false,
+				storeForm: {},
+				storeFormRules: {},
+				storeTree: '',
+				storeChecked: [],        
+				defaultProps: {
+			          children: 'children',
+			          label: 'sStore_Name'
+			    },
 				
 				//Tips
 				tips: {
@@ -235,6 +249,18 @@ var myvue = new Vue({
 				ajaxReq(aidAllUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.aidOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleStoreOptions: function(cb){
+				var self = this;
+				var params = {};
+				ajaxReq(storeAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.storeTree = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -625,6 +651,82 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//store
+			handleStore: function(index, row){
+				if(!this.hasAuth('store')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				var self = this;
+				ajaxReq(userStoreUrl, {sUser_ID: row.sUser_ID}, function(res){
+					self.handleResQuery(res, function(){
+						self.storeFormVisible = true;
+						self.storeForm.sUser_ID = row.sUser_ID;
+						self.storeForm.store = [];
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var storeLeaf = node.sUserStore_StoreLv1ID;
+							storeLeaf = node.sUserStore_StoreLv2ID ? node.sUserStore_StoreLv2ID : storeLeaf;
+							storeLeaf = node.sUserStore_StoreLv3ID ? node.sUserStore_StoreLv3ID : storeLeaf;
+							storeLeaf = node.sUserStore_StoreLv4ID ? node.sUserStore_StoreLv4ID : storeLeaf;
+							self.storeForm.store.push(storeLeaf);
+						}
+					});
+				});
+			},
+			storeClose: function () {
+				this.storeFormVisible = false;
+				this.storeLoading = false;
+				this.$refs.storeForm.resetFields();
+			},
+			storeSubmit: function () {
+				this.$refs.storeForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确定提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.storeLoading = true;
+							var params = {
+								sUser_ID: this.storeForm.sUser_ID,
+								store: []
+							};
+							var checkedNodes = this.$refs.storeTree.getCheckedNodes();
+							for (var i = 0; i < checkedNodes.length; i++) {
+								var temp = checkedNodes[i];
+								if(temp.children){
+									continue;
+								}
+								var node = {};
+								if(temp.sStore_Level1){
+									node.sStore_Level1 = temp.sStore_Level1;
+									if(temp.sStore_Level2){
+										node.sStore_Level2 = temp.sStore_Level2;
+										if(temp.sStore_Level3){
+											node.sStore_Level3 = temp.sStore_Level3;
+											node.sStore_Level4 = temp.sStore_ID;
+										}else{
+											node.sStore_Level3 = temp.sStore_ID;
+										}
+									}else{
+										node.sStore_Level2 = temp.sStore_ID;
+									}
+								}else{
+									node.sStore_Level1 = temp.sStore_ID;
+								}
+								params.store.push(node);
+							}
+							params.store = JSON.stringify(params.store);
+							
+							ajaxReq(userUpdateStoreUserUrl, params, function(res){
+								self.storeLoading = false;
+								self.handleResOperate(res, function(){
+									self.storeFormVisible = false;
+									//self.getList();
+								});
+							});
+						});
+					}
+				});
+			},
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
@@ -743,6 +845,7 @@ var myvue = new Vue({
 			this.handleMenuAuthOptions();
 			this.getList();
 			this.handleAidOptions();
+			this.handleStoreOptions();
 		}
 	  });
 	

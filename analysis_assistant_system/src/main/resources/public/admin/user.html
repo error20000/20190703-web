@@ -132,6 +132,9 @@
 							    <el-dropdown-item @click.native="handleAid(scope.$index, scope.row)" ref="aid" auth="sys:user:aid" v-show="hasAuth('aid')">
 							    	<i class="fas fa-map-pin"></i>&nbsp;分配航标
 							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleStore(scope.$index, scope.row)" ref="store" auth="sys:user:store" v-show="hasAuth('store')">
+							    	<i class="fas fa-map-pin"></i>&nbsp;分配仓库
+							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row)" divided style="color: #f56c6c;" ref="delete" auth="sys:user:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 							    </el-dropdown-item>
@@ -350,6 +353,26 @@
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="aidClose">关闭</el-button>
 				<el-button size="mini" type="primary" @click="aidSubmit" :loading="aidLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		<!-- store -->
+		<el-dialog title="分配仓库" :visible.sync="storeFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="storeForm" :rules="storeFormRules" ref="storeForm" label-width="120px">
+				<el-form-item prop="store">
+					<el-tree
+					  :data="storeTree"
+					  show-checkbox
+					  node-key="sStore_ID"
+					  ref="storeTree"
+					  :default-checked-keys="storeForm.store"
+					  :props="defaultProps">
+					</el-tree>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="storeClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="storeSubmit" :loading="storeLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

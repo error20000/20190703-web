@@ -617,7 +617,7 @@ var myvue = new Vue({
 								self.editLoading = false;
 								self.handleResOperate(res, function(){
 									self.editFormVisible = false;
-									self.getList();
+									//self.getList();
 								});
 							});
 							
@@ -743,7 +743,7 @@ var myvue = new Vue({
 			equipTypeChange: function(item, defItem){
 				item.equip = defItem ? defItem.sEquip_ID : '';
 				var equipOptions = this.equipOptionsCache[item.type];
-				if(equipOptions){
+				if(equipOptions && equipOptions.length > 0){
 					item.equipOptions = equipOptions;
 					return;
 				}
