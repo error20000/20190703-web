@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.jian.system.App;
 import com.jian.system.annotation.SysLog;
 import com.jian.system.config.Config;
 import com.jian.system.entity.SystemLog;
@@ -83,7 +84,7 @@ public class SystemLogAspect {
 		case Delete:
 		case Export:
 			String str = JsonTools.toJsonString(request.getParameterMap());
-			str = str.substring(0, str.length() > 255 ? 255 : str.length());
+			str = str.substring(0, str.length() > 255 ? 255 : str.length()); //超过一定长度截取。
 			slog.setsSLog_Request(str);
 			logService.insert(slog, user);
 			break;
@@ -113,7 +114,7 @@ public class SystemLogAspect {
 		case Login:
 		case Export:
 			String str = String.valueOf(obj);
-			slog.setsSLog_Response(str.substring(0, str.length() > 255 ? 255 : str.length()) );
+			slog.setsSLog_Response(str.substring(0, str.length() > 255 ? 255 : str.length()) ); //超过一定长度截取。
 	    	logService.update(slog, null);
 			break;
 		default:
@@ -124,9 +125,18 @@ public class SystemLogAspect {
     
     @AfterThrowing(pointcut="execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)", throwing="e")
     public void afterThrowing(JoinPoint joinPoint, Exception e, SysLog log){
-    	logger.error(e.getMessage());
-    	String str = e.getMessage();
-    	str = str.substring(0, str.length() > 255 ? 255 : str.length());
+    	//e.getMessage() 为 null，用e.toString()。这里自己提取有用信息进行保存。
+    	logger.error(e.toString(), e);
+    	String str = e.toString() + ": ";
+    	StackTraceElement[]  stackTrace = e.getStackTrace();
+    	for (StackTraceElement stackTraceElement : stackTrace) {
+    		String sstr = stackTraceElement.toString();
+    		if(sstr.contains(App.class.getPackage().getName())) { //取第一条跟本包相关的信息
+    			str += sstr;
+    			break;
+    		}
+		}
+    	str = str.substring(0, str.length() > 255 ? 255 : str.length()); //超过一定长度截取。
     	slog.setsSLog_Exception(str);
     	logService.update(slog, null);
     }

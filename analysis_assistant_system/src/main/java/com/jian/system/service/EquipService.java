@@ -129,8 +129,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			battery.setsBattery_NO(request.getParameter("sBattery_NO"));
 			battery.setsBattery_Type(request.getParameter("sBattery_Type"));
 			battery.setsBattery_Connect(request.getParameter("sBattery_Connect"));
-			battery.setlBattery_Volt(Float.parseFloat(request.getParameter("lBattery_Volt")));
-			battery.setlBattery_Watt(Float.parseFloat(request.getParameter("lBattery_Watt")));
+			battery.setlBattery_Volt(Tools.parseFloat(request.getParameter("lBattery_Volt")));
+			battery.setlBattery_Watt(Tools.parseFloat(request.getParameter("lBattery_Watt")));
 			batteryService.insert(battery, user);
 			break;
 		case Constant.EquipType_Lamp:
@@ -141,9 +141,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			lamp.setsLamp_Telemetry(request.getParameter("sLamp_Telemetry"));
 			lamp.setsLamp_Brand(request.getParameter("sLamp_Brand"));
 			lamp.setsLamp_Lens(request.getParameter("sLamp_Lens"));
-			lamp.setlLamp_TelemetryFlag(Integer.parseInt(request.getParameter("lLamp_TelemetryFlag")));
-			lamp.setlLamp_InputVolt(Float.parseFloat(request.getParameter("lLamp_InputVolt")));
-			lamp.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			lamp.setlLamp_TelemetryFlag(Tools.parseInt(request.getParameter("lLamp_TelemetryFlag")));
+			lamp.setlLamp_InputVolt(Tools.parseFloat(request.getParameter("lLamp_InputVolt")));
+			lamp.setlLamp_Watt(Tools.parseFloat(request.getParameter("lLamp_Watt")));
 			lampService.insert(lamp, user);
 			break;
 		case Constant.EquipType_Radar:
@@ -159,14 +159,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			solar.setsSolar_NO(request.getParameter("sSolar_NO"));
 			solar.setsSolar_Type(request.getParameter("sSolar_Type"));
 			solar.setsSolar_Connect(request.getParameter("sSolar_Connect"));
-			solar.setlSolar_Volt(Float.parseFloat(request.getParameter("lSolar_Volt")));
-			solar.setlSolar_Watt(Float.parseFloat(request.getParameter("lSolar_Watt")));
+			solar.setlSolar_Volt(Tools.parseFloat(request.getParameter("lSolar_Volt")));
+			solar.setlSolar_Watt(Tools.parseFloat(request.getParameter("lSolar_Watt")));
 			solarEnergyService.insert(solar, user);
 			break;
 		case Constant.EquipType_SpareLamp:
 			EquipSpareLamp spare = new EquipSpareLamp();
 			spare.setsEquip_ID(obj.getsEquip_ID());
-			spare.setlSLamp_Watt(Float.parseFloat(request.getParameter("lSLamp_Watt")));
+			spare.setlSLamp_Watt(Tools.parseFloat(request.getParameter("lSLamp_Watt")));
 			spareLampService.insert(spare, user);
 			break;
 		case Constant.EquipType_Telemetry:
@@ -175,14 +175,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			telemetry.setsTelemetry_NO(request.getParameter("sTelemetry_NO"));
 			telemetry.setsTelemetry_Mode(request.getParameter("sTelemetry_Mode"));
 			telemetry.setsTelemetry_SIM(request.getParameter("sTelemetry_SIM"));
-			telemetry.setlTelemetry_Volt(Float.parseFloat(request.getParameter("lTelemetry_Volt")));
-			telemetry.setlTelemetry_Watt(Float.parseFloat(request.getParameter("lTelemetry_Watt")));
+			telemetry.setlTelemetry_Volt(Tools.parseFloat(request.getParameter("lTelemetry_Volt")));
+			telemetry.setlTelemetry_Watt(Tools.parseFloat(request.getParameter("lTelemetry_Watt")));
 			telemetryService.insert(telemetry, user);
 			break;
 		case Constant.EquipType_ViceLamp:
 			EquipViceLamp vice = new EquipViceLamp();
 			vice.setsEquip_ID(obj.getsEquip_ID());
-			vice.setlVLamp_Watt(Float.parseFloat(request.getParameter("lVLamp_Watt")));
+			vice.setlVLamp_Watt(Tools.parseFloat(request.getParameter("lVLamp_Watt")));
 			viceLampService.insert(vice, user);
 			break;
 
@@ -307,8 +307,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			battery.setsBattery_NO(request.getParameter("sBattery_NO"));
 			battery.setsBattery_Type(request.getParameter("sBattery_Type"));
 			battery.setsBattery_Connect(request.getParameter("sBattery_Connect"));
-			battery.setlBattery_Volt(Float.parseFloat(request.getParameter("lBattery_Volt")));
-			battery.setlBattery_Watt(Float.parseFloat(request.getParameter("lBattery_Watt")));
+			battery.setlBattery_Volt(Tools.parseFloat(request.getParameter("lBattery_Volt")));
+			battery.setlBattery_Watt(Tools.parseFloat(request.getParameter("lBattery_Watt")));
 			if(modify) {
 				batteryService.update(battery, user);
 			}else {
@@ -323,9 +323,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			lamp.setsLamp_Telemetry(request.getParameter("sLamp_Telemetry"));
 			lamp.setsLamp_Brand(request.getParameter("sLamp_Brand"));
 			lamp.setsLamp_Lens(request.getParameter("sLamp_Lens"));
-			lamp.setlLamp_TelemetryFlag(Integer.parseInt(request.getParameter("lLamp_TelemetryFlag")));
-			lamp.setlLamp_InputVolt(Float.parseFloat(request.getParameter("lLamp_InputVolt")));
-			lamp.setlLamp_Watt(Float.parseFloat(request.getParameter("lLamp_Watt")));
+			lamp.setlLamp_TelemetryFlag(Tools.parseInt(request.getParameter("lLamp_TelemetryFlag")));
+			lamp.setlLamp_InputVolt(Tools.parseFloat(request.getParameter("lLamp_InputVolt")));
+			lamp.setlLamp_Watt(Tools.parseFloat(request.getParameter("lLamp_Watt")));
 			if(modify) {
 				lampService.update(lamp, user);
 			}else {
@@ -349,8 +349,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			solar.setsSolar_NO(request.getParameter("sSolar_NO"));
 			solar.setsSolar_Type(request.getParameter("sSolar_Type"));
 			solar.setsSolar_Connect(request.getParameter("sSolar_Connect"));
-			solar.setlSolar_Volt(Float.parseFloat(request.getParameter("lSolar_Volt")));
-			solar.setlSolar_Watt(Float.parseFloat(request.getParameter("lSolar_Watt")));
+			solar.setlSolar_Volt(Tools.parseFloat(request.getParameter("lSolar_Volt")));
+			solar.setlSolar_Watt(Tools.parseFloat(request.getParameter("lSolar_Watt")));
 			if(modify) {
 				solarEnergyService.update(solar, user);
 			}else {
@@ -360,7 +360,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_SpareLamp:
 			EquipSpareLamp spare = new EquipSpareLamp();
 			spare.setsEquip_ID(old.getsEquip_ID());
-			spare.setlSLamp_Watt(Float.parseFloat(request.getParameter("lSLamp_Watt")));
+			spare.setlSLamp_Watt(Tools.parseFloat(request.getParameter("lSLamp_Watt")));
 			if(modify) {
 				spareLampService.update(spare, user);
 			}else {
@@ -373,8 +373,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			telemetry.setsTelemetry_NO(request.getParameter("sTelemetry_NO"));
 			telemetry.setsTelemetry_Mode(request.getParameter("sTelemetry_Mode"));
 			telemetry.setsTelemetry_SIM(request.getParameter("sTelemetry_SIM"));
-			telemetry.setlTelemetry_Volt(Float.parseFloat(request.getParameter("lTelemetry_Volt")));
-			telemetry.setlTelemetry_Watt(Float.parseFloat(request.getParameter("lTelemetry_Watt")));
+			telemetry.setlTelemetry_Volt(Tools.parseFloat(request.getParameter("lTelemetry_Volt")));
+			telemetry.setlTelemetry_Watt(Tools.parseFloat(request.getParameter("lTelemetry_Watt")));
 			if(modify) {
 				telemetryService.update(telemetry, user);
 			}else {
@@ -384,7 +384,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		case Constant.EquipType_ViceLamp:
 			EquipViceLamp vice = new EquipViceLamp();
 			vice.setsEquip_ID(old.getsEquip_ID());
-			vice.setlVLamp_Watt(Float.parseFloat(request.getParameter("lVLamp_Watt")));
+			vice.setlVLamp_Watt(Tools.parseFloat(request.getParameter("lVLamp_Watt")));
 			if(modify) {
 				viceLampService.update(vice, user);
 			}else {

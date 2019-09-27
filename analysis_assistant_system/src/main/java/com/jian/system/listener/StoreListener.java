@@ -29,6 +29,7 @@ import com.jian.system.service.StoreTypeService;
 import com.jian.system.service.UserService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.DateTools;
+import com.jian.tools.core.Tools;
 
 @WebListener
 @Component
@@ -139,7 +140,7 @@ public class StoreListener implements ServletContextListener {
 			node.setsSLog_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") + "" );
 			node.setsSLog_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "" );
 			node.setsSLog_EquipType(temp.get("sEquip_Type") == null ? "" : temp.get("sEquip_Type") +"" );
-			node.setdSLog_EquipNum(Integer.parseInt(String.valueOf(temp.get("sEquip_Num"))) );
+			node.setdSLog_EquipNum(Tools.parseInt(String.valueOf(temp.get("sEquip_Num"))) );
 			res.add(node);
 		}
 		storeLogService.batchInsert(res, null);
@@ -176,7 +177,7 @@ public class StoreListener implements ServletContextListener {
 			if(limit == null || limit == 0) {
 				limit = tempLimit.get(temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1") + "");
 			}
-			Integer count = Integer.parseInt(String.valueOf(temp.get("sEquip_Num")));
+			Integer count = Tools.parseInt(String.valueOf(temp.get("sEquip_Num")));
 			if(limit != null && limit != 0 && limit >= count ) {
 				//给所有人，发送消息
 				for (User user : userAll) {

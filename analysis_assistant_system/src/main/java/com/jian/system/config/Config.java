@@ -27,6 +27,10 @@ public class Config {
 	@Value("${login_session_key}")
 	public String login_session_key="login_user";
 	
+	//上传临时路劲
+	@Value("${upload_temp_path}")
+	public String upload_temp_path;
+	
 	
 	public String superGroupId = "1"; //超管组
 	public String managerGroupId = "2"; //管理组
