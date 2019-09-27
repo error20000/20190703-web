@@ -53,6 +53,8 @@ public class SystemLogAspect {
     	startTime = System.currentTimeMillis();
     	request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
     	session = request.getSession();
+		String str = JsonTools.toJsonString(request.getParameterMap());
+    	System.out.println(request.getRequestURI() +" : "+ str);
     }
 
 
