@@ -46,6 +46,7 @@ public class SystemLogAspect {
     private HttpServletRequest request;
     private HttpSession session;
     private static final Logger logger = LoggerFactory.getLogger(SystemLogAspect.class);
+	Map<String, String[]> params = new HashMap<>();
     
 
     @Before("execution(public * com.jian.system.controller.*.*(..)) && @annotation(log)")
@@ -53,8 +54,7 @@ public class SystemLogAspect {
     	startTime = System.currentTimeMillis();
     	request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
     	session = request.getSession();
-		String str = JsonTools.toJsonString(request.getParameterMap());
-    	System.out.println(request.getRequestURI() +" : "+ str);
+    	params = new HashMap<>(request.getParameterMap());
     }
 
 
@@ -85,13 +85,13 @@ public class SystemLogAspect {
 		case Update:
 		case Delete:
 		case Export:
-			String str = JsonTools.toJsonString(request.getParameterMap());
+			String str = JsonTools.toJsonString(params);
 			str = str.substring(0, str.length() > 255 ? 255 : str.length()); //超过一定长度截取。
 			slog.setsSLog_Request(str);
 			logService.insert(slog, user);
 			break;
 		case Login:
-			Map<String, String[]> params = new HashMap<>(request.getParameterMap());
+//			Map<String, String[]> params = new HashMap<>(request.getParameterMap());
 			params.remove("password");
 			slog.setsSLog_Request(JsonTools.toJsonString(params));
 			logService.insert(slog, user);
@@ -101,7 +101,8 @@ public class SystemLogAspect {
 			break;
 		}
 
-		logger.info("request: "+JsonTools.toJsonString(request.getParameterMap()));
+		logger.info("request: "+JsonTools.toJsonString(params));
+//    	logger.info("request: "+JsonTools.toJsonString(request.getParameterMap()));
     }
 
     

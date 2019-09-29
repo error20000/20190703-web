@@ -854,7 +854,12 @@ var myvue = new Vue({
 			this.handleMarkOptions();
 			this.handleStatusOptions();
 			
-			this.handleStoreTypeOptions(this.handleAidOptions(this.initMap()));
+			let self = this;
+			this.handleStoreTypeOptions(function(){
+				self.handleAidOptions(function(){
+					self.initMap();
+				});
+			});
 			//this.handleAidOptions();
 			//this.initMap();
 		}
