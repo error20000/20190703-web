@@ -131,7 +131,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" 	left join \"tBase_Equip\" b on a.\"sAidEquip_EquipID\" = b.\"sEquip_ID\"  ",
 		" 	left join \"tBase_Dict\" d on b.\"sEquip_Type\" = d.\"sDict_NO\"  and d.\"sDict_DictTypeNO\" = 'EquipType' ",
 		" 	left join \"tBase_Dict\" e on b.\"sEquip_Icon\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'EquipIcon' ",
-		"   where a.\"sAidEquip_AidID\" = #{sAid_ID} " 
+		"   where a.\"sAidEquip_AidID\" = #{sAid_ID} and b.\"sEquip_Status\" = '9' " //只显示使用中的器材
 	})
 	public List<Map<String, Object>> equip(@Param("sAid_ID") String sAid_ID);
 	

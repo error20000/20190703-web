@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jian.system.config.Config;
+import com.jian.system.config.Constant;
 import com.jian.system.dao.StoreMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
@@ -300,11 +301,19 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 
 	@TargetDataSource
 	public List<Map<String, Object>> equipPage(Map<String, Object> condition, int start, int rows){
+		if(condition == null) {
+			condition = new HashMap<>();
+		}
+		condition.put("sEquip_Status", Constant.EquipStatus_1); //只查询库存中的器材
 		return equipService.selectPageByCustom(condition, start, rows);
 	}
 	
 	@TargetDataSource
 	public long equipSize(Map<String, Object> condition) {
+		if(condition == null) {
+			condition = new HashMap<>();
+		}
+		condition.put("sEquip_Status", Constant.EquipStatus_1); //只查询库存中的器材
 		return equipService.sizeByCustom(condition);
 	}
 

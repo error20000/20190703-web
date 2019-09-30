@@ -666,6 +666,12 @@ var myvue = new Vue({
 								self.iconSolarData.push(node);
 							}else if(node.sEquip_Type == 'EquipSpareLamp' ||　node.sEquip_Type == 'EquipViceLamp'　||　node.sEquip_Type == 'EquipLamp'){
 								self.iconLampData.push(node);
+							}else if(node.sEquip_Type == 'EquipSinkingstone'){
+								self.iconStoneData.push(node);
+							}else if(node.sEquip_Type == 'Equipbuoy'){
+								self.iconBodyData.push(node);
+							}else if(node.sEquip_Type == 'EquipAnchorchain'){
+								self.iconAnchorData.push(node);
 							}
 						}
 					});
