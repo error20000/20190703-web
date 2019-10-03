@@ -17,6 +17,7 @@ import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreLog;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
@@ -289,10 +290,19 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	
 	
 	@TargetDataSource
+	public List<StoreLog> isCheckedEquipType(String startDate, String endDate) {
+		return baseMapper.isCheckedEquipType(startDate, endDate);
+	}
+	
+	@TargetDataSource
 	public List<Map<String, Object>> checkEquipType() {
 		return baseMapper.checkEquipType();
 	}
 	
+	@TargetDataSource
+	public List<Message> isCheckedStore(String startDate, String endDate) {
+		return baseMapper.isCheckedStore(startDate, endDate);
+	}
 	
 	@TargetDataSource
 	public List<Map<String, Object>> checkStore() {

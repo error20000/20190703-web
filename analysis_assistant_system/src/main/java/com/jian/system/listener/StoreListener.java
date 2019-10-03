@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -40,7 +41,7 @@ public class StoreListener implements ServletContextListener {
 	private static Timer timer = null;
 	private static long runTime = 24 * 3600 * 1000;
 	private static Timer msgTimer = null;
-	private static long msgRunTime = 24 * 3600 * 1000;
+	private static long msgRunTime = 10 * 1000;
 	
 	@Autowired
 	private StoreService storeService;
@@ -120,12 +121,17 @@ public class StoreListener implements ServletContextListener {
 						e.printStackTrace();
 					}
 				}
-			}, date, msgRunTime);
+			}, 0, msgRunTime);
 			timerStart = true;
 		}
 	}
 	
 	private void checkInfo(){
+		//查询已盘点
+		Date date = new Date();
+		String startDate = DateTools.formatDate(date, "yyyy-MM-dd 00:00:00");
+		String endDate = DateTools.formatDate(date, "yyyy-MM-dd 23:59:59");
+		List<StoreLog> old = storeService.isCheckedEquipType(startDate, endDate);
 		//盘点库存
 		List<Map<String, Object>> list = storeService.checkEquipType();
 		List<StoreLog> res = new ArrayList<>();
@@ -141,12 +147,45 @@ public class StoreListener implements ServletContextListener {
 			node.setsSLog_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "" );
 			node.setsSLog_EquipType(temp.get("sEquip_Type") == null ? "" : temp.get("sEquip_Type") +"" );
 			node.setdSLog_EquipNum(Tools.parseInt(String.valueOf(temp.get("sEquip_Num"))) );
-			res.add(node);
+			//检查是否已盘点
+			if(old != null && old.size() > 0) {
+				String key = "";
+				key += temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1");
+				key += temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2");
+				key += temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3");
+				key += temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4");
+				key += temp.get("sEquip_Type") == null ? "" : temp.get("sEquip_Type");
+				String tempKey = key;
+				List<String> tempList = old.stream()
+						.map(e -> (e.getsSLog_StoreLv1() == null ? "" : e.getsSLog_StoreLv1()) +
+								(e.getsSLog_StoreLv2() == null ? "" : e.getsSLog_StoreLv2()) +
+								(e.getsSLog_StoreLv3() == null ? "" : e.getsSLog_StoreLv3()) +
+								(e.getsSLog_StoreLv4() == null ? "" : e.getsSLog_StoreLv4()) +
+								(e.getsSLog_EquipType() == null ? "" : e.getsSLog_EquipType())
+						)
+						.filter(e -> e.equals(tempKey))
+						.collect(Collectors.toList());
+				if(tempList.size() == 0) {
+					res.add(node);
+				}
+			}else {
+				res.add(node);
+			}
+		}
+		if(res.size() == 0) {
+			System.out.println("已盘点过库存。。。");
 		}
 		storeLogService.batchInsert(res, null);
 	}
 
 	private void msgInfo(){
+		//查询已发提醒
+		Date date = new Date();
+		String startDate = DateTools.formatDate(date, "yyyy-MM-dd 00:00:00");
+		String endDate = DateTools.formatDate(date, "yyyy-MM-dd 23:59:59");
+		List<Message> old = storeService.isCheckedStore(startDate, endDate);
+
+		//库存提醒
 		List<Map<String, Object>> list = storeService.checkStore();
 		
 		List<User> userAll = userService.selectAll();
@@ -179,6 +218,26 @@ public class StoreListener implements ServletContextListener {
 			}
 			Integer count = Tools.parseInt(String.valueOf(temp.get("sEquip_Num")));
 			if(limit != null && limit != 0 && limit >= count ) {
+				//检查是否已提醒
+				if(old != null && old.size() > 0) {
+					String key = "";
+					key += temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1");
+					key += temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2");
+					key += temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3");
+					key += temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4");
+					String tempKey = key;
+					List<String> tempList = old.stream()
+							.map(e -> (e.getsMsg_StoreLv1() == null ? "" : e.getsMsg_StoreLv1()) +
+									(e.getsMsg_StoreLv2() == null ? "" : e.getsMsg_StoreLv2()) +
+									(e.getsMsg_StoreLv3() == null ? "" : e.getsMsg_StoreLv3()) +
+									(e.getsMsg_StoreLv4() == null ? "" : e.getsMsg_StoreLv4()) 
+							)
+							.filter(e -> e.equals(tempKey))
+							.collect(Collectors.toList());
+					if(tempList.size() != 0) {
+						continue;
+					}
+				}
 				//给所有人，发送消息
 				for (User user : userAll) {
 					node = new Message();
@@ -197,6 +256,9 @@ public class StoreListener implements ServletContextListener {
 					res.add(node);
 				}
 			}
+		}
+		if(res.size() == 0) {
+			System.out.println("已提醒过库存不足。。。");
 		}
 		messageService.batchInsert(res, null);
 	}

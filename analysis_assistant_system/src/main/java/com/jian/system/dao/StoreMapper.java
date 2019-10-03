@@ -7,7 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.jian.system.config.Constant;
+import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreLog;
 
 @Mapper
 public interface StoreMapper extends BaseMapper<Store> {
@@ -70,19 +73,37 @@ public interface StoreMapper extends BaseMapper<Store> {
 	
 	@Select({
 		" select ",
+		"	* ",
+		" from \"tBase_StoreLog\" ",
+		" where \"dSLog_CreateDate\" >= to_date(#{startDate}, 'yyyy-MM-dd HH24:mi:ss') ",
+		"	and \"dSLog_CreateDate\" <= to_date(#{endDate}, 'yyyy-MM-dd HH24:mi:ss') "
+	})
+	public List<StoreLog> isCheckedEquipType(@Param("startDate") String startDate, @Param("endDate") String endDate);
+	
+	@Select({
+		" select ",
 		"	a.\"sEquip_StoreLv1\", a.\"sEquip_StoreLv2\", a.\"sEquip_StoreLv3\", a.\"sEquip_StoreLv4\", a.\"sEquip_Type\", count(1) \"sEquip_Num\" , b.\"sDict_Name\" \"sEquip_TypeName\" ",
 		" from \"tBase_Equip\" a ",
 		"   left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'EquipType' ",
-		" where a.\"sEquip_StoreLv1\" is not null or a.\"sEquip_StoreLv1\" != '' ",
+		" where a.\"sEquip_Status\" = '"+Constant.EquipStatus_1+"' and ( a.\"sEquip_StoreLv1\" is not null or a.\"sEquip_StoreLv1\" != '' ) ",
     	" group by a.\"sEquip_StoreLv1\", a.\"sEquip_StoreLv2\", a.\"sEquip_StoreLv3\", a.\"sEquip_StoreLv4\", a.\"sEquip_Type\", b.\"sDict_Name\" "
 	})
 	public List<Map<String, Object>> checkEquipType();
 	
 	@Select({
 		" select ",
+		"	* ",
+		" from \"tBase_Message\" ",
+		" where \"dMsg_CreateDate\" >= to_date(#{startDate}, 'yyyy-MM-dd HH24:mi:ss') ",
+		"	and \"dMsg_CreateDate\" <= to_date(#{endDate}, 'yyyy-MM-dd HH24:mi:ss') "
+	})
+	public List<Message> isCheckedStore(@Param("startDate") String startDate, @Param("endDate") String endDate);
+	
+	@Select({
+		" select ",
 		"	\"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\", count(1) \"sEquip_Num\" ",
 		" from \"tBase_Equip\" ",
-		" where \"sEquip_StoreLv1\" is not null or \"sEquip_StoreLv1\" != '' ",
+		" where \"sEquip_Status\" = '"+Constant.EquipStatus_1+"' and ( \"sEquip_StoreLv1\" is not null or \"sEquip_StoreLv1\" != '' ) ",
     	" group by \"sEquip_StoreLv1\", \"sEquip_StoreLv2\", \"sEquip_StoreLv3\", \"sEquip_StoreLv4\" "
 	})
 	public List<Map<String, Object>> checkStore();

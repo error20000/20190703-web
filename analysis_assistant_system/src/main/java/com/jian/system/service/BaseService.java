@@ -48,6 +48,9 @@ public class BaseService<T, M extends BaseMapper<T>> {
 			//fillDate(config.autoFillDateForAdd, t);
 			list.add(Tools.parseObjectToMap(t));
 		}
+		if(list.size() == 0) {
+			return 0;
+		}
 		return baseMapper.batchInsert(tableName, list);
 	}
 	
