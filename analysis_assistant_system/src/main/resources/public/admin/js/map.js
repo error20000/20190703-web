@@ -7,6 +7,7 @@ var aidEquipUrl = baseUrl + "api/aid/equip";
 var storeEquipUrl = baseUrl + "api/store/equip";
 var msgAidUrl = baseUrl + "api/aid/msg";
 var msgStoreUrl = baseUrl + "api/store/msg";
+var storeAllUrl = baseUrl + "api/store/findAll";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -78,6 +79,42 @@ var myvue = new Vue({
 				iconBodyData: [],
 				iconAnchorData: [],
 				iconStoneData: [],
+				
+				detailStoreAll: [],
+				detailStoreLoading: false,
+				detailStoreSels: [],
+				expands1: [],
+				expands2: [],
+				expands3: [],
+				expands4: [],
+
+				storeEquipContainer1: false,
+				storeEquipData1: {},
+				detailStoreEquipTotal1: {},
+				detailStoreEquipPage1: {},
+				detailStoreEquipRows1: 10,
+				storeId1: '',
+				
+				storeEquipContainer2: false,
+				storeEquipData2: {},
+				detailStoreEquipTotal2: {},
+				detailStoreEquipPage2: {},
+				detailStoreEquipRows2: 10,
+				storeId2: '',
+				
+				storeEquipContainer3: false,
+				storeEquipData3: {},
+				detailStoreEquipTotal3: {},
+				detailStoreEquipPage3: {},
+				detailStoreEquipRows3: 10,
+				storeId3: '',
+				
+				storeEquipContainer4: false,
+				storeEquipData4: {},
+				detailStoreEquipTotal4: {},
+				detailStoreEquipPage4: {},
+				detailStoreEquipRows4: 10,
+				storeId4: '',
 				
 				msgStoreData: [],
 				msgStoreTotal: 0,
@@ -644,6 +681,7 @@ var myvue = new Vue({
 						this.storeId = id;
 						this.detailEquipStore();
 						this.msgStore();
+						this.detailStoreTree();
 						break;
 					}
 				}
@@ -677,6 +715,19 @@ var myvue = new Vue({
 					});
 				});
 			},
+			detailStoreTree: function(){
+				var self = this;
+				var params = {
+						sStore_Level1: this.storeId
+				};
+				ajaxReq(storeAllUrl, params, function(res){
+					console.log(res);
+					self.handleResQuery(res, function(){
+						self.detailStoreAll = res.data;
+						console.log(self.expands1);
+					});
+				});
+			},
 			detailEquipStore: function(){
 				var self = this;
 				var params = {
@@ -699,6 +750,157 @@ var myvue = new Vue({
 				this.detailStoreEquipPage = val;
 				this.detailEquipStore();
 			},
+			//store equip lv 1
+			expandChange1: function(row, expandedRows){
+				this.storeId1 = row.sStore_ID;
+				if(expandedRows.length <= 0){
+					return;
+				}
+				if(row.children){
+					this.storeEquipContainer1 = false;
+					return;
+				}
+				this.$set(this.detailStoreEquipPage1, row.sStore_ID, 1);
+				this.storeEquipContainer1 = true;
+				this.detailEquipStore1(row.sStore_ID);
+			},
+			detailEquipStore1: function(id){
+				var self = this;
+				var params = {
+						page: this.detailStoreEquipPage1[id],
+						rows: this.detailStoreEquipRows1,
+						sEquip_StoreLv1: id
+				};
+				ajaxReq(storeEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.$set(self.storeEquipData1, id, res.data);
+						self.$set(self.detailStoreEquipTotal1, id, res.total);
+					});
+				});
+			},
+			handleDetailStoreEquipSizeChange1: function (val, id) {
+				this.detailStoreEquipRows1[id] = val;
+				this.detailEquipStore1(id);
+			},
+			handleDetailStoreEquipCurrentChange1: function (val, id) {
+				this.detailStoreEquipPage1[id] = val;
+				this.detailEquipStore1(id);
+			},
+			//store equip lv 2
+			expandChange2: function(row, expandedRows){
+				this.storeId2 = row.sStore_ID;
+				if(expandedRows.length <= 0){
+					return;
+				}
+				if(row.children){
+					this.storeEquipContainer2 = false;
+					return;
+				}
+				this.$set(this.detailStoreEquipPage2, row.sStore_ID, 1);
+				this.storeEquipContainer2 = true;
+				this.detailEquipStore2(row.sStore_ID);
+			},
+			detailEquipStore2: function(id){
+				var self = this;
+				var params = {
+						page: this.detailStoreEquipPage2[id],
+						rows: this.detailStoreEquipRows2,
+						sEquip_StoreLv1: this.storeId,
+						sEquip_StoreLv2: id
+				};
+				ajaxReq(storeEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.$set(self.storeEquipData2, id, res.data);
+						self.$set(self.detailStoreEquipTotal2, id, res.total);
+					});
+				});
+			},
+			handleDetailStoreEquipSizeChange2: function (val, id) {
+				this.detailStoreEquipRows2[id] = val;
+				this.detailEquipStore2(id);
+			},
+			handleDetailStoreEquipCurrentChange2: function (val, id) {
+				this.detailStoreEquipPage2[id] = val;
+				this.detailEquipStore2(id);
+			},
+			//store equip lv 3
+			expandChange3: function(row, expandedRows){
+				this.storeId3 = row.sStore_ID;
+				if(expandedRows.length <= 0){
+					return;
+				}
+				if(row.children){
+					this.storeEquipContainer3 = false;
+					return;
+				}
+				this.$set(this.detailStoreEquipPage3, row.sStore_ID, 1);
+				this.storeEquipContainer3 = true;
+				this.detailEquipStore3(row.sStore_ID);
+			},
+			detailEquipStore3: function(id){
+				var self = this;
+				var params = {
+						page: this.detailStoreEquipPage3[id],
+						rows: this.detailStoreEquipRows3,
+						sEquip_StoreLv1: this.storeId,
+						sEquip_StoreLv2: this.storeId2,
+						sEquip_StoreLv3: id
+				};
+				ajaxReq(storeEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.$set(self.storeEquipData3, id, res.data);
+						self.$set(self.detailStoreEquipTotal3, id, res.total);
+					});
+				});
+			},
+			handleDetailStoreEquipSizeChange3: function (val, id) {
+				this.detailStoreEquipRows3[id] = val;
+				this.detailEquipStore3(id);
+			},
+			handleDetailStoreEquipCurrentChange3: function (val, id) {
+				this.detailStoreEquipPage3[id] = val;
+				this.detailEquipStore3(id);
+			},
+			//store equip lv 4
+			expandChange4: function(row, expandedRows){
+				this.storeId4 = row.sStore_ID;
+				if(expandedRows.length <= 0){
+					return;
+				}
+				if(row.children){
+					this.storeEquipContainer4 = false;
+					return;
+				}
+				this.$set(this.detailStoreEquipPage4, row.sStore_ID, 1);
+				this.storeEquipContainer4 = true;
+				this.detailEquipStore4(row.sStore_ID);
+			},
+			detailEquipStore4: function(id){
+				var self = this;
+				var params = {
+						page: this.detailStoreEquipPage4[id],
+						rows: this.detailStoreEquipRows4,
+						sEquip_StoreLv1: this.storeId,
+						sEquip_StoreLv2: this.storeId2,
+						sEquip_StoreLv3: this.storeId3,
+						sEquip_StoreLv4: id
+				};
+				ajaxReq(storeEquipUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.$set(self.storeEquipData4, id, res.data);
+						self.$set(self.detailStoreEquipTotal4, id, res.total);
+					});
+				});
+			},
+			handleDetailStoreEquipSizeChange4: function (val, id) {
+				this.detailStoreEquipRows4[id] = val;
+				this.detailEquipStore4(id);
+			},
+			handleDetailStoreEquipCurrentChange4: function (val, id) {
+				this.detailStoreEquipPage4[id] = val;
+				this.detailEquipStore4(id);
+			},
+			
 			handleIconMaskShow: function(evt){
 				$(evt.target).css("opacity", "0.5");
 			},
