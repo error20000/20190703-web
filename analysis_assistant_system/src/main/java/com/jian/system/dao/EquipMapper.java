@@ -279,6 +279,11 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 				r = 1 ",	
     	"   		</if>",
 		" 		) k1 on g.\"sAid_Station\" = k1.\"sUserStation_Station\" ",
+		" 	left join \"tBase_UserStore\" e1 on a.\"sEquip_StoreLv1\" = e1.\"sUserStore_StoreLv1ID\" ",
+		" 		and a.\"sEquip_StoreLv2\" = e1.\"sUserStore_StoreLv2ID\" ",
+		" 		and a.\"sEquip_StoreLv3\" = e1.\"sUserStore_StoreLv3ID\" ",
+		" 		and a.\"sEquip_StoreLv4\" = e1.\"sUserStore_StoreLv4ID\" ",
+		
 		" 	left join \"tEquip_Ais\" p on a.\"sEquip_ID\" = p.\"sEquip_ID\" ",
 		" 	left join \"tEquip_Battery\" q on a.\"sEquip_ID\" = q.\"sEquip_ID\" ",
 		" 	left join \"tEquip_Lamp\" s on a.\"sEquip_ID\" = s.\"sEquip_ID\" ",
@@ -306,7 +311,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 		1 = 1 ",	
     	"   </if>",
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and ( k.\"sUserAid_UserID\" = #{sUser_ID} or k1.\"sUserStation_UserID\" = #{sUser_ID} ) ",	
+    	" 		and ( k.\"sUserAid_UserID\" = #{sUser_ID} or k1.\"sUserStation_UserID\" = #{sUser_ID} or e1.\"sUserStore_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
 		"</script>"
 	})
