@@ -327,32 +327,51 @@
 		
 		<!-- aid -->
 		<el-dialog title="分配航标" :visible.sync="aidFormVisible" :close-on-click-modal="false" >
-			<el-form size="mini" label-position="top" :model="aidForm" :rules="aidFormRules" ref="aidForm">
-			  <el-form-item >
-			    <!-- <div slot="label" >
-			    	<el-form size="mini" :inline="true">
-			  			<el-form-item >
-			  				<el-checkbox v-model="checked">备选项</el-checkbox>
-			  			</el-form-item>
-			  			<el-form-item >
-			  				<el-input
-							    placeholder="请输入内容"
-							    prefix-icon="el-icon-search"
-							    v-model="input21">
-							</el-input>
-			  			</el-form-item>
-			  		</el-form>
-			  	</div> -->
-			    <el-checkbox-group v-model="aidForm.aid" >
-			    	<template v-for="(item, index) in aidOptions">
-					    <el-checkbox border :label="item.sAid_ID" >{{item.sAid_Name}}</el-checkbox>
-			    	</template>
-			    </el-checkbox-group>
-			  </el-form-item>
-			</el-form>
-			<div slot="footer" class="dialog-footer">
+			<el-tabs v-model="activeAidName">
+			    <el-tab-pane label="按航标" name="1">
+					<el-form size="mini" label-position="top" :model="aidForm" :rules="aidFormRules" ref="aidForm">
+					  <el-form-item >
+					    <!-- <div slot="label" >
+					    	<el-form size="mini" :inline="true">
+					  			<el-form-item >
+					  				<el-checkbox v-model="checked">备选项</el-checkbox>
+					  			</el-form-item>
+					  			<el-form-item >
+					  				<el-input
+									    placeholder="请输入内容"
+									    prefix-icon="el-icon-search"
+									    v-model="input21">
+									</el-input>
+					  			</el-form-item>
+					  		</el-form>
+					  	</div> -->
+					    <el-checkbox-group v-model="aidForm.aid" >
+					    	<template v-for="(item, index) in aidOptions">
+							    <el-checkbox border :label="item.sAid_ID" >{{item.sAid_Name}}</el-checkbox>
+					    	</template>
+					    </el-checkbox-group>
+					  </el-form-item>
+					</el-form>
+			    </el-tab-pane>
+			    <el-tab-pane label="按航标站" name="2">
+					<el-form size="mini" label-position="top" :model="stationForm" :rules="stationFormRules" ref="stationForm">
+					  <el-form-item >
+					    <el-checkbox-group v-model="stationForm.station" >
+					    	<template v-for="(item, index) in stationOptions">
+							    <el-checkbox border :label="item.sDict_NO" >{{item.sDict_Name}}</el-checkbox>
+					    	</template>
+					    </el-checkbox-group>
+					  </el-form-item>
+					</el-form>
+			    </el-tab-pane>
+		  	</el-tabs>
+			<div slot="footer" class="dialog-footer" v-if="activeAidName == '1'">
 				<el-button size="mini" @click="aidClose">关闭</el-button>
 				<el-button size="mini" type="primary" @click="aidSubmit" :loading="aidLoading">提交</el-button>
+			</div>
+			<div slot="footer" class="dialog-footer" v-if="activeAidName == '2'">
+				<el-button size="mini" @click="stationClose">关闭</el-button>
+				<el-button size="mini" type="primary" @click="stationSubmit" :loading="stationLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

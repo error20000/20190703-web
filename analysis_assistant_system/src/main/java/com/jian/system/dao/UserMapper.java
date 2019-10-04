@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserStation;
 
 
 @Mapper
@@ -15,18 +16,27 @@ public interface UserMapper extends BaseMapper<User> {
 
 	@Select({
 		" select ",
-		" a.\"sAid_ID\", a.\"sAid_Name\", a.\"sAid_NO\" ",
-		" from \"tBase_Aid\" a join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
-		" where b.\"sUserAid_UserID\" = #{sUser_ID}"
+		" 	a.\"sAid_ID\", a.\"sAid_Name\", a.\"sAid_NO\" ",
+		" from \"tBase_Aid\" a ",
+		" 	join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" where b.\"sUserAid_UserID\" = #{sUser_ID} "
 	})
 	public List<Map<String, Object>> aid(String sUser_ID);
 	
 	@Select({
 		" select ",
-		" \"sAid_ID\", \"sAid_Name\", \"sAid_NO\" ",
+		" 	\"sAid_ID\", \"sAid_Name\", \"sAid_NO\" ",
 		" from \"tBase_Aid\" ",
 	})
 	public List<Map<String, Object>> aidAll();
+	
+	@Select({
+		" select ",
+		" 	* ",
+		" from \"tBase_UserStation\" ",
+		" where \"sUserStation_UserID\" = #{sUser_ID} "
+	})
+	public List<UserStation> station(String sUser_ID);
 	
 	@Select({
 		" select ",

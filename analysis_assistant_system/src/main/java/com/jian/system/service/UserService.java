@@ -19,6 +19,7 @@ import com.jian.system.entity.MenuFun;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.entity.UserMenu;
+import com.jian.system.entity.UserStation;
 import com.jian.system.entity.UserStore;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
@@ -42,6 +43,8 @@ public class UserService extends BaseService<User, UserMapper> {
 	private UserMenuService userMenuService;
 	@Autowired
 	private UserAidService userAidService;
+	@Autowired
+	private UserStationService userStationService;
 	@Autowired
 	private UserStoreService userStoreService;
 	
@@ -325,6 +328,35 @@ public class UserService extends BaseService<User, UserMapper> {
 			return 1;
 		}
 		return userAidService.batchInsert(list, null);
+	}
+	
+	@TargetDataSource
+	public List<UserStation> station(String sUser_ID) {
+		return baseMapper.station(sUser_ID);
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateStation(String sUser_ID, String stations) {
+		//删除分配
+		userStationService.delete(MapTools.custom().put("sUserStation_UserID", sUser_ID).build(), null);
+		//重新分配
+		if(Tools.isNullOrEmpty(stations)) {
+			return 1;
+		}
+		List<UserStation> list = new ArrayList<>();
+		UserStation node = null;
+		for (String station : stations.split(",")) {
+			node = new UserStation();
+			node.setsUserStation_ID(Utils.newSnowflakeIdStr());
+			node.setsUserStation_UserID(sUser_ID);
+			node.setsUserStation_Station(station);
+			list.add(node);
+		}
+		if(list.size() == 0) { //空分配
+			return 1;
+		}
+		return userStationService.batchInsert(list, null);
 	}
 	
 	@TargetDataSource

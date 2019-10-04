@@ -19,6 +19,10 @@ var userUpdateAidUserUrl = baseUrl + "api/user/updateAid";
 var storeAllUrl = baseUrl + "api/store/findAll";
 var userStoreUrl = baseUrl + "api/user/store";
 var userUpdateStoreUserUrl = baseUrl + "api/user/updateStore";
+var dictUrl = baseUrl + "api/dict/findList";
+var userStationUrl = baseUrl + "api/user/station";
+var userUpdateStationUserUrl = baseUrl + "api/user/updateStation";
+
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -49,6 +53,8 @@ var myvue = new Vue({
 				groupOptions: [],
 				pwdReg: pwdReg,
 				aidOptions: [],
+				stationDictNo: 'AidStation',
+				stationOptions: [],
 
 				//add
 				addFormVisible: false,
@@ -158,6 +164,13 @@ var myvue = new Vue({
 					aid: []
 				},
 				aidFormRules: {},
+				activeAidName: '1',
+				stationFormVisible: false,
+				stationLoading: false,
+				stationForm: {
+					station: []
+				},
+				stationFormRules: {},
 				//store
 				storeFormVisible: false,
 				storeLoading: false,
@@ -261,6 +274,18 @@ var myvue = new Vue({
 				ajaxReq(storeAllUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.storeTree = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleStationOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.stationDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.stationOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -616,13 +641,22 @@ var myvue = new Vue({
 					return;
 				}
 				var self = this;
+				self.aidForm.sUser_ID = row.sUser_ID;
+				self.aidForm.aid = [];
 				ajaxReq(userAidUrl, {sUser_ID: row.sUser_ID}, function(res){
 					self.handleResQuery(res, function(){
 						self.aidFormVisible = true;
-						self.aidForm.sUser_ID = row.sUser_ID;
-						self.aidForm.aid = [];
 						for (var i = 0; i < res.data.length; i++) {
 							self.aidForm.aid.push(res.data[i].sAid_ID);
+						}
+					});
+				});
+				self.stationForm.sUser_ID = row.sUser_ID;
+				self.stationForm.station = [];
+				ajaxReq(userStationUrl, {sUser_ID: row.sUser_ID}, function(res){
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							self.stationForm.station.push(res.data[i].sUserStation_Station);
 						}
 					});
 				});
@@ -651,6 +685,30 @@ var myvue = new Vue({
 					}
 				});
 			},
+			stationClose: function () {
+				this.aidFormVisible = false;
+				this.stationLoading = false;
+				this.$refs.stationForm.resetFields();
+			},
+			stationSubmit: function () {
+				this.$refs.stationForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确定提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.stationLoading = true;
+							var params = Object.assign({}, this.stationForm);
+							params.station = params.station.join(",");
+							ajaxReq(userUpdateStationUserUrl, params, function(res){
+								self.stationLoading = false;
+								self.handleResOperate(res, function(){
+									self.aidFormVisible = false;
+									//self.getList();
+								});
+							});
+						});
+					}
+				});
+			},
 			//store
 			handleStore: function(index, row){
 				if(!this.hasAuth('store')){
@@ -658,11 +716,11 @@ var myvue = new Vue({
 					return;
 				}
 				var self = this;
+				self.storeForm.sUser_ID = row.sUser_ID;
+				self.storeForm.store = [];
 				ajaxReq(userStoreUrl, {sUser_ID: row.sUser_ID}, function(res){
 					self.handleResQuery(res, function(){
 						self.storeFormVisible = true;
-						self.storeForm.sUser_ID = row.sUser_ID;
-						self.storeForm.store = [];
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
 							var storeLeaf = node.sUserStore_StoreLv1ID;
@@ -846,6 +904,7 @@ var myvue = new Vue({
 			this.getList();
 			this.handleAidOptions();
 			this.handleStoreOptions();
+			this.handleStationOptions();
 		}
 	  });
 	

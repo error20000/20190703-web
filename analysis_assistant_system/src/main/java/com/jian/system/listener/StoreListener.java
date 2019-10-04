@@ -41,7 +41,7 @@ public class StoreListener implements ServletContextListener {
 	private static Timer timer = null;
 	private static long runTime = 24 * 3600 * 1000;
 	private static Timer msgTimer = null;
-	private static long msgRunTime = 10 * 1000;
+	private static long msgRunTime = 24 * 3600 * 1000;
 	
 	@Autowired
 	private StoreService storeService;
@@ -121,7 +121,7 @@ public class StoreListener implements ServletContextListener {
 						e.printStackTrace();
 					}
 				}
-			}, 0, msgRunTime);
+			}, date, msgRunTime);
 			timerStart = true;
 		}
 	}
