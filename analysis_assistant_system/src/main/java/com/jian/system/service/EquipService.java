@@ -203,8 +203,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			condition.put(string, value.get(string));
 			value.remove(string);
 		}
-		condition = condition.isEmpty() ? null : condition;
-		value = value.isEmpty() ? null : value;
+		condition = condition != null && condition.isEmpty() ? null : condition;
+		value = value != null && value.isEmpty() ? null : value;
 		return update(value, condition, user, ip);
 	}
 
@@ -212,7 +212,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	public int update(Map<String, Object> value, Map<String, Object> condition, User user, String ip) {
 
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		
 		Equip old = selectOne(condition);
 		if(old == null) {
@@ -455,7 +455,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	@Transactional
 	@TargetDataSource
 	public int delete(Map<String, Object> condition, User user) {
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		String tableName =  getTableName();
 		Equip old = baseMapper.selectOne(tableName, condition);
 		//删除NFC
@@ -611,7 +611,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user == null) {
 			return new ArrayList<>();
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
 			return baseMapper.selectPageByUser(condition, null, start, rows);
 		}
@@ -623,7 +623,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(user == null) {
 			return 0;
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有
 			return baseMapper.sizeByUser(condition, null);
 		}

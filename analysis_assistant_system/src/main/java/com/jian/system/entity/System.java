@@ -23,7 +23,23 @@ public class System extends Base<System> {
 	private int lSys_MapIconWidth;
 	@Excel(name="图标高度", sort=0, length="", isNull=1 )
 	private int lSys_MapIconHeight;
-	
+
+	@Excel(name="库存盘点模式", sort=0, length="", isNull=1 )
+	private int lSys_StoreMode;
+	@Excel(name="库存盘点模式值", sort=0, length="", isNull=1 )
+	private int lSys_StoreValue;
+	@Excel(name="库存不足是否通知管理员 0：否，1：是	", sort=0, length="", isNull=1 )
+	private int lSys_StoreMsg;
+
+	@Excel(name="器材寿命盘点模式", sort=0, length="", isNull=1 )
+	private int lSys_EquipMode;
+	@Excel(name="器材寿命盘点模式值", sort=0, length="", isNull=1 )
+	private int lSys_EquipValue;
+	@Excel(name="寿命不足是否通知管理员 0：否，1：是", sort=0, length="", isNull=1 )
+	private int lSys_EquipMsg;
+	@Excel(name="不足平均寿命的百分之几", sort=0, length="", isNull=1 )
+	private int lSys_EquipRate;
+
 	
 	
 	public String getsSys_ID() {
@@ -67,6 +83,48 @@ public class System extends Base<System> {
 	}
 	public void setlSys_MapIconHeight(int lSys_MapIconHeight) {
 		this.lSys_MapIconHeight = lSys_MapIconHeight;
+	}
+	public int getlSys_StoreMode() {
+		return lSys_StoreMode;
+	}
+	public void setlSys_StoreMode(int lSys_StoreMode) {
+		this.lSys_StoreMode = lSys_StoreMode;
+	}
+	public int getlSys_StoreValue() {
+		return lSys_StoreValue;
+	}
+	public void setlSys_StoreValue(int lSys_StoreValue) {
+		this.lSys_StoreValue = lSys_StoreValue;
+	}
+	public int getlSys_StoreMsg() {
+		return lSys_StoreMsg;
+	}
+	public void setlSys_StoreMsg(int lSys_StoreMsg) {
+		this.lSys_StoreMsg = lSys_StoreMsg;
+	}
+	public int getlSys_EquipMode() {
+		return lSys_EquipMode;
+	}
+	public void setlSys_EquipMode(int lSys_EquipMode) {
+		this.lSys_EquipMode = lSys_EquipMode;
+	}
+	public int getlSys_EquipValue() {
+		return lSys_EquipValue;
+	}
+	public void setlSys_EquipValue(int lSys_EquipValue) {
+		this.lSys_EquipValue = lSys_EquipValue;
+	}
+	public int getlSys_EquipMsg() {
+		return lSys_EquipMsg;
+	}
+	public void setlSys_EquipMsg(int lSys_EquipMsg) {
+		this.lSys_EquipMsg = lSys_EquipMsg;
+	}
+	public int getlSys_EquipRate() {
+		return lSys_EquipRate;
+	}
+	public void setlSys_EquipRate(int lSys_EquipRate) {
+		this.lSys_EquipRate = lSys_EquipRate;
 	}
 	
 	

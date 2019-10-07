@@ -87,7 +87,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	@Transactional
 	@TargetDataSource
 	public int delete(Map<String, Object> condition, User user) {
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		String tableName =  getTableName();
 		Aid old = baseMapper.selectOne(tableName, condition);
 		if(!Tools.isNullOrEmpty(old.getsAid_NfcID())) {
@@ -150,7 +150,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		if(user == null) {
 			return new ArrayList<Aid>();
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
 			return baseMapper.selectPageByUser(condition, null, start, rows);
 		}
@@ -162,7 +162,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		if(user == null) {
 			return 0;
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
 			return baseMapper.sizeByUser(condition, null);
 		}

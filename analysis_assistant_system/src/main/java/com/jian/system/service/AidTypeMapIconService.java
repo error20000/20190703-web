@@ -45,8 +45,8 @@ public class AidTypeMapIconService extends BaseService<AidTypeMapIcon, AidTypeMa
 			condition.put(string, value.get(string));
 			value.remove(string);
 		}
-		condition = condition.isEmpty() ? null : condition;
-		value = value.isEmpty() ? null : value;
+		condition = condition != null && condition.isEmpty() ? null : condition;
+		value = value != null && value.isEmpty() ? null : value;
 		return update(value, condition, user);
 	}
 

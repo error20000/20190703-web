@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,18 +18,24 @@ import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.entity.System;
+import com.jian.system.listener.EquipListener;
+import com.jian.system.listener.StoreListener;
 import com.jian.system.service.SystemService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
+import com.jian.tools.core.Tools;
 
 @Controller
 @RequestMapping("/api/sys")
 @API(name="系统设置")
 public class SystemController extends BaseController<System, SystemService> {
 
-	
+	@Autowired
+	StoreListener storeListener;
+	@Autowired
+	EquipListener equipListener;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -40,7 +47,15 @@ public class SystemController extends BaseController<System, SystemService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Update, describe="更新系统设置")
 	public String update(HttpServletRequest req) {
-		return super.update(req);
+		String res = super.update(req);
+
+		String update = Tools.getReqParamSafe(req, "update");
+		if(!Tools.isNullOrEmpty(update)) {
+			storeListener.update();
+			equipListener.update();
+		}
+		
+		return res;
 	}
 
 

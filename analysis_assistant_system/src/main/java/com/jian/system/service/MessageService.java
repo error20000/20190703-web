@@ -34,7 +34,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		if(user == null) {
 			return new ArrayList<>();
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
 			return baseMapper.selectPageByUser(condition, startDate, endDate, null, start, rows);
 		}
@@ -46,7 +46,7 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		if(user == null) {
 			return 0;
 		}
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有消息
 			return baseMapper.sizeByUser(condition, startDate, endDate, null);
 		}

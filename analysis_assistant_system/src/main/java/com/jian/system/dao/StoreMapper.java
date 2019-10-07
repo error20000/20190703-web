@@ -94,7 +94,8 @@ public interface StoreMapper extends BaseMapper<Store> {
 		" select ",
 		"	* ",
 		" from \"tBase_Message\" ",
-		" where \"dMsg_CreateDate\" >= to_date(#{startDate}, 'yyyy-MM-dd HH24:mi:ss') ",
+		" where \"sMsg_Type\" = '1' ",
+		" 	and \"dMsg_CreateDate\" >= to_date(#{startDate}, 'yyyy-MM-dd HH24:mi:ss') ",
 		"	and \"dMsg_CreateDate\" <= to_date(#{endDate}, 'yyyy-MM-dd HH24:mi:ss') "
 	})
 	public List<Message> isCheckedStore(@Param("startDate") String startDate, @Param("endDate") String endDate);

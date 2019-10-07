@@ -353,7 +353,14 @@
 					  </el-form-item>
 					</el-form>
 			    </el-tab-pane>
-			    <el-tab-pane label="按航标站" name="2">
+			    <el-tab-pane name="2">
+			    	<div slot="label">
+			    		<el-tooltip v-if="tips.forms.station" :effect="tips.effect" :placement="tips.forms.station.placement">
+		                    <div slot="content" v-html="tips.forms.station.content"></div>
+		                    <span>按航标站<i class="el-icon-question"></i></span>
+		                </el-tooltip>
+                		<span v-else>按航标站</span>
+			    	</div>
 					<el-form size="mini" label-position="top" :model="stationForm" :rules="stationFormRules" ref="stationForm">
 					  <el-form-item >
 					    <el-checkbox-group v-model="stationForm.station" >

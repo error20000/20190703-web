@@ -59,7 +59,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	@TargetDataSource
 	public int delete(Map<String, Object> condition, User user) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.delete(tableName, condition);
 	}
 
@@ -74,8 +74,8 @@ public class BaseService<T, M extends BaseMapper<T>> {
 			condition.put(string, value.get(string));
 			value.remove(string);
 		}
-		condition = condition.isEmpty() ? null : condition;
-		value = value.isEmpty() ? null : value;
+		condition = condition != null && condition.isEmpty() ? null : condition;
+		value = value != null && value.isEmpty() ? null : value;
 		return update(value, condition, user);
 	}
 
@@ -83,7 +83,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	public int update(Map<String, Object> value, Map<String, Object> condition, User user) {
 		fillDate(config.autoFillDateForModify, value);
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.update(tableName, value, condition);
 	}
 
@@ -104,7 +104,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	@TargetDataSource
 	public T selectOne(Map<String, Object> condition) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectOne(tableName, condition);
 	}
 	
@@ -120,7 +120,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	@TargetDataSource
 	public Map<String, Object> selectOneMap(List<String> columns, Map<String, Object> condition) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectOneMap(tableName, columns, condition);
 	}
 
@@ -133,21 +133,21 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	@TargetDataSource
 	public List<T> selectList(Map<String, Object> condition) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectList(tableName, condition);
 	}
 
 	@TargetDataSource
 	public List<Map<String, Object>> selectListMap(List<String> columns, Map<String, Object> condition) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectListMap(tableName, columns, condition);
 	}
 
 	@TargetDataSource
 	public List<T> selectPage(Map<String, Object> condition, int start, int rows) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectPage(tableName, condition, start, rows);
 	}
 
@@ -156,7 +156,7 @@ public class BaseService<T, M extends BaseMapper<T>> {
 	@TargetDataSource
 	public long size(Map<String, Object> condition) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.size(tableName, condition);
 	}
 	

@@ -29,7 +29,12 @@ var myvue = new Vue({
 				//edit
 				editFormVisible: false,
 				editLoading: false,
-				editForm: {},
+				editForm: {
+					lSys_StoreValue1: '',
+					lSys_StoreValue2: '',
+					lSys_EquipValue1: '',
+					lSys_EquipValue2: ''
+				},
 				editFormRules: {
 				},
 				
@@ -56,6 +61,10 @@ var myvue = new Vue({
 				        },
 				        lSys_MapIconHeight: {
 				            content: "说明：<br/><br/>1、设置图标在地图上显示的高度。<br/><br/>2、单位：像素。",
+				            placement: "right"
+				        },
+				        lSys_EquipRate: {
+				            content: "说明：<br/><br/>1、当器材使用寿命大于平均使用寿命的xx%时，进行消息提醒。",
 				            placement: "right"
 				        }
 				    }
@@ -92,7 +101,22 @@ var myvue = new Vue({
 				ajaxReq(oneUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.editFormVisible = true;
-						self.editForm = Object.assign({}, res.data)
+						self.editForm = Object.assign({}, res.data);
+						if(self.editForm.lSys_StoreMode == 1){
+							self.editForm.lSys_StoreValue1 = self.editForm.lSys_StoreValue;
+							self.editForm.lSys_StoreValue2 = "";
+						}else{
+							self.editForm.lSys_StoreValue2 = self.editForm.lSys_StoreValue;
+							self.editForm.lSys_StoreValue1 = "";
+						}
+						if(self.editForm.lSys_EquipMode == 1){
+							self.editForm.lSys_EquipValue1 = self.editForm.lSys_EquipValue;
+							self.editForm.lSys_EquipValue2 = "";
+						}else{
+							self.editForm.lSys_EquipValue2 = self.editForm.lSys_EquipValue;
+							self.editForm.lSys_EquipValue1 = "";
+						}
+						self.editForm = Object.assign({}, self.editForm);
 					});
 				});
 			},
@@ -126,6 +150,41 @@ var myvue = new Vue({
 							var self = this;
 							this.editLoading = true;
 							var params = Object.assign({}, this.editForm);
+							ajaxReq(modUrl, params, function(res){
+								self.editLoading = false;
+								self.handleResOperate(res, function(){
+									self.editFormVisible = false;
+									self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
+			editSubmit2: function () {
+				this.$refs.editForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.editLoading = true;
+							var params = Object.assign({}, this.editForm);
+
+							if(params.lSys_StoreMode == 1){
+								params.lSys_StoreValue = params.lSys_StoreValue1;
+							}else{
+								params.lSys_StoreValue = params.lSys_StoreValue2;
+							}
+							delete params.lSys_StoreValue1;
+							delete params.lSys_StoreValue2;
+							if(params.lSys_EquipMode == 1){
+								params.lSys_EquipValue = params.lSys_EquipValue1;
+							}else{
+								params.lSys_EquipValue = params.lSys_EquipValue2;
+							}
+							delete params.lSys_EquipValue1;
+							delete params.lSys_EquipValue2;
+							params.update = 1;
 							ajaxReq(modUrl, params, function(res){
 								self.editLoading = false;
 								self.handleResOperate(res, function(){

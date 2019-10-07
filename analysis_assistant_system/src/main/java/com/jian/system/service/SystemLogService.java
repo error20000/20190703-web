@@ -16,20 +16,20 @@ public class SystemLogService extends BaseService<SystemLog, SystemLogMapper> {
 	@TargetDataSource
 	public List<SystemLog> selectPageByDate(Map<String, Object> condition, Date startDate, Date endDate, int start, int rows) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectPageByDate(tableName, condition, startDate, endDate, start, rows);
 	}
 
 	@TargetDataSource
 	public long sizeByDate(Map<String, Object> condition, Date startDate, Date endDate) {
 		String tableName =  getTableName();
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.sizeByDate(tableName, condition, startDate, endDate);
 	}
 
 	@TargetDataSource
 	public List<SystemLog> selectByDate(Map<String, Object> condition, Date startDate, Date endDate) {
-		condition = condition.isEmpty() ? null : condition;
+		condition = condition != null && condition.isEmpty() ? null : condition;
 		return baseMapper.selectByDate(condition, startDate, endDate);
 	}
 	

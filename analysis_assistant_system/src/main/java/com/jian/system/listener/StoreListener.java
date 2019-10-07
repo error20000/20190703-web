@@ -17,19 +17,24 @@ import javax.servlet.annotation.WebListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jian.system.config.Config;
 import com.jian.system.config.Constant;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
 import com.jian.system.entity.StoreLog;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserStore;
 import com.jian.system.service.MessageService;
 import com.jian.system.service.StoreLogService;
 import com.jian.system.service.StoreService;
 import com.jian.system.service.StoreTypeService;
+import com.jian.system.service.SystemService;
 import com.jian.system.service.UserService;
+import com.jian.system.service.UserStoreService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.DateTools;
+import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tools;
 
 @WebListener
@@ -42,6 +47,7 @@ public class StoreListener implements ServletContextListener {
 	private static long runTime = 24 * 3600 * 1000;
 	private static Timer msgTimer = null;
 	private static long msgRunTime = 24 * 3600 * 1000;
+	private com.jian.system.entity.System system;
 	
 	@Autowired
 	private StoreService storeService;
@@ -53,12 +59,13 @@ public class StoreListener implements ServletContextListener {
 	private MessageService messageService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserStoreService userStoreService;
+	@Autowired
+	private Config config;
+	@Autowired
+	private SystemService systemService;
 	
-	/*@Autowired
-	public StoreListener(StoreService storeService, StoreLogService storeLogService){
-		StoreListener.storeService = storeService;
-		StoreListener.storeLogService = storeLogService;
-	}*/
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -71,6 +78,10 @@ public class StoreListener implements ServletContextListener {
 		destroy();
 	}
 	
+	public void update() {
+		destroy();
+		init();
+	}
 
 	private void init(){
 		process();
@@ -92,36 +103,77 @@ public class StoreListener implements ServletContextListener {
 	private void process(){
 		if(!timerStart){
 			System.out.println(DateTools.formatDate()+"	StoreListener start...");
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String str = sdf.format(new Date()) + " 22:00:00";
-			Date date = DateTools.formatDateStr(str);
-			System.out.println(date);
-			//库存盘点
-			timer = new Timer(true); 
-			timer.schedule(new TimerTask() {
+			
+			system = systemService.selectOne(null);
+			
+			if(system == null) {
+				return;
+			}
+			
+			if(system.getlSys_StoreMode() == 1) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 				
-				@Override
-				public void run() {
-					try {
-						checkInfo();
-					} catch (Exception e) {
-						e.printStackTrace();
+				String str = sdf.format(new Date()) + " "+(system.getlSys_StoreValue() < 10 ? "0"+system.getlSys_StoreValue() : system.getlSys_StoreValue())+":00:00";
+				Date date = DateTools.formatDateStr(str);
+				System.out.println(new Date() + " 每天"+system.getlSys_StoreValue()+"点，盘点一次");
+				System.out.println(date);
+				//库存盘点
+				timer = new Timer(true); 
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						try {
+							checkInfo();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			}, date, runTime);
-			//库存提醒
-			msgTimer = new Timer(true); 
-			msgTimer.schedule(new TimerTask() {
+				}, date, runTime);
+				//库存提醒
+				msgTimer = new Timer(true); 
+				msgTimer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						try {
+							msgInfo();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}, date, msgRunTime);
 				
-				@Override
-				public void run() {
-					try {
-						msgInfo();
-					} catch (Exception e) {
-						e.printStackTrace();
+			}else if(system.getlSys_StoreMode() == 2) {
+				System.out.println(new Date() + " 每隔"+system.getlSys_StoreValue()+"小时，盘点一次");
+				long time = system.getlSys_StoreValue() * 3600 * 1000;
+				//库存盘点
+				timer = new Timer(true); 
+				timer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						try {
+							checkInfo();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			}, date, msgRunTime);
+				}, time, time);
+				//库存提醒
+				msgTimer = new Timer(true); 
+				msgTimer.schedule(new TimerTask() {
+					
+					@Override
+					public void run() {
+						try {
+							msgInfo();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}, time, time);
+			}
 			timerStart = true;
 		}
 	}
@@ -188,7 +240,9 @@ public class StoreListener implements ServletContextListener {
 		//库存提醒
 		List<Map<String, Object>> list = storeService.checkStore();
 		
-		List<User> userAll = userService.selectAll();
+		Map<String, List<UserStore>> cacheUserStore = new HashMap<>();
+		Map<String, List<User>> cacheUser = new HashMap<>();
+		
 		List<StoreType> storeTypeAll = storeTypeService.selectAll();
 		List<Store> storeAll = storeService.selectAll();
 		Map<String, Integer> tempLimit = new HashMap<String, Integer>();
@@ -202,6 +256,13 @@ public class StoreListener implements ServletContextListener {
 		Message node = null;
 		for (int i = 0; i < list.size(); i++) {
 			Map<String, Object> temp = list.get(i);
+			String key = "";
+			key += temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1");
+			key += temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2");
+			key += temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3");
+			key += temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4");
+			String tempKey = key;
+			
 			//库存不足
 			Integer limit = null;
 			if(limit == null || limit == 0) {
@@ -220,12 +281,6 @@ public class StoreListener implements ServletContextListener {
 			if(limit != null && limit != 0 && limit >= count ) {
 				//检查是否已提醒
 				if(old != null && old.size() > 0) {
-					String key = "";
-					key += temp.get("sEquip_StoreLv1") == null ? "" : temp.get("sEquip_StoreLv1");
-					key += temp.get("sEquip_StoreLv2") == null ? "" : temp.get("sEquip_StoreLv2");
-					key += temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3");
-					key += temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4");
-					String tempKey = key;
 					List<String> tempList = old.stream()
 							.map(e -> (e.getsMsg_StoreLv1() == null ? "" : e.getsMsg_StoreLv1()) +
 									(e.getsMsg_StoreLv2() == null ? "" : e.getsMsg_StoreLv2()) +
@@ -238,8 +293,48 @@ public class StoreListener implements ServletContextListener {
 						continue;
 					}
 				}
-				//给所有人，发送消息
-				for (User user : userAll) {
+				//发送消息给有其权限的人
+				List<UserStore> userStores = cacheUserStore.get(key);
+				if(userStores == null) {
+					Map<String, Object> condition = new HashMap<>();
+					if(temp.get("sEquip_StoreLv1") != null) {
+						condition.put("sUserStore_StoreLv1ID", temp.get("sEquip_StoreLv1"));
+					}
+					if(temp.get("sEquip_StoreLv2") != null) {
+						condition.put("sUserStore_StoreLv2ID", temp.get("sEquip_StoreLv2"));
+					}
+					if(temp.get("sEquip_StoreLv3") != null) {
+						condition.put("sUserStore_StoreLv3ID", temp.get("sEquip_StoreLv3"));
+					}
+					if(temp.get("sEquip_StoreLv4") != null) {
+						condition.put("sUserStore_StoreLv4ID", temp.get("sEquip_StoreLv4"));
+					}
+					userStores = userStoreService.selectList(condition);
+				}
+				List<User> userManager = cacheUser.get(config.managerGroupId);
+				if(userManager == null) {
+					userManager = userService.selectList(MapTools.custom().put("sUser_GroupID", config.managerGroupId).build());
+				}
+				List<User> userSuper = cacheUser.get(config.superGroupId);
+				if(userSuper == null) {
+					userSuper = userService.selectList(MapTools.custom().put("sUser_GroupID", config.superGroupId).build());
+				}
+				List<String> userIds = new ArrayList<>();
+				userIds.addAll(userStores.stream()
+						.map(e -> e.getsUserStore_UserID())
+						.collect(Collectors.toList()));
+				if(system.getlSys_StoreMsg() == 1) {  //是否通知管理员
+					userIds.addAll(userManager.stream()
+							.map(e -> e.getsUser_ID())
+							.collect(Collectors.toList()));
+					userIds.addAll(userSuper.stream()
+							.map(e -> e.getsUser_ID())
+							.collect(Collectors.toList()));
+				}
+				userIds = userIds.stream()
+						.distinct()
+						.collect(Collectors.toList());
+				for (String uid : userIds) {
 					node = new Message();
 					node.setsMsg_ID(Utils.newSnowflakeIdStr());
 					node.setdMsg_CreateDate(new Date());
@@ -252,7 +347,7 @@ public class StoreListener implements ServletContextListener {
 					node.setsMsg_StoreLv3(temp.get("sEquip_StoreLv3") == null ? "" : temp.get("sEquip_StoreLv3") + "" );
 					node.setsMsg_StoreLv4(temp.get("sEquip_StoreLv4") == null ? "" : temp.get("sEquip_StoreLv4") + "" );
 					node.setdMsg_StoreNum(count);
-					node.setsMsg_ToUserID(user.getsUser_ID());
+					node.setsMsg_ToUserID(uid);
 					res.add(node);
 				}
 			}
