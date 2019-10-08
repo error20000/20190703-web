@@ -524,14 +524,15 @@ var myvue = new Vue({
 				}else{
 					iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
 				}
+				var self = this;
 				var symbol = {};
 					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
 						symbol = {
 								type: "picture-marker",
 								url: iconUrl,
-								width: "24px",
-								height: "24px"
+								width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? "24px" : sysData.lSys_MapIconWidth + 'px',
+								height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? "24px" : sysData.lSys_MapIconHeight + 'px'
 						};
 						
 					});
@@ -571,8 +572,12 @@ var myvue = new Vue({
 					var iconUrl = "";
 					if(zoom <= self.maxZoom){
 						iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+						item.symbol.width = "24px";
+						item.symbol.height = "24px";
 					}else{
 						iconUrl = pic ? "/" + pic : "/admin/images/map.png";
+						item.symbol.width = sysData.lSys_MapIconWidth == 0 ? "24px" : sysData.lSys_MapIconWidth + 'px';
+						item.symbol.height = sysData.lSys_MapIconHeight == 0 ? "24px" : sysData.lSys_MapIconHeight + 'px';
 					} 
 					item.symbol.url = iconUrl;
 				});

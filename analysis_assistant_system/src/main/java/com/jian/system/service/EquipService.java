@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -1191,7 +1192,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	public List<Map<String, Object>> brandOption(){
 		
 		List<Map<String, Object>> list = baseMapper.brandOption();
-		
+		list = list.stream()
+				.filter(e -> e != null)
+				.collect(Collectors.toList());
 		return list;
 	}
 	

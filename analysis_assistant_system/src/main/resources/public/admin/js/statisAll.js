@@ -804,7 +804,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            interval: 1,
+					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
 					            }
@@ -920,7 +920,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            interval: 1,
+					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
 					            }
@@ -1036,7 +1036,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            interval: 1,
+					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
 					            }
@@ -1152,7 +1152,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            interval: 1,
+					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
 					            }

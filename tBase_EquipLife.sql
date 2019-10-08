@@ -18,7 +18,7 @@
 -- ----------------------------
 -- Table structure for tBase_EquipLife
 -- ----------------------------
-DROP TABLE "AASYSTEM"."tBase_EquipLife";
+
 CREATE TABLE "AASYSTEM"."tBase_EquipLife" (
   "sELife_ID" NVARCHAR2(32) NOT NULL ,
   "dELife_CreateDate" DATE ,

@@ -1905,21 +1905,21 @@
 			});
 	};
 	
-	var data;
+	var sysData;
 	ajaxReqSync("/api/sys/findOne", {}, function(res){
 		if(res.code > 0){
-			data = res.data;
+			sysData = res.data;
 		}
 	});
 	
-	   var Center = {lat: data.lSys_MapLat, lng: data.lSys_MapLng};	
+	   var Center = {lat: sysData.lSys_MapLat, lng: sysData.lSys_MapLng};	
 	   var ArGis = {
 	   		baseUrl: "arcgis_js_api/library/4.5",
-	   		mapUrl: data.sSys_MapService,
+	   		mapUrl: sysData.sSys_MapService,
 	   		map: "",
 			view: "",
 			center: [Center.lng, Center.lat],
-			zoom: data.lSys_MapLevel
+			zoom: sysData.lSys_MapLevel
 	   };
   </script>
   <script src="arcgis_js_api/library/4.5/init.js"></script>
