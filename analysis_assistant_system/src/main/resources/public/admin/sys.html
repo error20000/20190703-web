@@ -27,7 +27,6 @@
   .box-card {
     width: 49%;
     display: inline-block;
-    height: 450px;
   }
 </style>
 </head>
@@ -116,7 +115,7 @@
 				</el-card>
 				
 				
-				<el-card class="box-card">
+				<el-card class="box-card" v-drag="contain">
 				  <div slot="header" class="clearfix">
 				    <span>盘点设置</span>
 				    <el-button style="float: right; padding: 3px 0" type="text" @click="editSubmit2">保存</el-button>

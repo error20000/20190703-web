@@ -701,6 +701,9 @@ var myvue = new Vue({
 						self.iconBatteryData = [];
 						self.iconSolarData = [];
 						self.iconLampData = [];
+						self.iconBodyData = [];
+						self.iconAnchorData = [];
+						self.iconStoneData = [];
 						for (var i = 0; i < res.data.length; i++) {
 							let node = res.data[i];
 							if(node.sEquip_Type == 'EquipBattery'){

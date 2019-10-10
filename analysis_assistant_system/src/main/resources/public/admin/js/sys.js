@@ -70,6 +70,11 @@ var myvue = new Vue({
 				    }
 				},
 				
+				contain:{
+					xx:1500,
+					yy:1500
+				},
+				
 				user: ''
 			}
 		},
@@ -296,7 +301,43 @@ var myvue = new Vue({
 			getLoginToken();
 			this.preloading = true;
 			this.getList();
+		},
+		directives:{
+			drag:{
+	            bind: function (el, binding, vnode) {
+	              el.onmousedown = function(e){
+	                var disx = e.clientX - el.offsetLeft;
+	                var disy = e.clientY - el.offsetTop;
+                    e.stopPropagation();
+	                document.onmousemove = function (e){
+	                	let left = e.clientX - disx;
+	                	let top = e.clientY - disy;
+	                	if(left<0){
+	                    	left = 0;
+	                    }
+	                    if(top<0){
+	                    	top = 0;
+	                    }
+	                    if(left>binding.value.xx-el.offsetWidth){
+	                    	left = binding.value.xx-el.offsetWidth;
+	                    }
+	                    if(top>binding.value.yy-el.offsetHeight){
+	                    	top = binding.value.yy-el.offsetHeight;
+	                    }
+	                    el.style.left = left+'px';
+	                    el.style.top = top+'px';
+	                    e.stopPropagation();
+	                }
+	                document.onmouseup = function(){
+	                    document.onmousemove = document.onmouseup = null;
+	                }
+	            }
+
+	          },
+	        
+	        }
 		}
+
 	  });
 	
 	
