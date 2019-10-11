@@ -594,19 +594,50 @@ var myvue = new Vue({
 					var status = item.attributes.status
 					var pic = item.attributes.pic
 					var iconUrl = "";
-					if(zoom <= self.maxZoom){
-						iconUrl = "/admin/images/map1.png";
-						if(item.attributes.type == 'aid'){
-							iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+					var color = "";
+					var symbol = item.symbol;
+					
+					if(zoom <= self.maxZoomPoint){
+						if(symbol.type == "picture-marker"){
+							if(params.attr.type == 'aid'){
+								color = params.attr.status == this.defaultAidStatus ? "green" : "red";
+							}
+							symbol = {
+					  		    type: "simple-marker",  
+					  		    color: color,
+					  		    size: sysData.lSys_MapIconWidthPoint ? sysData.lSys_MapIconWidthPoint + 'px' : "4px",
+							    outline: {
+							    	style:"none"
+							    }
+					  		};
 						}
-						item.symbol.width = sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px';
-						item.symbol.height = sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px';
 					}else{
-						iconUrl = pic ? "/" + pic : "/admin/images/map.png";
-						item.symbol.width = sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px';
-						item.symbol.height = sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px';
-					} 
-					item.symbol.url = iconUrl;
+						if(symbol.type == "simple-marker"){
+							require(["esri/symbols/PictureMarkerSymbol"], 
+									function (PictureMarkerSymbol) {
+								symbol = {
+										type: "picture-marker",
+										url: iconUrl,
+										width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
+										height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
+								};
+							});
+						}
+						if(zoom <= self.maxZoom){
+							iconUrl = "/admin/images/map1.png";
+							if(item.attributes.type == 'aid'){
+								iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+							}
+							symbol.width = sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px';
+							symbol.height = sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px';
+						}else{
+							iconUrl = pic ? "/" + pic : "/admin/images/map.png";
+							symbol.width = sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px';
+							symbol.height = sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px';
+						} 
+						symbol.url = iconUrl;
+					}
+					
 				});
 			},
 			//query
