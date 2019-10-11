@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 07/10/2019 12:43:31
+ Date: 11/10/2019 23:49:38
 */
 
 
@@ -33,7 +33,13 @@ CREATE TABLE "AASYSTEM"."tBase_System" (
   "lSys_EquipValue" NUMBER ,
   "lSys_StoreMsg" NUMBER ,
   "lSys_EquipMsg" NUMBER ,
-  "lSys_EquipRate" NUMBER 
+  "lSys_EquipRate" NUMBER ,
+  "lSys_MapLevelPoint" NUMBER ,
+  "lSys_MapIconWidthPoint" NUMBER ,
+  "lSys_MapIconHeightPoint" NUMBER ,
+  "lSys_MapLevelDef" NUMBER ,
+  "lSys_MapIconWidthDef" NUMBER ,
+  "lSys_MapIconHeightDef" NUMBER 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -65,14 +71,24 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_EquipValue" IS '器材寿命�
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreMsg" IS '库存不足是否通知管理员 0：否，1：是';
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_EquipMsg" IS '寿命不足是否通知管理员 0：否，1：是';
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_EquipRate" IS '不足平均寿命的百分之几';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapLevelPoint" IS '点图标级别';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconWidthPoint" IS '点图标宽度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconHeightPoint" IS '点图标高度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapLevelDef" IS '默认图标级别';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconWidthDef" IS '默认图标宽度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconHeightDef" IS '默认图标高度';
 
 -- ----------------------------
 -- Records of tBase_System
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '20', '1', '22', '1', '22', '1', '1', '90');
+INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '50', '1', '22', '1', '22', '1', '1', '90', '4', '24', '24', '10', '24', '24');
 
 -- ----------------------------
 -- Primary Key structure for table tBase_System
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0017770" PRIMARY KEY ("sSys_ID");
 
+-- ----------------------------
+-- Checks structure for table tBase_System
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0022166" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
