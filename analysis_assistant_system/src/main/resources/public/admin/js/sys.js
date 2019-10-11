@@ -66,7 +66,19 @@ var myvue = new Vue({
 				        lSys_EquipRate: {
 				            content: "说明：<br/><br/>1、当器材使用寿命大于平均使用寿命的xx%时，进行消息提醒。",
 				            placement: "right"
-				        }
+				        },
+				        lSys_MapLevelPoint: {
+				            content: "说明：<br/><br/>1、当地图缩放级别小于该值时显示点。",
+				            placement: "right"
+				        },
+				        lSys_MapLevelDef: {
+				            content: "说明：<br/><br/>1、当地图缩放级别小于该值时显示默认图标。",
+				            placement: "right"
+				        },
+				        lSys_MapLevelDef2: {
+				            content: "说明：<br/><br/>1、当地图缩放级别大于该值时显示自定义图标。",
+				            placement: "right"
+				        },
 				    }
 				},
 				

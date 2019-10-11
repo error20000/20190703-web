@@ -28,6 +28,29 @@
     width: 49%;
     display: inline-block;
   }
+  
+  .el-divider {
+    background-color: #dcdfe6;
+    position: relative;
+  }
+  .el-divider--horizontal {
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: 24px 0;
+  }
+  .el-divider__text {
+    position: absolute;
+    background-color: #fff;
+    padding: 0 20px;
+    font-weight: 500;
+    color: #303133;
+    font-size: 14px;
+  }
+  .is-left.el-divider__text {
+    left: 20px;
+    transform: translateY(-50%);
+  }
 </style>
 </head>
 <body class="animated fadeIn">
@@ -91,13 +114,87 @@
 	                    </span>
 					    <el-slider input-size="mini" v-model="editForm.lSys_MapLevel" show-input :min="0" :max="23" :step="1"> </el-slider>
 					  </el-form-item>
+					  <div class="el-divider el-divider--horizontal"><div class="el-divider__text is-left">图标设置</div></div>
+					  <!-- 点 -->
+					  <el-form-item prop="lSys_MapLevelPoint">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLevelPoint" :effect="tips.effect" :placement="tips.forms.lSys_MapLevelPoint.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLevelPoint.content"></div>
+	                            <span>点图标显示级别<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>点图标显示级别</span>
+	                    </span>
+					    <el-slider input-size="mini" v-model="editForm.lSys_MapLevelPoint" show-input :min="0" :max="23" :step="1"> </el-slider>
+					  </el-form-item>
+					  <el-form-item prop="lSys_MapIconWidthPoint">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidthPoint" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidthPoint.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidthPoint.content"></div>
+	                            <span>点图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>点图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconWidthPoint"></el-input>
+					  </el-form-item>
+					  <!-- <el-form-item prop="lSys_MapIconHeightPoint">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeightPoint" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeightPoint.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeightPoint.content"></div>
+	                            <span>点图标高度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>点图标高度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconHeightPoint"></el-input>
+					  </el-form-item> -->
+					  <!-- 默认 -->
+					  <el-form-item prop="lSys_MapLevelDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLevelDef" :effect="tips.effect" :placement="tips.forms.lSys_MapLevelDef.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLevelDef.content"></div>
+	                            <span>默认图标显示级别<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>默认图标显示级别</span>
+	                    </span>
+					    <el-slider input-size="mini" v-model="editForm.lSys_MapLevelDef" show-input :min="editForm.lSys_MapLevelPoint" :max="23" :step="1"> </el-slider>
+					  </el-form-item>
+					  <el-form-item prop="lSys_MapIconWidthDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidthDef" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidthDef.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidthDef.content"></div>
+	                            <span>默认图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>默认图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconWidthDef"></el-input>
+					  </el-form-item>
+					  <el-form-item prop="lSys_MapIconHeightDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeightDef" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeightDef.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeightDef.content"></div>
+	                            <span>默认图标高度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>默认图标高度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_MapIconHeightDef"></el-input>
+					  </el-form-item>
+					  <!-- 自定义 -->
+					  <el-form-item prop="lSys_MapLevelDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_MapLevelDef2" :effect="tips.effect" :placement="tips.forms.lSys_MapLevelDef2.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_MapLevelDef2.content"></div>
+	                            <span>自定义图标显示级别<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>自定义图标显示级别</span>
+	                    </span>
+					    <el-slider input-size="mini" v-model="editForm.lSys_MapLevelDef" show-input :min="editForm.lSys_MapLevelPoint" :max="23" :step="1"> </el-slider>
+					  </el-form-item>
 					  <el-form-item prop="lSys_MapIconWidth">
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidth" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidth.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidth.content"></div>
-	                            <span>图标宽度(px)<i class="el-icon-question"></i></span>
+	                            <span>自定义图标宽度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>图标宽度(px)</span>
+	                        <span v-else>自定义图标宽度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconWidth"></el-input>
 					  </el-form-item>
@@ -105,9 +202,9 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeight" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeight.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeight.content"></div>
-	                            <span>图标高度(px)<i class="el-icon-question"></i></span>
+	                            <span>自定义图标高度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>图标高度(px)</span>
+	                        <span v-else>自定义图标高度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconHeight"></el-input>
 					  </el-form-item>
@@ -115,7 +212,7 @@
 				</el-card>
 				
 				
-				<el-card class="box-card" v-drag="contain">
+				<el-card class="box-card" v-drag="contain" style="float: right;">
 				  <div slot="header" class="clearfix">
 				    <span>盘点设置</span>
 				    <el-button style="float: right; padding: 3px 0" type="text" @click="editSubmit2">保存</el-button>

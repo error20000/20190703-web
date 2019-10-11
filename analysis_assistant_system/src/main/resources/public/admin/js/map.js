@@ -60,6 +60,9 @@ var myvue = new Vue({
 				defaultAidStatus: 'normal',
 				defaultStoreStatus: 'normal',
 				maxZoom: 10,
+				maxZoomPoint: 6,
+				defaultWidth: '24px',
+				defaultHeight: '24px',
 				
 				detailFormVisible: false,
 				detailForm: {},
@@ -518,24 +521,45 @@ var myvue = new Vue({
 				    }
 		  		  };*/
 				//var iconUrl = params.attr.status ? params.attr.status.sDict_Picture ? "/"+params.attr.status.sDict_Picture : "/admin/images/map.png" : "/admin/images/map.png";
-				var iconUrl = "";
-				if(ArGis.view.zoom <= this.maxZoom){
-					iconUrl = params.attr.status == this.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
-				}else{
-					iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
-				}
+				
 				var self = this;
 				var symbol = {};
+				
+				if(ArGis.view.zoom <= self.maxZoomPoint){
+					var color = "green";
+					if(params.attr.type == 'aid'){
+						color = params.attr.status == this.defaultAidStatus ? "green" : "red";
+					}
+					 symbol = {
+			  		    type: "simple-marker",  
+			  		    color: color,
+			  		    size: sysData.lSys_MapIconWidthPoint ? sysData.lSys_MapIconWidthPoint + 'px' : "4px",
+					    outline: {
+					    	style:"none"
+					    }
+			  		  };
+				}else{
+					var iconUrl = "";
+					if(ArGis.view.zoom <= this.maxZoom){
+						iconUrl = "/admin/images/map1.png";
+						if(params.attr.type == 'aid'){
+							iconUrl = params.attr.status == this.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+						}
+					}else{
+						iconUrl = params.attr.pic ? "/"+params.attr.pic : "/admin/images/map.png";
+					}
 					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
 						symbol = {
 								type: "picture-marker",
 								url: iconUrl,
-								width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? "24px" : sysData.lSys_MapIconWidth + 'px',
-								height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? "24px" : sysData.lSys_MapIconHeight + 'px'
+								width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
+								height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
 						};
 						
 					});
+				}
+				
 			     
 			     return this.createGraphic(geometry, symbol, params.attr, params.template);
 			},
@@ -571,13 +595,16 @@ var myvue = new Vue({
 					var pic = item.attributes.pic
 					var iconUrl = "";
 					if(zoom <= self.maxZoom){
-						iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
-						item.symbol.width = "24px";
-						item.symbol.height = "24px";
+						iconUrl = "/admin/images/map1.png";
+						if(item.attributes.type == 'aid'){
+							iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+						}
+						item.symbol.width = sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px';
+						item.symbol.height = sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px';
 					}else{
 						iconUrl = pic ? "/" + pic : "/admin/images/map.png";
-						item.symbol.width = sysData.lSys_MapIconWidth == 0 ? "24px" : sysData.lSys_MapIconWidth + 'px';
-						item.symbol.height = sysData.lSys_MapIconHeight == 0 ? "24px" : sysData.lSys_MapIconHeight + 'px';
+						item.symbol.width = sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px';
+						item.symbol.height = sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px';
 					} 
 					item.symbol.url = iconUrl;
 				});
@@ -1058,6 +1085,9 @@ var myvue = new Vue({
 		mounted: function() {
 			getLoginToken();
 			this.preloading = true;
+
+			this.maxZoomPoint = sysData.lSys_MapLevelPoint;
+			this.maxZoom = sysData.lSys_MapLevelDef;
 			
 			//this.handleAidStatusIconOptions();
 			//this.handleStoreMapIconOptions();

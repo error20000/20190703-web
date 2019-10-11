@@ -39,6 +39,19 @@ public class System extends Base<System> {
 	private int lSys_EquipMsg;
 	@Excel(name="不足平均寿命的百分之几", sort=0, length="", isNull=1 )
 	private int lSys_EquipRate;
+	
+	@Excel(name="点图标级别", sort=0, length="", isNull=1 )
+	private int lSys_MapLevelPoint;
+	@Excel(name="点图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconWidthPoint;
+	@Excel(name="点图标高度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconHeightPoint;
+	@Excel(name="默认图标级别", sort=0, length="", isNull=1 )
+	private int lSys_MapLevelDef;
+	@Excel(name="默认图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconWidthDef;
+	@Excel(name="默认图标高度", sort=0, length="", isNull=1 )
+	private int lSys_MapIconHeightDef;
 
 	
 	
@@ -125,6 +138,42 @@ public class System extends Base<System> {
 	}
 	public void setlSys_EquipRate(int lSys_EquipRate) {
 		this.lSys_EquipRate = lSys_EquipRate;
+	}
+	public int getlSys_MapLevelPoint() {
+		return lSys_MapLevelPoint;
+	}
+	public void setlSys_MapLevelPoint(int lSys_MapLevelPoint) {
+		this.lSys_MapLevelPoint = lSys_MapLevelPoint;
+	}
+	public int getlSys_MapIconWidthPoint() {
+		return lSys_MapIconWidthPoint;
+	}
+	public void setlSys_MapIconWidthPoint(int lSys_MapIconWidthPoint) {
+		this.lSys_MapIconWidthPoint = lSys_MapIconWidthPoint;
+	}
+	public int getlSys_MapIconHeightPoint() {
+		return lSys_MapIconHeightPoint;
+	}
+	public void setlSys_MapIconHeightPoint(int lSys_MapIconHeightPoint) {
+		this.lSys_MapIconHeightPoint = lSys_MapIconHeightPoint;
+	}
+	public int getlSys_MapLevelDef() {
+		return lSys_MapLevelDef;
+	}
+	public void setlSys_MapLevelDef(int lSys_MapLevelDef) {
+		this.lSys_MapLevelDef = lSys_MapLevelDef;
+	}
+	public int getlSys_MapIconWidthDef() {
+		return lSys_MapIconWidthDef;
+	}
+	public void setlSys_MapIconWidthDef(int lSys_MapIconWidthDef) {
+		this.lSys_MapIconWidthDef = lSys_MapIconWidthDef;
+	}
+	public int getlSys_MapIconHeightDef() {
+		return lSys_MapIconHeightDef;
+	}
+	public void setlSys_MapIconHeightDef(int lSys_MapIconHeightDef) {
+		this.lSys_MapIconHeightDef = lSys_MapIconHeightDef;
 	}
 	
 	
