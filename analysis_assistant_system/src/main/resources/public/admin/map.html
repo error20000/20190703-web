@@ -152,7 +152,7 @@
 		    	<i class="el-dialog__close el-icon-close"></i>
 		    </el-button>
 		  </div>
-	      <div v-if="detailType == 'aid'" class="text item">
+	      <div v-show="detailType == 'aid'" class="text item">
 	      	  <el-tabs v-model="activeAidDetailName">
 			    <el-tab-pane label="图标信息" name="0">
 			    	<div class="icon-container" v-if="detailIcon == 'leftLabel'">
@@ -1635,6 +1635,8 @@
 									<div>{{formatDateStr(scope.row.dMsg_CreateDate, 'yyyy-MM-dd')}}</div>
 								</template>
 							</el-table-column>
+							<el-table-column label="状态" prop="sMsg_Status" :formatter="msgStatusFormatter">
+							</el-table-column>
 						</el-table>
 						<!-- page tool -->
 						<el-col :span="24" class="toolbar">
@@ -1650,7 +1652,7 @@
 				    </el-tab-pane>
 			  </el-tabs>
 			</div>
-			  <div v-if="detailType == 'store'" class="text item">
+			  <div v-show="detailType == 'store'" class="text item">
 		      	  <el-tabs v-model="activeStoreDetailName">
 				    
 				    <el-tab-pane label="仓库信息" name="1">
@@ -1853,6 +1855,8 @@
 								<template scope="scope">
 									<div>{{formatDateStr(scope.row.dMsg_CreateDate, 'yyyy-MM-dd')}}</div>
 								</template>
+							</el-table-column>
+							<el-table-column label="状态" prop="sMsg_Status" :formatter="msgStatusFormatter">
 							</el-table-column>
 						</el-table>
 						<!-- page tool -->

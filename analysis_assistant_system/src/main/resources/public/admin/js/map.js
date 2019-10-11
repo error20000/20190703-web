@@ -55,6 +55,8 @@ var myvue = new Vue({
 				iconOptions: [],
 				statusDictNo: 'AidStatus',
 				statusOptions: [],
+				msgStatusDictNo: 'MsgStatus',
+				msgStatusOptions: [],
 				
 				pointArray: [],
 				defaultAidStatus: 'normal',
@@ -210,7 +212,7 @@ var myvue = new Vue({
 					var item = this.aidTypeOptions[i];
 					if(row.sAid_Type == item.sDict_NO){
 						name = item.sDict_Name;
-						break
+						break;
 					}
 				}
 				return name;
@@ -221,7 +223,7 @@ var myvue = new Vue({
 					var item = this.stationOptions[i];
 					if(row.sAid_Station == item.sDict_NO){
 						name = item.sDict_Name;
-						break
+						break;
 					}
 				}
 				return name;
@@ -232,7 +234,7 @@ var myvue = new Vue({
 					var item = this.lightOptions[i];
 					if(row.sAid_Lighting == item.sDict_NO){
 						name = item.sDict_Name + (item.sDict_Describe ? " ("+item.sDict_Describe+")" : "");
-						break
+						break;
 					}
 				}
 				return name;
@@ -243,7 +245,7 @@ var myvue = new Vue({
 					var item = this.markOptions[i];
 					if(row.sAid_Mark == item.sDict_NO){
 						name = item.sDict_Name;
-						break
+						break;
 					}
 				}
 				return name;
@@ -302,7 +304,7 @@ var myvue = new Vue({
 					var item = this.iconOptions[i];
 					if(row.sAid_Icon == item.sDict_NO){
 						name = item.sDict_Picture;
-						break
+						break;
 					}
 				}
 				return name;
@@ -325,7 +327,7 @@ var myvue = new Vue({
 					var item = this.statusOptions[i];
 					if(row.sAid_Status == item.sDict_NO){
 						name = item.sDict_Name;
-						break
+						break;
 					}
 				}
 				return name;
@@ -336,6 +338,29 @@ var myvue = new Vue({
 				ajaxReq(dictUrl, {sDict_DictTypeNO: this.statusDictNo}, function(res){
 					self.handleResQuery(res, function(){
 						self.statusOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			msgStatusFormatter: function(row){
+				var name = row.sMsg_Status;
+				for (var i = 0; i < this.msgStatusOptions.length; i++) {
+					var item = this.msgStatusOptions[i];
+					if(row.sMsg_Status == item.sDict_NO){
+						name = item.sDict_Name;
+						break;
+					}
+				}
+				return name;
+			},
+			handleMsgStatusOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.msgStatusDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.msgStatusOptions = res.data;
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -599,8 +624,8 @@ var myvue = new Vue({
 					
 					if(zoom <= self.maxZoomPoint){
 						if(symbol.type == "picture-marker"){
-							if(params.attr.type == 'aid'){
-								color = params.attr.status == this.defaultAidStatus ? "green" : "red";
+							if(item.attributes.type == 'aid'){
+								color = status == this.defaultAidStatus ? "green" : "red";
 							}
 							symbol = {
 					  		    type: "simple-marker",  
@@ -610,6 +635,9 @@ var myvue = new Vue({
 							    	style:"none"
 							    }
 					  		};
+							
+							ArGis.view.graphics.splice(i,1,item);
+							console.log("====>"+symbol);
 						}
 					}else{
 						if(symbol.type == "simple-marker"){
@@ -622,6 +650,7 @@ var myvue = new Vue({
 										height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
 								};
 							});
+							console.log("---->",symbol);
 						}
 						if(zoom <= self.maxZoom){
 							iconUrl = "/admin/images/map1.png";
@@ -1130,6 +1159,7 @@ var myvue = new Vue({
 			this.handleLightOptions();
 			this.handleMarkOptions();
 			this.handleStatusOptions();
+			this.handleMsgStatusOptions();
 			
 			let self = this;
 			this.handleStoreTypeOptions(function(){
