@@ -124,6 +124,9 @@
 																    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row, 4)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">
 																    	<i class="fas fa-edit"></i>&nbsp;编辑
 																    </el-dropdown-item>
+																    <el-dropdown-item @click.native="handleLimit(scope.$index, scope.row, 4)" ref="limit" auth="sys:store:limit" v-show="hasAuth('limit')">
+																    	<i class="fas fa-cog"></i>&nbsp;库存预警
+																    </el-dropdown-item>
 																    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row, 4)" divided style="color: #f56c6c;" ref="delete" auth="sys:store:delete" v-show="hasAuth('delete')">
 																    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 																    </el-dropdown-item>
@@ -154,6 +157,9 @@
 													    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row, 3)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">
 													    	<i class="fas fa-edit"></i>&nbsp;编辑
 													    </el-dropdown-item>
+													    <el-dropdown-item @click.native="handleLimit(scope.$index, scope.row, 3)" ref="limit" auth="sys:store:limit" v-show="hasAuth('limit')">
+													    	<i class="fas fa-cog"></i>&nbsp;库存预警
+													    </el-dropdown-item>
 													    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row, 3)" divided style="color: #f56c6c;" ref="delete" auth="sys:store:delete" v-show="hasAuth('delete')">
 													    	<i class="fas fa-trash-alt"></i>&nbsp;删除
 													    </el-dropdown-item>
@@ -183,6 +189,9 @@
 										  <el-dropdown-menu slot="dropdown">
 										    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row, 2)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">
 										    	<i class="fas fa-edit"></i>&nbsp;编辑
+										    </el-dropdown-item>
+										    <el-dropdown-item @click.native="handleLimit(scope.$index, scope.row, 2)" ref="limit" auth="sys:store:limit" v-show="hasAuth('limit')">
+										    	<i class="fas fa-cog"></i>&nbsp;库存预警
 										    </el-dropdown-item>
 										    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row, 2)" divided style="color: #f56c6c;" ref="delete" auth="sys:store:delete" v-show="hasAuth('delete')">
 										    	<i class="fas fa-trash-alt"></i>&nbsp;删除
@@ -228,6 +237,9 @@
 							  <el-dropdown-menu slot="dropdown">
 							    <el-dropdown-item @click.native="handleEdit(scope.$index, scope.row, 1)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">
 							    	<i class="fas fa-edit"></i>&nbsp;编辑
+							    </el-dropdown-item>
+							    <el-dropdown-item @click.native="handleLimit(scope.$index, scope.row, 1)" ref="limit" auth="sys:store:limit" v-show="hasAuth('limit')">
+							    	<i class="fas fa-cog"></i>&nbsp;库存预警
 							    </el-dropdown-item>
 							    <el-dropdown-item @click.native="handleDel(scope.$index, scope.row, 1)" divided style="color: #f56c6c;" ref="delete" auth="sys:store:delete" v-show="hasAuth('delete')">
 							    	<i class="fas fa-trash-alt"></i>&nbsp;删除

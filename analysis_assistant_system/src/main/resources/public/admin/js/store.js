@@ -8,6 +8,8 @@ var excelUrl = baseUrl + "api/store/excel";
 var importUrl = baseUrl + "api/store/import";
 var dictUrl = baseUrl + "api/dict/findList";
 var listUrl = baseUrl + "api/store/findList";
+var storeLimitUrl = baseUrl + "api/store/limit";
+var updateStoreLimitUrl = baseUrl + "api/store/updateLimit";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -160,6 +162,14 @@ var myvue = new Vue({
 		            	}, trigger: 'blur' }
 		              ]
 				},
+				//limit
+				limitFormVisible: false,
+				limitLoading: false,
+				limitForm: {
+					sSLimit_StoreID : '',
+					data: []
+				},
+				limitFormRules: {},
 				
 				//has auth
 				hasEditAuth: false,
@@ -635,6 +645,53 @@ var myvue = new Vue({
 					}
 				});
 			},
+			//limit
+			handleLimit: function (index, row, lv) {
+				if(!this.hasAuth('limit')){
+					this.$message.error('没有权限！');
+					return;
+				}
+				this.limitFormVisible = true;
+				this.limitForm.sSLimit_StoreID = row.sStore_ID;
+				var self = this;
+				var params = {
+					sStore_ID: row.sStore_ID
+				};
+				ajaxReq(storeLimitUrl, params, function(res){
+					self.handleResOperate(res, function(){
+						self.limitForm.data = res.data;
+					});
+				});
+			},
+			limitClose: function () {
+				this.limitFormVisible = false;
+				this.limitLoading = false;
+				this.$refs.limitForm.resetFields();
+			},
+			limitSubmit: function () {
+				this.$refs.limitForm.validate((valid) => {
+					if (valid) {
+						this.$confirm('确认提交吗?', '提示', {}).then(() => {
+							var self = this;
+							this.limitLoading = true;
+							var params = Object.assign({}, this.editForm);
+							if(this.editForm.level == 1){
+								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_LatDu, params.lStoreType_LatFen, params.lStoreType_LatMiao);
+								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_LngDu, params.lStoreType_LngFen, params.lStoreType_LngMiao);
+							}
+							ajaxReq(modUrl, params, function(res){
+								self.limitLoading = false;
+								self.handleResOperate(res, function(){
+									self.limitFormVisible = false;
+									//self.getList();
+								});
+							});
+							
+						});
+					}
+				});
+			},
+			
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
