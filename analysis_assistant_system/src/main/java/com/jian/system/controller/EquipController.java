@@ -1223,4 +1223,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		Equip res = service.nfc(sNfc_NO);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+	
+	//TODO -------------------------------------------------------------------------------- 第三方接口
+	
 }
