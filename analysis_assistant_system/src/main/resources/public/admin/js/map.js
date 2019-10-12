@@ -531,6 +531,9 @@ var myvue = new Vue({
 				});
 			},
 			createPoint: function(params){
+				
+				var zoom = params.zoom ? params.zoom : ArGis.view.zoom;
+				
 				var geometry = {
 					type: "point",
 				    longitude: params.lng ,
@@ -550,7 +553,7 @@ var myvue = new Vue({
 				var self = this;
 				var symbol = {};
 				
-				if(ArGis.view.zoom <= self.maxZoomPoint){
+				if(zoom <= self.maxZoomPoint){
 					var color = "green";
 					if(params.attr.type == 'aid'){
 						color = params.attr.status == this.defaultAidStatus ? "green" : "red";
@@ -565,7 +568,7 @@ var myvue = new Vue({
 			  		  };
 				}else{
 					var iconUrl = "";
-					if(ArGis.view.zoom <= this.maxZoom){
+					if(zoom <= this.maxZoom){
 						iconUrl = "/admin/images/map1.png";
 						if(params.attr.type == 'aid'){
 							iconUrl = params.attr.status == this.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
@@ -575,12 +578,21 @@ var myvue = new Vue({
 					}
 					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
-						symbol = {
-								type: "picture-marker",
-								url: iconUrl,
-								width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
-								height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
-						};
+						if(zoom <= self.maxZoom){
+							symbol = {
+									type: "picture-marker",
+									url: iconUrl,
+									width: sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px',
+									height: sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px'
+							};
+						}else{
+							symbol = {
+									type: "picture-marker",
+									url: iconUrl,
+									width: sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
+									height: sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
+							};
+						}
 						
 					});
 				}
@@ -611,47 +623,75 @@ var myvue = new Vue({
 				var point = this.createPoint(params);
 				ArGis.view.graphics.add(point)
 			},
+			updatePoint: function(zoom){
+				this.pointArray = [];
+				for (var i = 0; i < this.aidOptions.length; i++) {
+					let node = this.aidOptions[i];
+					this.pointArray.push(this.createPoint({
+						lat: node.lAid_Lat,
+						lng: node.lAid_Lng,
+						attr:{
+							id: node.sAid_ID,
+							name: node.sAid_Name,
+							no: node.sAid_NO,
+							type: 'aid',
+							//status: this.findAidStatusIcon(node.sAid_Status || "normal")
+							status: node.sAid_Status || this.defaultAidStatus,
+							pic: node.sAid_StatusIcon ? node.sAid_StatusIcon : node.sAid_TypeIcon
+						},
+						color: "blue",
+						width: "10px",
+						zoom: zoom
+					}));
+				}
+				for (var i = 0; i < this.storeTypeOptions.length; i++) {
+					let node = this.storeTypeOptions[i];
+					this.pointArray.push(this.createPoint({
+						lat: node.lStoreType_Lat,
+						lng: node.lStoreType_Lng,
+						attr:{
+							id: node.sStoreType_ID,
+							name: node.sStoreType_Name,
+							type: 'store',
+							//status: this.findStoreMapIcon(node.sStoreType_MapIcon)
+							status: node.status,
+							pic: node.sStoreType_MapIconPic
+						},
+						color: "red",
+						width: "10px",
+						zoom: zoom
+					}));
+				}
+				ArGis.view.graphics.addMany(this.pointArray);
+			},
 			changePoint: function(evt){
 				var self = this;
 				var graphics = ArGis.view.graphics;
 				var zoom = evt.deltaY > 0 ? ArGis.view.zoom - 1 : ArGis.view.zoom + 1;
+				var flag = true;
+				if(zoom <= self.maxZoomPoint){
+					if(graphics.getItemAt(0).symbol.type == "picture-marker"){
+						graphics.removeAll();
+						self.updatePoint(zoom);
+						flag = false;
+					}
+				}else{
+					if(graphics.getItemAt(0).symbol.type == "simple-marker"){
+						graphics.removeAll();
+						self.updatePoint(zoom);
+						flag = false;
+					}
+				}
+				if(!flag){
+					return;
+				}
 				graphics.forEach(function(item, i){
 					var status = item.attributes.status
 					var pic = item.attributes.pic
 					var iconUrl = "";
 					var color = "";
 					var symbol = item.symbol;
-					
-					if(zoom <= self.maxZoomPoint){
-						if(symbol.type == "picture-marker"){
-							if(item.attributes.type == 'aid'){
-								color = status == this.defaultAidStatus ? "green" : "red";
-							}
-							symbol = {
-					  		    type: "simple-marker",  
-					  		    color: color,
-					  		    size: sysData.lSys_MapIconWidthPoint ? sysData.lSys_MapIconWidthPoint + 'px' : "4px",
-							    outline: {
-							    	style:"none"
-							    }
-					  		};
-							
-							ArGis.view.graphics.splice(i,1,item);
-							console.log("====>"+symbol);
-						}
-					}else{
-						if(symbol.type == "simple-marker"){
-							require(["esri/symbols/PictureMarkerSymbol"], 
-									function (PictureMarkerSymbol) {
-								symbol = {
-										type: "picture-marker",
-										url: iconUrl,
-										width: sysData.lSys_MapIconWidth == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
-										height: sysData.lSys_MapIconHeight == 0 || ArGis.view.zoom <= self.maxZoom ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
-								};
-							});
-							console.log("---->",symbol);
-						}
+					if(zoom > self.maxZoomPoint){
 						if(zoom <= self.maxZoom){
 							iconUrl = "/admin/images/map1.png";
 							if(item.attributes.type == 'aid'){
