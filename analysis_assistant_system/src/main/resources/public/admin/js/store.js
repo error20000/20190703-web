@@ -41,6 +41,8 @@ var myvue = new Vue({
 				stationOptions: [],
 				mapIconDictNo: 'StoreMapIcon',
 				mapIconOptions: [],
+				equipTypeDictNo: 'EquipType',
+				equipTypeOptions: [],
 				lv1Options: [],
 				lv2Options: [],
 				lv3Options: [],
@@ -266,6 +268,28 @@ var myvue = new Vue({
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.mapIconOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			handleEquipTypeOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.equipTypeDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.equipTypeOptions = res.data;
+						//排序
+						for (var i = 0; i < self.equipTypeOptions.length; i++) {
+							for (var j = i; j < self.equipTypeOptions.length; j++) {
+								if(self.equipTypeOptions[i].sDict_NO > self.equipTypeOptions[j].sDict_NO){
+									var temp = self.equipTypeOptions[i];
+									self.equipTypeOptions[i] = self.equipTypeOptions[j];
+									self.equipTypeOptions[j] = temp;
+								}
+							}
+						}
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -653,13 +677,30 @@ var myvue = new Vue({
 				}
 				this.limitFormVisible = true;
 				this.limitForm.sSLimit_StoreID = row.sStore_ID;
+				this.limitForm.data = [];
+				for (var i = 0; i < this.equipTypeOptions.length; i++) {
+					this.limitForm.data.push({
+						type: this.equipTypeOptions[i].sDict_NO,
+						name: this.equipTypeOptions[i].sDict_Name,
+						value: 0
+					});
+				}
 				var self = this;
 				var params = {
-					sStore_ID: row.sStore_ID
+					sSLimit_StoreID: row.sStore_ID
 				};
 				ajaxReq(storeLimitUrl, params, function(res){
-					self.handleResOperate(res, function(){
-						self.limitForm.data = res.data;
+					self.handleResQuery(res, function(){
+						for (var i = 0; i < res.data.length; i++) {
+							var node1 = res.data[i];
+							for (var j = 0; j < self.limitForm.data.length; j++) {
+								var node2 = self.limitForm.data[j];
+								if(node1.sSLimit_EquipType == node2.type){
+									node2.value = node1.lSLimit_Num;
+									break;
+								}
+							}
+						}
 					});
 				});
 			},
@@ -674,12 +715,9 @@ var myvue = new Vue({
 						this.$confirm('确认提交吗?', '提示', {}).then(() => {
 							var self = this;
 							this.limitLoading = true;
-							var params = Object.assign({}, this.editForm);
-							if(this.editForm.level == 1){
-								params.lStoreType_Lat = this.formatToDegree(params.lStoreType_LatDu, params.lStoreType_LatFen, params.lStoreType_LatMiao);
-								params.lStoreType_Lng = this.formatToDegree(params.lStoreType_LngDu, params.lStoreType_LngFen, params.lStoreType_LngMiao);
-							}
-							ajaxReq(modUrl, params, function(res){
+							var params = Object.assign({}, this.limitForm);
+							params.data = JSON.stringify(params.data);
+							ajaxReq(updateStoreLimitUrl, params, function(res){
 								self.limitLoading = false;
 								self.handleResOperate(res, function(){
 									self.limitFormVisible = false;
@@ -849,6 +887,7 @@ var myvue = new Vue({
 			this.handleMapIconOptions();
 			this.handleFiltersInitOptions();
 			this.getList();
+			this.handleEquipTypeOptions();
 		}
 	  });
 	

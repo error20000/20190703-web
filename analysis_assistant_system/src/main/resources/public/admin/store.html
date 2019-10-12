@@ -108,8 +108,8 @@
 														</el-table-column>
 														<el-table-column label="仓库名称" prop="sStore_Name">
 														</el-table-column>
-														<el-table-column label="仓库预警值" prop="lStore_Limit" >
-														</el-table-column>
+														<!-- <el-table-column label="仓库预警值" prop="lStore_Limit" >
+														</el-table-column> -->
 														<el-table-column label="操作" width="100">
 															<!-- <template scope="scope">
 																<el-button size="mini" @click="handleEdit(scope.$index, scope.row, 4)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">编辑</el-button>
@@ -141,8 +141,8 @@
 											</el-table-column>
 											<el-table-column label="仓库名称" prop="sStore_Name">
 											</el-table-column>
-											<el-table-column label="仓库预警值" prop="lStore_Limit" >
-											</el-table-column>
+											<!-- <el-table-column label="仓库预警值" prop="lStore_Limit" >
+											</el-table-column> -->
 											<el-table-column label="操作" width="100">
 												<!-- <template scope="scope">
 													<el-button size="mini" @click="handleEdit(scope.$index, scope.row, 3)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">编辑</el-button>
@@ -174,8 +174,8 @@
 								</el-table-column>
 								<el-table-column label="仓库名称" prop="sStore_Name">
 								</el-table-column>
-								<el-table-column label="仓库预警值" prop="lStore_Limit" >
-								</el-table-column>
+								<!-- <el-table-column label="仓库预警值" prop="lStore_Limit" >
+								</el-table-column> -->
 								<el-table-column label="操作" width="100">
 									<!-- <template scope="scope">
 										<el-button size="mini" @click="handleEdit(scope.$index, scope.row, 2)" ref="edit" auth="sys:store:update" v-show="hasAuth('edit')">编辑</el-button>
@@ -215,8 +215,8 @@
 					</el-table-column>
 					<el-table-column label="归属航标站" prop="sStoreType_Station" >
 					</el-table-column>
-					<el-table-column label="仓库预警值" prop="lStoreType_Limit" >
-					</el-table-column>
+					<!-- <el-table-column label="仓库预警值" prop="lStoreType_Limit" >
+					</el-table-column> -->
 					<el-table-column label="地图图标" prop="sStoreType_MapIcon" >
 						<template scope="scope">
 							<div style="width: 45px; height: 45px;" v-for="item in mapIconOptions" v-if="scope.row.sStoreType_MapIcon == item.sDict_NO">
@@ -292,9 +292,9 @@
 						    </el-option>
 					    </el-select>
 					  </el-form-item>
-					  <el-form-item label="仓库预警值" prop="lStoreType_Limit">
+					  <!-- <el-form-item label="仓库预警值" prop="lStoreType_Limit">
 					    <el-input v-model="addForm.lStoreType_Limit"></el-input>
-					  </el-form-item>
+					  </el-form-item> -->
 					  <el-form-item label="地图图标" prop="sStoreType_MapIcon">
 					    <el-select v-model="addForm.sStoreType_MapIcon" placeholder="请选择地图图标">
 						    <el-option
@@ -343,11 +343,11 @@
 					</el-form-item>
 				</template>
 				
-				<template v-if="addForm.level >= 2">
+				<!-- <template v-if="addForm.level >= 2">
 					  <el-form-item label="仓库预警值" prop="lStore_Limit">
 					    <el-input v-model="addForm.lStore_Limit"></el-input>
 					  </el-form-item>
-				</template>
+				</template> -->
 				
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -394,9 +394,9 @@
 						    </el-option>
 					    </el-select>
 					  </el-form-item>
-					  <el-form-item label="仓库预警值" prop="lStoreType_Limit">
+					  <!-- <el-form-item label="仓库预警值" prop="lStoreType_Limit">
 					    <el-input v-model="editForm.lStoreType_Limit"></el-input>
-					  </el-form-item>
+					  </el-form-item> -->
 					  <el-form-item label="地图图标" prop="sStoreType_MapIcon">
 					    <el-select v-model="editForm.sStoreType_MapIcon" placeholder="请选择地图图标">
 						    <el-option
@@ -445,15 +445,32 @@
 					</el-form-item>
 				</template>
 				
-				<template v-if="addForm.level >= 2">
+				<!-- <template v-if="editForm.level >= 2">
 					  <el-form-item label="仓库预警值" prop="lStore_Limit">
 					    <el-input v-model="editForm.lStore_Limit"></el-input>
 					  </el-form-item>
-				</template>
+				</template> -->
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="editClose">取消</el-button>
 				<el-button size="mini" type="primary" @click="editSubmit" :loading="editLoading">提交</el-button>
+			</div>
+		</el-dialog>
+		
+		
+		<!-- limit -->
+		<el-dialog title="库存预警值" :visible.sync="limitFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="limitForm" :rules="limitFormRules" ref="limitForm" label-width="120px">
+				 <el-form-item
+				    v-for="(item, index) in limitForm.data"
+				    :label="item.name"
+				    :key="index">
+				    <el-input v-model="item.value"></el-input>
+				  </el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="limitClose">取消</el-button>
+				<el-button size="mini" type="primary" @click="limitSubmit" :loading="limitLoading">提交</el-button>
 			</div>
 		</el-dialog>
 		

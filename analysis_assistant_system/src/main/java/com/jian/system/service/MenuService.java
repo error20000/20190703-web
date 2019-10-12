@@ -43,6 +43,17 @@ public class MenuService extends BaseService<Menu, MenuMapper> {
 		Map<String, Object> node = null;
 		
 		Map<String, Object> temp = new HashMap<String, Object>();
+
+		//排序
+		for (int i = 0; i < funs.size(); i++) {
+			for (int j = i; j < funs.size(); j++) {
+				if(funs.get(i).getsMFun_ID().compareTo(funs.get(j).getsMFun_ID()) > 0 ) {
+					MenuFun tempMenuFun = funs.get(i);
+					funs.set(i, funs.get(j));
+					funs.set(j, tempMenuFun);
+				}
+			}
+		}
 		
 		for (MenuFun fun : funs) {
 			List<MenuFun> list = (List<MenuFun>) temp.get(fun.getsMFun_MenuID());

@@ -42,6 +42,7 @@ import com.jian.system.entity.Dict;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreLimit;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
 import com.jian.system.service.DictService;
@@ -272,6 +273,45 @@ public class StoreController extends BaseController<Store, StoreService> {
 		List<Message> list = service.msgPage(condition, getLoginUser(req), start, Tools.parseInt(rows));
 		long total = service.msgSize(condition, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+	
+	@RequestMapping("/limit")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询库存预警")
+	public String limit(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sSLimit_StoreID = Tools.getReqParamSafe(req, "sSLimit_StoreID");
+		vMap = Tools.verifyParam("sSLimit_StoreID", sSLimit_StoreID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		List<StoreLimit> res = service.limit(sSLimit_StoreID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+	
+	@RequestMapping("/updateLimit")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新库存预警")
+	public String updateLimit(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String sSLimit_StoreID = Tools.getReqParamSafe(req, "sSLimit_StoreID");
+		String data = Tools.getReqParamSafe(req, "data");
+		vMap = Tools.verifyParam("sSLimit_StoreID", sSLimit_StoreID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		int res = service.updateLimit(sSLimit_StoreID, data);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
 	@RequestMapping("/import")

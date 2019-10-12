@@ -17,10 +17,13 @@ import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Store;
+import com.jian.system.entity.StoreLimit;
 import com.jian.system.entity.StoreLog;
 import com.jian.system.entity.StoreType;
 import com.jian.system.entity.User;
 import com.jian.system.exception.ServiceException;
+import com.jian.system.utils.Utils;
+import com.jian.tools.core.JsonTools;
 import com.jian.tools.core.MapTools;
 import com.jian.tools.core.Tips;
 import com.jian.tools.core.Tools;
@@ -36,6 +39,8 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	private MessageService msgService;
 	@Autowired
 	private Config config;
+	@Autowired
+	private StoreLimitService limitService;
 	
 	@TargetDataSource
 	public int add(String level, String name, StoreType type, Store obj, User user) {
@@ -119,12 +124,22 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		}
 		int res = 0;
 		switch (level) {
-		case "1": //一级
-			res = typeService.delete(MapTools.custom().put("sStoreType_ID", id).build(), user);
+		case "1":
+			res = super.delete(MapTools.custom().put("sStore_Level1", id).build(), user);
+			res += typeService.delete(MapTools.custom().put("sStoreType_ID", id).build(), user);
 			break;
-
-		default:
+		case "2":
+			res = super.delete(MapTools.custom().put("sStore_Level2", id).build(), user);
+			res += super.delete(MapTools.custom().put("sStore_ID", id).build(), user);
+			break;
+		case "3":
+			res = super.delete(MapTools.custom().put("sStore_Level3", id).build(), user);
+			res += super.delete(MapTools.custom().put("sStore_ID", id).build(), user);
+			break;
+		case "4":
 			res = super.delete(MapTools.custom().put("sStore_ID", id).build(), user);
+			break;
+		default:
 			break;
 		}
 		return res;
@@ -337,6 +352,36 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 		return msgService.size(condition, null, null, user);
 	}
 
+	@TargetDataSource
+	public List<StoreLimit> limit(String sSLimit_StoreID){
+		Map<String, Object> condition = MapTools.custom().put("sSLimit_StoreID", sSLimit_StoreID).build();
+		return limitService.selectList(condition);
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updateLimit(String sSLimit_StoreID, String data) {
+		Map<String, Object> condition = MapTools.custom().put("sSLimit_StoreID", sSLimit_StoreID).build();
+		//删除就数据
+		limitService.delete(condition, null);
+		//插入新数据
+		if(Tools.isNullOrEmpty(data)) {
+			return 0;
+		}
+		List<Map<String, Object>> list = JsonTools.jsonToList(data);
+		List<StoreLimit> res = new ArrayList<>();
+		StoreLimit node = null;
+		for (Map<String, Object> map : list) {
+			node = new StoreLimit();
+			node.setsSLimit_ID(Utils.newSnowflakeIdStr());
+			node.setsSLimit_StoreID(sSLimit_StoreID);
+			node.setsSLimit_EquipType(map.get("type")+"");
+			node.setlSLimit_Num(Tools.parseInt(map.get("value")));
+			res.add(node);
+		}
+		return limitService.batchInsert(res, null);
+	}
+	
 
 	@TargetDataSource
 	public List<Map<String, Object>> export(Map<String, Object> condition, User user) {
