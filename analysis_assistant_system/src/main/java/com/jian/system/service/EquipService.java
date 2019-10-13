@@ -35,6 +35,7 @@ import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
+import com.jian.system.entity.UserStation;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.MapTools;
@@ -74,6 +75,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private EquipViceLampService viceLampService;
 	@Autowired
 	private Config config;
+	@Autowired
+	private UserStationService userStationService;
 	
 	
 	@Transactional
@@ -687,7 +690,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	
 	@TargetDataSource
 	@Transactional
-	public int inStore(Equip equip, String remarks, User user, String ip){
+	public int inStore(Equip equip, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(equip == null) {
 			throw new ServiceException(Tips.ERROR101, "器材不能为空");
@@ -713,7 +716,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用中
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可入库");
 		}
-		Date date = new Date();
+		date = date == null ? new Date() : date;
 		equip.setsEquip_Status(Constant.EquipStatus_1); // 入库
 		values.put("sEquip_Status", equip.getsEquip_Status());
 		values.put("sEquip_StoreLv1", equip.getsEquip_StoreLv1());
@@ -746,7 +749,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int outStore(String sEquip_ID, String remarks, User user, String ip){
+	public int outStore(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -765,6 +768,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(!Constant.EquipStatus_1.equals(test.getsEquip_Status())) { //不再仓库中
 			throw new ServiceException(Tips.ERROR101, "器材不在仓库中，不可出库");
 		}
+		date = date == null ? new Date() : date;
 		//出库
 		values.put("sEquip_Status", Constant.EquipStatus_2);
 //		values.put("sEquip_StoreLv1", " ");
@@ -774,7 +778,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		log.setsELog_StoreLv1(test.getsEquip_StoreLv1());
@@ -795,7 +799,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int remove(String sEquip_ID, String remarks, User user, String ip){
+	public int remove(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -814,12 +818,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(!Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //拆除
 			throw new ServiceException(Tips.ERROR101, "器材未使用，不可拆除");
 		}
+		date = date == null ? new Date() : date;
 		//拆除
 		values.put("sEquip_Status", Constant.EquipStatus_3);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -837,7 +842,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int transport(String sEquip_ID, String remarks, User user, String ip){
+	public int transport(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -856,12 +861,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可运输");
 		}
+		date = date == null ? new Date() : date;
 		//运输
 		values.put("sEquip_Status", Constant.EquipStatus_4);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -878,7 +884,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int toBeTest(String sEquip_ID, String remarks, User user, String ip){
+	public int toBeTest(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -897,12 +903,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可待检测");
 		}
+		date = date == null ? new Date() : date;
 		//待检测
 		values.put("sEquip_Status", Constant.EquipStatus_5);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -919,7 +926,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int check(String sEquip_ID, String remarks, User user, String ip){
+	public int check(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -938,12 +945,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可检测");
 		}
+		date = date == null ? new Date() : date;
 		//检测
 		values.put("sEquip_Status", Constant.EquipStatus_6);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -960,7 +968,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int repair(String sEquip_ID, String remarks, User user, String ip){
+	public int repair(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -979,12 +987,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可维修");
 		}
+		date = date == null ? new Date() : date;
 		//维修
 		values.put("sEquip_Status", Constant.EquipStatus_7);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -1002,7 +1011,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int dump(String sEquip_ID, String remarks, User user, String ip){
+	public int dump(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -1021,7 +1030,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_9.equals(test.getsEquip_Status())) { //使用
 			throw new ServiceException(Tips.ERROR101, "器材使用中，不可报废");
 		}
-		Date date = new Date();
+		date = date == null ? new Date() : date;
 		//报废
 		values.put("sEquip_Status", Constant.EquipStatus_8);
 		if(test.getdEquip_DumpDate() == null) {
@@ -1056,7 +1065,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int useToAid(String sEquip_ID, String sAid_ID, String remarks, User user, String ip){
+	public int useToAid(String sEquip_ID, String sAid_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -1081,7 +1090,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_1.equals(test.getsEquip_Status())) { //仓库
 			throw new ServiceException(Tips.ERROR101, "器材未出库，不可使用");
 		}
-		Date date = new Date();
+		date = date == null ? new Date() : date;
 		//使用
 		values.put("sEquip_Status", Constant.EquipStatus_9);
 		values.put("sEquip_AidID", sAid_ID);
@@ -1114,7 +1123,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 
 	@TargetDataSource
 	@Transactional
-	public int unusual(String sEquip_ID, String remarks, User user, String ip){
+	public int unusual(String sEquip_ID, String remarks, Date date, User user, String ip){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -1130,12 +1139,13 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Constant.EquipStatus_10.equals(test.getsEquip_Status())) {
 			throw new ServiceException(Tips.ERROR101, "器材已处于异常状态");
 		}
+		date = date == null ? new Date() : date;
 		//异常
 		values.put("sEquip_Status", Constant.EquipStatus_10);
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
-		log.setdELog_CreateDate(new Date());
+		log.setdELog_CreateDate(date);
 		log.setsELog_EquipID(sEquip_ID);
 		log.setsELog_IP(ip);
 		if(user != null) {
@@ -1148,16 +1158,33 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		//标记航标为异常
 		Aid aid = null;
 		List<UserAid> ausers = null;
+		List<UserStation> susers = null;
 		AidEquip aidEquip = aidEquipService.selectOne(MapTools.custom().put("sAidEquip_EquipID", sEquip_ID).build());
 		if(aidEquip != null) {
 			aid = aidService.selectOne(MapTools.custom().put("sAid_ID", aidEquip.getsAidEquip_AidID()).build());
 			if(aid != null) {
-				aid.setsAid_Status("unusual");
+				aid.setsAid_Status(Constant.AidStatus_Unusual);
 				aidService.update(aid, user);
 				//查询用户
 				ausers = userAidService.selectList(MapTools.custom().put("sUserAid_AidID", aid.getsAid_ID()).build());
+				susers = userStationService.selectList(MapTools.custom().put("sUserStation_Station", aid.getsAid_Station()).build());
 			}
 		}
+		//用户
+		List<String> userIds = new ArrayList<>();
+		if(ausers != null) {
+			userIds.addAll(ausers.stream()
+					.map(e -> e.getsUserAid_UserID())
+					.collect(Collectors.toList()));
+		}
+		if(susers != null) {
+			userIds.addAll(susers.stream()
+					.map(e -> e.getsUserStation_UserID())
+					.collect(Collectors.toList()));
+		}
+		userIds = userIds.stream()
+				.distinct()
+				.collect(Collectors.toList());
 
 		//产生消息
 		List<Message> mlist = new ArrayList<Message>();
@@ -1173,11 +1200,14 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(aid != null) {
 			message.setsMsg_AidID(aid.getsAid_ID());
 		}
-		if(ausers != null) {
-			for (UserAid userAid : ausers) {
+		if(user != null) {
+			message.setsMsg_FromUserID(user.getsUser_ID());
+		}
+		if(userIds.size() > 0) {
+			for (String userId : userIds) {
 				Message node = message.clone();
 				node.setsMsg_ID(Utils.newSnowflakeIdStr());
-				node.setsMsg_ToUserID(userAid.getsUserAid_UserID());
+				node.setsMsg_ToUserID(userId);
 				mlist.add(node);
 			}
 		}else {

@@ -85,4 +85,8 @@ public class Constant {
 	public static final String DictType_EquipLampTelemetry = "EquipLampTelemetry"; //	遥测接口类型	
 	public static final String DictType_EquipLampType = "EquipLampType"; //	灯器类型	
 	public static final String DictType_EquipLampLens = "EquipLampLens"; //	透镜形状	
+	
+	//航标
+	public static final String AidStatus_Normal = "normal"; //	正常	
+	public static final String AidStatus_Unusual = "unusual"; //	异常	
 }
