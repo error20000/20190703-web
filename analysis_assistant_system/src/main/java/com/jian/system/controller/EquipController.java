@@ -1246,4 +1246,17 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	
 	//TODO -------------------------------------------------------------------------------- 第三方接口
 	
+	@RequestMapping("/other/unusual")
+    @ResponseBody
+	@SysLog(type=SystemLogType.Update, describe="第三方设置器材异常")
+	public String otherUnusual(HttpServletRequest req) {
+		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
+		String remarks = Tools.getReqParamSafe(req, "remarks");
+		String date = Tools.getReqParamSafe(req, "date");
+		String sApp_NO = Tools.getReqParamSafe(req, "sApp_NO");
+		String sign = Tools.getReqParamSafe(req, "sign");
+		Date cDate = Tools.isNullOrEmpty(date) ? null : new Date(Long.parseLong(date));
+		int res = service.unusual3(sApp_NO, sign, sEquip_ID, remarks, cDate, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 }

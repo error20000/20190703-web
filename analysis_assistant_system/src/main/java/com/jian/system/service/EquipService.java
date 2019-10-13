@@ -21,6 +21,7 @@ import com.jian.system.dao.EquipMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
+import com.jian.system.entity.App;
 import com.jian.system.entity.Equip;
 import com.jian.system.entity.EquipAis;
 import com.jian.system.entity.EquipBattery;
@@ -77,6 +78,8 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	private Config config;
 	@Autowired
 	private UserStationService userStationService;
+	@Autowired
+	private AppService appService;
 	
 	
 	@Transactional
@@ -1120,6 +1123,43 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		return baseMapper.update(tableName, values, condition);
 	}
 	
+	@TargetDataSource
+	@Transactional
+	public int unusual3(String sApp_NO, String sign, String sEquip_ID, String remarks, Date date, User user, String ip){
+		if(Tools.isNullOrEmpty(sApp_NO)) {
+			throw new ServiceException(Tips.ERROR206, "sApp_NO");
+		}
+		if(Tools.isNullOrEmpty(remarks)) {
+			throw new ServiceException(Tips.ERROR206, "sign");
+		}
+		if(Tools.isNullOrEmpty(remarks)) {
+			throw new ServiceException(Tips.ERROR206, "sign");
+		}
+		App app = appService.selectOne(MapTools.custom().put("sApp_NO", sApp_NO).build());
+		if(app == null ) {
+			throw new ServiceException(Tips.ERROR106, "sApp_NO");
+		}
+		if(app.getlApp_StatusFlag() == 0) {
+			throw new ServiceException(Tips.ERROR107, "应用（"+sApp_NO+"）");
+		}
+		//签名字符串
+		String signStr = "";
+		if(!Tools.isNullOrEmpty(date)) {
+			signStr += "date=" + date.getTime();
+		}
+		signStr = Tools.isNullOrEmpty(signStr) ? "" : signStr + "&";
+		signStr += "remarks=" + remarks;
+		signStr += "&sApp_NO=" + sApp_NO;
+		signStr += "&sEquip_ID=" + sEquip_ID;
+		signStr += "&" + app.getsApp_SecretKey();
+		
+		String singStrMd5 = Tools.md5(signStr);
+		if(!singStrMd5.equalsIgnoreCase(sign)) {
+			throw new ServiceException(Tips.ERROR203, "sign");
+		}
+		
+		return unusual(sEquip_ID, remarks, date, user, ip);
+	}
 
 	@TargetDataSource
 	@Transactional
@@ -1167,7 +1207,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 				aidService.update(aid, user);
 				//查询用户
 				ausers = userAidService.selectList(MapTools.custom().put("sUserAid_AidID", aid.getsAid_ID()).build());
-				susers = userStationService.selectList(MapTools.custom().put("sUserStation_Station", aid.getsAid_Station()).build());
+				if(!Tools.isNullOrEmpty(aid.getsAid_Station())) {
+					susers = userStationService.selectList(MapTools.custom().put("sUserStation_Station", aid.getsAid_Station()).build());
+				}
 			}
 		}
 		//用户

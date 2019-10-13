@@ -18,11 +18,13 @@ import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
+import com.jian.system.entity.App;
 import com.jian.system.entity.EquipLog;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
+import com.jian.system.entity.UserStation;
 import com.jian.system.exception.ServiceException;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.MapTools;
@@ -46,6 +48,12 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	private EquipService equipService;
 	@Autowired
 	private EquipLogService logService;
+	@Autowired
+	private UserStationService userStationService;
+	@Autowired
+	private MessageService messageService;
+	@Autowired
+	private AppService appService;
 	
 	@Transactional
 	@TargetDataSource
@@ -276,10 +284,46 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		
 		return aidEquipService.batchInsert(res, user);
 	}
+	
 
-
+	
 	@TargetDataSource
-	public int unusual(String sAid_ID, User user, String ip) {
+	@Transactional
+	public int unusual3(String sApp_NO, String sign, String sAid_ID, String remarks, User user, String ip){
+		if(Tools.isNullOrEmpty(sApp_NO)) {
+			throw new ServiceException(Tips.ERROR206, "sApp_NO");
+		}
+		if(Tools.isNullOrEmpty(remarks)) {
+			throw new ServiceException(Tips.ERROR206, "remarks");
+		}
+		if(Tools.isNullOrEmpty(remarks)) {
+			throw new ServiceException(Tips.ERROR206, "sign");
+		}
+		App app = appService.selectOne(MapTools.custom().put("sApp_NO", sApp_NO).build());
+		if(app == null ) {
+			throw new ServiceException(Tips.ERROR106, "sApp_NO");
+		}
+		if(app.getlApp_StatusFlag() == 0) {
+			throw new ServiceException(Tips.ERROR107, "应用（"+sApp_NO+"）");
+		}
+		//签名字符串
+		String signStr = "";
+		signStr += "remarks=" + remarks;
+		signStr += "&sAid_ID=" + sAid_ID;
+		signStr += "&sApp_NO=" + sApp_NO;
+		signStr += "&" + app.getsApp_SecretKey();
+		
+		String singStrMd5 = Tools.md5(signStr);
+		if(!singStrMd5.equalsIgnoreCase(sign)) {
+			throw new ServiceException(Tips.ERROR203, "sign");
+		}
+		
+		return unusual(sAid_ID, remarks, user, ip);
+	}
+
+	@Transactional
+	@TargetDataSource
+	public int unusual(String sAid_ID, String remarks, User user, String ip) {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("sAid_ID", sAid_ID);
 		String tableName =  getTableName();
@@ -288,7 +332,55 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			throw new ServiceException(Tips.ERROR102, "航标不存在");
 		}
 		Map<String, Object> value = new HashMap<>();
-		value.put("sAid_Status", "unusual");
+		value.put("sAid_Status", Constant.AidStatus_Unusual);
+
+		//查询用户
+		List<UserAid> ausers = userAidService.selectList(MapTools.custom().put("sUserAid_AidID", aid.getsAid_ID()).build());
+		List<UserStation> susers = null;
+		if(!Tools.isNullOrEmpty(aid.getsAid_Station())) {
+			susers = userStationService.selectList(MapTools.custom().put("sUserStation_Station", aid.getsAid_Station()).build());
+		}
+		List<String> userIds = new ArrayList<>();
+		if(ausers != null) {
+			userIds.addAll(ausers.stream()
+					.map(e -> e.getsUserAid_UserID())
+					.collect(Collectors.toList()));
+		}
+		if(susers != null) {
+			userIds.addAll(susers.stream()
+					.map(e -> e.getsUserStation_UserID())
+					.collect(Collectors.toList()));
+		}
+		userIds = userIds.stream()
+				.distinct()
+				.collect(Collectors.toList());
+
+		//产生消息
+		List<Message> mlist = new ArrayList<Message>();
+		Message message = new Message();
+		message.setsMsg_ID(Utils.newSnowflakeIdStr());
+		message.setdMsg_CreateDate(new Date());
+		message.setlMsg_Level(1);
+		message.setsMsg_Type(Constant.MsgType_2);
+		message.setsMsg_Status(Constant.MsgStatus_1);
+		message.setsMsg_Title(Constant.MsgType_2_Msg);
+		message.setsMsg_Describe(remarks);
+		message.setsMsg_AidID(sAid_ID);
+		if(user != null) {
+			message.setsMsg_FromUserID(user.getsUser_ID());
+		}
+		if(userIds.size() > 0) {
+			for (String userId : userIds) {
+				Message node = message.clone();
+				node.setsMsg_ID(Utils.newSnowflakeIdStr());
+				node.setsMsg_ToUserID(userId);
+				mlist.add(node);
+			}
+		}else {
+			mlist.add(message);
+		}
+		messageService.batchInsert(mlist, user);
+		//更新
 		return baseMapper.update(tableName, value, condition);
 	}
 

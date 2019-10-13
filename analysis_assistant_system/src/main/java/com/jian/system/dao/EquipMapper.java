@@ -107,6 +107,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	
 	@Select({
 		"<script>",
+		"select count(*) from (",
 		" select count(*) ",
 		" from \"tBase_Equip\" ",
 		" where ",
@@ -118,14 +119,16 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 	<if test=\" map == null \"> ",
     	" 		1 = 1 ",	
     	"   </if>",
+    	" ) ",
 		"</script>"
 	})
 	public long sizeByCustom(@Param("map") Map<String, Object> condition);
 
 	@Select({
 		"<script>",
+		"select ROWNUM, t1.* from (",
 		" select ",
-		" 	rownum, a.*, ",
+		" 	distinct a.*, ",
 		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
 		" from \"tBase_Equip\" a ",
 		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
@@ -150,10 +153,11 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( f.\"sUserAid_UserID\" = #{sUser_ID} or f1.\"sUserStation_UserID\" = #{sUser_ID} or e.\"sUserStore_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
-		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
+		" ) t1 where rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
+		"select ROWNUM, t2.* from (",
 		" select ",
-		" 	rownum, a.*, ",
+		" 	distinct a.*, ",
 		" 	b.\"sDict_Name\" \"sEquip_TypeName\" ",
 		" from \"tBase_Equip\" a ",
 		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
@@ -178,15 +182,16 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( f.\"sUserAid_UserID\" = #{sUser_ID} or f1.\"sUserStation_UserID\" = #{sUser_ID} or e.\"sUserStore_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
-		"	 and rownum <![CDATA[<=]]> ${start}",
+		" ) t2 where rownum <![CDATA[<=]]> ${start}",
 		"</script>"
 	})
 	public List<Map<String, Object>> selectPageByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID,  @Param("start") int start, @Param("rows") int rows);
 
 	@Select({
 		"<script>",
+		"select count(*) from (",
 		" select ",
-		" 	count(*) ",
+		" 	distinct a.* ",
 		" from \"tBase_Equip\" a ",
 		" 	left join \"tBase_Dict\" b on a.\"sEquip_Type\" = b.\"sDict_NO\"  and b.\"sDict_DictTypeNO\" = 'EquipType' ",
 		" 	left join \"tBase_Dict\" c on a.\"sEquip_Icon\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'EquipIcon' ",
@@ -210,6 +215,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( f.\"sUserAid_UserID\" = #{sUser_ID} or f1.\"sUserStation_UserID\" = #{sUser_ID} or e.\"sUserStore_UserID\" = #{sUser_ID} ) ",		
     	"   </if>", 
+    	" ) ",
 		"</script>"
 	})
 	public long sizeByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);

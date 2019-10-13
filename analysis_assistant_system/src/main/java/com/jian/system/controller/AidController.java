@@ -708,7 +708,8 @@ public class AidController extends BaseController<Aid, AidService> {
 	@SysLog(type=SystemLogType.Update, describe="app航标异常")
 	public String appUnusual(HttpServletRequest req) {
 		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
-		int res = service.unusual(sAid_ID, getAppLoginUser(req), Tools.getIp(req));
+		String remarks = Tools.getReqParamSafe(req, "remarks");
+		int res = service.unusual(sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
@@ -722,5 +723,20 @@ public class AidController extends BaseController<Aid, AidService> {
 	public String appMap(HttpServletRequest req) {
 		List<Map<String, Object>> list = service.aidMap(getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+
+	//TODO -------------------------------------------------------------------------------- 第三方接口
+
+	
+	@RequestMapping("/other/unusual")
+    @ResponseBody
+	@SysLog(type=SystemLogType.Update, describe="第三方设置航标异常")
+	public String otherUnusual(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		String remarks = Tools.getReqParamSafe(req, "remarks");
+		String sApp_NO = Tools.getReqParamSafe(req, "sApp_NO");
+		String sign = Tools.getReqParamSafe(req, "sign");
+		int res = service.unusual3(sApp_NO, sign, sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 }

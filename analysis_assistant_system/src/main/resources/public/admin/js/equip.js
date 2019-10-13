@@ -1095,7 +1095,8 @@ var myvue = new Vue({
 			this.handleAidOptions();
 			this.handleMfOptions();
 			this.handleFiltersInitOptions();
-			this.handleStoreOptions(this.getList);
+			this.handleStoreOptions();
+			this.getList();
 		}
 	  });
 	
