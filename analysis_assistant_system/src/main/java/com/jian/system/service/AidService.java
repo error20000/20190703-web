@@ -320,6 +320,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		
 		return unusual(sAid_ID, remarks, user, ip);
 	}
+	
 
 	@Transactional
 	@TargetDataSource
@@ -364,6 +365,69 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		message.setsMsg_Type(Constant.MsgType_2);
 		message.setsMsg_Status(Constant.MsgStatus_1);
 		message.setsMsg_Title(Constant.MsgType_2_Msg);
+		message.setsMsg_Describe(remarks);
+		message.setsMsg_AidID(sAid_ID);
+		if(user != null) {
+			message.setsMsg_FromUserID(user.getsUser_ID());
+		}
+		if(userIds.size() > 0) {
+			for (String userId : userIds) {
+				Message node = message.clone();
+				node.setsMsg_ID(Utils.newSnowflakeIdStr());
+				node.setsMsg_ToUserID(userId);
+				mlist.add(node);
+			}
+		}else {
+			mlist.add(message);
+		}
+		messageService.batchInsert(mlist, user);
+		//更新
+		return baseMapper.update(tableName, value, condition);
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int normal(String sAid_ID, String remarks, User user, String ip) {
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("sAid_ID", sAid_ID);
+		String tableName =  getTableName();
+		Aid aid = baseMapper.selectOne(tableName, condition);
+		if(aid == null) {
+			throw new ServiceException(Tips.ERROR102, "航标不存在");
+		}
+		Map<String, Object> value = new HashMap<>();
+		value.put("sAid_Status", Constant.AidStatus_Normal);
+
+		//查询用户
+		List<UserAid> ausers = userAidService.selectList(MapTools.custom().put("sUserAid_AidID", aid.getsAid_ID()).build());
+		List<UserStation> susers = null;
+		if(!Tools.isNullOrEmpty(aid.getsAid_Station())) {
+			susers = userStationService.selectList(MapTools.custom().put("sUserStation_Station", aid.getsAid_Station()).build());
+		}
+		List<String> userIds = new ArrayList<>();
+		if(ausers != null) {
+			userIds.addAll(ausers.stream()
+					.map(e -> e.getsUserAid_UserID())
+					.collect(Collectors.toList()));
+		}
+		if(susers != null) {
+			userIds.addAll(susers.stream()
+					.map(e -> e.getsUserStation_UserID())
+					.collect(Collectors.toList()));
+		}
+		userIds = userIds.stream()
+				.distinct()
+				.collect(Collectors.toList());
+
+		//产生消息
+		List<Message> mlist = new ArrayList<Message>();
+		Message message = new Message();
+		message.setsMsg_ID(Utils.newSnowflakeIdStr());
+		message.setdMsg_CreateDate(new Date());
+		message.setlMsg_Level(1);
+		message.setsMsg_Type(Constant.MsgType_6);
+		message.setsMsg_Status(Constant.MsgStatus_1);
+		message.setsMsg_Title(Constant.MsgType_6_Msg);
 		message.setsMsg_Describe(remarks);
 		message.setsMsg_AidID(sAid_ID);
 		if(user != null) {

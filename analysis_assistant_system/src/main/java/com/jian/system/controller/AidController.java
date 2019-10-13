@@ -712,6 +712,20 @@ public class AidController extends BaseController<Aid, AidService> {
 		int res = service.unusual(sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+	
+	
+	@RequestMapping("/app/normal")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Update, describe="app航标正常")
+	public String appNormal(HttpServletRequest req) {
+		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
+		String remarks = Tools.getReqParamSafe(req, "remarks");
+		int res = service.normal(sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 
 
 	@RequestMapping("/app/map")

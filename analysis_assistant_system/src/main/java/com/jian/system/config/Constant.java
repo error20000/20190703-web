@@ -48,6 +48,8 @@ public class Constant {
 	public static final String MsgType_4_Msg = "自定义消息";
 	public static final String MsgType_5 = "5"; 
 	public static final String MsgType_5_Msg = "器材寿命不足";
+	public static final String MsgType_6 = "6"; 
+	public static final String MsgType_6_Msg = "航标恢复正常";
 	
 	public static final String MsgStatus_1 = "1"; //未读
 	public static final String MsgStatus_2 = "2"; //已读
