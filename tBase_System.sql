@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 11/10/2019 23:49:38
+ Date: 12/10/2019 21:37:33
 */
 
 
@@ -81,14 +81,9 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconHeightDef" IS '默认�
 -- ----------------------------
 -- Records of tBase_System
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '50', '1', '22', '1', '22', '1', '1', '90', '4', '24', '24', '10', '24', '24');
+INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '50', '1', '22', '1', '22', '1', '1', '90', '6', '20', '20', '10', '24', '24');
 
 -- ----------------------------
 -- Primary Key structure for table tBase_System
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0017770" PRIMARY KEY ("sSys_ID");
-
--- ----------------------------
--- Checks structure for table tBase_System
--- ----------------------------
-ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0022166" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;

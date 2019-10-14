@@ -75,9 +75,45 @@ var myvue = new Vue({
 					sAid_Station: ''
 				},
 				
+				//drag
+				myList: [{ 
+					                     "id": 1, 
+					                     "x": 10, 
+					                     "y": 1, 
+					                     "sizex": 3, 
+					                     "sizey": 2 
+					                 }, { 
+					                     "id": 2, 
+					                     "x": 8, 
+					                     "y": 1, 
+					                     "sizex": 2, 
+					                     "sizey": 2 
+					                 } ], 
+				baseWidth: 0, 
+				baseHeight: 0, 
+
+				
 				user: ''
 			}
 		},
+		components: {
+			'power-drag' : powerDrag
+		},
+		created: function() { 
+             //屏幕适配，使得当前布局能在所有分辨率下适用，示例是在1366*638分辨率下完成 
+             let screenWidth = window.innerWidth; 
+             let screenHeight = window.innerHeight; 
+             this.baseWidth = 90.8333 * (screenWidth / 1366); 
+             this.baseHeight = 100 * (screenHeight / 638); 
+             this.baseMarginLeft = 20 * (screenWidth / 1366); 
+             this.baseMarginTop = 20 * (screenHeight / 638); 
+  
+             this.$nextTick(function () { 
+                 $(".dragAndResize").css("width", "calc(100% - " + (this.baseMarginLeft) + "px)") 
+             }) 
+        }, 
+
+
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
@@ -1378,6 +1414,9 @@ var myvue = new Vue({
 				$("#exitFullscrean").hide();
 			}*/
 			
+			let gridster = this.$refs['cyGridster']; //获取gridster实例 
+			gridster.init(); //在适当的时候初始化布局组件 
+
 		}
 	  });
 	
