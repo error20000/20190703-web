@@ -117,7 +117,8 @@ function removeItemFromPositionBox(item) {
  */
 function recalcCellWidth() {
     let containerNode = this.$refs['container'];
-    let containerWidth = containerNode.offsetWidth;
+//    let containerWidth = containerNode.offsetWidth;
+    let containerWidth = window.innerWidth;
 
     let cells = Math.round(containerWidth / this.cellWidth);
     this.maxCell = cells;
@@ -704,7 +705,7 @@ var powerDrag = {
                 this.infoBox = {}
             }
             let infoBox = this.infoBox;
-            let target = $(e.target);
+            let target = $(e.target).parents(".item");
 
             let className = target.attr("class");
             className = className || '';

@@ -53,17 +53,17 @@
 	
   </style>
 </head>
-<body class="animated fadeIn" style="overflow: auto;">
+<body style="overflow: auto;">
   <div id="app">
   	
-  	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
+  	<!-- <div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
 	   <div class="el-loading-spinner">
 	    <i class="fa fa-spinner fa-pulse"></i>
  	    <p class="el-loading-text">Loading...</p>
 	   </div>
-    </div>
+    </div> -->
     
-    <section style="" >
+    <section >
 		<!-- filter -->
 		<!-- <el-row>
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
@@ -92,16 +92,18 @@
 			    	:base-margin-left="baseMarginLeft" 
 			    	:base-margin-top="baseMarginTop" 
 			    	:base-width="baseWidth" 
-	            	:base-height="baseHeight"> 
-		             <!-- <div v-for="(item,index) in myList" :slot="'slot'+index"> 
-		             
-		            </div> --> 
-	            </power-drag> 
-		    </div>
-		    
-				<div id="chartView" style="width: 100%;height: 100%; display: inline-block; overflow: auto;">
+	            	:base-height="baseHeight"
+            		:drag-start="dragStart" 
+            		:dragging="dragging" 
+            		:drag-end="dragEnd" 
+            		:resize-start="resizeStart"
+					:resizing="resizing" 
+					:resize-end="resizeEnd"> 
+	            	<template v-for="(item,index) in myList" :slot="'slot'+index">
+	            	
 				
-					<el-card class="box-card">
+				
+					<el-card class="box-card" v-if="index == 0" :data="item.id">
 					  <div slot="header" class="clearfix">
 					    <span>器材区域分布统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
@@ -127,10 +129,10 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipDistribution" style="width: 100%;height: 500px;"></div>
+					  <div id="chartEquipDistribution" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card">
+					<el-card class="box-card" v-if="index == 1">
 					  <div slot="header" class="clearfix">
 					    <span>仓库库存变化统计表</span>
 					    <el-form size="mini" :inline="true" :model="filtersStoreTime" style="float: right;">
@@ -160,10 +162,10 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartStoreTime" style="width: 100%;height: 500px;"></div>
+					  <div id="chartStoreTime" style="width: 100%;height: 430px;"></div>
 					</el-card>
 				
-					<el-card class="box-card">
+					<el-card class="box-card" v-if="index == 2">
 					  <div slot="header" class="clearfix">
 					    <span>器材寿命统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
@@ -183,11 +185,11 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipLife" style="width: 49%;height: 500px;display: inline-block;"></div>
-					  <div id="chartEquipLife2" style="width: 50%;height: 500px;display: inline-block;"></div>
+					  <div id="chartEquipLife" style="width: 49%;height: 430px;display: inline-block;"></div>
+					  <div id="chartEquipLife2" style="width: 50%;height: 430px;display: inline-block;"></div>
 					</el-card>
 					
-					<el-card class="box-card" style="width: 49%; float: left;">
+					<el-card class="box-card"  v-if="index == 3">
 					  <div slot="header" class="clearfix">
 					    <span>器材品牌、型号统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrand" style="float: right;">
@@ -207,10 +209,10 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipBrand" style="width: 100%;height: 500px;"></div>
+					  <div id="chartEquipBrand" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card" style="width: 50%; float: right;">
+					<el-card class="box-card"  v-if="index == 4">
 					  <div slot="header" class="clearfix">
 					    <span>器材报废统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandDump" style="float: right;">
@@ -230,10 +232,10 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipBrandDump" style="width: 100%;height: 500px;"></div>
+					  <div id="chartEquipBrandDump" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card" style="width: 49%; float: left;">
+					<el-card class="box-card"  v-if="index == 5">
 					  <div slot="header" class="clearfix">
 					    <span>器材故障统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
@@ -253,10 +255,14 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipBrandUnusual" style="width: 100%;height: 500px;"></div>
+					  <div id="chartEquipBrandUnusual" style="width: 100%; height: 430px;" :height="(gridster.cellHeight * (item.sizey) - baseMarginTop) - 83 - 40"></div>
+					  {{gridster.cellHeight}}
+					   {{item.sizey}}
+					    {{baseMarginTop}}
+					    {{(gridster.cellHeight * (item.sizey) - baseMarginTop) - 83 - 40}}
 					</el-card>
 					
-					<el-card class="box-card" style="width: 50%; float: right;">
+					<el-card class="box-card"  v-if="index == 6">
 					  <div slot="header" class="clearfix">
 					    <span>器材维修统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandRepair" style="float: right;">
@@ -276,10 +282,13 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div id="chartEquipBrandRepair" style="width: 100%;height: 500px;"></div>
+					  <div id="chartEquipBrandRepair" style="width: 100%; height: 430px;" :height="(gridster.cellHeight * (item.sizey) - baseMarginTop) - 83 - 40"></div>
 					</el-card>
 				
-				</div>
+	            	</template>
+	            </power-drag> 
+		    </div>
+				
 			</el-tab-pane>
 		  </el-tabs>
 		

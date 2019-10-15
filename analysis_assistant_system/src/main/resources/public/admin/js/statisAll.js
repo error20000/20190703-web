@@ -77,21 +77,52 @@ var myvue = new Vue({
 				
 				//drag
 				myList: [{ 
-					                     "id": 1, 
-					                     "x": 10, 
-					                     "y": 1, 
-					                     "sizex": 3, 
-					                     "sizey": 2 
-					                 }, { 
-					                     "id": 2, 
-					                     "x": 8, 
-					                     "y": 1, 
-					                     "sizex": 2, 
-					                     "sizey": 2 
-					                 } ], 
+                     "id": 1, 
+                     "x": 1, 
+                     "y": 1, 
+                     "sizex": 15, 
+                     "sizey": 1 
+                 }, { 
+                     "id": 2, 
+                     "x": 2, 
+                     "y": 1, 
+                     "sizex": 15, 
+                     "sizey": 10
+                 }, { 
+                     "id": 3, 
+                     "x": 3, 
+                     "y": 1, 
+                     "sizex": 15, 
+                     "sizey": 10 
+                 }, { 
+                     "id": 4, 
+                     "x": 4, 
+                     "y": 1, 
+                     "sizex": 6, 
+                     "sizey": 10 
+                 }, { 
+                     "id": 5, 
+                     "x": 4, 
+                     "y": 2, 
+                     "sizex": 6, 
+                     "sizey": 10 
+                 }, { 
+                     "id": 6, 
+                     "x": 5, 
+                     "y": 1, 
+                     "sizex": 6, 
+                     "sizey": 10 
+                 }, { 
+                     "id": 7, 
+                     "x": 5, 
+                     "y": 2, 
+                     "sizex": 6, 
+                     "sizey": 2 
+                 } ], 
 				baseWidth: 0, 
 				baseHeight: 0, 
-
+				gridster: '',
+				chartBox: {},
 				
 				user: ''
 			}
@@ -1204,9 +1235,11 @@ var myvue = new Vue({
 					};
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
 			},
 			queryEquipBrandRepair:function(){
 				this.chartEquipBrandRepair(this.filtersBrandRepair);
@@ -1299,6 +1332,28 @@ var myvue = new Vue({
 				this.authCache[ref] = flag;
 				return flag;
 			},
+			
+			dragStart: function(e, item, index) {},
+
+            dragging: function(e, item, index) {},
+
+            dragEnd: function(e, item, index) { console.log(this.myList)},
+
+            resizeStart: function(e, item, index) {},
+
+            resizing: function(e, item, index) {
+
+            },
+
+            resizeEnd: function(e, item, index) {
+            	console.log(this.chartBox);
+            	console.log(item);
+            	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - 83 - 40;
+            	$("#chartEquipBrandRepair").css('height', h);
+            	var myChart = this.chartBox["chartEquipBrandRepair"];
+		        myChart.resize();
+            },
+            
 			//excel
 			getExcel: function(){
 				
@@ -1365,14 +1420,14 @@ var myvue = new Vue({
 			this.handleStoreLv1Options();
 			this.handleBrandOptions();
 			
-			this.chartEquipDistribution();
+			/*this.chartEquipDistribution();
 			this.chartStoreTime();
 			this.chartEquipLife();
 			
 			this.chartEquipBrand();
 			this.chartEquipBrandDump();
 			this.chartEquipBrandUnusual();
-			this.chartEquipBrandRepair();
+			this.chartEquipBrandRepair();*/
 			
 			/*window.onresize = function() {
 				if(this.fullScreenEnabled){
@@ -1414,9 +1469,31 @@ var myvue = new Vue({
 				$("#exitFullscrean").hide();
 			}*/
 			
-			let gridster = this.$refs['cyGridster']; //获取gridster实例 
-			gridster.init(); //在适当的时候初始化布局组件 
+		},
+		watch: {
+			preloading: function(){
 
+				
+				let gridster = this.$refs['cyGridster']; //获取gridster实例
+				console.log(gridster);
+				this.gridster = gridster;
+
+				
+				let self = this;
+				gridster.afterInitOk(function () {
+					
+					self.chartEquipDistribution();
+					self.chartStoreTime();
+					self.chartEquipLife();
+					
+					self.chartEquipBrand();
+					self.chartEquipBrandDump();
+					self.chartEquipBrandUnusual();
+					self.chartEquipBrandRepair();
+				});
+				
+	            gridster.init(); //在适当的时候初始化布局组件
+			}
 		}
 	  });
 	
