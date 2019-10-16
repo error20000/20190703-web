@@ -48,6 +48,7 @@ import com.jian.system.config.Config;
 import com.jian.system.config.RedisCacheKey;
 import com.jian.system.entity.Group;
 import com.jian.system.entity.User;
+import com.jian.system.entity.UserPosition;
 import com.jian.system.entity.UserStation;
 import com.jian.system.service.GroupService;
 import com.jian.system.service.UserService;
@@ -423,6 +424,36 @@ public class UserController extends BaseController<User, UserService> {
 			return JsonTools.toJsonString(vMap);
 		}
 		int res = service.updateStore(sUser_ID, store);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+	
+
+	
+
+	@RequestMapping("/position")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询用户统计布局")
+	public String position(HttpServletRequest req) {
+		UserPosition res = service.position(getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
+	@RequestMapping("/updatePosition")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Update, describe="更新用户统计布局")
+	public String updatePosition(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String style = Tools.getReqParamSafe(req, "style");
+		vMap = Tools.verifyParam("style", style, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int res = service.updatePosition(style, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	

@@ -19,6 +19,7 @@ import com.jian.system.entity.MenuFun;
 import com.jian.system.entity.User;
 import com.jian.system.entity.UserAid;
 import com.jian.system.entity.UserMenu;
+import com.jian.system.entity.UserPosition;
 import com.jian.system.entity.UserStation;
 import com.jian.system.entity.UserStore;
 import com.jian.system.exception.ServiceException;
@@ -47,6 +48,8 @@ public class UserService extends BaseService<User, UserMapper> {
 	private UserStationService userStationService;
 	@Autowired
 	private UserStoreService userStoreService;
+	@Autowired
+	private UserPositionService userPositionService;
 	
 	@Override
 	@TargetDataSource
@@ -395,6 +398,33 @@ public class UserService extends BaseService<User, UserMapper> {
 			return 1;
 		}
 		return userStoreService.batchInsert(list, null);
+	}
+	
+
+	
+	@TargetDataSource
+	public UserPosition position(User user) {
+		//判断用户
+		if(user == null) {
+			throw new ServiceException(Tips.ERROR103, "user is null");
+		}
+		UserPosition uposition = userPositionService.selectOne(MapTools.custom().put("sUserPosition_UserID", user.getsUser_ID()).build());
+		if(uposition == null) {
+			uposition = userPositionService.selectOne(MapTools.custom().put("sUserPosition_UserID", 1).build());
+		}
+		return uposition;
+	}
+	
+	@Transactional
+	@TargetDataSource
+	public int updatePosition(String style, User user) {
+		//判断用户
+		if(user == null) {
+			throw new ServiceException(Tips.ERROR102, "user is null");
+		}
+		Map<String, Object> condition = MapTools.custom().put("sUserPosition_UserID", user.getsUser_ID()).build();
+		Map<String, Object> values = MapTools.custom().put("sUserPosition_Position", style).build();
+		return userPositionService.update(values, condition, user);
 	}
 
 	@TargetDataSource

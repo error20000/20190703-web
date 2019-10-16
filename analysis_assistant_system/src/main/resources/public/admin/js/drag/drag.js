@@ -96,7 +96,7 @@ function fillPositionBox(maxY) {
 
     itemMaxY = maxY;
 
-    $(this.$el).css("height", ((itemMaxY + 2) * this.cellHeight) + "px");
+    $(this.$el).css("height", ((itemMaxY - 2) * this.cellHeight) + "px");
 }
 
 function removeItemFromPositionBox(item) {
@@ -705,8 +705,13 @@ var powerDrag = {
                 this.infoBox = {}
             }
             let infoBox = this.infoBox;
+            console.log($(e.target));
             //点击菜单返回
             if($(e.target).parents(".el-form").length != 0){
+            	return;
+            }
+            //点击echarts返回
+            if($(e.target).parents(".echarts").length != 0){
             	return;
             }
             let target = $(e.target).parents(".item");

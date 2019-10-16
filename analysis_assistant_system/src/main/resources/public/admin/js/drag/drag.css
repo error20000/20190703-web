@@ -16,6 +16,7 @@
     height: 100px;
     cursor: move;
     background-color: #24273e;
+    border-radius: 6px;
 }
 
 .resizeHandle {

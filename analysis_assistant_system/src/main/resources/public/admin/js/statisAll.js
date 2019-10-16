@@ -12,6 +12,9 @@ var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
 
 var storeTimeUrl = baseUrl + "api/store/time";
 
+var positionUrl = baseUrl + "api/user/position";
+var updatePositionUrl = baseUrl + "api/user/updatePosition";
+
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
 
@@ -76,50 +79,25 @@ var myvue = new Vue({
 				},
 				
 				//drag
-				/*myList: [{ 
-                     "id": "chartEquipDistribution", 
-                     "x": 1, 
-                     "y": 1, 
-                     "sizex": 15, 
-                     "sizey": 1 
-                 }, { 
-                     "id": "chartStoreTime", 
-                     "x": 2, 
-                     "y": 1, 
-                     "sizex": 15, 
-                     "sizey": 10
-                 }, { 
-                     "id": "chartEquipLife", 
-                     "x": 3, 
-                     "y": 1, 
-                     "sizex": 15, 
-                     "sizey": 10 
-                 }, { 
-                     "id": "chartEquipBrand", 
-                     "x": 4, 
-                     "y": 1, 
-                     "sizex": 6, 
-                     "sizey": 10 
-                 }, { 
-                     "id": "chartEquipBrandDump", 
-                     "x": 4, 
-                     "y": 2, 
-                     "sizex": 6, 
-                     "sizey": 10 
-                 }, { 
-                     "id": "chartEquipBrandUnusual", 
-                     "x": 5, 
-                     "y": 1, 
-                     "sizex": 6, 
-                     "sizey": 10 
-                 }, { 
-                     "id": "chartEquipBrandRepair", 
-                     "x": 5, 
-                     "y": 2, 
-                     "sizex": 6, 
-                     "sizey": 2 
-                 } ], */
 				myList: [{ 
+                    "id": "chartEquipDistribution", 
+                    "x": 1, 
+                    "y": 1, 
+                    "sizex": 15, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartStoreTime", 
+                    "x": 1, 
+                    "y": 11, 
+                    "sizex": 15, 
+                    "sizey": 10
+                }, { 
+                    "id": "chartEquipLife", 
+                    "x": 1, 
+                    "y": 21, 
+                    "sizex": 15, 
+                    "sizey": 10 
+                },{ 
                     "id": "chartEquipBrandRepair", 
                     "x": 7, 
                     "y": 31, 
@@ -131,7 +109,7 @@ var myvue = new Vue({
                     "y": 31, 
                     "sizex": 6, 
                     "sizey": 10 
-                }, { 
+                },{ 
                     "id": "chartEquipBrandDump", 
                     "x": 7, 
                     "y": 41, 
@@ -142,24 +120,6 @@ var myvue = new Vue({
                     "x": 1, 
                     "y": 41, 
                     "sizex": 6, 
-                    "sizey": 10 
-                }, { 
-                    "id": "chartEquipLife", 
-                    "x": 1, 
-                    "y": 21, 
-                    "sizex": 15, 
-                    "sizey": 10 
-                }, { 
-                    "id": "chartStoreTime", 
-                    "x": 1, 
-                    "y": 11, 
-                    "sizex": 15, 
-                    "sizey": 10
-                },{ 
-                    "id": "chartEquipDistribution", 
-                    "x": 1, 
-                    "y": 1, 
-                    "sizex": 15, 
                     "sizey": 10 
                 }], 
 				baseWidth: 0, 
@@ -1396,29 +1356,55 @@ var myvue = new Vue({
 				return flag;
 			},
 			
+			//drag
+			handleDrag: function(cb){
+				var self = this;
+				ajaxReq(positionUrl, {}, function(res){
+					self.handleResQuery(res, function(){
+						if(res.data.sUserPosition_Position){
+							self.myList = JSON.parse(res.data.sUserPosition_Position);
+							if(typeof cb == 'function'){
+								cb();
+							}
+						}
+					});
+				});
+			},
 			dragStart: function(e, item, index) {},
 
             dragging: function(e, item, index) {},
 
-            dragEnd: function(e, item, index) { 
-            	console.log(this.myList);
-            	console.log(JSON.stringify(this.myList));
+            dragEnd: function(e, item, index) {
+            	this.savePosition();
             },
 
             resizeStart: function(e, item, index) {},
 
             resizing: function(e, item, index) {
-
+            	this.$nextTick(function () { 
+            		if (item.sizey + item.y >= itemMaxY) {
+                        fillPositionBox.call(this.gridster, item.y + item.sizey);
+                        $(document).scrollTop($(document).height());
+                    }
+                }); 
             },
 
             resizeEnd: function(e, item, index) {
-            	console.log(this.chartBox);
-            	console.log(item);
             	this.resizeChart(item.id);
+            	this.savePosition();
             },
-            stopMouseDown: function(e){
-            	console.log("stopMouseDown", e);
-            	e.preventDefault();
+            
+            savePosition: function(){
+            	var self = this;
+            	this.$nextTick(function () { 
+            		var params = {
+            				style: JSON.stringify(this.gridster.getList())
+            		}
+            		ajaxReq(updatePositionUrl, params, function(res){
+            			self.handleResQuery(res, function(){
+            			});
+            		});
+                }) 
             },
             resizeChart: function(chartId){
             	var item = null;
@@ -1431,9 +1417,19 @@ var myvue = new Vue({
             	var ch = $("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
             	var bp = 40;
             	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - ch - bp;
-            	$("#" + chartId).css('height', h);
-            	var myChart = this.chartBox[chartId];
-		        myChart.resize();
+            	if(chartId == "chartEquipLife"){
+            		$("#chartEquipLife").css('height', h);
+                	var myChart1 = this.chartBox["chartEquipLife"];
+    		        myChart1.resize();
+            		$("#chartEquipLife2").css('height', h);
+                	var myChart2 = this.chartBox["chartEquipLife2"];
+    		        myChart2.resize();
+            	}else{
+            		$("#" + chartId).css('height', h);
+                	var myChart = this.chartBox[chartId];
+    		        myChart.resize();
+            	}
+            	
             },
             
 			//excel
@@ -1551,17 +1547,11 @@ var myvue = new Vue({
 				$("#exitFullscrean").hide();
 			}*/
 			
-		},
-		watch: {
-			preloading: function(){
-
+			let self = this;
+			this.handleDrag(function(){
+				let gridster = self.$refs['cyGridster']; //获取gridster实例
+				self.gridster = gridster;
 				
-				let gridster = this.$refs['cyGridster']; //获取gridster实例
-				console.log(gridster);
-				this.gridster = gridster;
-
-				
-				let self = this;
 				gridster.afterInitOk(function () {
 					
 					self.chartEquipDistribution();
@@ -1575,8 +1565,11 @@ var myvue = new Vue({
 				});
 				
 	            gridster.init(); //在适当的时候初始化布局组件
-			}
+	            
+			});
+			
 		}
+		
 	  });
 	
 	
