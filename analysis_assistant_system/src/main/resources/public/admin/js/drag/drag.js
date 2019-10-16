@@ -705,6 +705,10 @@ var powerDrag = {
                 this.infoBox = {}
             }
             let infoBox = this.infoBox;
+            //点击菜单返回
+            if($(e.target).parents(".el-form").length != 0){
+            	return;
+            }
             let target = $(e.target).parents(".item");
 
             let className = target.attr("class");

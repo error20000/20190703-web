@@ -76,49 +76,92 @@ var myvue = new Vue({
 				},
 				
 				//drag
-				myList: [{ 
-                     "id": 1, 
+				/*myList: [{ 
+                     "id": "chartEquipDistribution", 
                      "x": 1, 
                      "y": 1, 
                      "sizex": 15, 
                      "sizey": 1 
                  }, { 
-                     "id": 2, 
+                     "id": "chartStoreTime", 
                      "x": 2, 
                      "y": 1, 
                      "sizex": 15, 
                      "sizey": 10
                  }, { 
-                     "id": 3, 
+                     "id": "chartEquipLife", 
                      "x": 3, 
                      "y": 1, 
                      "sizex": 15, 
                      "sizey": 10 
                  }, { 
-                     "id": 4, 
+                     "id": "chartEquipBrand", 
                      "x": 4, 
                      "y": 1, 
                      "sizex": 6, 
                      "sizey": 10 
                  }, { 
-                     "id": 5, 
+                     "id": "chartEquipBrandDump", 
                      "x": 4, 
                      "y": 2, 
                      "sizex": 6, 
                      "sizey": 10 
                  }, { 
-                     "id": 6, 
+                     "id": "chartEquipBrandUnusual", 
                      "x": 5, 
                      "y": 1, 
                      "sizex": 6, 
                      "sizey": 10 
                  }, { 
-                     "id": 7, 
+                     "id": "chartEquipBrandRepair", 
                      "x": 5, 
                      "y": 2, 
                      "sizex": 6, 
                      "sizey": 2 
-                 } ], 
+                 } ], */
+				myList: [{ 
+                    "id": "chartEquipBrandRepair", 
+                    "x": 7, 
+                    "y": 31, 
+                    "sizex": 6, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartEquipBrandUnusual", 
+                    "x": 1, 
+                    "y": 31, 
+                    "sizex": 6, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartEquipBrandDump", 
+                    "x": 7, 
+                    "y": 41, 
+                    "sizex": 6, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartEquipBrand", 
+                    "x": 1, 
+                    "y": 41, 
+                    "sizex": 6, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartEquipLife", 
+                    "x": 1, 
+                    "y": 21, 
+                    "sizex": 15, 
+                    "sizey": 10 
+                }, { 
+                    "id": "chartStoreTime", 
+                    "x": 1, 
+                    "y": 11, 
+                    "sizex": 15, 
+                    "sizey": 10
+                },{ 
+                    "id": "chartEquipDistribution", 
+                    "x": 1, 
+                    "y": 1, 
+                    "sizex": 15, 
+                    "sizey": 10 
+                }], 
 				baseWidth: 0, 
 				baseHeight: 0, 
 				gridster: '',
@@ -444,10 +487,13 @@ var myvue = new Vue({
 
 		        // 使用刚指定的配置项和数据显示图表。
 		        myChart.setOption(option);
-		        
-		        $("#"+chartId).resize(function() {
-		        	myChart.resize();
-		        });
+
+				/*$("#"+chartId).resize(function() {
+					myChart.resize();
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 		        
 			},
 			queryEquipDistribution:function(){
@@ -541,9 +587,12 @@ var myvue = new Vue({
 			    };
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			queryStoreTime:function(){
 				this.chartStoreTime(this.filtersStoreTime);
@@ -732,9 +781,9 @@ var myvue = new Vue({
 				};
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
 				
 
 				var chartId2 = "chartEquipLife2";
@@ -770,9 +819,13 @@ var myvue = new Vue({
 
 				myChart2.setOption(option2);
 
-				$("#"+chartId2).resize(function() {
+				/*$("#"+chartId2).resize(function() {
 					myChart2.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.chartBox[chartId2] = myChart2;
+				this.resizeChart(chartId);
 			},
 			queryEquipLife:function(){
 				this.chartEquipLife(this.filtersLife);
@@ -887,9 +940,12 @@ var myvue = new Vue({
 					};
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			queryEquipBrand:function(){
 				this.chartEquipBrand(this.filtersBrand);
@@ -1003,9 +1059,12 @@ var myvue = new Vue({
 					};
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			queryEquipBrandDump:function(){
 				this.chartEquipBrandDump(this.filtersBrandDump);
@@ -1119,9 +1178,12 @@ var myvue = new Vue({
 					};
 				myChart.setOption(option);
 
-				$("#"+chartId).resize(function() {
+				/*$("#"+chartId).resize(function() {
 					myChart.resize();
-				});
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			queryEquipBrandUnusual:function(){
 				this.chartEquipBrandUnusual(this.filtersBrandUnusual);
@@ -1240,6 +1302,7 @@ var myvue = new Vue({
 				});*/
 				
 				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			queryEquipBrandRepair:function(){
 				this.chartEquipBrandRepair(this.filtersBrandRepair);
@@ -1337,7 +1400,10 @@ var myvue = new Vue({
 
             dragging: function(e, item, index) {},
 
-            dragEnd: function(e, item, index) { console.log(this.myList)},
+            dragEnd: function(e, item, index) { 
+            	console.log(this.myList);
+            	console.log(JSON.stringify(this.myList));
+            },
 
             resizeStart: function(e, item, index) {},
 
@@ -1348,9 +1414,25 @@ var myvue = new Vue({
             resizeEnd: function(e, item, index) {
             	console.log(this.chartBox);
             	console.log(item);
-            	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - 83 - 40;
-            	$("#chartEquipBrandRepair").css('height', h);
-            	var myChart = this.chartBox["chartEquipBrandRepair"];
+            	this.resizeChart(item.id);
+            },
+            stopMouseDown: function(e){
+            	console.log("stopMouseDown", e);
+            	e.preventDefault();
+            },
+            resizeChart: function(chartId){
+            	var item = null;
+            	for (var i = 0; i < this.myList.length; i++) {
+					if(this.myList[i].id == chartId){
+						item = this.myList[i];
+						break;
+					}
+				}
+            	var ch = $("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
+            	var bp = 40;
+            	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - ch - bp;
+            	$("#" + chartId).css('height', h);
+            	var myChart = this.chartBox[chartId];
 		        myChart.resize();
             },
             
