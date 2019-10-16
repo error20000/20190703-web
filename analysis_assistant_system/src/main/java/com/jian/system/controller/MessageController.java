@@ -77,7 +77,32 @@ public class MessageController extends BaseController<Message, MessageService> {
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="分页查询消息")
 	public String findPage(HttpServletRequest req) {
-		return super.findPage(req);
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String page = Tools.getReqParamSafe(req, "page");
+		String rows = Tools.getReqParamSafe(req, "rows");
+		String startDate = Tools.getReqParamSafe(req, "startDate");
+		String endDate = Tools.getReqParamSafe(req, "endDate");
+		vMap = Tools.verifyParam("page", page, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("rows", rows, 0, 0, true);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		int start = Tools.parseInt(page) <= 1 ? 0 : (Tools.parseInt(page) - 1) * Tools.parseInt(rows);
+		//参数
+		Map<String, Object> condition = Utils.getReqParamsToMap(req, Message.class);
+		
+
+		Date sDate = Tools.isNullOrEmpty(startDate) ? null : new Date(Long.parseLong(startDate));
+		Date eDate = Tools.isNullOrEmpty(endDate) ? null : new Date(Long.parseLong(endDate));
+		
+		List<Message> list = service.selectPage(condition, sDate, eDate, getLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.size(condition, sDate, eDate, getLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 
 	@Override

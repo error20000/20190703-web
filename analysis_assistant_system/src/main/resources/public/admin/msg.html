@@ -30,8 +30,8 @@
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
-					<el-form-item>
-					    <el-select v-model="filters.sSLog_UserID" placeholder="请选择用户">
+					<!-- <el-form-item>
+					    <el-select v-model="filters.sMsg_ToUserID" placeholder="请选择消息接收者">
 						    <el-option
 						      v-for="item in userOptions"
 						      :key="item.sUser_ID"
@@ -39,11 +39,21 @@
 						      :value="item.sUser_ID">
 						    </el-option>
 					    </el-select>
-					</el-form-item>
+					</el-form-item> -->
 					<el-form-item>
-					    <el-select v-model="filters.sSLog_Type" placeholder="请选择日志类型">
+					    <el-select v-model="filters.sMsg_Type" placeholder="请选择消息类型">
 						    <el-option
 						      v-for="item in typeOptions"
+						      :key="item.sDict_NO"
+						      :label="item.sDict_Name"
+						      :value="item.sDict_NO">
+						    </el-option>
+					    </el-select>
+					</el-form-item>
+					<el-form-item>
+					    <el-select v-model="filters.sMsg_Status" placeholder="请选择消息状态">
+						    <el-option
+						      v-for="item in statusOptions"
 						      :key="item.sDict_NO"
 						      :label="item.sDict_Name"
 						      :value="item.sDict_NO">
@@ -70,8 +80,6 @@
 					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<el-button type="primary" title="导出" @click="getExcel" icon="fas fa-file-export" ref="export" auth="sys:slog:export" v-show="hasAuth('export')"></el-button>
 					</el-form-item>
 				</el-form>
 			    </el-tab-pane>
@@ -82,36 +90,36 @@
 		</el-row>
 		
 	    <el-tabs v-model="activeTab" >
-		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:slog:query" v-show="hasAuth('query')">
+		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:msg:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sSLog_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sMsg_ID" width="120" fixed="left">
 					</el-table-column>
-					<el-table-column label="日志分类" prop="sSLog_Type" fixed="left">
+					<el-table-column label="消息分类" prop="sMsg_Type" fixed="left" :formatter="typeFormatter">
 					</el-table-column>
-					<el-table-column label="日志描述" prop="sSLog_Describe" width="150" fixed="left">
+					<el-table-column label="消息状态" prop="sMsg_Status" fixed="left" :formatter="statusFormatter">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dSLog_CreateDate" width="150" :formatter="(r,c) => {return formatDate(r.dSLog_CreateDate);}">
+					<el-table-column label="创建日期" prop="dMsg_CreateDate" width="150" :formatter="(r,c) => {return formatDate(r.dMsg_CreateDate);}">
 					</el-table-column>
-					<el-table-column label="用户ID" prop="sSLog_UserID">
+					<el-table-column label="标题" prop="sMsg_Title" width="200">
 					</el-table-column>
-					<el-table-column label="用户名" prop="sSLog_UserNick">
+					<el-table-column label="描述" prop="sMsg_Describe" width="300">
 					</el-table-column>
-					<el-table-column label="访问IP" prop="sSLog_IP">
+					<el-table-column label="接收者" prop="sMsg_ToUserID" :formatter="userFormatter">
 					</el-table-column>
-					<el-table-column label="请求地址" prop="sSLog_Uri" width="200">
+					<el-table-column label="发送者" prop="sMsg_FromUserID" :formatter="userFormatter">
 					</el-table-column>
-					<el-table-column label="请求耗时(ms)" prop="lSLog_TimeConsume">
+					<el-table-column label="处理者" prop="sMsg_UserID" :formatter="userFormatter">
 					</el-table-column>
-					<el-table-column label="模块" prop="sSLog_Module" width="150">
+					<el-table-column label="处理日期" prop="dMsg_UpdateDate" width="150" :formatter="(r,c) => {return formatDate(r.dMsg_UpdateDate);}">
 					</el-table-column>
-					<el-table-column label="方法名" prop="sSLog_Method">
+					<el-table-column label="处理IP" prop="sMsg_IP" width="150">
 					</el-table-column>
-					<el-table-column label="请求参数" prop="sSLog_Request" width="300">
+					<el-table-column label="备注" prop="sMsg_Remarks" width="200">
 					</el-table-column>
-					<el-table-column label="响应参数" prop="sSLog_Response" width="300">
+					<el-table-column label="航标ID" prop="sMsg_AidID" width="200">
 					</el-table-column>
-					<el-table-column label="异常信息" prop="sSLog_Exception" width="300">
+					<el-table-column label="器材ID" prop="sMsg_EquipID" width="200">
 					</el-table-column>
 
 					<!-- <el-table-column fixed="right" label="操作" width="180">
@@ -139,5 +147,5 @@
   <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
   <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/global.js"></script>
-  <script type="text/javascript" src="js/slog.js"></script>
+  <script type="text/javascript" src="js/msg.js"></script>
 </html>

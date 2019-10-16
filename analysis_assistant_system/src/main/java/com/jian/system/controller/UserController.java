@@ -139,6 +139,33 @@ public class UserController extends BaseController<User, UserService> {
 	public String findAll(HttpServletRequest req) {
 		return super.findAll(req);
 	}
+	
+	@RequestMapping("/options")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询所有用户")
+	public String options(HttpServletRequest req) {
+		List<User> all = service.selectAll();
+		User loginUser = getLoginUser(req);
+		if(loginUser == null){
+			return ResultTools.custom(Tips.ERROR111).toJSONString();
+		}
+		List<Map<String, Object>> res = all.stream()
+				/*.filter( e -> config.superGroupId.equals(loginUser.getsUser_GroupID()) 
+						|| e.getsUser_ID().equals(loginUser.getsUser_ID()))*/
+				.map(e -> {
+					Map<String, Object> temp = new HashMap<>();
+					temp.put("sUser_ID", e.getsUser_ID());
+					temp.put("sUser_Nick", e.getsUser_Nick());
+					temp.put("sUser_UserName", e.getsUser_UserName());
+					temp.put("lUser_StatusFlag", e.getlUser_StatusFlag());
+					temp.put("sUser_GroupID", e.getsUser_GroupID());
+					return temp;
+				})
+				.collect(Collectors.toList());
+		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 
 
 	@RequestMapping("/login")

@@ -18,7 +18,7 @@
 -- ----------------------------
 -- Table structure for tBase_UserPosition
 -- ----------------------------
-DROP TABLE "AASYSTEM"."tBase_UserPosition";
+
 CREATE TABLE "AASYSTEM"."tBase_UserPosition" (
   "sUserPosition_ID" NVARCHAR2(32) NOT NULL ,
   "sUserPosition_UserID" NVARCHAR2(32) ,

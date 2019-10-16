@@ -211,6 +211,16 @@ public class UserService extends BaseService<User, UserMapper> {
 		Map<String, Object> res = new HashMap<>();
 		
 		if(config.superGroupId.equals(groupId)) { //超管
+			//排序
+			for (int i = 0; i < allms.size(); i++) {
+				for (int j = i; j < allms.size(); j++) {
+					if(allms.get(i).getlMenu_Order() > allms.get(j).getlMenu_Order()) {
+						Menu t = allms.get(i);
+						allms.set(i, allms.get(j));
+						allms.set(j, t);
+					}
+				}
+			}
 			res.put("menus", allms);
 			res.put("funs", allmfs);
 		}else {

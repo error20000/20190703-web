@@ -1,7 +1,7 @@
 var baseUrl = parent.window.baseUrl || '../';
 
-var queryUrl = baseUrl + "api/systemLog/findPage";
-var excelUrl = baseUrl + "api/systemLog/excel";
+var queryUrl = baseUrl + "api/msg/findPage";
+var excelUrl = baseUrl + "api/msg/excel";
 var dictUrl = baseUrl + "api/dict/findList";
 var userUrl = baseUrl + "api/user/options";
 
@@ -31,8 +31,10 @@ var myvue = new Vue({
 				authCache: {},
 				
 				userOptions: [],
-				typeDictNo: 'SystemLogType',
+				typeDictNo: 'MsgType',
 				typeOptions: [],
+				statusDictNo: 'MsgStatus',
+				statusOptions: [],
 
 				
 				user: ''
@@ -43,10 +45,10 @@ var myvue = new Vue({
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
 			},
 			typeFormatter: function(row){
-				var name = row.sSLog_Type;
+				var name = row.sMsg_Type;
 				for (var i = 0; i < this.typeOptions.length; i++) {
 					var item = this.typeOptions[i];
-					if(row.sSLog_Type == item.sDict_NO){
+					if(row.sMsg_Type == item.sDict_NO){
 						name = item.sDict_Name;
 						break
 					}
@@ -64,6 +66,43 @@ var myvue = new Vue({
 						}
 					});
 				});
+			},
+			statusFormatter: function(row){
+				var name = row.sMsg_Status;
+				for (var i = 0; i < this.statusOptions.length; i++) {
+					var item = this.statusOptions[i];
+					if(row.sMsg_Status == item.sDict_NO){
+						name = item.sDict_Name;
+						break
+					}
+				}
+				return name;
+			},
+			handleStatusOptions: function(cb){
+				var self = this;
+				var params = {sDict_DictTypeNO: this.statusDictNo};
+				ajaxReq(dictUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.statusOptions = res.data;
+						if(typeof cb == 'function'){
+							cb();
+						}
+					});
+				});
+			},
+			userFormatter: function(row, c){
+				var name = row[c.property];
+				for (var i = 0; i < this.userOptions.length; i++) {
+					var item = this.userOptions[i];
+					if(row[c.property] == item.sUser_ID){
+						name = item.sUser_Nick;
+						if(!name){
+							name = item.sUser_UserName;
+						}
+						break
+					}
+				}
+				return name;
 			},
 			handleUserOptions: function(cb){
 				var self = this;
@@ -121,7 +160,9 @@ var myvue = new Vue({
 			//reset
 			reset: function(){
 				this.filters = {
-					sSLog_Type: '',
+					sMsg_ToUserID: '',
+					sMsg_Type: '',
+					sMsg_Status: '',
 					startDate: '',
 					endDate: ''
 				};
@@ -213,6 +254,7 @@ var myvue = new Vue({
 			getLoginToken();
 			this.preloading = true;
 			this.handleTypeOptions();
+			this.handleStatusOptions();
 			this.handleUserOptions();
 			this.getList();
 		}
