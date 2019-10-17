@@ -27,7 +27,7 @@ new Vue({
             newPwd2: [
               { required: true, message: "再次输入新密码.", trigger: "blur" },
               {
-                validator: (rule, value, callback) => {
+                validator: function(rule, value, callback) {
                   if (value !== this.pwdForm.newPwd) {
                     callback(new Error("密码不一致!"));
                   } else {
@@ -74,9 +74,9 @@ new Vue({
           this.$refs.pwdForm.resetFields();
         },
         pwdChange: function() {
-          this.$refs.pwdForm.validate(valid => {
+          this.$refs.pwdForm.validate(function(valid){
             if (valid) {
-              this.$confirm('确定提交吗?', '提示', {}).then(() => {
+              this.$confirm('确定提交吗?', '提示', {}).then(function() {
                 var params = Object.assign({}, this.pwdForm);
                 delete params.newPwd2;
                 var self = this;
