@@ -15,7 +15,7 @@
     width: 100px;
     height: 100px;
     cursor: move;
-    background-color: #24273e;
+    /* background-color: #24273e; */
     border-radius: 6px;
 }
 
@@ -58,7 +58,7 @@
     width: 100%;
     height: 100%;
     content: '';
-    /* background-color: #bbb; */
+    background-color: #bbb;
 }
 
 .positionBox {

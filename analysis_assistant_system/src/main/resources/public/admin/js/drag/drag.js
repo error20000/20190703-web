@@ -715,6 +715,9 @@ var powerDrag = {
             	return;
             }
             let target = $(e.target).parents(".item");
+            if(target.length == 0){
+            	target = $(e.target);
+            }
 
             let className = target.attr("class");
             className = className || '';
@@ -944,10 +947,10 @@ var powerDrag = {
     },
     template: '<div class="dragAndResize" ref="container" @mousedown="containerMouseDown($event)" @mouseup="endMove($event)" @mousemove="moving($event)">'
 		    +' <div v-if="renderOk">'
-		    +' <div v-if="item.sizex!=undefined" :class="{item:true,moveAnimation:moveAnimate,movingItem:item.isPlayer,canNotDrag:!draggable}" @mousedown="startMove($event,item,index)" :ref="\'item\'+index" v-for="(item,index) in yourList"'
+		    +' <div v-if="item.sizex!=undefined" :class="{item:true,moveAnimation:moveAnimate,movingItem:item.isPlayer,canNotDrag:!draggable || item.undrag}" @mousedown="startMove($event,item,index)" :ref="\'item\'+index" v-for="(item,index) in yourList"'
 		    +'     :key="\'item\'+index" :style="nowItemStyle(item,index)">'
 		    +'    <slot :name="\'slot\'+index"></slot>'
-		    +'     <span class="resizeHandle" v-show="resizable" @mousedown="startResize($event,item,index)"></span>'
+		    +'     <span class="resizeHandle" v-show="resizable && !item.unresize" @mousedown="startResize($event,item,index)"></span>'
 		    +' </div>'
 		    +' </div>'
 		    +' </div>'

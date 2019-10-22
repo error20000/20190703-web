@@ -1117,10 +1117,7 @@ var myvue = new Vue({
 					            data: xAxisData,
 					            axisPointer: {
 					                type: 'shadow'
-					            },
-						        axisTick:{
-						        	show:false
-						        }
+					            }
 					        },
 					    yAxis: {
 					            type: 'value',
@@ -1128,28 +1125,7 @@ var myvue = new Vue({
 					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
-					            },
-							  axisTick: {
-									show: true,
-									alignWithLabel: true
-								  },
-							  axisLine: {
-									lineStyle: {
-									  color: '#0963dd',
-									  fontSize: 12
-									}
-								  },
-								  axisLabel: {
-									color: '#fff'
-								  },
-								  splitLine: {
-									show: true,
-									lineStyle: {
-									  color: '#2a293c',
-									  width: 1,
-									  type: 'solid'
-									}
-								  }
+					            }
 					        },
 					    series: [
 					        {
@@ -1460,7 +1436,9 @@ var myvue = new Vue({
             	}else{
             		$("#" + chartId).css('height', h);
                 	var myChart = this.chartBox[chartId];
-    		        myChart.resize();
+                	if(myChart){
+                		myChart.resize();
+                	}
             	}
             	
             },
@@ -1626,6 +1604,9 @@ var goption = {
     		}
     	},
     	tooltip: {},
+	    toolbox: {
+	    	show: false
+	    },
     	yAxis:{
     		axisLabel:{
     			color:"#c8e8ff"
