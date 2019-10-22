@@ -1088,6 +1088,9 @@ var myvue = new Vue({
 				});
 				
 				var option = {
+						title:{
+							text:"{a|来源网站TOP5}"		
+						},
 					    tooltip: {
 					        trigger: 'axis',
 			            	formatter: function (objs) {
@@ -1109,34 +1112,64 @@ var myvue = new Vue({
 					            saveAsImage: {show: true}
 					        }
 					    },
-					    xAxis: [
-					        {
+					    xAxis: {
 					            type: 'category',
 					            data: xAxisData,
 					            axisPointer: {
 					                type: 'shadow'
-					            }
-					        }
-					    ],
-					    yAxis: [
-					        {
+					            },
+						        axisTick:{
+						        	show:false
+						        }
+					        },
+					    yAxis: {
 					            type: 'value',
-					            name: '数量',
+					            name: '',
 					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
-					            }
-					        }
-					    ],
+					            },
+							  axisTick: {
+									show: true,
+									alignWithLabel: true
+								  },
+							  axisLine: {
+									lineStyle: {
+									  color: '#0963dd',
+									  fontSize: 12
+									}
+								  },
+								  axisLabel: {
+									color: '#fff'
+								  },
+								  splitLine: {
+									show: true,
+									lineStyle: {
+									  color: '#2a293c',
+									  width: 1,
+									  type: 'solid'
+									}
+								  }
+					        },
 					    series: [
 					        {
 					            name:'品牌',
 					            type:'bar',
 					            data: yData
 					        }
-					    ]
+					    ],
+					    grid:{
+			            	containLabel:false,
+			            	left:40,
+			            	right:40,
+			            	top:45,
+			            	bottom:20
+			            }
 					};
-				myChart.setOption(option);
+				console.log(goption);
+				console.log(option);
+				console.log($.extend(true, {}, goption, option));
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -1554,12 +1587,12 @@ var myvue = new Vue({
 				
 				gridster.afterInitOk(function () {
 					
-					self.chartEquipDistribution();
+					/*self.chartEquipDistribution();
 					self.chartStoreTime();
 					self.chartEquipLife();
 					
 					self.chartEquipBrand();
-					self.chartEquipBrandDump();
+					self.chartEquipBrandDump();*/
 					self.chartEquipBrandUnusual();
 					self.chartEquipBrandRepair();
 				});
@@ -1573,4 +1606,47 @@ var myvue = new Vue({
 	  });
 	
 	
-
+var goption = {
+    	title:{
+    		text:"",
+    		padding:[10,0],
+    		textStyle:{    			
+    			rich:{
+    				a:{
+    					color:"#00ccff",     					
+    					fontSize:16
+    				},
+    				b:{
+    					fontFamily:"iconfont",
+    					fontSize:16,
+    					color:"#00ccff",
+    					padding:[0,10]
+    				}
+    			}
+    		}
+    	},
+    	tooltip: {},
+    	yAxis:{
+    		axisLabel:{
+    			color:"#c8e8ff"
+    		},
+    		nameTextStyle:{
+    			color:"#c8e8ff"
+    		}
+    	},
+    	xAxis:{
+    		axisLabel:{
+    			color:"#c8e8ff"
+    		},
+    		nameTextStyle:{
+    			color:"#c8e8ff"
+    		}
+    	},
+        grid:{
+        	containLabel:true,
+        	left:20,
+        	right:10,
+        	top:40,
+        	bottom:0
+        }
+    };

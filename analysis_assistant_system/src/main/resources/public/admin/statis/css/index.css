@@ -1,0 +1,5 @@
+.box-card{
+    border: 1px solid #5e79a2;
+    background: #121e30;
+    transition: all .4s ease;
+}
