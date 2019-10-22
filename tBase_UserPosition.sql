@@ -11,14 +11,14 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 17/10/2019 00:19:10
+ Date: 22/10/2019 23:08:32
 */
 
 
 -- ----------------------------
 -- Table structure for tBase_UserPosition
 -- ----------------------------
-
+DROP TABLE "AASYSTEM"."tBase_UserPosition";
 CREATE TABLE "AASYSTEM"."tBase_UserPosition" (
   "sUserPosition_ID" NVARCHAR2(32) NOT NULL ,
   "sUserPosition_UserID" NVARCHAR2(32) ,
@@ -48,7 +48,7 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_UserPosition"."sUserPosition_Position" IS 'æ
 -- Records of tBase_UserPosition
 -- ----------------------------
 INSERT INTO "AASYSTEM"."tBase_UserPosition" VALUES ('1', '0', '[{"id":"chartEquipDistribution","x":1,"y":1,"sizex":12,"sizey":5},{"id":"chartStoreTime","x":1,"y":6,"sizex":12,"sizey":5},{"id":"chartEquipLife","x":1,"y":11,"sizex":12,"sizey":5},{"id":"chartEquipBrandRepair","x":7,"y":16,"sizex":6,"sizey":5},{"id":"chartEquipBrandUnusual","x":1,"y":16,"sizex":6,"sizey":5},{"id":"chartEquipBrandDump","x":7,"y":21,"sizex":6,"sizey":5},{"id":"chartEquipBrand","x":1,"y":21,"sizex":6,"sizey":5}]');
-INSERT INTO "AASYSTEM"."tBase_UserPosition" VALUES ('2', '1', '[{"id":"chartEquipDistribution","x":1,"y":1,"sizex":12,"sizey":5},{"id":"chartStoreTime","x":1,"y":6,"sizex":12,"sizey":5},{"id":"chartEquipLife","x":1,"y":11,"sizex":12,"sizey":5},{"id":"chartEquipBrandRepair","x":7,"y":16,"sizex":6,"sizey":5},{"id":"chartEquipBrandUnusual","x":1,"y":16,"sizex":6,"sizey":5},{"id":"chartEquipBrandDump","x":7,"y":21,"sizex":6,"sizey":5},{"id":"chartEquipBrand","x":1,"y":21,"sizex":6,"sizey":5}]');
+INSERT INTO "AASYSTEM"."tBase_UserPosition" VALUES ('2', '1', '[{"id":"chartEquipDistribution","x":4,"y":1,"sizex":6,"sizey":5},{"id":"chartStoreTime","x":10,"y":1,"sizex":3,"sizey":2},{"id":"chartEquipBrandUnusual","x":1,"y":1,"sizex":3,"sizey":2},{"id":"chartEquipBrandRepair","x":10,"y":3,"sizex":3,"sizey":3},{"id":"chartEquipBrandDump","x":1,"y":3,"sizex":3,"sizey":3},{"id":"chartEquipLife","x":1,"y":6,"sizex":6,"sizey":3},{"id":"chartEquipBrand","x":7,"y":6,"sizex":6,"sizey":3}]');
 
 -- ----------------------------
 -- Primary Key structure for table tBase_UserPosition

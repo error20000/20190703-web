@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="../css/index.css">
 <link rel="stylesheet" href="../js/drag/drag.css">
 
+<link rel="stylesheet" href="css/index.css">
+
 <style type="text/css">
 .v-box {
 	text-align: center;
@@ -89,9 +91,11 @@
 </head>
 <body>
 <div id="app">
-	<div class="lg-header">
+	<div class="lg-headers">
 		<div class="container clearfix">
-
+<div class="content-box" style="width: 100%;height: 650px" id="center-box">
+		<div class="big-title">龙岗政府在线大数据分析平台</div>
+	</div>
 			<div id="demo" style="width: 100%; padding: 1.5em 0 1.5em 0; ">
 			    <power-drag 
 			    	ref="cyGridster" 
@@ -111,7 +115,7 @@
 				
 				
 					<el-card class="box-card" v-if="item.id == 'chartEquipDistribution'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材区域分布统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 							<el-form-item>
@@ -140,7 +144,7 @@
 					</el-card>
 					
 					<el-card class="box-card" v-if="item.id == 'chartStoreTime'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>仓库库存变化统计表</span>
 					    <el-form size="mini" :inline="true" :model="filtersStoreTime" style="float: right;">
 							<el-form-item>
@@ -173,7 +177,7 @@
 					</el-card>
 				
 					<el-card class="box-card" v-if="item.id == 'chartEquipLife'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材寿命统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
 							<el-form-item>
@@ -193,11 +197,11 @@
 						</el-form>
 					  </div>
 					  <div class="echarts" id="chartEquipLife" style="width: 49%;height: 430px;display: inline-block;"></div>
-					  <div class="echarts" id="chartEquipLife2" style="width: 50%;height: 430px;display: inline-block;"></div>
+					  <div class="echarts" id="chartEquipLife2" style="width: 49%;height: 430px;display: inline-block;"></div>
 					</el-card>
 					
 					<el-card class="box-card"  v-if="item.id == 'chartEquipBrand'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材品牌、型号统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrand" style="float: right;">
 							<el-form-item>
@@ -220,7 +224,7 @@
 					</el-card>
 					
 					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandDump'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材报废统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandDump" style="float: right;">
 							<el-form-item>
@@ -243,7 +247,7 @@
 					</el-card>
 					
 					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandUnusual'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材故障统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
 							<el-form-item>
@@ -266,7 +270,7 @@
 					</el-card>
 					
 					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandRepair'">
-					  <div slot="header" class="clearfix">
+					  <div slot="headers" class="clearfix">
 					    <span>器材维修统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandRepair" style="float: right;">
 							<el-form-item>
@@ -309,5 +313,6 @@
   <script src="../js/browser.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="../js/drag/drag.js"></script>
   <script type="text/javascript" src="../js/global.js"></script>
+  <script type="text/javascript" src="js/walden.js"></script>
   <script type="text/babel" src="js/statisAll.js"></script>
 </html>

@@ -1040,7 +1040,7 @@ var myvue = new Vue({
 			//queryEquipBrandUnusual
 			chartEquipBrandUnusual: function(filter){
 				var chartId = "chartEquipBrandUnusual";
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
 		        var data = [];
@@ -1192,7 +1192,7 @@ var myvue = new Vue({
 			//queryEquipBrandRepair
 			chartEquipBrandRepair: function(filter){
 				var chartId = "chartEquipBrandRepair";
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
 		        var data = [];
@@ -1447,7 +1447,7 @@ var myvue = new Vue({
 						break;
 					}
 				}
-            	var ch = $("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
+            	var ch = 0;//$("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
             	var bp = 40;
             	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - ch - bp;
             	if(chartId == "chartEquipLife"){
@@ -1587,12 +1587,12 @@ var myvue = new Vue({
 				
 				gridster.afterInitOk(function () {
 					
-					/*self.chartEquipDistribution();
+					self.chartEquipDistribution();
 					self.chartStoreTime();
 					self.chartEquipLife();
 					
 					self.chartEquipBrand();
-					self.chartEquipBrandDump();*/
+					self.chartEquipBrandDump();
 					self.chartEquipBrandUnusual();
 					self.chartEquipBrandRepair();
 				});
