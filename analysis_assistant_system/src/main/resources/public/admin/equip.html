@@ -165,7 +165,7 @@
 					</el-table-column>
 					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" :formatter="store4Formatter">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dEquip_CreateDate" :formatter="(r,c) => {return formatDate(r.dEquip_CreateDate);}">
+					<el-table-column label="创建日期" prop="dEquip_CreateDate" :formatter="function(r,c) {return formatDate(r.dEquip_CreateDate);}">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">
@@ -1009,5 +1009,5 @@
   <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
   <script src="js/browser.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/global.js"></script>
-  <script type="text/babel" src="js/equip.js"></script>
+  <script type="text/javascript" src="js/equip.js"></script>
 </html>

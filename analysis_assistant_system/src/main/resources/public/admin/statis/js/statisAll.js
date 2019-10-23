@@ -6,8 +6,8 @@ var equipBrandOptionUrl = baseUrl + "api/equip/brandOption";
 var equipDistributionUrl = baseUrl + "api/equip/distribution";
 var equipLifeUrl = baseUrl + "api/equip/life";
 var equipBrandUrl = baseUrl + "api/equip/brand";
-var equipBrandDumpUrl = baseUrl + "api/equip/brandDump";
-var equipBrandUnusualUrl = baseUrl + "api/equip/brandUnusual";
+var chartEquipTypeUrl = baseUrl + "api/equip/equipType";
+var chartAidUrl = baseUrl + "api/aid/statis";
 var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
 
 var storeTimeUrl = baseUrl + "api/store/time";
@@ -79,53 +79,13 @@ var myvue = new Vue({
 				},
 				
 				//drag
-				myList: [{ 
-                    "id": "chartEquipDistribution", 
-                    "x": 1, 
-                    "y": 1, 
-                    "sizex": 15, 
-                    "sizey": 10 
-                }, { 
-                    "id": "chartStoreTime", 
-                    "x": 1, 
-                    "y": 11, 
-                    "sizex": 15, 
-                    "sizey": 10
-                }, { 
-                    "id": "chartEquipLife", 
-                    "x": 1, 
-                    "y": 21, 
-                    "sizex": 15, 
-                    "sizey": 10 
-                },{ 
-                    "id": "chartEquipBrandRepair", 
-                    "x": 7, 
-                    "y": 31, 
-                    "sizex": 6, 
-                    "sizey": 10 
-                }, { 
-                    "id": "chartEquipBrandUnusual", 
-                    "x": 1, 
-                    "y": 31, 
-                    "sizex": 6, 
-                    "sizey": 10 
-                },{ 
-                    "id": "chartEquipBrandDump", 
-                    "x": 7, 
-                    "y": 41, 
-                    "sizex": 6, 
-                    "sizey": 10 
-                }, { 
-                    "id": "chartEquipBrand", 
-                    "x": 1, 
-                    "y": 41, 
-                    "sizex": 6, 
-                    "sizey": 10 
-                }], 
+				myList: [], 
 				baseWidth: 0, 
 				baseHeight: 0, 
 				gridster: '',
 				chartBox: {},
+				//
+				msgData: [],
 				
 				user: ''
 			}
@@ -203,7 +163,7 @@ var myvue = new Vue({
 				var chartId = "chartEquipDistribution";
 				var self = this;
 				// 基于准备好的dom，初始化echarts实例
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
 		        var series = [];
@@ -446,7 +406,7 @@ var myvue = new Vue({
 		        };
 
 		        // 使用刚指定的配置项和数据显示图表。
-		        myChart.setOption(option);
+		        myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -471,7 +431,7 @@ var myvue = new Vue({
 			//queryStoreTime
 			chartStoreTime: function(filter){
 				var chartId = "chartStoreTime";
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 
 				var data = [];
@@ -545,7 +505,7 @@ var myvue = new Vue({
 			            data: data
 			        }
 			    };
-				myChart.setOption(option);
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -568,7 +528,7 @@ var myvue = new Vue({
 			//queryEquipLife 
 			chartEquipLife: function(filter){
 				var chartId = "chartEquipLife";
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 
 				var data = {};
@@ -739,7 +699,7 @@ var myvue = new Vue({
 				    },
 				    series: series
 				};
-				myChart.setOption(option);
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -747,7 +707,7 @@ var myvue = new Vue({
 				
 
 				var chartId2 = "chartEquipLife2";
-		        var myChart2 = echarts.init(document.getElementById(chartId2));
+		        var myChart2 = echarts.init(document.getElementById(chartId2), 'walden');
 		        myChart2.clear();
 				var option2 = {
 					    tooltip: {},
@@ -777,7 +737,7 @@ var myvue = new Vue({
 					    }]
 					};
 
-				myChart2.setOption(option2);
+				myChart2.setOption($.extend(true, {}, goption, option2));
 
 				/*$("#"+chartId2).resize(function() {
 					myChart2.resize();
@@ -802,7 +762,7 @@ var myvue = new Vue({
 			//queryEquipBrand
 			chartEquipBrand: function(filter){
 				var chartId = "chartEquipBrand";
-		        var myChart = echarts.init(document.getElementById(chartId));
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
 		        var data = [];
@@ -898,7 +858,7 @@ var myvue = new Vue({
 					        }
 					    ]
 					};
-				myChart.setOption(option);
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -918,10 +878,10 @@ var myvue = new Vue({
 			},
 
 
-			//queryEquipBrandDump
-			chartEquipBrandDump: function(filter){
-				var chartId = "chartEquipBrandDump";
-		        var myChart = echarts.init(document.getElementById(chartId));
+			//queryEquipType
+			chartEquipType: function(filter){
+				var chartId = "chartEquipType";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
 		        var data = [];
@@ -930,57 +890,23 @@ var myvue = new Vue({
 				var yData = [];
 		        var self = this;
 				var params = filter || {};
-				ajaxReqSync(equipBrandDumpUrl, params, function(res){
+				ajaxReqSync(chartEquipTypeUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
-							if(!hash[key]){
-								var index = data.push({
-				                       brand: node.sEquip_MBrand,
-				                       model: node.sEquip_MModel,
-				                       value: 1
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								data[index].value = data[index].value + 1;
-							}
-						}
-						var hash = {};
-						var temp = {};
-						for (var i = 0; i < data.length; i++) {
-							var node = data[i];
-							var key = node.brand;
-							if(!hash[key]){
-								temp[key] = [];
-								temp[key].push(node);
-								var xIndex = xAxisData.push(node.brand);
-								var index = yData.push([xIndex-1, node.value, temp[key]]);
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								yData[index][1] = yData[index][1] + node.value;
-								temp[key].push(node);
-							}
+							xAxisData.push(node.sEquip_TypeName ? node.sEquip_TypeName : "未知");
+							yData.push(node.sEquip_Num);
 						}
 					});
 				});
 				
 				var option = {
+						title:{
+							text:"{a|器材统计}"		
+						},
 					    tooltip: {
 					        trigger: 'axis',
-			            	formatter: function (objs) {
-			            		var obj = objs[0];
-			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-			                    + obj.name
-			                    + '</div>';
-			            		for (var i = 0; i < obj.value[2].length; i++) {
-				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
-								}
-			                    return str;
-			            	}
 					    },
 					    toolbox: {
 					        feature: {
@@ -1002,7 +928,7 @@ var myvue = new Vue({
 					    yAxis: [
 					        {
 					            type: 'value',
-					            name: '数量',
+					            name: '',
 					            minInterval: 1,
 					            axisLabel: {
 					                formatter: '{value} 个'
@@ -1011,13 +937,13 @@ var myvue = new Vue({
 					    ],
 					    series: [
 					        {
-					            name:'品牌',
+					            name:'数量',
 					            type:'bar',
 					            data: yData
 					        }
 					    ]
 					};
-				myChart.setOption(option);
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -1037,9 +963,9 @@ var myvue = new Vue({
 			},
 
 
-			//queryEquipBrandUnusual
-			chartEquipBrandUnusual: function(filter){
-				var chartId = "chartEquipBrandUnusual";
+			//queryAid
+			chartAid: function(filter){
+				var chartId = "chartAid";
 		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 		        
@@ -1049,60 +975,23 @@ var myvue = new Vue({
 				var yData = [];
 		        var self = this;
 				var params = filter || {};
-				ajaxReqSync(equipBrandUnusualUrl, params, function(res){
+				ajaxReqSync(chartAidUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
-							if(!hash[key]){
-								var index = data.push({
-				                       brand: node.sEquip_MBrand,
-				                       model: node.sEquip_MModel,
-				                       value: 1
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								data[index].value = data[index].value + 1;
-							}
-						}
-						var hash = {};
-						var temp = {};
-						for (var i = 0; i < data.length; i++) {
-							var node = data[i];
-							var key = node.brand;
-							if(!hash[key]){
-								temp[key] = [];
-								temp[key].push(node);
-								var xIndex = xAxisData.push(node.brand);
-								var index = yData.push([xIndex-1, node.value, temp[key]]);
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								yData[index][1] = yData[index][1] + node.value;
-								temp[key].push(node);
-							}
+							xAxisData.push(node.sAid_TypeName ? node.sAid_TypeName : "未知");
+							yData.push(node.sAid_Num);
 						}
 					});
 				});
 				
 				var option = {
 						title:{
-							text:"{a|来源网站TOP5}"		
+							text:"{a|航标统计}"		
 						},
 					    tooltip: {
 					        trigger: 'axis',
-			            	formatter: function (objs) {
-			            		var obj = objs[0];
-			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-			                    + obj.name
-			                    + '</div>';
-			            		for (var i = 0; i < obj.value[2].length; i++) {
-				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
-								}
-			                    return str;
-			            	}
 					    },
 					    toolbox: {
 					        feature: {
@@ -1129,22 +1018,13 @@ var myvue = new Vue({
 					        },
 					    series: [
 					        {
-					            name:'品牌',
+					            name:'数量',
 					            type:'bar',
 					            data: yData
 					        }
-					    ],
-					    grid:{
-			            	containLabel:false,
-			            	left:40,
-			            	right:40,
-			            	top:45,
-			            	bottom:20
-			            }
+					    ]
 					};
-				console.log(goption);
-				console.log(option);
-				console.log($.extend(true, {}, goption, option));
+				
 				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
@@ -1264,7 +1144,7 @@ var myvue = new Vue({
 					        }
 					    ]
 					};
-				myChart.setOption(option);
+				myChart.setOption($.extend(true, {}, goption, option));
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -1565,14 +1445,18 @@ var myvue = new Vue({
 				
 				gridster.afterInitOk(function () {
 					
-					self.chartEquipDistribution();
+					/*self.chartEquipDistribution();
 					self.chartStoreTime();
 					self.chartEquipLife();
 					
 					self.chartEquipBrand();
-					self.chartEquipBrandDump();
-					self.chartEquipBrandUnusual();
-					self.chartEquipBrandRepair();
+					self.chartEquipBrandRepair();*/
+					self.chartAid();
+					self.chartEquipType();
+					
+					window.onresize = function() {
+						window.location.reload();
+				    }
 				});
 				
 	            gridster.init(); //在适当的时候初始化布局组件

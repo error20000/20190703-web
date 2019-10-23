@@ -467,4 +467,23 @@ public interface EquipMapper extends BaseMapper<Equip> {
 		"</script>"
 	})
 	public List<Map<String, Object>> life(@Param("sEquip_MBrand") String sEquip_MBrand, @Param("sEquip_Type") String sEquip_Type);
+	
+
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.\"sEquip_Type\", count(1) \"sEquip_Num\", e.\"sDict_Name\" \"sEquip_TypeName\" ",
+		" from \"tBase_Equip\" a",
+		" 	left join \"tBase_Dict\" e on a.\"sEquip_Type\" = e.\"sDict_NO\" and e.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_Aid\" c on a.\"sEquip_AidID\" = c.\"sAid_ID\" ",
+		" 	left join \"tBase_StoreType\" d on a.\"sEquip_StoreLv1\" = d.\"sStoreType_ID\" ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and ( c.\"sAid_Station\" = #{sAid_Station} or d.\"sStoreType_Station\" = #{sAid_Station} ) ",	
+    	"   </if>", 
+		" group by a.\"sEquip_Type\", e.\"sDict_Name\" ",
+		"</script>"
+	})
+	public List<Map<String, Object>> equipType(@Param("sAid_Station") String sAid_Station);
 }

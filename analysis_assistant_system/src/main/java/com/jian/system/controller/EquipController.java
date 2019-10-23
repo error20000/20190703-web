@@ -406,6 +406,18 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		List<Map<String, Object>> res = service.brandOption();
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	
+	@RequestMapping("/equipType")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询器材种类")
+	public String equipType(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.equipType(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 	
 	@RequestMapping("/import")
 	@ResponseBody

@@ -121,7 +121,7 @@ new Vue({
         logout: function() {
           this.$confirm("确定退出系统吗？", "提示", {
             //type: 'warning'
-          }).then(() => {
+          }).then(function() {
               var self = this;
               var params = {};
               ajaxReq(logoutUrl, params, function(res) {
@@ -134,7 +134,7 @@ new Vue({
 					});
                 }
               });
-            }).catch(() => {});
+            }).catch(function() {});
         },
         userAuthMenu: function() {
 			var params = {};

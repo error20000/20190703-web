@@ -1386,4 +1386,15 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		
 		return list;
 	}
+	
+	/**
+	 * 器材种类
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> equipType(String sAid_Station){
+		
+		List<Map<String, Object>> list = baseMapper.equipType(sAid_Station);
+		
+		return list;
+	}
 }

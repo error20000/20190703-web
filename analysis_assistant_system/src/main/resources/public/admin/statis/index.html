@@ -110,7 +110,10 @@
 	            	<template v-for="(item,index) in myList" :slot="'slot'+index">
 	            	
 	            	<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 1">
-						<div class="big-title">龙岗政府在线大数据分析平台</div>
+						<div class="big-title"></div>
+					</div>
+					<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 3">
+						<div class="big-title"></div>
 					</div>
 				
 					<el-card class="box-card" v-if="item.id == 'chartEquipDistribution'">
@@ -142,37 +145,61 @@
 					  <div class="echarts" id="chartEquipDistribution" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card" v-if="item.id == 'chartStoreTime'">
-					  <div slot="headers" class="clearfix">
-					    <span>仓库库存变化统计表</span>
-					    <el-form size="mini" :inline="true" :model="filtersStoreTime" style="float: right;">
-							<el-form-item>
-							    <el-select v-model="filtersStoreTime.sStore_Level1" placeholder="请选择" @visible-change="handleVisibleChange">
-								    <el-option
-								      v-for="item in storeLv1Options"
-								      :key="item.sStoreType_ID"
-								      :label="item.sStoreType_Name"
-								      :value="item.sStoreType_ID">
-								    </el-option>
-							    </el-select>
-							</el-form-item>
-							<el-form-item>
-							    <el-select v-model="filtersStoreTime.sEquip_Type" placeholder="请选择" @visible-change="handleVisibleChange">
-								    <el-option
-								      v-for="item in equipTypeOptions"
-								      :key="item.sDict_NO"
-								      :label="item.sDict_Name"
-								      :value="item.sDict_NO">
-								    </el-option>
-							    </el-select>
-							</el-form-item>
-							<el-form-item>
-								<el-button type="primary" title="查询" @click="queryStoreTime" icon="fa fa-search"></el-button>
-								<el-button @click="resetStoreTime"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
-							</el-form-item>
-						</el-form>
-					  </div>
-					  <div class="echarts" id="chartStoreTime" style="width: 100%;height: 430px;"></div>
+					<el-card class="box-card text-box" v-if="item.id == 'msgList'">
+					  <h1>消息列表</h1>
+					  <div class="content" id="osusume">
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
+					  			<time>2019-05-04</time>
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+				  	</div>
 					</el-card>
 				
 					<el-card class="box-card" v-if="item.id == 'chartEquipLife'">
@@ -222,9 +249,9 @@
 					  <div class="echarts" id="chartEquipBrand" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandDump'">
+					<el-card class="box-card"  v-if="item.id == 'chartEquipType'">
 					  <div slot="headers" class="clearfix">
-					    <span>器材报废统计图表</span>
+					    <span>器材统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandDump" style="float: right;">
 							<el-form-item>
 							    <el-select v-model="filtersBrandDump.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
@@ -242,12 +269,12 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div class="echarts" id="chartEquipBrandDump" style="width: 100%;height: 430px;"></div>
+					  <div class="echarts" id="chartEquipType" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandUnusual'">
+					<el-card class="box-card"  v-if="item.id == 'chartAid'">
 					  <div slot="headers" class="clearfix">
-					    <span>器材故障统计图表</span>
+					    <span>航标统计图表</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrandUnusual" style="float: right;">
 							<el-form-item>
 							    <el-select v-model="filtersBrandUnusual.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
@@ -265,30 +292,64 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div class="echarts" id="chartEquipBrandUnusual" style="width: 100%; height: 430px;"></div>
+					  <div class="echarts" id="chartAid" style="width: 100%; height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card"  v-if="item.id == 'chartEquipBrandRepair'">
-					  <div slot="headers" class="clearfix">
-					    <span>器材维修统计图表</span>
-					    <el-form size="mini" :inline="true" :model="filtersBrandRepair" style="float: right;">
-							<el-form-item>
-							    <el-select v-model="filtersBrandRepair.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
-								    <el-option
-								      v-for="item in aidStationOptions"
-								      :key="item.sDict_NO"
-								      :label="item.sDict_Name"
-								      :value="item.sDict_NO">
-								    </el-option>
-							    </el-select>
-							</el-form-item>
-							<el-form-item>
-								<el-button type="primary" title="查询" @click="queryEquipBrandRepair" icon="fa fa-search"></el-button>
-								<el-button @click="resetEquipBrandRepair"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
-							</el-form-item>
-						</el-form>
-					  </div>
-					  <div class="echarts" id="chartEquipBrandRepair" style="width: 100%; height: 430px;"></div>
+					<el-card class="box-card text-box"  v-if="item.id == 'aidList'">
+					  <h1>航标状态列表</h1>
+					  <div class="content" id="osusume">
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
+					  			<time>2019-05-04</time>
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+					  	<div class="msg_item">
+					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+					  			<i></i>龙岗区教育局关于做好龙岗区2019...
+					  		</a>
+				  		</div>
+				  	</div>
 					</el-card>
 				
 	            	</template>
@@ -313,5 +374,5 @@
   <script type="text/javascript" src="../js/drag/drag.js"></script>
   <script type="text/javascript" src="../js/global.js"></script>
   <script type="text/javascript" src="js/walden.js"></script>
-  <script type="text/babel" src="js/statisAll.js"></script>
+  <script type="text/javascript" src="js/statisAll.js"></script>
 </html>

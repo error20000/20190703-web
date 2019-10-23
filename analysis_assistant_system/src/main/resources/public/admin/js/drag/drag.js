@@ -721,6 +721,9 @@ var powerDrag = {
 
             let className = target.attr("class");
             className = className || '';
+            if (className.indexOf("canNotDrag") != -1) {
+                return;
+            }
             if (className.indexOf("dragHandle") == -1 && className.indexOf("item") == -1 && className.indexOf("resizeHandle") == -1) {
                 return;
             }
