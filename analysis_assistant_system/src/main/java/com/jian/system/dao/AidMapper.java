@@ -205,6 +205,37 @@ public interface AidMapper extends BaseMapper<Aid> {
 		"</script>" 
 	})
 	public List<Map<String, Object>> statis(@Param("sAid_Station") String sAid_Station);
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.*, b.\"sDict_Name\" \"sAid_TypeName\" ",
+		" from \"tBase_Aid\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sAid_Type\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'AidType' ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and a.\"sAid_Station\" = #{sAid_Station} ",	
+    	"   </if>",
+		"</script>" 
+	})
+	public List<Map<String, Object>> statisMap(@Param("sAid_Station") String sAid_Station);
+
+	@Select({
+		"<script>",
+		" select ",
+		"	a.*,",
+		"	b.\"sDict_Name\" \"sAid_TypeName\", ",
+		"	c.\"sDict_Name\" \"sAid_StatusName\" ",
+		" from \"tBase_Aid\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sAid_Type\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'AidType' ",
+		" 	left join \"tBase_Dict\" c on a.\"sAid_Status\" = c.\"sDict_NO\" and c.\"sDict_DictTypeNO\" = 'AidStatus' ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and a.\"sAid_Station\" = #{sAid_Station} ",	
+    	"   </if>",
+		"</script>" 
+	})
+	public List<Map<String, Object>> status(@Param("sAid_Station") String sAid_Station);
 	
 	@Select({
 		"<script>",

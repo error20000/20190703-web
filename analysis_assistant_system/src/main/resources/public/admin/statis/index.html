@@ -110,15 +110,15 @@
 	            	<template v-for="(item,index) in myList" :slot="'slot'+index">
 	            	
 	            	<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 1">
-						<div class="big-title"></div>
+						<div class="big-title">蛇口航标管理站大数据展示</div>
 					</div>
 					<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 3">
 						<div class="big-title"></div>
 					</div>
 				
-					<el-card class="box-card" v-if="item.id == 'chartEquipDistribution'">
+					<el-card class="box-card" v-if="item.id == 'chartAidMap'">
 					  <div slot="headers" class="clearfix">
-					    <span>器材区域分布统计图表</span>
+					    <span>航标分布地图</span>
 					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
 							<el-form-item>
 							    <el-select v-model="filters.used" placeholder="请选择" >
@@ -142,64 +142,21 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div class="echarts" id="chartEquipDistribution" style="width: 100%;height: 430px;"></div>
+					  <div class="echarts" id="chartAidMap" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
 					<el-card class="box-card text-box" v-if="item.id == 'msgList'">
-					  <h1>消息列表</h1>
-					  <div class="content" id="osusume">
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
-					  			<time>2019-05-04</time>
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-				  	</div>
+					  <div class="echarts" >
+						  <h1>消息列表</h1>
+						  <div class="content" id="msgList">
+						  	<!-- <div class="msg_item">
+						  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+						  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
+						  			<time>2019-05-04</time>
+						  		</a>
+					  		</div> -->
+					  	   </div>
+					  </div>
 					</el-card>
 				
 					<el-card class="box-card" v-if="item.id == 'chartEquipLife'">
@@ -296,60 +253,17 @@
 					</el-card>
 					
 					<el-card class="box-card text-box"  v-if="item.id == 'aidList'">
-					  <h1>航标状态列表</h1>
-					  <div class="content" id="osusume">
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
-					  			<time>2019-05-04</time>
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-					  	<div class="msg_item">
-					  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
-					  			<i></i>龙岗区教育局关于做好龙岗区2019...
-					  		</a>
-				  		</div>
-				  	</div>
+					  <div class="echarts" >
+						  <h1>航标状态列表</h1>
+						  <div class="content" id="aidList">
+						  	<!-- <div class="msg_item">
+						  		<a href="" class="l-it" target="_blank" title="龙岗区教育局关于做好龙岗区2019年度义务教育阶段新生招生工作的通知">
+						  			<p><i></i>龙岗区教育局关于做好龙岗区2019...</p>
+						  			<time>2019-05-04</time>
+						  		</a>
+					  		</div> -->
+					  	</div>
+					  </div>
 					</el-card>
 				
 	            	</template>

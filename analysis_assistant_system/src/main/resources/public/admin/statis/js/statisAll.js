@@ -3,12 +3,16 @@ var baseUrl = parent.window.baseUrl || '../../';
 var dictUrl = baseUrl + "api/dict/findList";
 var equipStoreUrl = baseUrl + "api/store/findList";
 var equipBrandOptionUrl = baseUrl + "api/equip/brandOption";
-var equipDistributionUrl = baseUrl + "api/equip/distribution";
 var equipLifeUrl = baseUrl + "api/equip/life";
 var equipBrandUrl = baseUrl + "api/equip/brand";
+var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
+
+var chartAidMapUrl = baseUrl + "api/aid/statisMap";
 var chartEquipTypeUrl = baseUrl + "api/equip/equipType";
 var chartAidUrl = baseUrl + "api/aid/statis";
-var equipBrandRepairUrl = baseUrl + "api/equip/brandRepair";
+
+var msgListUrl = baseUrl + "api/msg/findPage";
+var aidListUrl = baseUrl + "api/aid/status";
 
 var storeTimeUrl = baseUrl + "api/store/time";
 
@@ -158,9 +162,9 @@ var myvue = new Vue({
 				});
 			},
 			
-			//Equip Distribution
-			chartEquipDistribution: function(filter){
-				var chartId = "chartEquipDistribution";
+			//chartAidMap
+			chartAidMap: function(filter){
+				var chartId = "chartAidMap";
 				var self = this;
 				// 基于准备好的dom，初始化echarts实例
 		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
@@ -171,80 +175,16 @@ var myvue = new Vue({
 		        var unUsedData = [];
 		        var usedData = [];
 				var params = filter || {};
-				ajaxReqSync(equipDistributionUrl, params, function(res){
+				ajaxReqSync(chartAidMapUrl, params, function(res){
 					self.handleResQuery(res, function(){
-						//未使用
 						var hash = {};
-						for (var i = 0; i < res.data.unused.length; i++) {
-							var node = res.data.unused[i];
-							var key = node.sEquip_Type+"_"+node.sStoreType_ID;
-							if(!hash[key]){
-								var index = unUsedData.push({
-				                       name: node.sDict_Name,
-				                       store: node.sStoreType_Name,
-				                       value: [node.lStoreType_Lng, node.lStoreType_Lat, 1]
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								unUsedData[index].value[2] = unUsedData[index].value[2] + 1;
-							}
-						}
-						for (var i = 0; i < unUsedData.length; i++) {
-							var node = unUsedData[i];
-							var temp = {
-				                name: node.store,
-				                type: 'scatter',
-				                coordinateSystem: 'bmap',
-				                data: [node],
-				                symbolSize: function (val) {
-				                    return val[2] > 10 ? val[2] / 10 : 10;
-				                },
-				                label: {
-				                    normal: {
-				                        formatter: '{b}',
-				                        position: 'right',
-				                        show: false
-				                    },
-				                    emphasis: {
-				                        show: true
-				                    }
-				                }/*,
-				                itemStyle: {
-				                    normal: {
-				                        color: 'purple'
-				                    }
-				                }*/,
-					            tooltip: {
-					            	trigger: 'item',
-					            	formatter: function (obj) {
-					            		return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
-					                    + obj.name
-					                    + '</div>'
-					                    + '仓库' + '：' + obj.seriesName + '<br>'
-					                    + '数量' + '：' + obj.value[2] + '<br>';
-					            	}
-					            }
-				            }
-							series.push(temp);
-							legendData.push(node.store);
-						}
-						//已使用
-						var hash = {};
-						for (var i = 0; i < res.data.used.length; i++) {
-							var node = res.data.used[i];
-							var key = node.sEquip_Type+"_"+node.sAid_ID;
-							if(!hash[key]){
-								var index = usedData.push({
-				                       name: node.sDict_Name,
-				                       aid: node.sAid_Name,
-				                       value: [node.lAid_Lng, node.lAid_Lat, 1]
-					            });
-								hash[key] = index;
-							}else{
-								var index = hash[key] - 1;
-								usedData[index].value[2] = usedData[index].value[2] + 1;
-							}
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							usedData.push({
+			                       name: node.sAid_Name,
+			                       aid: node.sAid_NO,
+			                       value: [node.lAid_Lng, node.lAid_Lat, 1]
+				            });
 						}
 						for (var i = 0; i < usedData.length; i++) {
 							var node = usedData[i];
@@ -272,8 +212,7 @@ var myvue = new Vue({
 					            		return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
 					                    + obj.name
 					                    + '</div>'
-					                    + '航标' + '：' + obj.seriesName + '<br>'
-					                    + '数量' + '：' + obj.value[2] + '<br>';
+					                    + '编码' + '：' + obj.seriesName + '<br>';
 					            	}
 					            }
 				            }
@@ -285,6 +224,10 @@ var myvue = new Vue({
 				
 				// 指定图表的配置项和数据
 		        var option = {
+		        	title:{
+						text:"{a|航标分布地图}",
+				        left: 'center'
+		        	},
 		            tooltip: {
 		            	trigger: 'item',
 		            	formatter: function (obj) {
@@ -1163,6 +1106,51 @@ var myvue = new Vue({
 				this.chartEquipBrandRepair();
 			},
 			
+			//msgList
+			msgList: function(){
+				var self = this;
+				var params = {
+					page: 1,
+					rows: 10
+				};
+				ajaxReq(msgListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var str = '';
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							str += '<div class="msg_im">';
+							str += '<a href="javascript:void(0);" class="l-it" target="_blank" title="'+node.sMsg_Title+'">';
+							str += '	<p><i></i>'+node.sMsg_Title+'</p>';
+							str += '	<time>'+self.formatDateStr(node.dMsg_CreateDate, 'yyyy-MM-dd')+'</time>';
+							str += '</a>';
+							str += '</div>';
+						}
+						$("#msgList").html(str);
+					});
+				});
+			},
+			
+			//aidList
+			aidList: function(){
+				var self = this;
+				var params = {};
+				ajaxReq(aidListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var str = '';
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							str += '<div class="msg_im">';
+							str += '<span class="l-it" title="'+node.sAid_Name+'">';
+							str += '	<p><i></i>'+node.sAid_Name+'</p>';
+							str += '	<time>'+(node.sAid_StatusName ? node.sAid_StatusName : '')+'</time>';
+							str += '</span>';
+							str += '</div>';
+						}
+						$("#aidList").html(str);
+					});
+				});
+			},
+			
 			
 			//full
 			handleShowFull: function(){
@@ -1445,12 +1433,15 @@ var myvue = new Vue({
 				
 				gridster.afterInitOk(function () {
 					
-					/*self.chartEquipDistribution();
-					self.chartStoreTime();
+					/*self.chartStoreTime();
 					self.chartEquipLife();
 					
 					self.chartEquipBrand();
 					self.chartEquipBrandRepair();*/
+					self.msgList();
+					self.aidList();
+					
+					self.chartAidMap();
 					self.chartAid();
 					self.chartEquipType();
 					
@@ -1509,7 +1500,7 @@ var goption = {
     	},
         grid:{
         	containLabel:true,
-        	left:20,
+        	left:10,
         	right:10,
         	top:40,
         	bottom:0

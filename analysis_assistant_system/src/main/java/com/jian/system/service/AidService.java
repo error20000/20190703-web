@@ -249,10 +249,10 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		for (String sEquip_ID : tempUpdate) {
 			Date date = new Date();
 			condEquip.put("sEquip_ID", sEquip_ID);
-//			valueEquip.put("sEquip_StoreLv1", " ");
-//			valueEquip.put("sEquip_StoreLv2", " ");
-//			valueEquip.put("sEquip_StoreLv3", " ");
-//			valueEquip.put("sEquip_StoreLv4", " ");
+			valueEquip.put("sEquip_StoreLv1", " ");
+			valueEquip.put("sEquip_StoreLv2", " ");
+			valueEquip.put("sEquip_StoreLv3", " ");
+			valueEquip.put("sEquip_StoreLv4", " ");
 			valueEquip.put("sEquip_AidID", sAid_ID);
 			valueEquip.put("sEquip_Status", Constant.EquipStatus_9);
 			List<Map<String, Object>> test = old.stream()
@@ -490,9 +490,19 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	
 	@TargetDataSource
 	public List<Map<String, Object>> statis(String sAid_Station){
-		
 		List<Map<String, Object>> list = baseMapper.statis(sAid_Station);
-		
+		return list;
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> statisMap(String sAid_Station){
+		List<Map<String, Object>> list = baseMapper.statisMap(sAid_Station);
+		return list;
+	}
+	
+	@TargetDataSource
+	public List<Map<String, Object>> status(String sAid_Station){
+		List<Map<String, Object>> list = baseMapper.status(sAid_Station);
 		return list;
 	}
 	

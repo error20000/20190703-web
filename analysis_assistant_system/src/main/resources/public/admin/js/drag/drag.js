@@ -714,6 +714,10 @@ var powerDrag = {
             if($(e.target).parents(".echarts").length != 0){
             	return;
             }
+            //点击box-card
+            if($(e.target).attr("class").indexOf("box-card") != -1){
+            	return;
+            }
             let target = $(e.target).parents(".item");
             if(target.length == 0){
             	target = $(e.target);

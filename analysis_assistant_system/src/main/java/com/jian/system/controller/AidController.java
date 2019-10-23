@@ -611,6 +611,30 @@ public class AidController extends BaseController<Aid, AidService> {
 		List<Map<String, Object>> res = service.statis(sAid_Station);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
+
+	
+	@RequestMapping("/statisMap")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标统计地图")
+	public String statisMap(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.statisMap(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
+	
+	@RequestMapping("/status")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标状态列表")
+	public String status(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> res = service.status(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 	
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口

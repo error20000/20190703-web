@@ -774,10 +774,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//出库
 		values.put("sEquip_Status", Constant.EquipStatus_2);
-//		values.put("sEquip_StoreLv1", " ");
-//		values.put("sEquip_StoreLv2", " ");
-//		values.put("sEquip_StoreLv3", " ");
-//		values.put("sEquip_StoreLv4", " ");
+		values.put("sEquip_StoreLv1", " ");
+		values.put("sEquip_StoreLv2", " ");
+		values.put("sEquip_StoreLv3", " ");
+		values.put("sEquip_StoreLv4", " ");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
