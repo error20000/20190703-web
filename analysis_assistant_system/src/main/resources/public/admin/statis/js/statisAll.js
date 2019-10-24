@@ -1307,13 +1307,16 @@ var myvue = new Vue({
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
 							str += '<div class="msg_im">';
-							str += '<a href="javascript:void(0);" class="l-it" title="'+node.sMsg_Title+'">';
+							str += '<a href="javascript:void(0);" class="l-it" title="'+node.sMsg_Title+'" data="'+node.sMsg_ID+'">';
 							str += '	<p><i></i>'+node.sMsg_Title+'</p>';
 							str += '	<time>'+self.formatDateStr(node.dMsg_CreateDate, 'yyyy-MM-dd')+'</time>';
 							str += '</a>';
 							str += '</div>';
 						}
 						$("#msgList").html(str);
+						$("#msgList a").on('click',function(){
+							self.msgDetail($(this).attr('data'));
+						});
 					});
 				});
 			},
@@ -1393,6 +1396,8 @@ var myvue = new Vue({
 						console.log(res);
 						self.msgFormVisible = true;
 						self.msgForm = res.data;
+						self.msgForm.dMsg_CreateDateStr = self.formatDate(self.msgForm.dMsg_CreateDate);
+						self.msgForm.dMsg_UpdateDateStr = self.formatDate(self.msgForm.dMsg_UpdateDate);
 					});
 				});
 			},
@@ -1693,8 +1698,6 @@ var myvue = new Vue({
 					self.chartEquipType();
 					self.chartStoreTime();
 					self.chartStoreInout();
-					
-					self.msgDetail(1);
 					
 					window.onresize = function() {
 						window.location.reload();
