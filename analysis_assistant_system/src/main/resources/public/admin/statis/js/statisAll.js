@@ -20,7 +20,9 @@ var storeInoutUrl = baseUrl + "api/store/inout";
 var positionUrl = baseUrl + "api/user/position";
 var updatePositionUrl = baseUrl + "api/user/updatePosition";
 
-var weatherUrl = baseUrl + "/api/weather/get";
+var weatherUrl = baseUrl + "api/weather/get";
+
+var msgDetailUrl = baseUrl + "api/msg/view";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -91,8 +93,11 @@ var myvue = new Vue({
 				baseHeight: 0, 
 				gridster: '',
 				chartBox: {},
-				//
-				msgData: [],
+				//msg
+				msgFormVisible: false,
+				msgLoading: false,
+				msgFormRules: {},
+				msgForm: {},
 				
 				user: ''
 			}
@@ -1340,7 +1345,6 @@ var myvue = new Vue({
 				var self = this;
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'wind'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('wind', res);
 						if(res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.wind font').html(str[1]+"、"+str[2]);
@@ -1349,46 +1353,51 @@ var myvue = new Vue({
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'gust'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('gust', res);
 						if(res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.gust font').html(str[1]);
 						}
 					});
-					
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'visibility'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('visibility', res);
 						if(res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.visibility font').html(str[1]);
 						}
 					});
-					
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'waves'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('waves', res);
 					});
-					
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'swell1'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('swell1', res);
 					});
-					
 				});
 				ajaxReq(weatherUrl, {productName: 'sea', overlayName: 'currents'}, function(res){
 					self.handleResQuery(res, function(){
-						console.log('currents', res);
 						if(res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.currents font').html(str[1]+"、"+str[2]);
 						}
 					});
-					
 				});
+			},
+			
+			//msg
+			msgDetail: function(sMsg_ID){
+				var self = this;
+				ajaxReq(msgDetailUrl, {sMsg_ID: sMsg_ID}, function(res){
+					self.handleResQuery(res, function(){
+						console.log(res);
+						self.msgFormVisible = true;
+						self.msgForm = res.data;
+					});
+				});
+			},
+			msgClose:function(){
+				this.msgFormVisible = false;
 			},
 			
 			
@@ -1397,7 +1406,7 @@ var myvue = new Vue({
 				var full = document.getElementsByTagName('body')[0];//document.getElementById("chartView");
 	            launchIntoFullscreen(full);
 	            //window.location.reload(); 
-				//localStorage.setItem('isFullScreen', 1);
+				localStorage.setItem('isFullScreen', 1);
 
 				$("#fullscrean").hide();
 				$("#exitFullscrean").show();
@@ -1405,7 +1414,7 @@ var myvue = new Vue({
 			handleHideFull: function(){
 				//var full = document.getElementsByTagName('body')[0];
 				exitFullscreen();
-				//localStorage.setItem('isFullScreen', "");
+				localStorage.removeItem('isFullScreen');
 				$("#fullscrean").show();
 				$("#exitFullscrean").hide();
 			},
@@ -1434,7 +1443,7 @@ var myvue = new Vue({
 			        		console.log("----------------------------------")
 		        	    }
 		        	},100);*/
-		        	setTimeout(() => {
+		        	setTimeout(function() {
 		        		$('.el-select-dropdown').css('position', 'fixed');
 		        	}, 20);
 		        }
@@ -1560,7 +1569,7 @@ var myvue = new Vue({
 			//res
 			toLoginHtml: function(){
                 localStorage.removeItem('loginUser');
-                parent.window.location.href = "../login.html";
+                parent.window.location.href = "login.html";
 			},
 			handleResQuery: function(res, success, failed){
 				this.handleRes(false, res, success, failed);
@@ -1652,6 +1661,7 @@ var myvue = new Vue({
 	        });*/
 
 			/*let isFullScreen = localStorage.getItem('isFullScreen');
+			console.log("isFullScreen----->"+isFullScreen);
 			if(isFullScreen){
 				$("#fullscrean").hide();
 				$("#exitFullscrean").show();
@@ -1684,9 +1694,18 @@ var myvue = new Vue({
 					self.chartStoreTime();
 					self.chartStoreInout();
 					
+					self.msgDetail(1);
+					
 					window.onresize = function() {
 						window.location.reload();
 				    }
+					window.onkeyup = function(e) {
+						console.log(e);
+						if(e.keyCode == 27){
+							localStorage.removeItem('isFullScreen');
+						}
+				    }
+					
 				});
 				
 	            gridster.init(); //在适当的时候初始化布局组件

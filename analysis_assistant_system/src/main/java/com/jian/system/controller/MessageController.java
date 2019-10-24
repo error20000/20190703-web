@@ -125,6 +125,17 @@ public class MessageController extends BaseController<Message, MessageService> {
 		return super.findAll(req);
 	}
 
+	@RequestMapping("/view")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询消息详情")
+	public String view(HttpServletRequest req) {
+		String sMsg_ID = Tools.getReqParamSafe(req, "sMsg_ID");
+		Map<String, Object> res = service.view(sMsg_ID, getLoginUser(req), Tools.getIp(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
+
 	
 	//TODO -------------------------------------------------------------------------------- 前端接口
 

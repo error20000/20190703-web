@@ -185,6 +185,58 @@
 	</div>
 	<div class="footer">
 	</div>
+	
+	<div id="fullscrean" class="page-component-up"  title="全屏"  @click="handleShowFull"><i class="fas fa-arrows-alt"></i></div>
+	<div id="exitFullscrean" style="display: none;" class="page-component-up"  title="退出全屏"  @click="handleHideFull"><i class="fas fa-compress-arrows-alt"></i></div>
+	
+	<!--message-->
+	<el-dialog title="消息详情" :visible.sync="msgFormVisible" :close-on-click-modal="false">
+		<el-form size="mini" :model="msgForm"  :rules="msgFormRules" ref="msgForm" label-width="120px">
+			<el-form-item label="ID" prop="oldPwd">
+				<el-input type="text" v-model="msgForm.oldPwd"></el-input>
+			</el-form-item>
+			<el-form-item label="消息类型" prop="sMsg_Type">
+				<el-input type="text" v-model="msgForm.newPwd"></el-input>
+			</el-form-item>
+			<el-form-item label="消息日期" prop="dMsg_CreateDate">
+				<el-input type="text" v-model="msgForm.newPwd2"></el-input>
+			</el-form-item>
+			<el-form-item label="消息描述" prop="sMsg_Describe">
+				<el-input type="text" v-model="msgForm.newPwd2"></el-input>
+			</el-form-item>
+			<el-form-item label="消息备注" prop="sMsg_Remarks">
+				<el-input type="text" v-model="msgForm.newPwd2"></el-input>
+			</el-form-item>
+			
+			sMsg_ID	NVARCHAR2	32	0	0	-1	ID				0	0	0			
+sMsg_Type	NVARCHAR2	64	0	-1	0	消息类型				0	0	0			
+dMsg_CreateDate	DATE	7	0	-1	0	消息日期				0	0	0			
+sMsg_ToUserID	NVARCHAR2	32	0	-1	0	接收消息人员ID				0	0	0			
+sMsg_EquipID	NVARCHAR2	32	0	-1	0	器材ID				0	0	0			
+sMsg_Describe	NVARCHAR2	255	0	-1	0	消息描述				0	0	0			
+sMsg_Remarks	NVARCHAR2	255	0	-1	0	消息备注				0	0	0			
+dMsg_UpdateDate	DATE	7	0	-1	0	消息更新日期				0	0	0			
+sMsg_UserID	NVARCHAR2	32	0	-1	0	操作员ID				0	0	0			
+sMsg_AidID	NVARCHAR2	32	0	-1	0	航标ID				0	0	0			
+sMsg_IP	NVARCHAR2	255	0	-1	0	操作员IP				0	0	0			
+sMsg_FromUserID	NVARCHAR2	32	0	-1	0	产生消息人员ID				0	0	0			
+sMsg_Label	NVARCHAR2	64	0	-1	0	消息自定义标签				0	0	0			
+lMsg_Level	NUMBER	0	0	-1	0	消息重要级别				0	0	0			
+sMsg_Status	NVARCHAR2	64	0	-1	0	消息状态				0	0	0			
+sMsg_Title	NVARCHAR2	32	0	-1	0	消息标题				0	0	0			
+sMsg_StoreLv1	NVARCHAR2	32	0	-1	0	一级仓库				0	0	0			
+sMsg_StoreLv2	NVARCHAR2	32	0	-1	0	二级仓库				0	0	0			
+sMsg_StoreLv3	NVARCHAR2	32	0	-1	0	三级仓库				0	0	0			
+sMsg_StoreLv4	NVARCHAR2	32	0	-1	0	四级仓库				0	0	0			
+dMsg_StoreNum	NUMBER	0	0	-1	0	库存数量				0	0	0			
+sMsg_Reason	NVARCHAR2	64	0	-1	0	消息原因				0	0	0			
+			
+			
+		</el-form>
+		<div slot="footer" class="dialog-footer">
+			<el-button size="mini" @click="msgClose">取消</el-button>
+		</div>
+	</el-dialog>
 </div>
 </body>
   <script src="../js/jquery-3.4.1.js" type="text/javascript"></script>
