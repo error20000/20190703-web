@@ -1,4 +1,4 @@
-var baseUrl = parent.window.baseUrl || '../../';
+var baseUrl = '../../';
 
 var dictUrl = baseUrl + "api/dict/findList";
 var equipStoreUrl = baseUrl + "api/store/findList";
@@ -14,10 +14,13 @@ var chartAidUrl = baseUrl + "api/aid/statis";
 var msgListUrl = baseUrl + "api/msg/findPage";
 var aidListUrl = baseUrl + "api/aid/status";
 
-var storeTimeUrl = baseUrl + "api/store/time";
+var storeTimeUrl = baseUrl + "api/store/time2";
+var storeInoutUrl = baseUrl + "api/store/inout";
 
 var positionUrl = baseUrl + "api/user/position";
 var updatePositionUrl = baseUrl + "api/user/updatePosition";
+
+var weatherUrl = baseUrl + "/api/weather/get";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -224,10 +227,10 @@ var myvue = new Vue({
 				
 				// 指定图表的配置项和数据
 		        var option = {
-		        	title:{
+		        /*	title:{
 						text:"{a|航标分布地图}",
 				        left: 'center'
-		        	},
+		        	},*/
 		            tooltip: {
 		            	trigger: 'item',
 		            	formatter: function (obj) {
@@ -377,47 +380,93 @@ var myvue = new Vue({
 		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
 		        myChart.clear();
 
-				var data = [];
+				var series = [];
 				var legendData = [];
+				var xData = [];
 		        var self = this;
 				var params = filter || {};
 				ajaxReqSync(storeTimeUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						var hash = {};
+						var legendHash = {};
+						var dateHash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							var key = self.formatDateStr(node.dSLog_CreateDate, 'yyyy-MM-dd');
+							
+							var dateKey = self.formatDateStr(node.dSLog_CreateDate, 'yyyy-MM-dd');
+							if(!dateHash[dateKey]){
+								var index = xData.push(dateKey);
+								dateHash[dateKey] = index;
+							}
+							
+							var legendKey = (node.sSLog_StoreLv1Name ? node.sSLog_StoreLv1Name : '未知') + "-" + (node.sSLog_EquipTypeName ? node.sSLog_EquipTypeName : '未知');
+							if(!legendHash[legendKey]){
+								var index = legendData.push(legendKey);
+								legendHash[legendKey] = index;
+							}
+							
+							var key = dateKey + "_" + legendKey;
 							if(!hash[key]){
-								var index = data.push([key, node.dSLog_EquipNum]);
-								hash[key] = index;
+								hash[key] = node.dSLog_EquipNum;
 							}else{
-								var index = hash[key] - 1;
-								data[index][1] = data[index][1] + node.dSLog_EquipNum;
+								hash[key] = hash[key] + node.dSLog_EquipNum;
 							}
 						}
-						for (var i = 0; i < data.length; i++) {
-							for (var j = i; j < data.length; j++) {
-								if(data[i][0] > data[j][0]){
-									var temp = data[i];
-									data[i] = data[j];
-									data[j] = temp;
+						//legend
+						for (var i = 0; i < legendData.length; i++) {
+							for (var j = i; j < legendData.length; j++) {
+								if(legendData[i] > legendData[j]){
+									var temp = legendData[i];
+									legendData[i] = legendData[j];
+									legendData[j] = temp;
 								}
 							}
 						}
-						console.log(data);
-						for (var i = 0; i < data.length; i++) {
-							legendData.push(data[i][0]);
+						//x
+						for (var i = 0; i < xData.length; i++) {
+							for (var j = i; j < xData.length; j++) {
+								if(xData[i] > xData[j]){
+									var temp = xData[i];
+									xData[i] = xData[j];
+									xData[j] = temp;
+								}
+							}
 						}
-						console.log(legendData);
+						//y
+						for (var i = 0; i < legendData.length; i++) {
+							var snode = {
+					            name: legendData[i],
+					            type: 'line',
+					            data: []
+					        };
+							
+							for (var j = 0; j < xData.length; j++) {
+								var key = xData[j] + "_" + legendData[i];
+								snode.data.push(hash[key] ? hash[key] : 0);
+							}
+							
+							series.push(snode);
+						}
 					});
 				});
 				
 				var option = {
+					title:{
+						text:"{a|仓库统计}"		
+					},
 			        tooltip: {
 			            trigger: 'axis'
 			        },
-			        xAxis: {
+			        legend: {
+			        	type: 'scroll',
+			        	orient: 'vertical',
+			        	align: 'right',
+			        	right: 10,
+			        	height: 110,
 			            data: legendData
+			        },
+			        xAxis: {
+			            data: xData
 			        },
 			        yAxis: {
 			            splitLine: {
@@ -439,16 +488,22 @@ var myvue = new Vue({
 			            start: 0,
 			            end: 100
 			        },{
-			            type: 'inside'
+			            type: 'inside',
+			            zoomOnMouseWheel: 'shift'
 			        }],
+			        grid:{
+			        	containLabel:true,
+			        	left:10,
+			        	right:10,
+			        	top:40,
+			        	bottom:40
+			        },
 			        
-			        series: {
-			            name: '库存',
-			            type: 'line',
-			            data: data
-			        }
+			        series: series
 			    };
 				myChart.setOption($.extend(true, {}, goption, option));
+				
+				console.log(myChart.getOption());
 
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
@@ -466,6 +521,146 @@ var myvue = new Vue({
 					sEquip_Type: ''
 				};
 				this.chartStoreTime();
+			},
+			
+			//queryStoreInout
+			chartStoreInout: function(filter){
+				var chartId = "chartStoreInout";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
+		        myChart.clear();
+
+				var series = [];
+				var legendData = [];
+				var xData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(storeInoutUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						var legendHash = {};
+						var dateHash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							
+							var dateKey = self.formatDateStr(node.dELog_CreateDate, 'yyyy-MM-dd');
+							if(!dateHash[dateKey]){
+								var index = xData.push(dateKey);
+								dateHash[dateKey] = index;
+							}
+							
+							var legendKey = (node.sELog_StoreLv1Name ? node.sELog_StoreLv1Name : '未知') + "-" + (node.sELog_Type == '1' ? '入库' : node.sELog_Type == '2' ? '出库' : '未知');
+							if(!legendHash[legendKey]){
+								var index = legendData.push(legendKey);
+								legendHash[legendKey] = index;
+							}
+							
+							var key = dateKey + "_" + legendKey;
+							if(!hash[key]){
+								hash[key] = 1;
+							}else{
+								hash[key] = hash[key] + 1;
+							}
+						}
+						//legend
+						for (var i = 0; i < legendData.length; i++) {
+							for (var j = i; j < legendData.length; j++) {
+								if(legendData[i] > legendData[j]){
+									var temp = legendData[i];
+									legendData[i] = legendData[j];
+									legendData[j] = temp;
+								}
+							}
+						}
+						//x
+						for (var i = 0; i < xData.length; i++) {
+							for (var j = i; j < xData.length; j++) {
+								if(xData[i] > xData[j]){
+									var temp = xData[i];
+									xData[i] = xData[j];
+									xData[j] = temp;
+								}
+							}
+						}
+						//y
+						for (var i = 0; i < legendData.length; i++) {
+							var snode = {
+					            name: legendData[i],
+					            type: 'bar',
+					            data: []
+					        };
+							
+							for (var j = 0; j < xData.length; j++) {
+								var key = xData[j] + "_" + legendData[i];
+								snode.data.push(hash[key] ? hash[key] : 0);
+							}
+							
+							series.push(snode);
+						}
+						console.log(legendData);
+						console.log(xData);
+						console.log(series);
+					});
+				});
+				
+				var option = {
+					title:{
+						text:"{a|出入库趋势}"		
+					},
+			        tooltip: {
+			            trigger: 'axis'
+			        },
+			        legend: {
+			        	type: 'scroll',
+			        	orient: 'vertical',
+			        	align: 'right',
+			        	right: 10,
+			        	height: 110,
+			            data: legendData
+			        },
+			        xAxis: {
+			            data: xData
+			        },
+			        yAxis: {
+			            splitLine: {
+			                show: false
+			            }
+			        },
+			        toolbox: {
+			            left: 'right',
+			            feature: {
+			                dataZoom: {
+			                    yAxisIndex: 'none'
+			                },
+			                restore: {},
+			                saveAsImage: {}
+			            }
+			        },
+			        dataZoom: [{
+			        	show: true,
+			            start: 0,
+			            end: 100
+			        },{
+			            type: 'inside',
+			            zoomOnMouseWheel: 'shift'
+			        }],
+			        grid:{
+			        	containLabel:true,
+			        	left:10,
+			        	right:10,
+			        	top:40,
+			        	bottom:40
+			        },
+			        
+			        series: series
+			    };
+				myChart.setOption($.extend(true, {}, goption, option));
+				
+				/*$("#"+chartId).resize(function() {
+					myChart.resize();
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 
 			//queryEquipLife 
@@ -787,10 +982,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            minInterval: 1,
-					            axisLabel: {
-					                formatter: '{value} 个'
-					            }
+					            minInterval: 1
 					        }
 					    ],
 					    series: [
@@ -872,10 +1064,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '',
-					            minInterval: 1,
-					            axisLabel: {
-					                formatter: '{value} 个'
-					            }
+					            minInterval: 1
 					        }
 					    ],
 					    series: [
@@ -954,10 +1143,7 @@ var myvue = new Vue({
 					    yAxis: {
 					            type: 'value',
 					            name: '',
-					            minInterval: 1,
-					            axisLabel: {
-					                formatter: '{value} 个'
-					            }
+					            minInterval: 1
 					        },
 					    series: [
 					        {
@@ -1073,10 +1259,7 @@ var myvue = new Vue({
 					        {
 					            type: 'value',
 					            name: '数量',
-					            minInterval: 1,
-					            axisLabel: {
-					                formatter: '{value} 个'
-					            }
+					            minInterval: 1
 					        }
 					    ],
 					    series: [
@@ -1119,7 +1302,7 @@ var myvue = new Vue({
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
 							str += '<div class="msg_im">';
-							str += '<a href="javascript:void(0);" class="l-it" target="_blank" title="'+node.sMsg_Title+'">';
+							str += '<a href="javascript:void(0);" class="l-it" title="'+node.sMsg_Title+'">';
 							str += '	<p><i></i>'+node.sMsg_Title+'</p>';
 							str += '	<time>'+self.formatDateStr(node.dMsg_CreateDate, 'yyyy-MM-dd')+'</time>';
 							str += '</a>';
@@ -1148,6 +1331,63 @@ var myvue = new Vue({
 						}
 						$("#aidList").html(str);
 					});
+				});
+			},
+			
+			//weather
+			weather: function(){
+				//wind风向风速、gust阵风风速、visibility能见度、waves海浪方向，浪高，周期、swell1浪涌方向，浪高，周期,currents洋流
+				var self = this;
+				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'wind'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('wind', res);
+						if(res.data != 'No data.'){
+							var str = res.data.split("|");
+							$('.wind font').html(str[1]+"、"+str[2]);
+						}
+					});
+				});
+				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'gust'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('gust', res);
+						if(res.data != 'No data.'){
+							var str = res.data.split("|");
+							$('.gust font').html(str[1]);
+						}
+					});
+					
+				});
+				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'visibility'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('visibility', res);
+						if(res.data != 'No data.'){
+							var str = res.data.split("|");
+							$('.visibility font').html(str[1]);
+						}
+					});
+					
+				});
+				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'waves'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('waves', res);
+					});
+					
+				});
+				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'swell1'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('swell1', res);
+					});
+					
+				});
+				ajaxReq(weatherUrl, {productName: 'sea', overlayName: 'currents'}, function(res){
+					self.handleResQuery(res, function(){
+						console.log('currents', res);
+						if(res.data != 'No data.'){
+							var str = res.data.split("|");
+							$('.currents font').html(str[1]+"、"+str[2]);
+						}
+					});
+					
 				});
 			},
 			
@@ -1292,21 +1532,15 @@ var myvue = new Vue({
 					}
 				}
             	var ch = 0;//$("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
+            	if($("#" + chartId).parents(".box-card").find(".el-card__header").length != 0){
+            		ch = $("#" + chartId).parents(".box-card").find(".el-card__header")[0].offsetHeight;
+            	}
             	var bp = 40;
             	var h = (this.gridster.cellHeight * (item.sizey) - this.baseMarginTop) - ch - bp;
-            	if(chartId == "chartEquipLife"){
-            		$("#chartEquipLife").css('height', h);
-                	var myChart1 = this.chartBox["chartEquipLife"];
-    		        myChart1.resize();
-            		$("#chartEquipLife2").css('height', h);
-                	var myChart2 = this.chartBox["chartEquipLife2"];
-    		        myChart2.resize();
-            	}else{
-            		$("#" + chartId).css('height', h);
-                	var myChart = this.chartBox[chartId];
-                	if(myChart){
-                		myChart.resize();
-                	}
+            	$("#" + chartId).css('height', h);
+            	var myChart = this.chartBox[chartId];
+            	if(myChart){
+            		myChart.resize();
             	}
             	
             },
@@ -1433,17 +1667,22 @@ var myvue = new Vue({
 				
 				gridster.afterInitOk(function () {
 					
-					/*self.chartStoreTime();
+					/*
 					self.chartEquipLife();
 					
 					self.chartEquipBrand();
 					self.chartEquipBrandRepair();*/
+					
+					self.weather();
+					
 					self.msgList();
 					self.aidList();
 					
 					self.chartAidMap();
 					self.chartAid();
 					self.chartEquipType();
+					self.chartStoreTime();
+					self.chartStoreInout();
 					
 					window.onresize = function() {
 						window.location.reload();

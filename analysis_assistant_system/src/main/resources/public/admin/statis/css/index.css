@@ -9,7 +9,7 @@
 
 .box-card:hover{box-shadow: 0 0 10px 3px #012356}
 .box-card h1{padding: 10px 0}
-.content {width: 100%;height: 95%}
+.content {width: 100%;height: 95%; cursor: default;}
 .box-card h1{padding: 10px 0 ;color: #00ccff;font-size: 16px;font-family: "iconfont";-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;user-select: none;}
 .box-card h2{padding: 0;text-align: center;}
 .box-card button{border-radius: 15px;padding: 5px 10px;border: transparent;background:rgba(4,56,109,.6);color: #fff;margin: 0 5px;cursor: pointer;transition: all 0.4s ease}
@@ -30,4 +30,13 @@
 .box-card .content .msg_im .l-it time{
 	
     float: right;
+}
+
+.content-box .weather{color: #fefefe;}
+
+.el-card__header {
+    border-bottom: none !important;
+    text-align: center;
+    color: #00ccff;
+    font-size: 16px;
 }

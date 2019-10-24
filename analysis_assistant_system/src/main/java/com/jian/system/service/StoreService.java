@@ -417,9 +417,25 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	 */
 	@TargetDataSource
 	public List<Map<String, Object>> time(String sEquip_Type, String sStore_Level1, String sStore_Level2, String sStore_Level3, String sStore_Level4){
-		
 		List<Map<String, Object>> list = baseMapper.time(sEquip_Type, sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
-		
+		return list;
+	}
+	
+	/**
+	 * 仓库库存变化2
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> time2(String sAid_Station){
+		List<Map<String, Object>> list = baseMapper.time2(sAid_Station);
+		return list;
+	}
+	
+	/**
+	 * 仓库出入库
+	 */
+	@TargetDataSource
+	public List<Map<String, Object>> inout(String sAid_Station){
+		List<Map<String, Object>> list = baseMapper.inout(sAid_Station);
 		return list;
 	}
 	

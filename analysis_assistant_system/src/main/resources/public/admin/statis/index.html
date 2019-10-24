@@ -17,77 +17,6 @@
 
 <link rel="stylesheet" href="css/index.css">
 
-<style type="text/css">
-.v-box {
-	text-align: center;
-	padding: 10px 0
-}
-
-.v-box>span {
-	display: inline-block;
-	color: #646464;
-}
-
-.search-bar {
-	padding: 0;
-	border-radius: 18px;
-	background: #ecf1f7;
-	margin: 0 10px;
-}
-
-.search-bar .s-text {
-	width: 100px;
-	text-indent: 1em;
-	background: transparent;
-	border: none;
-	vertical-align: middle;
-	font-size: 12px;
-}
-
-.search-bar .search-btn {
-	padding: 7px 22px;
-	border-radius: 18px;
-	background: #0276cd;
-	color: #fff;
-	display: inline-block;
-	cursor: pointer;
-	font-weight: 900;
-}
-
-.voiceGuide {
-	vertical-align: middle;
-	margin: 0 5px;
-}
-
-#voiceswitch {
-	text-align: left;
-}
-
-#kv .v {
-	font-family: "iconfont" !important
-}
-
-#kv h1 {
-	padding: 0
-}
-
-#kv h1>span {
-	text-align: center;
-	display: inline-block;
-	width: 50%;
-	cursor: pointer;
-	padding: 10px 0
-}
-
-#kv h1>span.on {
-	border-bottom: 2px solid #6998DE;
-	color: #fff
-}
-
-#voiceswitch .mic {
-	font-size: 24px;
-}
-</style>
 </head>
 <body>
 <div id="app">
@@ -112,35 +41,18 @@
 	            	<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 1">
 						<div class="big-title">蛇口航标管理站大数据展示</div>
 					</div>
-					<div class="content-box" style="width: 100%;height: 650px" id="center-box" v-if="item.id == 3">
-						<div class="big-title"></div>
+					<div class="content-box" style="width: 100%;height: 100%;" v-if="item.id == 3">
+						<div class="weather wind">风向风速：<font></font></div>
+						<div class="weather gust">阵风风速：<font></font></div>
+						<div class="weather visibility">能见度：<font></font></div>
+						<div class="weather waves">海浪方向，浪高，周期：<font></font></div>
+						<div class="weather swell1">浪涌方向，浪高，周期：<font></font></div>
+						<div class="weather currents">洋流：<font></font></div>
 					</div>
 				
 					<el-card class="box-card" v-if="item.id == 'chartAidMap'">
-					  <div slot="headers" class="clearfix">
+					  <div slot="header" class="clearfix">
 					    <span>航标分布地图</span>
-					    <el-form size="mini" :inline="true" :model="filters" style="float: right;">
-							<el-form-item>
-							    <el-select v-model="filters.used" placeholder="请选择" >
-							      <el-option label="已使用" value="1"></el-option>
-							      <el-option label="未使用" value="2"></el-option>
-							    </el-select>
-							</el-form-item>
-							<el-form-item>
-							    <el-select v-model="filters.sEquip_Type" placeholder="请选择" >
-								    <el-option
-								      v-for="item in equipTypeOptions"
-								      :key="item.sDict_NO"
-								      :label="item.sDict_Name"
-								      :value="item.sDict_NO">
-								    </el-option>
-							    </el-select>
-							</el-form-item>
-							<el-form-item>
-								<el-button type="primary" title="查询" @click="queryEquipDistribution" icon="fa fa-search"></el-button>
-								<el-button @click="resetEquipDistribution"  title="重置" icon="fas fa-redo"></el-button>&nbsp;&nbsp;&nbsp;&nbsp;
-							</el-form-item>
-						</el-form>
 					  </div>
 					  <div class="echarts" id="chartAidMap" style="width: 100%;height: 430px;"></div>
 					</el-card>
@@ -159,9 +71,9 @@
 					  </div>
 					</el-card>
 				
-					<el-card class="box-card" v-if="item.id == 'chartEquipLife'">
+					<el-card class="box-card" v-if="item.id == 'chartStoreTime'">
 					  <div slot="headers" class="clearfix">
-					    <span>器材寿命统计图表</span>
+					    <span>仓库统计</span>
 					    <el-form size="mini" :inline="true" :model="filtersLife" style="float: right;">
 							<el-form-item>
 							    <el-select v-model="filtersLife.sEquip_MBrand" placeholder="请选择" @visible-change="handleVisibleChange">
@@ -179,13 +91,12 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div class="echarts" id="chartEquipLife" style="width: 49%;height: 430px;display: inline-block;"></div>
-					  <div class="echarts" id="chartEquipLife2" style="width: 49%;height: 430px;display: inline-block;"></div>
+					  <div class="echarts" id="chartStoreTime" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
-					<el-card class="box-card"  v-if="item.id == 'chartEquipBrand'">
+					<el-card class="box-card"  v-if="item.id == 'chartStoreInout'">
 					  <div slot="headers" class="clearfix">
-					    <span>器材品牌、型号统计图表</span>
+					    <span>出入库趋势</span>
 					    <el-form size="mini" :inline="true" :model="filtersBrand" style="float: right;">
 							<el-form-item>
 							    <el-select v-model="filtersBrand.sAid_Station" placeholder="请选择" @visible-change="handleVisibleChange">
@@ -203,7 +114,7 @@
 							</el-form-item>
 						</el-form>
 					  </div>
-					  <div class="echarts" id="chartEquipBrand" style="width: 100%;height: 430px;"></div>
+					  <div class="echarts" id="chartStoreInout" style="width: 100%;height: 430px;"></div>
 					</el-card>
 					
 					<el-card class="box-card"  v-if="item.id == 'chartEquipType'">

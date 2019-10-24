@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 17/10/2019 02:13:32
+ Date: 24/10/2019 18:00:25
 */
 
 
@@ -140,4 +140,3 @@ INSERT INTO "AASYSTEM"."tBase_MenuFun" VALUES ('3206', '导出', '320', NULL, '1
 -- Primary Key structure for table tBase_MenuFun
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_MenuFun" ADD CONSTRAINT "SYS_C0014207" PRIMARY KEY ("sMFun_ID");
-

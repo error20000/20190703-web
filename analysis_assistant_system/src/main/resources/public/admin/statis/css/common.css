@@ -66,7 +66,7 @@ table { border-collapse:collapse; }
 #center-box{background: none;border: none;}
 #center-box:hover{box-shadow: none}
 #center-box .big-title{text-align: center;color: #fefefe;font-size: 40px;font-weight: bold;padding-bottom: 10px;text-shadow:  0px 4px 4px #000}
-#center-box  .sub-title{text-align: center;color: #fefefe;font-size: 20px;padding: 10px;}
+#center-box .sub-title{text-align: center;color: #fefefe;font-size: 20px;padding: 10px;}
 #center-box #count-group{ text-align: center; }
 #center-box #count-group>span{display:inline-block;margin:0 10px;text-align: center;}
 #center-box #count-group>span>i{text-align: center;font-size: 17px;color: #fff;padding: 5px;}

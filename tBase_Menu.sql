@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 17/10/2019 02:07:08
+ Date: 24/10/2019 18:06:17
 */
 
 
@@ -75,7 +75,7 @@ INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('650', '系统设置', '600', 'sys.h
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('330', '航标管理', '300', 'aid.html', NULL, '1', '31');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('320', '航标分类的地图图标', '300', 'aidTypeMapIcon.html', NULL, '1', '33');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('310', '航标的地图图标', '300', 'aidMapIcon.html', NULL, '1', '32');
-INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('510', '首页', '500', 'statisAll.html', NULL, '1', '61');
+INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('510', '首页', '500', 'statis/index.html', NULL, '1', '61');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('520', '器材统计分析', '500', 'statisEquip.html', NULL, '1', '62');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('530', '航标统计分析', '500', 'statisAid.html', NULL, '1', '63');
 INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('540', '仓库统计分析', '500', 'statisStore.html', NULL, '1', '64');
@@ -84,4 +84,3 @@ INSERT INTO "AASYSTEM"."tBase_Menu" VALUES ('540', '仓库统计分析', '500', 
 -- Primary Key structure for table tBase_Menu
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_Menu" ADD CONSTRAINT "SYS_C0012846" PRIMARY KEY ("sMenu_ID");
-

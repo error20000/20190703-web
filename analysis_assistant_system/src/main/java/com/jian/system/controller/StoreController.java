@@ -614,6 +614,28 @@ public class StoreController extends BaseController<Store, StoreService> {
 		List<Map<String, Object>> list = service.time(sEquip_Type, sStore_Level1, sStore_Level2, sStore_Level3, sStore_Level4);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+	
+	@RequestMapping("/time2")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询仓库库存变化2")
+	public String time2(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> list = service.time2(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+	@RequestMapping("/inout")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询仓库出入库")
+	public String inout(HttpServletRequest req) {
+		String sAid_Station = Tools.getReqParamSafe(req, "sAid_Station");
+		List<Map<String, Object>> list = service.inout(sAid_Station);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
 
 	//TODO -------------------------------------------------------------------------------- app接口
 	

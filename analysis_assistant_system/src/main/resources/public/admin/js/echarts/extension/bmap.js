@@ -183,6 +183,7 @@ BMapCoordSys.create = function (ecModel, api) {
 
             var overlay = new Overlay(viewportRoot);
             bmap.addOverlay(overlay);
+            
 
             // Override
             painter.getViewportRootOffset = function () {

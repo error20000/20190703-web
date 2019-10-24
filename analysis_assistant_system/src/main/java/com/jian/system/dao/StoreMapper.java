@@ -45,6 +45,38 @@ public interface StoreMapper extends BaseMapper<Store> {
 			@Param("sEquip_StoreLv3") String sEquip_StoreLv3, 
 			@Param("sEquip_StoreLv4") String sEquip_StoreLv4);
 	
+	@Select({
+		"<script>",
+		" select ",
+		"	a.*,  ",
+		"	b.\"sDict_Name\" \"sSLog_EquipTypeName\",  ",
+		"	c.\"sStoreType_Name\" \"sSLog_StoreLv1Name\" ",
+		" from \"tBase_StoreLog\" a ",
+		" 	left join \"tBase_Dict\" b on a.\"sSLog_EquipType\" = b.\"sDict_NO\" and b.\"sDict_DictTypeNO\" = 'EquipType' ",
+		" 	left join \"tBase_StoreType\" c on a.\"sSLog_StoreLv1\" = c.\"sStoreType_ID\"  ",
+		" where 1 = 1 ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and c.\"sStoreType_Station\" = #{sAid_Station} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> time2(@Param("sAid_Station") String sAid_Station);
+	
+	@Select({
+		"<script>",
+		" select ",
+		"	a.*,  ",
+		"	c.\"sStoreType_Name\" \"sELog_StoreLv1Name\" ",
+		" from \"tBase_EquipLog\" a ",
+		" 	left join \"tBase_StoreType\" c on a.\"sELog_StoreLv1\" = c.\"sStoreType_ID\"  ",
+		" where 1 = 1 and (a.\"sELog_Type\" = '1' or a.\"sELog_Type\" = '2') ",
+    	" 	<if test=\" sAid_Station != null \"> ",
+    	" 		and c.\"sStoreType_Station\" = #{sAid_Station} ",	
+    	"   </if>", 
+		"</script>"
+	})
+	public List<Map<String, Object>> inout(@Param("sAid_Station") String sAid_Station);
+	
 	
 	@Select({
 		"<script>",
