@@ -1627,6 +1627,9 @@
 				    <el-tab-pane label="消息列表" name="3">
 				    	<el-table size="mini" :data="msgAidData" highlight-current-row border style="width: 100%;" class="mytable">
 							<el-table-column label="标题" prop="sMsg_Title">
+								<template scope="scope">
+									<el-button type="text" @click="msgDetail(scope.row.sMsg_ID)">{{scope.row.sMsg_Title}}</el-button>
+								</template>
 							</el-table-column>
 							<el-table-column label="描述" prop="sMsg_Describe">
 							</el-table-column>
@@ -1848,6 +1851,9 @@
 				    <el-tab-pane label="消息列表" name="3">
 				    	<el-table size="mini" :data="msgStoreData" highlight-current-row border style="width: 100%;" class="mytable">
 							<el-table-column label="标题" prop="sMsg_Title">
+								<template scope="scope">
+									<el-button type="text" @click="msgDetail(scope.row.sMsg_ID)">{{scope.row.sMsg_Title}}</el-button>
+								</template>
 							</el-table-column>
 							<el-table-column label="描述" prop="sMsg_Describe">
 							</el-table-column>
@@ -1877,7 +1883,68 @@
 		  
 		</el-card>
 		
+		<!--message-->
+		<el-dialog title="消息详情" :visible.sync="msgFormVisible" :close-on-click-modal="false">
+			<el-form size="mini" :model="msgForm"  :rules="msgFormRules" ref="msgForm" label-width="120px">
+				<el-form-item label="ID" prop="sMsg_ID">
+					<el-input type="text" v-model="msgForm.sMsg_ID" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="消息类型" prop="sMsg_TypeName">
+					<el-input type="text" v-model="msgForm.sMsg_TypeName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="消息日期" prop="dMsg_CreateDateStr">
+					<el-input type="text" v-model="msgForm.dMsg_CreateDateStr" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="消息标题" prop="sMsg_Title">
+					<el-input type="text" v-model="msgForm.sMsg_Title" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="消息状态" prop="sMsg_StatusName">
+					<el-input type="text" v-model="msgForm.sMsg_StatusName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="消息描述" prop="sMsg_Describe">
+					<el-input type="textarea" v-model="msgForm.sMsg_Describe" readonly autosize></el-input>
+				</el-form-item>
+				<el-form-item label="消息备注" prop="sMsg_Remarks">
+					<el-input type="textarea" v-model="msgForm.sMsg_Remarks" readonly autosize></el-input>
+				</el-form-item>
+				<el-form-item label="接收者" prop="sMsg_ToUserName">
+					<el-input type="text" v-model="msgForm.sMsg_ToUserName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="发送者" prop="sMsg_FromUserName">
+					<el-input type="text" v-model="msgForm.sMsg_FromUserName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="处理者" prop="sMsg_UserID">
+					<el-input type="text" v-model="msgForm.sMsg_UserID" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="处理日期" prop="dMsg_UpdateDateStr">
+					<el-input type="text" v-model="msgForm.dMsg_UpdateDateStr" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="航标" prop="sMsg_AidName">
+					<el-input type="text" v-model="msgForm.sMsg_AidName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="器材" prop="sMsg_EquipName">
+					<el-input type="text" v-model="msgForm.sMsg_EquipName" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="一级仓库" prop="sMsg_StoreLv1Name">
+					<el-input type="text" v-model="msgForm.sMsg_StoreLv1Name" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="二级仓库" prop="sMsg_StoreLv2Name">
+					<el-input type="text" v-model="msgForm.sMsg_StoreLv2Name" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="三级仓库" prop="sMsg_StoreLv3Name">
+					<el-input type="text" v-model="msgForm.sMsg_StoreLv3Name" readonly></el-input>
+				</el-form-item>
+				<el-form-item label="四级仓库" prop="sMsg_StoreLv4Name">
+					<el-input type="text" v-model="msgForm.sMsg_StoreLv4Name" readonly></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button size="mini" @click="msgClose">取消</el-button>
+			</div>
+		</el-dialog>
+		
 	</section>
+	
   </div>
 </body>
   <script src="js/jquery-3.4.1.js" type="text/javascript"></script>

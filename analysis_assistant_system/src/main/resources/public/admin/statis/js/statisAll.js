@@ -508,8 +508,6 @@ var myvue = new Vue({
 			    };
 				myChart.setOption($.extend(true, {}, goption, option));
 				
-				console.log(myChart.getOption());
-
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
 				});*/
@@ -601,9 +599,6 @@ var myvue = new Vue({
 							
 							series.push(snode);
 						}
-						console.log(legendData);
-						console.log(xData);
-						console.log(series);
 					});
 				});
 				
@@ -1348,7 +1343,7 @@ var myvue = new Vue({
 				var self = this;
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'wind'}, function(res){
 					self.handleResQuery(res, function(){
-						if(res.data != 'No data.'){
+						if(res.data && res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.wind font').html(str[1]+"、"+str[2]);
 						}
@@ -1356,7 +1351,7 @@ var myvue = new Vue({
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'gust'}, function(res){
 					self.handleResQuery(res, function(){
-						if(res.data != 'No data.'){
+						if(res.data && res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.gust font').html(str[1]);
 						}
@@ -1364,7 +1359,7 @@ var myvue = new Vue({
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'visibility'}, function(res){
 					self.handleResQuery(res, function(){
-						if(res.data != 'No data.'){
+						if(res.data && res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.visibility font').html(str[1]);
 						}
@@ -1380,7 +1375,7 @@ var myvue = new Vue({
 				});
 				ajaxReq(weatherUrl, {productName: 'sea', overlayName: 'currents'}, function(res){
 					self.handleResQuery(res, function(){
-						if(res.data != 'No data.'){
+						if(res.data && res.data != 'No data.'){
 							var str = res.data.split("|");
 							$('.currents font').html(str[1]+"、"+str[2]);
 						}
@@ -1388,12 +1383,11 @@ var myvue = new Vue({
 				});
 			},
 			
-			//msg
+			//msg detail
 			msgDetail: function(sMsg_ID){
 				var self = this;
 				ajaxReq(msgDetailUrl, {sMsg_ID: sMsg_ID}, function(res){
 					self.handleResQuery(res, function(){
-						console.log(res);
 						self.msgFormVisible = true;
 						self.msgForm = res.data;
 						self.msgForm.dMsg_CreateDateStr = self.formatDate(self.msgForm.dMsg_CreateDate);
@@ -1410,18 +1404,20 @@ var myvue = new Vue({
 			handleShowFull: function(){
 				var full = document.getElementsByTagName('body')[0];//document.getElementById("chartView");
 	            launchIntoFullscreen(full);
+	            this.isFullScreen = true;
 	            //window.location.reload(); 
 				localStorage.setItem('isFullScreen', 1);
-
-				$("#fullscrean").hide();
-				$("#exitFullscrean").show();
+				/*$("#fullscrean").hide();
+				$("#exitFullscrean").show();*/
+	            
 			},
 			handleHideFull: function(){
 				//var full = document.getElementsByTagName('body')[0];
 				exitFullscreen();
+	            this.isFullScreen = false;
 				localStorage.removeItem('isFullScreen');
-				$("#fullscrean").show();
-				$("#exitFullscrean").hide();
+				/*$("#fullscrean").show();
+				$("#exitFullscrean").hide();*/
 			},
 			handleVisibleChange: function(val){
 		        if (document.fullscreen && val) {
@@ -1700,13 +1696,16 @@ var myvue = new Vue({
 					self.chartStoreInout();
 					
 					window.onresize = function() {
+						var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+						var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
 						window.location.reload();
-				    }
-					window.onkeyup = function(e) {
-						console.log(e);
-						if(e.keyCode == 27){
+						
+						if(!checkFullscreen()){
+							self.isFullScreen = false;
 							localStorage.removeItem('isFullScreen');
 						}
+						
+						
 				    }
 					
 				});
@@ -1714,6 +1713,13 @@ var myvue = new Vue({
 	            gridster.init(); //在适当的时候初始化布局组件
 	            
 			});
+			
+			//
+			if(localStorage.getItem('isFullScreen')){
+				this.isFullScreen = true;
+			}else{
+				this.isFullScreen = false;
+			}
 			
 		}
 		

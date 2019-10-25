@@ -78,6 +78,14 @@ function exitFullscreen() {
     }
 };
 
+function checkFullscreen(){
+	var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+	if (fullscreenElement == null) {
+        return false;
+    }
+    return true;
+}
+
 function formatDate(d, s){
 	if(!d){
 		return;

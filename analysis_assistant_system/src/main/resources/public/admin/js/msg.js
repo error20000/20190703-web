@@ -4,6 +4,7 @@ var queryUrl = baseUrl + "api/msg/findPage";
 var excelUrl = baseUrl + "api/msg/excel";
 var dictUrl = baseUrl + "api/dict/findList";
 var userUrl = baseUrl + "api/user/options";
+var msgDetailUrl = baseUrl + "api/msg/view";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -35,6 +36,12 @@ var myvue = new Vue({
 				typeOptions: [],
 				statusDictNo: 'MsgStatus',
 				statusOptions: [],
+				
+				//msg detail
+				msgFormVisible: false,
+				msgLoading: false,
+				msgFormRules: {},
+				msgForm: {},
 
 				
 				user: ''
@@ -168,6 +175,23 @@ var myvue = new Vue({
 				};
 				this.getList();
 			},
+			
+			//msg detail
+			msgDetail: function(sMsg_ID){
+				var self = this;
+				ajaxReq(msgDetailUrl, {sMsg_ID: sMsg_ID}, function(res){
+					self.handleResQuery(res, function(){
+						self.msgFormVisible = true;
+						self.msgForm = res.data;
+						self.msgForm.dMsg_CreateDateStr = self.formatDate(self.msgForm.dMsg_CreateDate);
+						self.msgForm.dMsg_UpdateDateStr = self.formatDate(self.msgForm.dMsg_UpdateDate);
+					});
+				});
+			},
+			msgClose:function(){
+				this.msgFormVisible = false;
+			},
+			
 			//has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
