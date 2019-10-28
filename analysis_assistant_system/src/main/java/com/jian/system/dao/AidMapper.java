@@ -116,7 +116,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 		" from \"tBase_Aid\" a ",
 		" 	left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
 		" 	left join \"tBase_UserStation\" c on a.\"sAid_Station\" = c.\"sUserStation_Station\" ",
-		" where a.\"sAid_NO\" like concat(concat('%', #{keywords}), '%') ",
+		" where a.\"sAid_Name\" like concat(concat('%', #{keywords}), '%') ",
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( b.\"sUserAid_UserID\" = #{sUser_ID} or c.\"sUserStation_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
