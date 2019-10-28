@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 13/10/2019 23:35:42
+ Date: 28/10/2019 23:50:17
 */
 
 
@@ -96,7 +96,8 @@ INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802002', '2', '已读', NULL, NULL,
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802003', '3', '待处理', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('802004', '4', '已处理', NULL, NULL, 'MsgStatus', NULL, NULL, '1', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('605884478887297024', '12', '22', TO_DATE('2019-07-30 22:08:36', 'SYYYY-MM-DD HH24:MI:SS'), '22', 'AidIcon', NULL, NULL, '0', NULL, 'upload/20190730/201907302208285808068.png', NULL, NULL);
-INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('3', 'test1', '长闪白10秒', NULL, NULL, 'AidLighting', NULL, NULL, '0', '2+8', NULL, NULL, NULL);
+INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('3', 'test1', 'VQ(9)10S(0.15+0.35,0.15+0.35,0.15+0.35,0.15+0.35,0.15+0.35, 0.15+0.35, 0.15+0.35,0.15+0.35,0.15+5.85)
+VQ(9)10S(0.15+0.35,0.15+0.35,0.15+0.35,0.15+0.35,0.15+0.35, 0.15+0.35, 0.15+0.35,0.15+0.35,0.15+5.85)', NULL, NULL, 'AidLighting', NULL, NULL, '0', '2+8', NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('1', 'test', '灯塔', NULL, NULL, 'AidType', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('2', 'test', '厦门', NULL, NULL, 'AidStation', NULL, NULL, '0', NULL, NULL, NULL, NULL);
 INSERT INTO "AASYSTEM"."tBase_Dict" VALUES ('4', 'test2', '互顿蓝黄3秒', NULL, NULL, 'AidLighting', NULL, NULL, '0', '蓝1.0+5.0+黄1.0+5.0', NULL, NULL, NULL);
