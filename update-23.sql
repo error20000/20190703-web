@@ -1,0 +1,1 @@
+alter table "tBase_EquipLog" add ( "sELog_AidID" NVARCHAR2(32));

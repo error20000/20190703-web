@@ -273,7 +273,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	@SysLog(type=SystemLogType.Query, describe="查询器材历史记录")
 	public String history(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
-		List<EquipLog> list = service.history(sEquip_ID);
+		List<Map<String, Object>> list = service.history(sEquip_ID);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -1041,7 +1041,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 	@SysLog(type=SystemLogType.Query, describe="app查询器材历史记录")
 	public String appHistory(HttpServletRequest req) {
 		String sEquip_ID = Tools.getReqParamSafe(req, "sEquip_ID");
-		List<EquipLog> list = service.history(sEquip_ID);
+		List<Map<String, Object>> list = service.history(sEquip_ID);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	

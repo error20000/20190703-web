@@ -112,7 +112,7 @@ public interface AidMapper extends BaseMapper<Aid> {
 
 	@Select({
 		"<script>",
-		" select a.* ",
+		" select distinct a.* ",
 		" from \"tBase_Aid\" a ",
 		" 	left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
 		" 	left join \"tBase_UserStation\" c on a.\"sAid_Station\" = c.\"sUserStation_Station\" ",

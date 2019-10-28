@@ -35,6 +35,8 @@ public class EquipLog extends Base<EquipLog> {
 	private String sELog_StoreLv3;
 	@Excel(name="四级仓库", sort=0, length="32", isNull=1 )
 	private String sELog_StoreLv4;
+	@Excel(name="航标ID", sort=0, length="32", isNull=1 )
+	private String sELog_AidID;
 	
 
 	
@@ -109,6 +111,12 @@ public class EquipLog extends Base<EquipLog> {
 	}
 	public void setsELog_StoreLv4(String sELog_StoreLv4) {
 		this.sELog_StoreLv4 = sELog_StoreLv4;
+	}
+	public String getsELog_AidID() {
+		return sELog_AidID;
+	}
+	public void setsELog_AidID(String sELog_AidID) {
+		this.sELog_AidID = sELog_AidID;
 	}
 	
 }

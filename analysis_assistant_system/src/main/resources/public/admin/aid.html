@@ -183,9 +183,9 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="灯质明灭" prop="sAid_Lighting" :formatter="lightFormatter">
+					<el-table-column label="灯质" prop="sAid_Lighting" :formatter="lightFormatter">
 					</el-table-column>
-					<el-table-column label="航标设置" prop="sAid_Mark" :formatter="markFormatter">
+					<el-table-column label="航标属性" prop="sAid_Mark" :formatter="markFormatter">
 					</el-table-column>
 					<el-table-column label="创建日期" prop="dAid_CreateDate" :formatter="(r,c) => {return formatDate(r.dAid_CreateDate);}">
 					</el-table-column>
@@ -299,8 +299,8 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
-			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质明灭">
+			  <el-form-item label="灯质" prop="sAid_Lighting">
+			    <el-select v-model="addForm.sAid_Lighting" placeholder="请选择灯质">
 				    <el-option
 				      v-for="item in lightOptions"
 				      :key="item.sDict_NO"
@@ -311,8 +311,8 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="航标设置" prop="sAid_Mark">
-			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标设置">
+			  <el-form-item label="航标属性" prop="sAid_Mark">
+			    <el-select v-model="addForm.sAid_Mark" placeholder="请选择航标属性">
 				    <el-option
 				      v-for="item in markOptions"
 				      :key="item.sDict_NO"
@@ -393,8 +393,8 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="灯质明灭" prop="sAid_Lighting">
-			    <el-select v-model="editForm.sAid_Lighting" placeholder="请选择灯质明灭">
+			  <el-form-item label="灯质" prop="sAid_Lighting">
+			    <el-select v-model="editForm.sAid_Lighting" placeholder="请选择灯质">
 				    <el-option
 				      v-for="item in lightOptions"
 				      :key="item.sDict_NO"
@@ -405,8 +405,8 @@
 				    </el-option>
 			    </el-select>
 			  </el-form-item>
-			  <el-form-item label="航标设置" prop="sAid_Mark">
-			    <el-select v-model="editForm.sAid_Mark" placeholder="请选择航标设置">
+			  <el-form-item label="航标属性" prop="sAid_Mark">
+			    <el-select v-model="editForm.sAid_Mark" placeholder="请选择航标属性">
 				    <el-option
 				      v-for="item in markOptions"
 				      :key="item.sDict_NO"
@@ -525,9 +525,9 @@
 					</el-table-column>	
 					<el-table-column label="撤除时间【日期】" prop="dAid_DelDate" width="120">
 					</el-table-column>	
-					<el-table-column label="灯质明灭【文本】" prop="sAid_Lighting" width="120">
+					<el-table-column label="灯质【文本】" prop="sAid_Lighting" width="120">
 					</el-table-column>	
-					<el-table-column label="航标设置【文本】" prop="sAid_Mark" width="120">
+					<el-table-column label="航标属性【文本】" prop="sAid_Mark" width="120">
 					</el-table-column>	
 					<el-table-column label="NFC标签【文本】" prop="sAid_NfcID" width="120">
 					</el-table-column>	

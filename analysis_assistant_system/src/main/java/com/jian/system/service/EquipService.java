@@ -570,18 +570,16 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 	}
 	
 	@TargetDataSource
-	public List<EquipLog> history(String sEquip_ID){
+	public List<Map<String, Object>> history(String sEquip_ID){
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR106, "sEquip_ID");
 		}
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("sELog_EquipID", sEquip_ID);
 		//排序
-		List<EquipLog> logs = logService.selectList(condition);
+		List<Map<String, Object>> logs = logService.history(sEquip_ID);
 		for (int i = 0; i < logs.size(); i++) {
 			for (int j = i; j < logs.size(); j++) {
-				if(logs.get(i).getdELog_CreateDate().getTime() > logs.get(j).getdELog_CreateDate().getTime()) {
-					EquipLog temp = logs.get(i);
+				if(((Date)logs.get(i).get("dELog_CreateDate")).getTime() > ((Date)logs.get(i).get("dELog_CreateDate")).getTime()) {
+					Map<String, Object> temp = logs.get(i);
 					logs.set(i, logs.get(j));
 					logs.set(j, temp);
 				}
@@ -1112,6 +1110,7 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		log.setsELog_Type(Constant.EquipLogType_9); // 使用
 		log.setsELog_Describe("器材使用中");
 		log.setsELog_Remarks(remarks);
+		log.setsELog_AidID(sAid_ID);
 		logService.insert(log, user);
 		//保存
 		AidEquip aidEquip = new AidEquip();
