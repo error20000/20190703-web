@@ -30,6 +30,7 @@ iframe {
   text-align: center;
   background: #20a0ff;
   color: #333;
+  z-index: 99;
 }
 .el-aside {
   background: #d3dce6;
