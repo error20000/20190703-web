@@ -1,5 +1,7 @@
 package com.jian.system.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +38,15 @@ public class WeatherController {
 	public String statis(HttpServletRequest req) {
 		String productName = Tools.getReqParamSafe(req, "productName");
 		String overlayName = Tools.getReqParamSafe(req, "overlayName");
+				
+		String url = config.weathUrl
+				.replace("{lat}", "29.730078774781184")
+				.replace("{lng}", "122.14201354980071")
+				.replace("{productName}", productName)
+				.replace("{overlayName}", overlayName)
+				.replace("{dataTime}", new Date().getTime()+"");
 
-		String res = HttpTools.getInstance().sendHttpGet(config.weathUrl.replace("{productName}", productName).replace("{overlayName}", overlayName));
+		String res = HttpTools.getInstance().sendHttpGet(url);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 

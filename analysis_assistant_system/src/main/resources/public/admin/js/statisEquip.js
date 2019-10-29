@@ -816,6 +816,9 @@ var myvue = new Vue({
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
+							if(!node){
+								continue;
+							}
 							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
 							if(!hash[key]){
 								var index = data.push({

@@ -43,6 +43,6 @@ public class Config {
 	
 	public String tokenSecretKey = "123456700"; //token密钥
 	
-	public String weathUrl = "http://123.57.38.38:8091/?action=single&lat=29.730078774781184&lng=122.14201354980071&productName={productName}&overlayName={overlayName}"; //天气抓取
-	
+	//public String weathUrl = "http://123.57.38.38:8091/?action=single&lat=29.730078774781184&lng=122.14201354980071&productName={productName}&overlayName={overlayName}"; //天气抓取
+	public String weathUrl = "http://htzx.yunh.xyz:8080/enavis/windy/getWeatherData/{lng}/{lat}/{productName}/{overlayName}/{dataTime}";
 }

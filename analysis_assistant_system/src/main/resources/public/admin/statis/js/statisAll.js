@@ -197,7 +197,7 @@ var myvue = new Vue({
 						for (var i = 0; i < usedData.length; i++) {
 							var node = usedData[i];
 							var temp = {
-				                name: node.aid,
+				                name: node.name,
 				                type: 'scatter',
 				                coordinateSystem: 'bmap',
 				                data: [node],
@@ -225,7 +225,7 @@ var myvue = new Vue({
 					            }
 				            }
 							series.push(temp);
-							legendData.push(node.aid);
+							legendData.push(node.name);
 						}
 					});
 				});
@@ -245,26 +245,36 @@ var myvue = new Vue({
 		                    + obj.seriesName + '：' + obj.value[2] + '<br>';
 		            	}
 		            },
-		            /*legend: {
-		                data: legendData,
-		                left: 'right'
-		            },*/
+			        legend: {
+			        	type: 'scroll',
+			        	orient: 'vertical',
+			        	align: 'right',
+			        	right: 10,
+			        	height: 300,
+			            data: legendData
+			        },
+		            xAxis:{
+		            	show:false
+		            },
+		            yAxis:{
+		            	show:false
+		            },
 		            bmap: {
 		                center: [114.114129, 20.550339],
 		                zoom: 5,
 		                roam: true,
 		                mapStyle: {
-		                    styleJson: [{
+		                	styleJson: [{
 		                        'featureType': 'water',
 		                        'elementType': 'all',
 		                        'stylers': {
-		                            'color': '#d1d1d1'
+		                            'color': '#044161'
 		                        }
 		                    }, {
 		                        'featureType': 'land',
 		                        'elementType': 'all',
 		                        'stylers': {
-		                            'color': '#f3f3f3'
+		                            'color': '#121e30'
 		                        }
 		                    }, {
 		                        'featureType': 'railway',
@@ -276,7 +286,7 @@ var myvue = new Vue({
 		                        'featureType': 'highway',
 		                        'elementType': 'all',
 		                        'stylers': {
-		                            'color': '#fdfdfd'
+		                            'visibility': 'off'
 		                        }
 		                    }, {
 		                        'featureType': 'highway',
@@ -288,13 +298,13 @@ var myvue = new Vue({
 		                        'featureType': 'arterial',
 		                        'elementType': 'geometry',
 		                        'stylers': {
-		                            'color': '#fefefe'
+		                            'color': '#004981'
 		                        }
 		                    }, {
 		                        'featureType': 'arterial',
 		                        'elementType': 'geometry.fill',
 		                        'stylers': {
-		                            'color': '#fefefe'
+		                            'color': '#004981'
 		                        }
 		                    }, {
 		                        'featureType': 'poi',
@@ -348,7 +358,13 @@ var myvue = new Vue({
 		                        'featureType': 'label',
 		                        'elementType': 'labels.text.fill',
 		                        'stylers': {
-		                            'color': '#999999'
+		                            'color': '#00ccff'
+		                        }
+		                    }, {
+		                        'featureType': 'label',
+		                        'elementType': 'labels.text.stroke',
+		                        'stylers': {
+		                            'color': '#121e30'
 		                        }
 		                    }]
 		                }
@@ -1030,13 +1046,17 @@ var myvue = new Vue({
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							xAxisData.push(node.sEquip_TypeName ? node.sEquip_TypeName : "未知");
-							yData.push(node.sEquip_Num);
+							//xAxisData.push(node.sEquip_TypeName ? node.sEquip_TypeName : "未知");
+							//yData.push(node.sEquip_Num);
+							yData.push({
+								value: node.sEquip_Num,
+								name: node.sEquip_TypeName ? node.sEquip_TypeName : "未知"
+							});
 						}
 					});
 				});
 				
-				var option = {
+				/*var option = {
 						title:{
 							text:"{a|器材统计}"		
 						},
@@ -1071,6 +1091,29 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};*/
+				var option = {
+						title:{
+							text:"{a|器材统计}"		
+						},
+						tooltip : {
+					        trigger: 'item',
+					        formatter: "{b} <br/>{a} : {c} ({d}%)"
+					    },
+					    xAxis:{
+					    	show: false
+					    },
+					    yAxis:{
+					    	show: false
+					    },
+					    series: [
+					        {
+					            name:'数量',
+					            type:'pie',
+					            radius : '30%',
 					            data: yData
 					        }
 					    ]
@@ -1112,13 +1155,17 @@ var myvue = new Vue({
 						var hash = {};
 						for (var i = 0; i < res.data.length; i++) {
 							var node = res.data[i];
-							xAxisData.push(node.sAid_TypeName ? node.sAid_TypeName : "未知");
-							yData.push(node.sAid_Num);
+							//xAxisData.push(node.sAid_TypeName ? node.sAid_TypeName : "未知");
+							//yData.push(node.sAid_Num);
+							yData.push({
+								value: node.sAid_Num, 
+								name: node.sAid_TypeName ? node.sAid_TypeName : "未知"
+							});
 						}
 					});
 				});
 				
-				var option = {
+				/*var option = {
 						title:{
 							text:"{a|航标统计}"		
 						},
@@ -1149,6 +1196,29 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};*/
+				var option = {
+						title:{
+							text:"{a|航标统计}"		
+						},
+						tooltip : {
+					        trigger: 'item',
+					        formatter: "{b} <br/>{a} : {c} ({d}%)"
+					    },
+					    xAxis:{
+					    	show: false
+					    },
+					    yAxis:{
+					    	show: false
+					    },
+					    series: [
+					        {
+					            name:'数量',
+					            type:'pie',
+					            radius : '30%',
 					            data: yData
 					        }
 					    ]
@@ -1318,7 +1388,7 @@ var myvue = new Vue({
 			
 			//aidList
 			aidList: function(){
-				var self = this;
+				/*var self = this;
 				var params = {};
 				ajaxReq(aidListUrl, params, function(res){
 					self.handleResQuery(res, function(){
@@ -1334,7 +1404,65 @@ var myvue = new Vue({
 						}
 						$("#aidList").html(str);
 					});
+				});*/
+				var chartId = "aidList";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = {};
+				ajaxReqSync(aidListUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sAid_StatusName ? node.sAid_StatusName : '未知';
+							if(!hash[key]){
+								hash[key] = 1;
+							}else{
+								hash[key] = hash[key] + 1;
+							}
+						}
+						for ( var key in hash) {
+							yData.push({
+								value: hash[key],
+								name: key
+							});
+						}
+					});
 				});
+				
+				var option = {
+						title:{
+							text:"{a|航标状态列表}"		
+						},
+						tooltip : {
+					        trigger: 'item',
+					        formatter: "{b} <br/>{a} : {c} ({d}%)"
+					    },
+					    xAxis:{
+					    	show: false
+					    },
+					    yAxis:{
+					    	show: false
+					    },
+					    series: [
+					        {
+					            name:'数量',
+					            type:'pie',
+					            radius : '30%',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption($.extend(true, {}, goption, option));
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 			},
 			
 			//weather
@@ -1365,15 +1493,15 @@ var myvue = new Vue({
 						}
 					});
 				});
-				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'waves'}, function(res){
+				ajaxReq(weatherUrl, {productName: 'ecmwfWaves', overlayName: 'waves'}, function(res){
 					self.handleResQuery(res, function(){
 					});
 				});
-				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'swell1'}, function(res){
+				ajaxReq(weatherUrl, {productName: 'ecmwfWaves', overlayName: 'swell1'}, function(res){
 					self.handleResQuery(res, function(){
 					});
 				});
-				ajaxReq(weatherUrl, {productName: 'sea', overlayName: 'currents'}, function(res){
+				ajaxReq(weatherUrl, {productName: 'sst', overlayName: 'currents'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
 							var str = res.data.split("|");
@@ -1720,7 +1848,15 @@ var myvue = new Vue({
 			}else{
 				this.isFullScreen = false;
 			}
-			
+			//时间
+			setInterval(function(){
+				$('.time').html(self.formatDate(new Date()));
+			}, 1000);
+
+			//天气
+			setInterval(function(){
+				self.weather();
+			}, 30 * 60 * 1000);
 		}
 		
 	  });
@@ -1729,7 +1865,7 @@ var myvue = new Vue({
 var goption = {
     	title:{
     		text:"",
-    		padding:[10,0],
+    		padding:[5,0],
     		textStyle:{    			
     			rich:{
     				a:{
