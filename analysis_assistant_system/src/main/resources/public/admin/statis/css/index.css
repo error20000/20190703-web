@@ -28,11 +28,21 @@
     float: left;
 }
 .box-card .content .msg_im .l-it time{
-	
     float: right;
 }
 
-.content-box .weather{color: #fefefe;}
+.content-box .midle{
+	color: #fefefe;
+    font-size: 12px;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    position: relative;
+}
+.content-box .weather{
+	color: #fefefe;
+    font-size: 12px;
+}
 
 .el-card__header {
     border-bottom: none !important;
@@ -71,7 +81,7 @@
     left: 50%;
     position: relative;
 }
-/* Òþ²ØµØÍ¼bmap×óÏÂ½Çlogo
+/* ï¿½ï¿½ï¿½Øµï¿½Í¼bmapï¿½ï¿½ï¿½Â½ï¿½logo
 .anchorBL{ 
 	display:none; 
 }  */

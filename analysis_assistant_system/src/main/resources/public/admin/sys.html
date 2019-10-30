@@ -130,11 +130,21 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidthPoint" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidthPoint.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidthPoint.content"></div>
-	                            <span>点图标宽度(px)<i class="el-icon-question"></i></span>
+	                            <span>航标点图标宽度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>点图标宽度(px)</span>
+	                        <span v-else>航标点图标宽度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconWidthPoint"></el-input>
+					  </el-form-item>
+					  <el-form-item prop="lSys_StoreIconWidthPoint">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_StoreIconWidthPoint" :effect="tips.effect" :placement="tips.forms.lSys_StoreIconWidthPoint.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_StoreIconWidthPoint.content"></div>
+	                            <span>仓库点图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>仓库点图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_StoreIconWidthPoint"></el-input>
 					  </el-form-item>
 					  <!-- <el-form-item prop="lSys_MapIconHeightPoint">
 					  	<span slot="label">
@@ -161,9 +171,9 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidthDef" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidthDef.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidthDef.content"></div>
-	                            <span>默认图标宽度(px)<i class="el-icon-question"></i></span>
+	                            <span>航标默认图标宽度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>默认图标宽度(px)</span>
+	                        <span v-else>航标默认图标宽度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconWidthDef"></el-input>
 					  </el-form-item>
@@ -171,11 +181,32 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeightDef" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeightDef.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeightDef.content"></div>
-	                            <span>默认图标高度(px)<i class="el-icon-question"></i></span>
+	                            <span>航标默认图标高度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>默认图标高度(px)</span>
+	                        <span v-else>航标默认图标高度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconHeightDef"></el-input>
+					  </el-form-item>
+					  
+					  <el-form-item prop="lSys_StoreIconWidthDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_StoreIconWidthDef" :effect="tips.effect" :placement="tips.forms.lSys_StoreIconWidthDef.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_StoreIconWidthDef.content"></div>
+	                            <span>仓库默认图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>仓库默认图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_StoreIconWidthDef"></el-input>
+					  </el-form-item>
+					  <el-form-item prop="lSys_StoreIconHeightDef">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_StoreIconHeightDef" :effect="tips.effect" :placement="tips.forms.lSys_StoreIconHeightDef.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_StoreIconHeightDef.content"></div>
+	                            <span>仓库默认图标高度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>仓库默认图标高度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_StoreIconHeightDef"></el-input>
 					  </el-form-item>
 					  <!-- 自定义 -->
 					  <el-form-item prop="lSys_MapLevelDef">
@@ -192,9 +223,9 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconWidth" :effect="tips.effect" :placement="tips.forms.lSys_MapIconWidth.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconWidth.content"></div>
-	                            <span>自定义图标宽度(px)<i class="el-icon-question"></i></span>
+	                            <span>航标自定义图标宽度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>自定义图标宽度(px)</span>
+	                        <span v-else>航标自定义图标宽度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconWidth"></el-input>
 					  </el-form-item>
@@ -202,11 +233,32 @@
 					  	<span slot="label">
 	                        <el-tooltip v-if="tips.forms.lSys_MapIconHeight" :effect="tips.effect" :placement="tips.forms.lSys_MapIconHeight.placement">
 	                            <div slot="content" v-html="tips.forms.lSys_MapIconHeight.content"></div>
-	                            <span>自定义图标高度(px)<i class="el-icon-question"></i></span>
+	                            <span>航标自定义图标高度(px)<i class="el-icon-question"></i></span>
 	                        </el-tooltip>
-	                        <span v-else>自定义图标高度(px)</span>
+	                        <span v-else>航标自定义图标高度(px)</span>
 	                    </span>
 					    <el-input v-model="editForm.lSys_MapIconHeight"></el-input>
+					  </el-form-item>
+					  
+					  <el-form-item prop="lSys_StoreIconWidth">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_StoreIconWidth" :effect="tips.effect" :placement="tips.forms.lSys_StoreIconWidth.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_StoreIconWidth.content"></div>
+	                            <span>仓库自定义图标宽度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>仓库自定义图标宽度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_StoreIconWidth"></el-input>
+					  </el-form-item>
+					  <el-form-item prop="lSys_StoreIconHeight">
+					  	<span slot="label">
+	                        <el-tooltip v-if="tips.forms.lSys_StoreIconHeight" :effect="tips.effect" :placement="tips.forms.lSys_StoreIconHeight.placement">
+	                            <div slot="content" v-html="tips.forms.lSys_StoreIconHeight.content"></div>
+	                            <span>仓库自定义图标高度(px)<i class="el-icon-question"></i></span>
+	                        </el-tooltip>
+	                        <span v-else>仓库自定义图标高度(px)</span>
+	                    </span>
+					    <el-input v-model="editForm.lSys_StoreIconHeight"></el-input>
 					  </el-form-item>
 				  </el-form>
 				</el-card>
@@ -292,6 +344,25 @@
 						    <el-radio :label="1">是</el-radio>
 						    <el-radio :label="0">否</el-radio>
 						  </el-radio-group>
+					  </el-form-item>
+				  </el-form>
+				</el-card>
+				
+				
+				<el-card class="box-card" v-drag="contain" style="float: right;position: absolute;top: 500px; right: 0; display:none;">
+				  <div slot="header" class="clearfix">
+				    <span>天气接口设置</span>
+				    <el-button style="float: right; padding: 3px 0" type="text" @click="editSubmit2">保存</el-button>
+				  </div>
+				  <el-form size="mini" :model="editForm" ref="editForm" label-width="120px">
+					  <el-form-item label="接口地址">
+					    <el-input v-model="editForm.lSys_StoreIconHeight"></el-input>
+					  </el-form-item>
+					  <el-form-item label="经度" prop="lSys_StoreMsg">
+					    <el-input v-model="editForm.lSys_StoreIconHeight"></el-input>
+					  </el-form-item>
+					  <el-form-item label="纬度">
+					    <el-input v-model="editForm.lSys_StoreIconHeight"></el-input>
 					  </el-form-item>
 				  </el-form>
 				</el-card>

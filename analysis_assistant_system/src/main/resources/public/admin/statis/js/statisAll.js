@@ -110,7 +110,7 @@ var myvue = new Vue({
              let screenWidth = window.innerWidth; 
              let screenHeight = window.innerHeight; 
              this.baseWidth = 90.8333 * (screenWidth / 1366); 
-             this.baseHeight = 100 * (screenHeight / 638); 
+             this.baseHeight = 110 * (screenHeight / 638); 
              this.baseMarginLeft = 20 * (screenWidth / 1366); 
              this.baseMarginTop = 20 * (screenHeight / 638); 
   
@@ -245,14 +245,14 @@ var myvue = new Vue({
 		                    + obj.seriesName + '：' + obj.value[2] + '<br>';
 		            	}
 		            },
-			        legend: {
+			        /*legend: {
 			        	type: 'scroll',
 			        	orient: 'vertical',
 			        	align: 'right',
 			        	right: 10,
 			        	height: 300,
 			            data: legendData
-			        },
+			        },*/
 		            xAxis:{
 		            	show:false
 		            },
@@ -1472,40 +1472,66 @@ var myvue = new Vue({
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'wind'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
-							var str = res.data.split("|");
-							$('.wind font').html(str[1]+"、"+str[2]);
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 5){
+								return;
+							}
+							$('.wind font').html(str[2] + "、" + str[3] + str[4]);
 						}
 					});
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'gust'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
-							var str = res.data.split("|");
-							$('.gust font').html(str[1]);
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 4){
+								return;
+							}
+							$('.gust font').html(str[2] + str[3]);
 						}
 					});
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'visibility'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
-							var str = res.data.split("|");
-							$('.visibility font').html(str[1]);
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 4){
+								return;
+							}
+							$('.visibility font').html(str[2] + str[3]);
 						}
 					});
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwfWaves', overlayName: 'waves'}, function(res){
 					self.handleResQuery(res, function(){
+						if(res.data && res.data != 'No data.'){
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 6){
+								return;
+							}
+							$('.waves font').html(str[2] + "、" + str[3] + str[4] + "、" + str[5].replace("period:", ""));
+						}
 					});
 				});
 				ajaxReq(weatherUrl, {productName: 'ecmwfWaves', overlayName: 'swell1'}, function(res){
 					self.handleResQuery(res, function(){
+						if(res.data && res.data != 'No data.'){
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 6){
+								return;
+							}
+							$('.swell1 font').html(str[2] + "、" + str[3] + str[4] + "、" + str[5].replace("period:", ""));
+						}
 					});
 				});
 				ajaxReq(weatherUrl, {productName: 'sst', overlayName: 'currents'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
-							var str = res.data.split("|");
-							$('.currents font').html(str[1]+"、"+str[2]);
+							var str = res.data.replace(/"/g, '').split("|");
+							if(str.length < 5){
+								return;
+							}
+							$('.currents font').html(str[2] + "、" + str[3] + str[4]);
 						}
 					});
 				});

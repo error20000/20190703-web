@@ -45,8 +45,9 @@ public class WeatherController {
 				.replace("{productName}", productName)
 				.replace("{overlayName}", overlayName)
 				.replace("{dataTime}", new Date().getTime()+"");
-
+		
 		String res = HttpTools.getInstance().sendHttpGet(url);
+		
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 

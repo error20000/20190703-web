@@ -53,6 +53,20 @@ public class System extends Base<System> {
 	@Excel(name="默认图标高度", sort=0, length="", isNull=1 )
 	private int lSys_MapIconHeightDef;
 
+
+	@Excel(name="仓库图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconWidth;
+	@Excel(name="仓库图标高度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconHeight;
+	@Excel(name="仓库点图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconWidthPoint;
+	@Excel(name="仓库点图标高度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconHeightPoint;
+	@Excel(name="仓库默认图标宽度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconWidthDef;
+	@Excel(name="仓库默认图标高度", sort=0, length="", isNull=1 )
+	private int lSys_StoreIconHeightDef;
+	
 	
 	
 	public String getsSys_ID() {
@@ -174,6 +188,42 @@ public class System extends Base<System> {
 	}
 	public void setlSys_MapIconHeightDef(int lSys_MapIconHeightDef) {
 		this.lSys_MapIconHeightDef = lSys_MapIconHeightDef;
+	}
+	public int getlSys_StoreIconWidth() {
+		return lSys_StoreIconWidth;
+	}
+	public void setlSys_StoreIconWidth(int lSys_StoreIconWidth) {
+		this.lSys_StoreIconWidth = lSys_StoreIconWidth;
+	}
+	public int getlSys_StoreIconHeight() {
+		return lSys_StoreIconHeight;
+	}
+	public void setlSys_StoreIconHeight(int lSys_StoreIconHeight) {
+		this.lSys_StoreIconHeight = lSys_StoreIconHeight;
+	}
+	public int getlSys_StoreIconWidthPoint() {
+		return lSys_StoreIconWidthPoint;
+	}
+	public void setlSys_StoreIconWidthPoint(int lSys_StoreIconWidthPoint) {
+		this.lSys_StoreIconWidthPoint = lSys_StoreIconWidthPoint;
+	}
+	public int getlSys_StoreIconHeightPoint() {
+		return lSys_StoreIconHeightPoint;
+	}
+	public void setlSys_StoreIconHeightPoint(int lSys_StoreIconHeightPoint) {
+		this.lSys_StoreIconHeightPoint = lSys_StoreIconHeightPoint;
+	}
+	public int getlSys_StoreIconWidthDef() {
+		return lSys_StoreIconWidthDef;
+	}
+	public void setlSys_StoreIconWidthDef(int lSys_StoreIconWidthDef) {
+		this.lSys_StoreIconWidthDef = lSys_StoreIconWidthDef;
+	}
+	public int getlSys_StoreIconHeightDef() {
+		return lSys_StoreIconHeightDef;
+	}
+	public void setlSys_StoreIconHeightDef(int lSys_StoreIconHeightDef) {
+		this.lSys_StoreIconHeightDef = lSys_StoreIconHeightDef;
 	}
 	
 	

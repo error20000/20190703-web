@@ -416,7 +416,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	@Select({
 		"<script>",
 		" select ",
-		"	a.\"sEquip_Manufacturer\", a.\"sEquip_MBrand\",a.\"sEquip_MModel\", b.\"sAid_Station\",c.\"sStoreType_Station\" ",
+		"	distinct a.\"sEquip_ID\", a.\"sEquip_Manufacturer\", a.\"sEquip_MBrand\",a.\"sEquip_MModel\" ",
 		" from \"tBase_Equip\" a ",
 		" 	left join \"tBase_Aid\" b on a.\"sEquip_AidID\" = b.\"sAid_ID\" ",
 		" 	left join \"tBase_StoreType\" c on a.\"sEquip_StoreLv1\" = c.\"sStoreType_ID\" ",
