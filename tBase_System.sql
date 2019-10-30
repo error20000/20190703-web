@@ -11,7 +11,7 @@
  Target Server Version : 110200
  File Encoding         : 65001
 
- Date: 12/10/2019 21:37:33
+ Date: 31/10/2019 00:00:36
 */
 
 
@@ -39,7 +39,13 @@ CREATE TABLE "AASYSTEM"."tBase_System" (
   "lSys_MapIconHeightPoint" NUMBER ,
   "lSys_MapLevelDef" NUMBER ,
   "lSys_MapIconWidthDef" NUMBER ,
-  "lSys_MapIconHeightDef" NUMBER 
+  "lSys_MapIconHeightDef" NUMBER ,
+  "lSys_StoreIconWidth" NUMBER ,
+  "lSys_StoreIconHeight" NUMBER ,
+  "lSys_StoreIconWidthPoint" NUMBER ,
+  "lSys_StoreIconHeightPoint" NUMBER ,
+  "lSys_StoreIconWidthDef" NUMBER ,
+  "lSys_StoreIconHeightDef" NUMBER 
 )
 TABLESPACE "USERS"
 LOGGING
@@ -77,13 +83,24 @@ COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconHeightPoint" IS '点图
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapLevelDef" IS '默认图标级别';
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconWidthDef" IS '默认图标宽度';
 COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_MapIconHeightDef" IS '默认图标高度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconWidth" IS '仓库图标宽度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconHeight" IS '仓库图标高度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconWidthPoint" IS '仓库点图标宽度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconHeightPoint" IS '仓库点图标高度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconWidthDef" IS '仓库默认图标宽度';
+COMMENT ON COLUMN "AASYSTEM"."tBase_System"."lSys_StoreIconHeightDef" IS '仓库默认图标高度';
 
 -- ----------------------------
 -- Records of tBase_System
 -- ----------------------------
-INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '50', '1', '22', '1', '22', '1', '1', '90', '6', '20', '20', '10', '24', '24');
+INSERT INTO "AASYSTEM"."tBase_System" VALUES ('1', 'http://101.230.249.90:7002/OneMapServer/rest/services/tideport/MapServer', '24.46', '118.1', '6', '20', '50', '1', '22', '1', '22', '1', '1', '90', '6', '20', '20', '10', '24', '24', '20', '20', '20', '0', '24', '24');
 
 -- ----------------------------
 -- Primary Key structure for table tBase_System
 -- ----------------------------
 ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0017770" PRIMARY KEY ("sSys_ID");
+
+-- ----------------------------
+-- Checks structure for table tBase_System
+-- ----------------------------
+ALTER TABLE "AASYSTEM"."tBase_System" ADD CONSTRAINT "SYS_C0022166" CHECK ("sSys_ID" IS NOT NULL) NOT DEFERRABLE INITIALLY IMMEDIATE NORELY VALIDATE;
