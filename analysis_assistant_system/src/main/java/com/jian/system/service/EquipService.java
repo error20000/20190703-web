@@ -1,6 +1,8 @@
 package com.jian.system.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -574,17 +576,19 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR106, "sEquip_ID");
 		}
-		//排序
 		List<Map<String, Object>> logs = logService.history(sEquip_ID);
-		for (int i = 0; i < logs.size(); i++) {
-			for (int j = i; j < logs.size(); j++) {
-				if(((Date)logs.get(i).get("dELog_CreateDate")).getTime() > ((Date)logs.get(i).get("dELog_CreateDate")).getTime()) {
-					Map<String, Object> temp = logs.get(i);
-					logs.set(i, logs.get(j));
-					logs.set(j, temp);
-				}
-			}
-		}
+		//排序 从小到大
+		Collections.sort(logs, new Comparator<Map<String, Object>>() {
+            
+            @Override
+            public int compare(Map<String, Object> p1, Map<String, Object> p2) {
+            	long t1 = ((Date)p1.get("dELog_CreateDate")).getTime();
+            	long t2 = ((Date)p2.get("dELog_CreateDate")).getTime();
+                return t1 == t2 ? 0 : t1 < t2 ? -1 : 1;
+            }
+            
+        });
+
 		return logs;
 	}
 	

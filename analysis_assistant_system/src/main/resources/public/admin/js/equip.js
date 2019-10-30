@@ -841,34 +841,36 @@ var myvue = new Vue({
 						self.$nextTick(function(){
 							//chart
 							$('#chart').hide();
-							if(res.data.length != 0){
+							if(res.data.length > 1){
 								$('#chart').show();
 						        var myChart = echarts.init(document.getElementById("chart"), 'walden');
 						        myChart.clear();
+						        var timeInterval = 1000;
 						        var data = [];
-						        var dataCount = 10;
-						        var startTime = +new Date();
+						        var startTime = Math.floor(res.data[0].dELog_CreateDate/1000);
 						        var categories = [row.sEquip_NO];
-						        var types = [
-						            {id: 1, name: '仓库待用', color: '#7b9ce1'},
-						            {id: 2, name: '出库', color: '#bd6d6c'},
-						            {id: 3, name: '拆除', color: '#75d874'},
-						            {id: 4, name: '运输', color: '#e0bc78'},
-						            {id: 5, name: '待检测', color: '#dc77dc'},
-						            {id: 6, name: '检测', color: '#72b362'},
-						            {id: 7, name: '维修', color: '#71b362'},
-						            {id: 8, name: '报废', color: '#71b362'},
-						            {id: 9, name: '使用', color: '#71b362'},
-						            {id: 0, name: '空闲', color: '#71b362'},
-						            {id: 10, name: '异常', color: '#71b362'}
-						        ];
+						        var types = {
+						            '1': {id: 1, name: '仓库待用', color: '#7b9ce1'},
+						            '2': {id: 2, name: '出库', color: '#bd6d6c'},
+						            '3': {id: 3, name: '拆除', color: '#75d874'},
+						            '4': {id: 4, name: '运输', color: '#e0bc78'},
+						            '5': {id: 5, name: '待检测', color: '#dc77dc'},
+						            '6': {id: 6, name: '检测', color: '#72b362'},
+						            '7': {id: 7, name: '维修', color: '#71b362'},
+						            '8': {id: 8, name: '报废', color: '#71b362'},
+						            '9': {id: 9, name: '使用', color: '#71b362'},
+						            '0': {id: 0, name: '空闲', color: '#71b362'},
+						            '10': {id: 10, name: '异常', color: '#71b362'}
+						        };
 
 						        // Generate mock data
 						        echarts.util.each(categories, function (category, index) {
-						            var baseTime = startTime;
-						            for (var i = 0; i < dataCount; i++) {
-						                var typeItem = types[Math.round(Math.random() * (types.length - 1))];
-						                var duration = Math.round(Math.random() * 10000);
+						        	var baseTime = startTime;
+						            for (var i = 0; i < res.data.length - 1; i++) {
+						            	var node = res.data[i];
+						            	var next = res.data[i+1];
+						                var typeItem = types[node.sELog_Type];
+						                var duration = Math.floor(next.dELog_CreateDate/1000) - Math.floor(node.dELog_CreateDate/1000);
 						                data.push({
 						                    name: typeItem.name,
 						                    value: [
@@ -883,11 +885,14 @@ var myvue = new Vue({
 						                        }
 						                    }
 						                });
-						                baseTime += Math.round(Math.random() * 2000);
+						                baseTime += 3600;
 						            }
 						        });
+						        
+						        console.log(data);
 
 						        function renderItem(params, api) {
+						            
 						            var categoryIndex = api.value(0);
 						            var start = api.coord([api.value(1), categoryIndex]);
 						            var end = api.coord([api.value(2), categoryIndex]);
@@ -904,7 +909,7 @@ var myvue = new Vue({
 						                width: params.coordSys.width,
 						                height: params.coordSys.height
 						            });
-
+						            
 						            return rectShape && {
 						                type: 'rect',
 						                shape: rectShape,
@@ -916,18 +921,17 @@ var myvue = new Vue({
 						        var option = {
 						            tooltip: {
 						                formatter: function (params) {
-						                    return params.marker + params.name + ': ' + params.value[3] + ' ms';
+						                    return params.marker + params.name + ': ' + formatSeconds(params.value[3]);
 						                }
 						            },
 						            title: {
-						                text: 'Profile',
+						                text: '概述',
 						                left: 'center'
 						            },
 						            dataZoom: [{
 						                type: 'slider',
 						                filterMode: 'weakFilter',
 						                showDataShadow: false,
-						                top: 400,
 						                height: 10,
 						                borderColor: 'transparent',
 						                backgroundColor: '#e2e2e2',
@@ -944,15 +948,15 @@ var myvue = new Vue({
 						                type: 'inside',
 						                filterMode: 'weakFilter'
 						            }],
-						            grid: {
+						            /*grid: {
 						                height:300
-						            },
+						            },*/
 						            xAxis: {
 						                min: startTime,
 						                scale: true,
 						                axisLabel: {
 						                    formatter: function (val) {
-						                        return Math.max(0, val - startTime) + ' ms';
+						                        return Math.floor(Math.max(0, val - startTime)/3600) + ' h';
 						                    }
 						                }
 						            },
