@@ -371,6 +371,10 @@ var myvue = new Vue({
 		            },
 		            series: series
 		        };
+				
+		        //先调整大小后，再填入数据，这样可以解决散列点与地图位置不匹配的问题。
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
 
 		        // 使用刚指定的配置项和数据显示图表。
 		        myChart.setOption($.extend(true, {}, goption, option));
@@ -378,9 +382,6 @@ var myvue = new Vue({
 				/*$("#"+chartId).resize(function() {
 					myChart.resize();
 				});*/
-				
-				this.chartBox[chartId] = myChart;
-				this.resizeChart(chartId);
 		        
 			},
 			queryEquipDistribution:function(){
@@ -1897,13 +1898,13 @@ var goption = {
     				a:{
     					color:"#00ccff",     					
     					fontSize:16
-    				},
+    				}/*,
     				b:{
     					fontFamily:"iconfont",
     					fontSize:16,
     					color:"#00ccff",
     					padding:[0,10]
-    				}
+    				}*/
     			}
     		}
     	},

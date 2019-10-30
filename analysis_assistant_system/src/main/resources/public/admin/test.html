@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title></title>
+<style>
+.el-timeline {
+	margin: 0;
+	font-size: 14px;
+	list-style: none;
+}
+
+body, html {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+		Microsoft YaHei, SimSun, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	-webkit-tap-highlight-color: transparent;
+}
+
+body.is-component, html.is-component {
+	overflow: hidden;
+}
+
+.demo-block .source {
+	padding: 24px;
+}
+
+.demo-block {
+	border: 1px solid #ebebeb;
+	border-radius: 3px;
+	transition: .2s;
+}
+
+.demo-block {
+	margin-bottom: 24px;
+}
+
+.page-component .content {
+	padding-top: 50px;
+}
+/* @media all and (min-width:1140px) */
+.page-component__content {
+	transition: padding-right .3s ease;
+}
+
+.page-component .page-component__content {
+	padding-left: 270px;
+	padding-bottom: 100px;
+	box-sizing: border-box;
+}
+
+.container, .page-container {
+	width: 1140px;
+	padding: 0;
+	margin: 0 auto;
+}
+
+.page-container {
+	padding-top: 55px;
+}
+
+.page-component {
+	box-sizing: border-box;
+	height: 100%;
+}
+
+.page-container.page-component {
+	padding: 0;
+}
+/* @media all and (min-width:1140px) */
+.page-component.page-container {
+	transition: all .3s ease;
+}
+
+.el-scrollbar__wrap {
+	overflow: scroll;
+	height: 100%;
+}
+
+.page-component__scroll .el-scrollbar__wrap {
+	overflow-x: auto;
+}
+
+.el-scrollbar {
+	overflow: hidden;
+	position: relative;
+}
+
+.page-component__scroll {
+	height: calc(100% - 80px);
+	margin-top: 80px;
+}
+
+.main-cnt {
+	margin-top: -80px;
+	padding: 80px 0 340px;
+	box-sizing: border-box;
+	min-height: 100%;
+}
+
+.is-component#app .main-cnt {
+	padding: 0;
+	margin-top: 0px;
+	height: 100%;
+	min-height: auto;
+}
+
+#app {
+	height: 100%;
+}
+
+.is-component#app {
+	overflow-y: hidden;
+}
+
+.el-timeline-item {
+	position: relative;
+	padding-bottom: 20px;
+}
+
+.el-timeline-item__tail {
+	position: absolute;
+	left: 4px;
+	height: 100%;
+	border-left: 2px solid #e4e7ed;
+}
+
+.el-timeline :last-child.el-timeline-item .el-timeline-item__tail {
+	display: none;
+}
+
+.el-timeline-item__node {
+	position: absolute;
+	background-color: #e4e7ed;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.el-timeline-item__node--normal {
+	left: -1px;
+	width: 12px;
+	height: 12px;
+}
+
+.el-timeline-item__wrapper {
+	position: relative;
+	padding-left: 28px;
+	top: -3px;
+}
+
+.el-timeline-item__content {
+	color: #303133;
+}
+
+.el-timeline-item__timestamp {
+	color: #909399;
+	line-height: 1;
+	font-size: 13px;
+}
+
+.is-bottom.el-timeline-item__timestamp {
+	margin-top: 8px;
+}
+</style>
+</head>
+<body class="is-component">
+	<div class="is-component" id="app">
+		<div class="main-cnt">
+			<div class="page-component__scroll el-scrollbar">
+				<div class="el-scrollbar__wrap"
+					style="margin-right: -17px; margin-bottom: -17px;">
+					<div class="el-scrollbar__view">
+						<div class="page-container page-component">
+							<div class="page-component__content">
+								<section class="content element-doc content">
+									<div class="demo-block demo-zh-CN demo-timeline">
+										<div class="source">
+											<div>
+												<div class="block">
+													<ul class="el-timeline">
+														<li class="el-timeline-item"><div
+																class="el-timeline-item__tail"></div>
+															<div
+																class="el-timeline-item__node el-timeline-item__node--normal el-timeline-item__node--">
+																<!---->
+															</div>
+															<!---->
+															<div class="el-timeline-item__wrapper">
+																<!---->
+																<div class="el-timeline-item__content">活动按期开始</div>
+																<div class="el-timeline-item__timestamp is-bottom">
+																	2018-04-15</div>
+															</div></li>
+														<li class="el-timeline-item"><div
+																class="el-timeline-item__tail"></div>
+															<div
+																class="el-timeline-item__node el-timeline-item__node--normal el-timeline-item__node--">
+																<!---->
+															</div>
+															<!---->
+															<div class="el-timeline-item__wrapper">
+																<!---->
+																<div class="el-timeline-item__content">通过审核</div>
+																<div class="el-timeline-item__timestamp is-bottom">
+																	2018-04-13</div>
+															</div></li>
+														<li class="el-timeline-item"><div
+																class="el-timeline-item__tail"></div>
+															<div
+																class="el-timeline-item__node el-timeline-item__node--normal el-timeline-item__node--">
+																<!---->
+															</div>
+															<!---->
+															<div class="el-timeline-item__wrapper">
+																<!---->
+																<div class="el-timeline-item__content">创建成功</div>
+																<div class="el-timeline-item__timestamp is-bottom">
+																	2018-04-11</div>
+															</div></li>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

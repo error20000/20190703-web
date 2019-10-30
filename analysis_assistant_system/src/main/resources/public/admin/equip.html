@@ -10,6 +10,86 @@
   	.uploadTabs .el-tabs__header{
   		margin-bottom: 10px !important;
   	}
+  
+  .el-divider {
+    background-color: #dcdfe6;
+    position: relative;
+  }
+  .el-divider--horizontal {
+    display: block;
+    height: 1px;
+    width: 100%;
+    margin: 24px 0;
+  }
+  .el-divider__text {
+    position: absolute;
+    background-color: #fff;
+    padding: 0 20px;
+    font-weight: 500;
+    color: #303133;
+    font-size: 14px;
+  }
+  .is-left.el-divider__text {
+    left: 20px;
+    transform: translateY(-50%);
+  }
+  
+  .el-timeline {
+	margin: 0;
+	font-size: 14px;
+	list-style: none;
+	margin-top: 20px;
+}
+  .el-timeline-item {
+	position: relative;
+	padding-bottom: 20px;
+}
+
+.el-timeline-item__tail {
+	position: absolute;
+	left: 4px;
+	height: 100%;
+	border-left: 2px solid #e4e7ed;
+}
+
+.el-timeline :last-child.el-timeline-item .el-timeline-item__tail {
+	display: none;
+}
+
+.el-timeline-item__node {
+	position: absolute;
+	background-color: #e4e7ed;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.el-timeline-item__node--normal {
+	left: -1px;
+	width: 12px;
+	height: 12px;
+}
+
+.el-timeline-item__wrapper {
+	position: relative;
+	padding-left: 28px;
+	top: -3px;
+}
+
+.el-timeline-item__content {
+	color: #303133;
+}
+
+.el-timeline-item__timestamp {
+	color: #909399;
+	line-height: 1;
+	font-size: 13px;
+}
+
+.is-bottom.el-timeline-item__timestamp {
+	margin-top: 8px;
+}
   </style>
 </head>
 <body class="animated fadeIn">
@@ -679,7 +759,7 @@
 		</el-dialog>
 		
 		<!-- view -->
-		<el-dialog title="编辑" :visible.sync="viewFormVisible" :close-on-click-modal="false">
+		<el-dialog title="详情" :visible.sync="viewFormVisible" :close-on-click-modal="false">
 			<el-form size="mini" :model="viewForm" ref="viewForm"label-width="120px">
 				<el-form-item label="器材编码" prop="sEquip_NO">
 					<div v-html="viewForm.sEquip_NO"></div>
@@ -854,6 +934,14 @@
 				  </el-form-item>
 			  </template>
 			  
+			  
+			  <div class="el-divider el-divider--horizontal"><div class="el-divider__text is-left">历史记录</div></div>
+			  
+			  	<div id="chart" style="height: 300px;">
+				</div>
+				<ul id="timeline" class="el-timeline">
+				</ul>
+			  
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button size="mini" @click="viewClose">关闭</el-button>
@@ -1007,6 +1095,7 @@
   <script src="js/jquery-3.4.1.js" type="text/javascript"></script>
   <script src="js/vue-2.6.10/vue.js" type="text/javascript"></script>
   <script src="js/element-2.4.11/index.js" type="text/javascript"></script>
+  <script type="text/javascript" src="js/echarts/echarts.min.js"></script>
   <script src="js/browser.min.js" type="text/javascript"></script>
   <script type="text/javascript" src="js/global.js"></script>
   <script type="text/javascript" src="js/equip.js"></script>

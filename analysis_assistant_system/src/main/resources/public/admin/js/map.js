@@ -562,13 +562,17 @@ var myvue = new Vue({
 				
 				if(zoom <= self.maxZoomPoint){
 					var color = "green";
+					var size = "4px";
 					if(params.attr.type == 'aid'){
 						color = params.attr.status == this.defaultAidStatus ? "green" : "red";
+						size = sysData.lSys_MapIconWidthPoint ? sysData.lSys_MapIconWidthPoint + 'px' : "4px";
+					}else{
+						size = sysData.lSys_StoreIconWidthPoint ? sysData.lSys_StoreIconWidthPoint + 'px' : "4px";
 					}
 					 symbol = {
 			  		    type: "simple-marker",  
 			  		    color: color,
-			  		    size: sysData.lSys_MapIconWidthPoint ? sysData.lSys_MapIconWidthPoint + 'px' : "4px",
+			  		    size: size,
 					    outline: {
 					    	style:"none"
 					    }
@@ -586,19 +590,37 @@ var myvue = new Vue({
 					require(["esri/symbols/PictureMarkerSymbol"], 
 							function (PictureMarkerSymbol) {
 						if(zoom <= self.maxZoom){
-							symbol = {
-									type: "picture-marker",
-									url: iconUrl,
-									width: sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px',
-									height: sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px'
-							};
+							if(params.attr.type == 'aid'){
+								symbol = {
+										type: "picture-marker",
+										url: iconUrl,
+										width: sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px',
+										height: sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px'
+								};
+							}else{
+								symbol = {
+										type: "picture-marker",
+										url: iconUrl,
+										width: sysData.lSys_StoreIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_StoreIconWidthDef + 'px',
+										height: sysData.lSys_StoreIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_StoreIconHeightDef + 'px'
+								};
+							}
 						}else{
-							symbol = {
-									type: "picture-marker",
-									url: iconUrl,
-									width: sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
-									height: sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
-							};
+							if(params.attr.type == 'aid'){
+								symbol = {
+										type: "picture-marker",
+										url: iconUrl,
+										width: sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px',
+										height: sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px'
+								};
+							}else{
+								symbol = {
+										type: "picture-marker",
+										url: iconUrl,
+										width: sysData.lSys_StoreIconWidth == 0 ? self.defaultWidth : sysData.lSys_StoreIconWidth + 'px',
+										height: sysData.lSys_StoreIconHeight == 0 ? self.defaultHeight : sysData.lSys_StoreIconHeight + 'px'
+								};
+							}
 						}
 						
 					});
@@ -703,13 +725,22 @@ var myvue = new Vue({
 							iconUrl = "/admin/images/map1.png";
 							if(item.attributes.type == 'aid'){
 								iconUrl = status == self.defaultAidStatus ? "/admin/images/map1.png" : "/admin/images/map2.png";
+								symbol.width = sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px';
+								symbol.height = sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px';
+							}else{
+								symbol.width = sysData.lSys_StoreIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_StoreIconWidthDef + 'px';
+								symbol.height = sysData.lSys_StoreIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_StoreIconHeightDef + 'px';
 							}
-							symbol.width = sysData.lSys_MapIconWidthDef == 0 ? self.defaultWidth : sysData.lSys_MapIconWidthDef + 'px';
-							symbol.height = sysData.lSys_MapIconHeightDef == 0 ? self.defaultHeight : sysData.lSys_MapIconHeightDef + 'px';
 						}else{
 							iconUrl = pic ? "/" + pic : "/admin/images/map.png";
-							symbol.width = sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px';
-							symbol.height = sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px';
+
+							if(item.attributes.type == 'aid'){
+								symbol.width = sysData.lSys_MapIconWidth == 0 ? self.defaultWidth : sysData.lSys_MapIconWidth + 'px';
+								symbol.height = sysData.lSys_MapIconHeight == 0 ? self.defaultHeight : sysData.lSys_MapIconHeight + 'px';
+							}else{
+								symbol.width = sysData.lSys_StoreIconWidth == 0 ? self.defaultWidth : sysData.lSys_StoreIconWidth + 'px';
+								symbol.height = sysData.lSys_StoreIconHeight == 0 ? self.defaultHeight : sysData.lSys_StoreIconHeight + 'px';
+							}
 						} 
 						symbol.url = iconUrl;
 					}
