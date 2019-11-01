@@ -296,10 +296,18 @@ public class StoreService extends BaseService<Store, StoreMapper> {
 	@TargetDataSource
 	public List<Equip> appEquip(String sEquip_StoreLv1, String sEquip_StoreLv2, String sEquip_StoreLv3, String sEquip_StoreLv4) {
 		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("sEquip_StoreLv1", sEquip_StoreLv1);
-		condition.put("sEquip_StoreLv2", sEquip_StoreLv2);
-		condition.put("sEquip_StoreLv3", sEquip_StoreLv3);
-		condition.put("sEquip_StoreLv4", sEquip_StoreLv4);
+		if(!Tools.isNullOrEmpty(sEquip_StoreLv1)) {
+			condition.put("sEquip_StoreLv1", sEquip_StoreLv1);
+		}
+		if(!Tools.isNullOrEmpty(sEquip_StoreLv2)) {
+			condition.put("sEquip_StoreLv2", sEquip_StoreLv2);
+		}
+		if(!Tools.isNullOrEmpty(sEquip_StoreLv3)) {
+			condition.put("sEquip_StoreLv3", sEquip_StoreLv3);
+		}
+		if(!Tools.isNullOrEmpty(sEquip_StoreLv4)) {
+			condition.put("sEquip_StoreLv4", sEquip_StoreLv4);
+		}
 		return equipService.selectList(condition);
 	}
 	
