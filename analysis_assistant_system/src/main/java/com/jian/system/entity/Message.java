@@ -55,6 +55,8 @@ public class Message extends Base<Message> {
 	private int dMsg_StoreNum;
 	@Excel(name="消息原因", sort=0, length="64", isNull=1 )
 	private String sMsg_Reason;
+	@Excel(name="消息来源", sort=0, length="64", isNull=1 )
+	private String sMsg_Source;
 
 	
 
@@ -189,6 +191,12 @@ public class Message extends Base<Message> {
 	}
 	public void setsMsg_Reason(String sMsg_Reason) {
 		this.sMsg_Reason = sMsg_Reason;
+	}
+	public String getsMsg_Source() {
+		return sMsg_Source;
+	}
+	public void setsMsg_Source(String sMsg_Source) {
+		this.sMsg_Source = sMsg_Source;
 	}
 	
 }

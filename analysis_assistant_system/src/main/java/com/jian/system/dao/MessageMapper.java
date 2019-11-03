@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import com.jian.system.config.Constant;
 import com.jian.system.entity.Message;
 
 @Mapper
@@ -32,7 +33,8 @@ public interface MessageMapper extends BaseMapper<Message> {
     	" 		1 = 1 ",	
     	"   </if>", 
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+    	//" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+		" 		and ( \"sMsg_ToUserID\" = #{sUser_ID} or \"sMsg_FromUserID\" = #{sUser_ID} or \"sMsg_UserID\" = #{sUser_ID} ) ",
     	"   </if>", 
     	" 	<if test=\" startDate != null \"> ",
     	" 		and \"dMsg_CreateDate\" <![CDATA[>=]]> #{startDate} ",	
@@ -61,7 +63,8 @@ public interface MessageMapper extends BaseMapper<Message> {
     	" 		1 = 1 ",	
     	"   </if>", 
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+    	//" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+		" 		and ( \"sMsg_ToUserID\" = #{sUser_ID} or \"sMsg_FromUserID\" = #{sUser_ID} or \"sMsg_UserID\" = #{sUser_ID} ) ",
     	"   </if>", 
     	" 	<if test=\" startDate != null \"> ",
     	" 		and \"dMsg_CreateDate\" <![CDATA[>=]]> #{startDate} ",	
@@ -92,7 +95,8 @@ public interface MessageMapper extends BaseMapper<Message> {
     	" 		1 = 1 ",	
     	"   </if>",
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+    	//" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+		" 		and ( \"sMsg_ToUserID\" = #{sUser_ID} or \"sMsg_FromUserID\" = #{sUser_ID} or \"sMsg_UserID\" = #{sUser_ID} ) ",
     	"   </if>", 
     	" 	<if test=\" startDate != null \"> ",
     	" 		and \"dMsg_CreateDate\" <![CDATA[>=]]> #{startDate} ",	
@@ -110,15 +114,25 @@ public interface MessageMapper extends BaseMapper<Message> {
 
 	@Select({
 		"<script>",
-		" select * ",
-		" from \"tBase_Message\" ",
+		" select distinct a.* ",
+		" from \"tBase_Message\" a ",
+		" 	left join \"tBase_Aid\" b ON a.\"sMsg_AidID\" = b.\"sAid_ID\" ",
+		" 	left join \"tBase_StoreType\" c ON a.\"sMsg_StoreLv1\" = c.\"sStoreType_ID\" ",
+		" 	left join \"tBase_Store\" d ON a.\"sMsg_StoreLv2\" = d.\"sStore_ID\" ",
+		" 	left join \"tBase_Store\" e ON a.\"sMsg_StoreLv3\" = e.\"sStore_ID\" ",
+		" 	left join \"tBase_Store\" f ON a.\"sMsg_StoreLv4\" = f.\"sStore_ID\" ",
 		" where ",
 		"	( ",
-		"		\"sMsg_Title\" like concat(concat('%', #{keywords}), '%') ",
-		"		or \"sMsg_Describe\" like concat(concat('%', #{keywords}), '%') ",
+		"		a.\"sMsg_Title\" like concat(concat('%', #{keywords}), '%') ",
+		"		or b.\"sAid_Name\" like concat(concat('%', #{keywords}), '%') ",
+		"		or c.\"sStoreType_Name\" like concat(concat('%', #{keywords}), '%') ",
+		"		or d.\"sStore_Name\" like concat(concat('%', #{keywords}), '%') ",
+		"		or e.\"sStore_Name\" like concat(concat('%', #{keywords}), '%') ",
+		"		or f.\"sStore_Name\" like concat(concat('%', #{keywords}), '%') ",
 		"	) ",
     	" 	<if test=\" sUser_ID != null \"> ",
-    	" 		and b.\"sUserAid_UserID\" = #{sUser_ID} ",	
+    	//" 		and a.\"sMsg_ToUserID\" = #{sUser_ID} ",	
+		" 		and ( a.\"sMsg_ToUserID\" = #{sUser_ID} or a.\"sMsg_FromUserID\" = #{sUser_ID} or a.\"sMsg_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
 		"</script>"
 	})
@@ -140,7 +154,8 @@ public interface MessageMapper extends BaseMapper<Message> {
 		"	m.\"sDict_Name\" \"sMsg_TypeName\", ",
 		"	n.\"sDict_Name\" \"sMsg_LabelName\", ",
 		"	o.\"sDict_Name\" \"sMsg_StatusName\", ",
-		"	p.\"sDict_Name\" \"sMsg_ReasonName\" ",
+		"	p.\"sDict_Name\" \"sMsg_ReasonName\", ",
+		"	q.\"sDict_Name\" \"sMsg_SourceName\" ",
 		" from \"tBase_Message\" a ",
 		" 	left join \"tBase_Aid\" b ON a.\"sMsg_AidID\" = b.\"sAid_ID\" ",
 		" 	left join \"tBase_Equip\" c ON a.\"sMsg_EquipID\" = c.\"sEquip_ID\" ",
@@ -155,14 +170,25 @@ public interface MessageMapper extends BaseMapper<Message> {
 		" 	left join \"tBase_Dict\" n ON a.\"sMsg_Label\" = n.\"sDict_NO\" and n.\"sDict_DictTypeNO\" = 'MsgLabel' ",
 		" 	left join \"tBase_Dict\" o ON a.\"sMsg_Status\" = o.\"sDict_NO\" and o.\"sDict_DictTypeNO\" = 'MsgStatus' ",
 		" 	left join \"tBase_Dict\" p ON a.\"sMsg_Reason\" = p.\"sDict_NO\" and p.\"sDict_DictTypeNO\" = 'MsgReason' ",
+		" 	left join \"tBase_Dict\" q ON a.\"sMsg_Source\" = q.\"sDict_NO\" and q.\"sDict_DictTypeNO\" = 'MsgSource' ",
 		" where ",
 		" 	a.\"sMsg_ID\" = #{sMsg_ID} ",	
 		" 	<if test=\" sUser_ID != null \"> ",
-		" 		and a.\"sMsg_ToUserID\" = #{sUser_ID} ",	
+    	//" 		and a.\"sMsg_ToUserID\" = #{sUser_ID} ",	
+		" 		and ( a.\"sMsg_ToUserID\" = #{sUser_ID} or a.\"sMsg_FromUserID\" = #{sUser_ID} or a.\"sMsg_UserID\" = #{sUser_ID} ) ",	
 		"   </if>", 
 		"</script>"
 	})
 	public Map<String, Object> view(@Param("sMsg_ID") String sMsg_ID, @Param("sUser_ID") String sUser_ID);
 	
+	@Select({
+		"<script>",
+		" select count(*) ",
+		" from \"tBase_Message\" ",
+		" where \"sMsg_Status\" = " + Constant.MsgStatus_1,
+    	" 		and \"sMsg_ToUserID\" = #{sUser_ID} ",	
+		"</script>"
+	})
+	public int unReadNum(@Param("sUser_ID") String sUser_ID);
 	
 }

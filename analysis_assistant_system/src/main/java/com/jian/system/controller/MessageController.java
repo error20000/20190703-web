@@ -277,4 +277,15 @@ public class MessageController extends BaseController<Message, MessageService> {
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
+
+	@RequestMapping("/app/unReadNum")
+    @ResponseBody
+    @VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Query, describe="app查询最新消息数量")
+	public String appUnReadNum(HttpServletRequest req) {
+		int res = service.unReadNum(getAppLoginUser(req));
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+	}
 }

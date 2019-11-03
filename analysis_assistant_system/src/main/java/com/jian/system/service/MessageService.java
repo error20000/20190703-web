@@ -176,5 +176,14 @@ public class MessageService extends BaseService<Message, MessageMapper> {
 		
 		return baseMapper.update(tableName, values, condition);
 	}
+	
+	@TargetDataSource
+	@Transactional
+	public int unReadNum(User user){
+        if(user == null){
+            return 0;
+        }
+		return baseMapper.unReadNum(user.getsUser_ID());
+	}
 
 }
