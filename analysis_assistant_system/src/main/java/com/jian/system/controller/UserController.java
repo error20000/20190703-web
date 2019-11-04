@@ -785,4 +785,34 @@ public class UserController extends BaseController<User, UserService> {
 		}
 		return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
+	
+	@RequestMapping("/app/changePWD")
+    @ResponseBody
+	@VerifyAppSign
+	@VerifyAppLogin
+	@VerifyAppAuth
+	@SysLog(type=SystemLogType.Update, describe="app修改用户密码")
+	public String appChangePWD(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String oldPwd = Tools.getReqParamSafe(req, "oldPwd");
+		String newPwd = Tools.getReqParamSafe(req, "newPwd");
+		vMap = Tools.verifyParam("oldPwd", oldPwd, 0, 0);
+		if(vMap != null){
+			return ResultTools.custom(Tips.ERROR206, "oldPwd").toJSONString();
+		}
+		vMap = Tools.verifyParam("newPwd", newPwd, 0, 0);
+		if(vMap != null){
+			return ResultTools.custom(Tips.ERROR206, "newPwd").toJSONString();
+		}
+		
+		//保存
+		int res = service.changePWD(oldPwd, newPwd, getAppLoginUser(req).getsUser_ID());
+		if(res > 0){
+			return ResultTools.custom(Tips.ERROR1).toJSONString();
+		}else{
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
+		}
+	}
 }

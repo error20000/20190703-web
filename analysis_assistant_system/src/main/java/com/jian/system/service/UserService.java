@@ -171,7 +171,7 @@ public class UserService extends BaseService<User, UserMapper> {
 		}
 		//检查密码复杂度
 		if(!checkPWD(newPwd)) {
-			throw new ServiceException(Tips.ERROR102, "密码不符合要求。");
+			throw new ServiceException(Tips.ERROR102, "新密码不符合要求。");
 		}
 		Map<String, Object> value = MapTools.custom().put("sUser_PassWord", Tools.md5(newPwd)).build();
 		return baseMapper.update(tableName, value, condition);
@@ -190,7 +190,7 @@ public class UserService extends BaseService<User, UserMapper> {
 		}
 		//检查密码复杂度
 		if(!checkPWD(sUser_PassWord)) {
-			throw new ServiceException(Tips.ERROR102, "密码不符合要求。");
+			throw new ServiceException(Tips.ERROR102, "新密码不符合要求。");
 		}
 		Map<String, Object> value = MapTools.custom().put("sUser_PassWord", Tools.md5(sUser_PassWord)).build();
 		return baseMapper.update(tableName, value, condition);
