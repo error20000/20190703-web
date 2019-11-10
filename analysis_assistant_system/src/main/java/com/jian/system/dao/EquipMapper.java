@@ -108,7 +108,7 @@ public interface EquipMapper extends BaseMapper<Equip> {
 	@Select({
 		"<script>",
 		"select count(*) from (",
-		" select count(*) ",
+		" select * ",
 		" from \"tBase_Equip\" ",
 		" where ",
     	" 	<if test=\" map != null \"> ",

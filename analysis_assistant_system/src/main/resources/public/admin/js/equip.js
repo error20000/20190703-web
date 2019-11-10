@@ -885,11 +885,10 @@ var myvue = new Vue({
 						                        }
 						                    }
 						                });
-						                baseTime += 3600;
+						                //baseTime += 3600;
 						            }
 						        });
 						        
-						        console.log(data);
 
 						        function renderItem(params, api) {
 						            
@@ -933,6 +932,7 @@ var myvue = new Vue({
 						                filterMode: 'weakFilter',
 						                showDataShadow: false,
 						                height: 10,
+						                bottom: 10,
 						                borderColor: 'transparent',
 						                backgroundColor: '#e2e2e2',
 						                handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
@@ -948,16 +948,18 @@ var myvue = new Vue({
 						                type: 'inside',
 						                filterMode: 'weakFilter'
 						            }],
-						            /*grid: {
-						                height:300
-						            },*/
+						            grid: {
+						                bottom: 120
+						            },
 						            xAxis: {
 						                min: startTime,
 						                scale: true,
 						                axisLabel: {
 						                    formatter: function (val) {
-						                        return Math.floor(Math.max(0, val - startTime)/3600) + ' h';
-						                    }
+						                        //return Math.floor(Math.max(0, val - startTime)/3600) + ' h';
+						                    	return self.formatDate(val);
+						                    },
+						                    rotate: 50
 						                }
 						            },
 						            yAxis: {
@@ -1000,11 +1002,8 @@ var myvue = new Vue({
 								str += '</li>';
 							}
 							$('#timeline').html(str);
-							
-							console.log("int", $('#timeline'));
 						});
 
-						console.log("out", $('#timeline'));
 					});
 				});
 			},

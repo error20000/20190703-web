@@ -54,6 +54,18 @@
 	  .el-table__expanded-cell{
 		padding-right: 0px !important;
 	  }
+	  .storeItem{
+	  	padding-left: 20px;
+	    cursor: pointer;
+	    margin-top: 20px;
+	  }
+	  .storeItemEquip{
+	  	padding: 20px 0px;
+	  	text-align: center;
+	  }
+	  .storeItemEquipPage{
+	  	text-align: center;
+	  }
   </style>
 </head>
 <body class="animated fadeIn">
@@ -1679,21 +1691,146 @@
 					</el-tab-pane>
 					
 		      	  	<el-tab-pane label="器材列表" name="2">
-				    	<el-table size="mini" :data="detailStoreAll" @expand-change="expandChange1" highlight-current-row border style="width: 100%;" class="mytable" row-key="sStore_ID" :expand-row-keys="expands1" >
-							<!-- 一级仓库  -->
+			      	  	<el-breadcrumb separator-class="el-icon-arrow-right">
+						  <el-breadcrumb-item v-for="(item, index) in breadcrumbData" :key="index"><a href="javascript:void(0)" @click="goback(item, index)">{{item.name}}</a></el-breadcrumb-item>
+						</el-breadcrumb>
+						<div v-show="storeEquipContainer1">
+							<div v-if="storeData1[storeId1]">
+								<div class="storeItem" v-for="(item, index) in storeData1[storeId1]" :key="index"  @click="expandChange2(item)">{{item.sStore_Name}}</div>
+							</div>
+							<div v-else>
+								<div class="storeItemEquip">器材列表</div>
+								<el-table size="mini" :data="storeEquipData1[storeId1]" highlight-current-row border style="width: 100%;" class="mytable">
+									<el-table-column label="编码" prop="sEquip_NO">
+									</el-table-column>
+									<el-table-column label="分类" prop="sEquip_TypeName">
+									</el-table-column>
+									<el-table-column label="入库日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dEquip_StoreDate, 'yyyy-MM-dd')}}</div>
+										</template>
+									</el-table-column>
+								</el-table>
+								<!-- page tool -->
+								<el-col :span="24" class="toolbar storeItemEquipPage">
+									<el-pagination layout="total, prev, pager, next" 
+										@size-change="function(val){handleDetailStoreEquipSizeChange1(val, storeId1)}" 
+										@current-change="function(val){handleDetailStoreEquipCurrentChange1(val, storeId1)}" 
+										:page-sizes="[10, 20, 50, 100]" 
+										:page-size="detailStoreEquipRows1" 
+										:pager-count="5"
+										:current-page="detailStoreEquipPage1[storeId1]"
+										:total="detailStoreEquipTotal1[storeId1]">
+									</el-pagination>
+								</el-col>
+							</div>
+						</div>
+						
+						<div v-show="storeEquipContainer2">
+							<div v-if="storeData2[storeId2]">
+								<div class="storeItem" v-for="(item, index) in storeData2[storeId2]" :key="index"  @click="expandChange3(item)">{{item.sStore_Name}}</div>
+							</div>
+							<div v-else>
+								<div class="storeItemEquip">器材列表</div>
+								<el-table size="mini" :data="storeEquipData2[storeId2]" highlight-current-row border style="width: 100%;" class="mytable">
+									<el-table-column label="编码" prop="sEquip_NO">
+									</el-table-column>
+									<el-table-column label="分类" prop="sEquip_TypeName">
+									</el-table-column>
+									<el-table-column label="入库日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dEquip_StoreDate, 'yyyy-MM-dd')}}</div>
+										</template>
+									</el-table-column>
+								</el-table>
+								<!-- page tool -->
+								<el-col :span="24" class="toolbar storeItemEquipPage">
+									<el-pagination layout="total, prev, pager, next" 
+										@size-change="function(val){handleDetailStoreEquipSizeChange2(val, storeId2)}" 
+										@current-change="function(val){handleDetailStoreEquipCurrentChange2(val, storeId2)}" 
+										:page-sizes="[10, 20, 50, 100]" 
+										:page-size="detailStoreEquipRows2" 
+										:pager-count="5"
+										:current-page="detailStoreEquipPage2[storeId2]"
+										:total="detailStoreEquipTotal2[storeId2]">
+									</el-pagination>
+								</el-col>
+							</div>
+						</div>
+						
+						<div v-show="storeEquipContainer3">
+							<div v-if="storeData3[storeId3]">
+								<div class="storeItem" v-for="(item, index) in storeData3[storeId3]" :key="index"  @click="expandChange4(item)">{{item.sStore_Name}}</div>
+							</div>
+							<div v-else>
+								<div class="storeItemEquip">器材列表</div>
+								<el-table size="mini" :data="storeEquipData3[storeId3]" highlight-current-row border style="width: 100%;" class="mytable">
+									<el-table-column label="编码" prop="sEquip_NO">
+									</el-table-column>
+									<el-table-column label="分类" prop="sEquip_TypeName">
+									</el-table-column>
+									<el-table-column label="入库日期">
+										<template scope="scope">
+											<div>{{formatDateStr(scope.row.dEquip_StoreDate, 'yyyy-MM-dd')}}</div>
+										</template>
+									</el-table-column>
+								</el-table>
+								<!-- page tool -->
+								<el-col :span="24" class="toolbar storeItemEquipPage">
+									<el-pagination layout="total, prev, pager, next" 
+										@size-change="function(val){handleDetailStoreEquipSizeChange3(val, storeId3)}" 
+										@current-change="function(val){handleDetailStoreEquipCurrentChange3(val, storeId3)}" 
+										:page-sizes="[10, 20, 50, 100]" 
+										:page-size="detailStoreEquipRows3" 
+										:pager-count="5"
+										:current-page="detailStoreEquipPage3[storeId3]"
+										:total="detailStoreEquipTotal3[storeId3]">
+									</el-pagination>
+								</el-col>
+							</div>
+						</div>
+						<div v-show="storeEquipContainer4">
+							<div class="storeItemEquip">器材列表</div>
+							<el-table size="mini" :data="storeEquipData4[storeId4]" highlight-current-row border style="width: 100%;" class="mytable">
+								<el-table-column label="编码" prop="sEquip_NO">
+								</el-table-column>
+								<el-table-column label="分类" prop="sEquip_TypeName">
+								</el-table-column>
+								<el-table-column label="入库日期">
+									<template scope="scope">
+										<div>{{formatDateStr(scope.row.dEquip_StoreDate, 'yyyy-MM-dd')}}</div>
+									</template>
+								</el-table-column>
+							</el-table>
+							<!-- page tool -->
+							<el-col :span="24" class="toolbar storeItemEquipPage">
+								<el-pagination layout="total, prev, pager, next" 
+									@size-change="function(val){handleDetailStoreEquipSizeChange4(val, storeId4)}" 
+									@current-change="function(val){handleDetailStoreEquipCurrentChange4(val, storeId4)}" 
+									:page-sizes="[10, 20, 50, 100]" 
+									:page-size="detailStoreEquipRows4" 
+									:pager-count="5"
+									:current-page="detailStoreEquipPage4[storeId4]"
+									:total="detailStoreEquipTotal4[storeId4]">
+								</el-pagination>
+							</el-col>
+						</div>
+						
+				    	<!-- <el-table size="mini" :data="detailStoreAll" @expand-change="expandChange1" highlight-current-row border style="width: 100%;" class="mytable" row-key="sStore_ID" :expand-row-keys="expands1" >
+							一级仓库 
 							<el-table-column type="expand" label="一级">
 								<template slot-scope="props">
-									<!-- 二级仓库  -->
+									二级仓库 
 									<div v-show="!storeEquipContainer1">
 									<el-table size="mini" :data="props.row.children" @expand-change="expandChange2" highlight-current-row border style="width: 100%;" class="mytable" row-key="sStore_ID" :expand-row-keys="expands2" >
 										<el-table-column type="expand" label="二级">
 											<template slot-scope="props">
-												<!-- 三级仓库  -->
+												三级仓库 
 												<div v-show="!storeEquipContainer2">
 												<el-table size="mini" :data="props.row.children" @expand-change="expandChange3" highlight-current-row border style="width: 100%;" class="mytable" row-key="sStore_ID" :expand-row-keys="expands3" >
 													<el-table-column type="expand" label="三级">
 														<template slot-scope="props">
-															<!-- 四级仓库  -->
+															四级仓库 
 															<div v-show="!storeEquipContainer3">
 															<el-table size="mini" :data="props.row.children" @expand-change="expandChange4" highlight-current-row border style="width: 100%;" class="mytable" row-key="sStore_ID" :expand-row-keys="expands4" >
 																<el-table-column type="expand" label="四级">
@@ -1711,7 +1848,7 @@
 																					</template>
 																				</el-table-column>
 																			</el-table>
-																			<!-- page tool -->
+																			page tool
 																			<el-col :span="24" class="toolbar">
 																				<el-pagination layout="total, prev, pager, next" 
 																					@size-change="function(val){handleDetailStoreEquipSizeChange4(val, props.row.sStore_ID)}" 
@@ -1742,7 +1879,7 @@
 																		</template>
 																	</el-table-column>
 																</el-table>
-																<!-- page tool -->
+																page tool
 																<el-col :span="24" class="toolbar">
 																	<el-pagination layout="total, prev, pager, next" 
 																		@size-change="function(val){handleDetailStoreEquipSizeChange3(val, props.row.sStore_ID)}" 
@@ -1773,7 +1910,7 @@
 															</template>
 														</el-table-column>
 													</el-table>
-													<!-- page tool -->
+													page tool
 													<el-col :span="24" class="toolbar">
 														<el-pagination layout="total, prev, pager, next" 
 															@size-change="function(val){handleDetailStoreEquipSizeChange2(val, props.row.sStore_ID)}" 
@@ -1804,7 +1941,7 @@
 												</template>
 											</el-table-column>
 										</el-table>
-										<!-- page tool -->
+										page tool
 										<el-col :span="24" class="toolbar">
 											<el-pagination layout="total, prev, pager, next" 
 												@size-change="function(val){handleDetailStoreEquipSizeChange1(val, props.row.sStore_ID)}" 
@@ -1820,7 +1957,7 @@
 							</el-table-column>
 							<el-table-column label="仓库名称" prop="sStoreType_Name">
 							</el-table-column>
-						</el-table>
+						</el-table> -->
 				    </el-tab-pane>
 				    
 				    <!-- <el-tab-pane label="器材列表" name="2">

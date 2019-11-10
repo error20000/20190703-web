@@ -191,10 +191,61 @@ var myvue = new Vue({
 							usedData.push({
 			                       name: node.sAid_Name,
 			                       aid: node.sAid_NO,
+			                       aidType: node.sAid_Type,
+			                       aidTypeName: node.sAid_TypeName,
 			                       value: [node.lAid_Lng, node.lAid_Lat, 1]
 				            });
 						}
+						
+						var tempHash = {};
 						for (var i = 0; i < usedData.length; i++) {
+							var node = usedData[i];
+							var key = node.aidType;
+							var name = node.aidTypeName;
+							if(!tempHash[key]){
+								tempHash[key] = {};
+								tempHash[key].name = name;
+								tempHash[key].data = [];
+							}
+							tempHash[key].data.push(node);
+						}
+						console.log(tempHash);
+						for ( var key in tempHash) {
+							var data = tempHash[key].data;
+							var name = tempHash[key].name;
+							var temp = {
+					                name: name,
+					                type: 'scatter',
+					                coordinateSystem: 'bmap',
+					                data: data,
+					                symbolSize: function (val) {
+					                    return val[2] > 10 ? val[2] / 10 : 10;
+					                },
+					                label: {
+					                    normal: {
+					                        formatter: '{b}',
+					                        position: 'right',
+					                        show: false
+					                    },
+					                    emphasis: {
+					                        show: true
+					                    }
+					                },
+						            tooltip: {
+						            	trigger: 'item',
+						            	formatter: function (obj) {
+						            		return '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+						                    + obj.name
+						                    + '</div>'
+						                    + '种类' + '：' + obj.seriesName + '<br>'
+						                    + '编码' + '：' + obj.data.aid + '<br>';
+						            	}
+						            }
+					            }
+								series.push(temp);
+								legendData.push(name);
+						}
+						/*for (var i = 0; i < usedData.length; i++) {
 							var node = usedData[i];
 							var temp = {
 				                name: node.name,
@@ -226,7 +277,7 @@ var myvue = new Vue({
 				            }
 							series.push(temp);
 							legendData.push(node.name);
-						}
+						}*/
 					});
 				});
 				

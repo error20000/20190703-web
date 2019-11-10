@@ -93,28 +93,33 @@ var myvue = new Vue({
 				expands2: [],
 				expands3: [],
 				expands4: [],
+				breadcrumbData: [],
 
+				storeData1: {},
 				storeEquipContainer1: false,
 				storeEquipData1: {},
 				detailStoreEquipTotal1: {},
 				detailStoreEquipPage1: {},
 				detailStoreEquipRows1: 10,
 				storeId1: '',
-				
+
+				storeData2: {},
 				storeEquipContainer2: false,
 				storeEquipData2: {},
 				detailStoreEquipTotal2: {},
 				detailStoreEquipPage2: {},
 				detailStoreEquipRows2: 10,
 				storeId2: '',
-				
+
+				storeData3: {},
 				storeEquipContainer3: false,
 				storeEquipData3: {},
 				detailStoreEquipTotal3: {},
 				detailStoreEquipPage3: {},
 				detailStoreEquipRows3: 10,
 				storeId3: '',
-				
+
+				storeData4: {},
 				storeEquipContainer4: false,
 				storeEquipData4: {},
 				detailStoreEquipTotal4: {},
@@ -888,19 +893,6 @@ var myvue = new Vue({
 					});
 				});
 			},
-			detailStoreTree: function(){
-				var self = this;
-				var params = {
-						sStore_Level1: this.storeId
-				};
-				ajaxReq(storeAllUrl, params, function(res){
-					console.log(res);
-					self.handleResQuery(res, function(){
-						self.detailStoreAll = res.data;
-						console.log(self.expands1);
-					});
-				});
-			},
 			detailEquipStore: function(){
 				var self = this;
 				var params = {
@@ -923,18 +915,54 @@ var myvue = new Vue({
 				this.detailStoreEquipPage = val;
 				this.detailEquipStore();
 			},
-			//store equip lv 1
-			expandChange1: function(row, expandedRows){
-				this.storeId1 = row.sStore_ID;
-				if(expandedRows.length <= 0){
-					return;
+			detailStoreTree: function(){
+				var self = this;
+				var params = {
+						sStore_Level1: this.storeId
+				};
+				ajaxReq(storeAllUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.detailStoreAll = res.data;
+						self.expandChange1(self.detailStoreAll[0]);
+					});
+				});
+			},
+			goback: function(item, index){
+				
+				this.breadcrumbData = this.breadcrumbData.slice(0, index);
+				
+				switch (index) {
+				case 0:
+					this.expandChange1(item.data);
+					break;
+				case 1:
+					this.expandChange2(item.data);
+					break;
+				case 2:
+					this.expandChange3(item.data);
+					break;
+				case 3:
+					this.expandChange4(item.data);
+					break;
+
+				default:
+					break;
 				}
+			},
+			//store equip lv 1
+			expandChange1: function(row){
+				this.storeEquipContainer1 = true;
+				this.storeEquipContainer2 = false;
+				this.storeEquipContainer3 = false;
+				this.storeEquipContainer4 = false;
+				this.storeId1 = row.sStore_ID;
+				this.breadcrumbData = [];
+				this.breadcrumbData.push({data: row, name: row.sStore_Name});
 				if(row.children){
-					this.storeEquipContainer1 = false;
+					this.$set(this.storeData1, row.sStore_ID, row.children);
 					return;
 				}
 				this.$set(this.detailStoreEquipPage1, row.sStore_ID, 1);
-				this.storeEquipContainer1 = true;
 				this.detailEquipStore1(row.sStore_ID);
 			},
 			detailEquipStore1: function(id){
@@ -960,17 +988,18 @@ var myvue = new Vue({
 				this.detailEquipStore1(id);
 			},
 			//store equip lv 2
-			expandChange2: function(row, expandedRows){
+			expandChange2: function(row){
+				this.storeEquipContainer1 = false;
+				this.storeEquipContainer2 = true;
+				this.storeEquipContainer3 = false;
+				this.storeEquipContainer4 = false;
 				this.storeId2 = row.sStore_ID;
-				if(expandedRows.length <= 0){
-					return;
-				}
+				this.breadcrumbData.push({data: row, name: row.sStore_Name});
 				if(row.children){
-					this.storeEquipContainer2 = false;
+					this.$set(this.storeData2, row.sStore_ID, row.children);
 					return;
 				}
 				this.$set(this.detailStoreEquipPage2, row.sStore_ID, 1);
-				this.storeEquipContainer2 = true;
 				this.detailEquipStore2(row.sStore_ID);
 			},
 			detailEquipStore2: function(id){
@@ -997,17 +1026,18 @@ var myvue = new Vue({
 				this.detailEquipStore2(id);
 			},
 			//store equip lv 3
-			expandChange3: function(row, expandedRows){
+			expandChange3: function(row){
+				this.storeEquipContainer1 = false;
+				this.storeEquipContainer2 = false;
+				this.storeEquipContainer3 = true;
+				this.storeEquipContainer4 = false;
 				this.storeId3 = row.sStore_ID;
-				if(expandedRows.length <= 0){
-					return;
-				}
+				this.breadcrumbData.push({data: row, name: row.sStore_Name});
 				if(row.children){
-					this.storeEquipContainer3 = false;
+					this.$set(this.storeData3, row.sStore_ID, row.children);
 					return;
 				}
 				this.$set(this.detailStoreEquipPage3, row.sStore_ID, 1);
-				this.storeEquipContainer3 = true;
 				this.detailEquipStore3(row.sStore_ID);
 			},
 			detailEquipStore3: function(id){
@@ -1035,17 +1065,19 @@ var myvue = new Vue({
 				this.detailEquipStore3(id);
 			},
 			//store equip lv 4
-			expandChange4: function(row, expandedRows){
+			expandChange4: function(row){
+				console.log(this.storeId4, this.detailStoreEquipPage4);
+				this.storeEquipContainer1 = false;
+				this.storeEquipContainer2 = false;
+				this.storeEquipContainer3 = false;
+				this.storeEquipContainer4 = true;
 				this.storeId4 = row.sStore_ID;
-				if(expandedRows.length <= 0){
-					return;
-				}
+				this.breadcrumbData.push({data: row, name: row.sStore_Name});
 				if(row.children){
-					this.storeEquipContainer4 = false;
+					this.$set(this.storeData4, row.sStore_ID, row.children);
 					return;
 				}
 				this.$set(this.detailStoreEquipPage4, row.sStore_ID, 1);
-				this.storeEquipContainer4 = true;
 				this.detailEquipStore4(row.sStore_ID);
 			},
 			detailEquipStore4: function(id){
