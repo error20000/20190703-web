@@ -1066,7 +1066,6 @@ var myvue = new Vue({
 			},
 			//store equip lv 4
 			expandChange4: function(row){
-				console.log(this.storeId4, this.detailStoreEquipPage4);
 				this.storeEquipContainer1 = false;
 				this.storeEquipContainer2 = false;
 				this.storeEquipContainer3 = false;
