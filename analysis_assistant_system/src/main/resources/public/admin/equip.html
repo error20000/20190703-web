@@ -215,13 +215,13 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:equip:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sEquip_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sEquip_ID" width="120" >
 					</el-table-column>
-					<el-table-column label="器材编码" prop="sEquip_NO" width="120" fixed="left">
+					<el-table-column label="器材编码" prop="sEquip_NO" width="120" >
 					</el-table-column>
 					<!-- <el-table-column label="器材名称" prop="sEquip_Name" width="120" fixed="left">
 					</el-table-column> -->
-					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter" fixed="left">
+					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter" >
 					</el-table-column>
 					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter">
 					</el-table-column>
@@ -235,7 +235,7 @@
 					        </el-popover>
 					     </template>
 					</el-table-column>
-					<el-table-column label="所属航标" prop="sEquip_AidID"  :formatter="aidFormatter">
+					<el-table-column label="所属航标" prop="sEquip_AidID" :fit="true" :width="listWidth.sEquip_AidID" class-name="table-drugs-groupno"  :formatter="aidFormatter">
 					</el-table-column>
 					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" :formatter="store1Formatter">
 					</el-table-column>

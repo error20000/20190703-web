@@ -39,6 +39,7 @@ var myvue = new Vue({
 					sEquip_StoreLv4: ''
 				},
 				list: [],
+				listWidth: {},
 				total: 0,
 				page: 1,
 				rows: 10,
@@ -69,14 +70,14 @@ var myvue = new Vue({
 				mfOptions: [],
 				
 				equipTypeOptions: {
-					EquipType_AIS: "EquipAIS", //AIS
-					EquipType_Radar: "EquipRadar", //雷达应答器
-					EquipType_Telemetry: "EquipTelemetry", //遥测遥控
-					EquipType_Battery:  "EquipBattery", //蓄电池	
-					EquipType_SolarEnergy:  "EquipSolarEnergy", //太阳能板
-					EquipType_SpareLamp:  "EquipSpareLamp", //备灯器	
-					EquipType_ViceLamp:  "EquipViceLamp", //副灯器	
-					EquipType_Lamp:  "EquipLamp" //灯器
+					EquipType_AIS: "EquipAIS", // AIS
+					EquipType_Radar: "EquipRadar", // 雷达应答器
+					EquipType_Telemetry: "EquipTelemetry", // 遥测遥控
+					EquipType_Battery:  "EquipBattery", // 蓄电池
+					EquipType_SolarEnergy:  "EquipSolarEnergy", // 太阳能板
+					EquipType_SpareLamp:  "EquipSpareLamp", // 备灯器
+					EquipType_ViceLamp:  "EquipViceLamp", // 副灯器
+					EquipType_Lamp:  "EquipLamp" // 灯器
 				},
 				aisMMSIXDictNo: 'EquipAisMMSIX',
 				aisMMSIXOptions: [],
@@ -97,7 +98,7 @@ var myvue = new Vue({
 				telemetryModeDictNo: 'EquipTelemetryMode',
 				telemetryModeOptions: [],
 
-				//add
+				// add
 				addFormVisible: false,
 				addLoading: false, 
 				addForm: {},
@@ -105,23 +106,22 @@ var myvue = new Vue({
 					sEquip_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					/*sEquip_Name: [
-		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ],*/
+					/*
+					 * sEquip_Name: [ { required: true, message: '请输入名称.',
+					 * trigger: 'blur' }, ],
+					 */
 					sEquip_Type: [
 		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
 		            ],
-		            /*sEquip_Manufacturer: [
-		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
-			        ],
-			        sEquip_MModel: [
-		                { required: true, message: '请输入厂方型号.', trigger: 'blur' },
-			        ],
-			        sEquip_MBrand: [
-		                { required: true, message: '请输入品牌.', trigger: 'blur' },
-			        ]*/
+		            /*
+					 * sEquip_Manufacturer: [ { required: true, message:
+					 * '请选择生产厂家.', trigger: 'blur' }, ], sEquip_MModel: [ {
+					 * required: true, message: '请输入厂方型号.', trigger: 'blur' }, ],
+					 * sEquip_MBrand: [ { required: true, message: '请输入品牌.',
+					 * trigger: 'blur' }, ]
+					 */
 				},
-				//edit
+				// edit
 				editFormVisible: false,
 				editLoading: false,
 				editForm: {},
@@ -129,27 +129,26 @@ var myvue = new Vue({
 					sEquip_NO: [
 		                { required: true, message: '请输入编码.', trigger: 'blur' },
 		              ],
-					/*sEquip_Name: [
-		                { required: true, message: '请输入名称.', trigger: 'blur' },
-		              ],*/
+					/*
+					 * sEquip_Name: [ { required: true, message: '请输入名称.',
+					 * trigger: 'blur' }, ],
+					 */
 					sEquip_Type: [
 		                { required: true, message: '请选择器材种类.', trigger: 'blur' },
 		            ],
-		            /*sEquip_Manufacturer: [
-		                { required: true, message: '请选择生产厂家.', trigger: 'blur' },
-			        ],
-			        sEquip_MModel: [
-		                { required: true, message: '请输入厂方型号.', trigger: 'blur' },
-			        ],
-			        sEquip_MBrand: [
-		                { required: true, message: '请输入品牌.', trigger: 'blur' },
-			        ]*/
+		            /*
+					 * sEquip_Manufacturer: [ { required: true, message:
+					 * '请选择生产厂家.', trigger: 'blur' }, ], sEquip_MModel: [ {
+					 * required: true, message: '请输入厂方型号.', trigger: 'blur' }, ],
+					 * sEquip_MBrand: [ { required: true, message: '请输入品牌.',
+					 * trigger: 'blur' }, ]
+					 */
 				},
-				//view
+				// view
 				viewFormVisible: false,
 				viewForm: {},
 				viewHistory: [],
-				//bind
+				// bind
 				nfcOptions: [],
 				bindFormVisible: false,
 				bindLoading: false,
@@ -170,6 +169,26 @@ var myvue = new Vue({
 				user: ''
 			}
 		},
+		watch:{
+
+			"list": function(){
+				let drugColumnMaxWidth = {
+						groupNo: 29
+				};
+				try {
+					for (let i = 1; i <  document.getElementsByClassName("table-drugs-groupno").length; i++){
+						const element =  document.getElementsByClassName("table-drugs-groupno")[i];
+						console.log(element, element.querySelectorAll('div'));
+						drugColumnMaxWidth.groupNo = drugColumnMaxWidth.groupNo < element.querySelectorAll('div')[0].offsetWidth
+							? element.querySelectorAll('div')[0].offsetWidth : drugColumnMaxWidth.groupNo;
+					}
+					// 避免宽度小数+1，计算变宽宽度+1，20是内边距；+5是为了容错
+					this.listWidth.sEquip_AidID = drugColumnMaxWidth.groupNo + 2 + 20;
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		},																																																																																																																														// } }}
 		methods: {
 			formatDate: function(date){
 				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
@@ -504,7 +523,7 @@ var myvue = new Vue({
 					});
 				});
 			},
-			//filter store
+			// filter store
 			handleFiltersInitOptions: function(){
 				var self = this;
 				var params = {};
@@ -569,7 +588,7 @@ var myvue = new Vue({
 				this.page = 1;
 				this.getList();
 			},
-			//query
+			// query
 			getList: function () {
 				if(!this.hasAuth('query')){
 					this.$message.error('没有权限！');
@@ -583,10 +602,10 @@ var myvue = new Vue({
 				for ( var key in this.filters) {
 					if(this.filters[key]){
 						if(key == 'store'){
-//							this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
-//							this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
-//							this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
-//							this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
+// this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
+// this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
+// this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
+// this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
 						}else{
 							params[key] = this.filters[key];
 						}
@@ -598,14 +617,15 @@ var myvue = new Vue({
 					self.handleResQuery(res, function(){
 						self.total = res.total;
 						self.list = res.data;
-						/*if(self.page != 1 && self.total <= (self.page - 1) * self.rows){
-							self.page = self.page - 1;
-							self.getList();
-						}*/
+						/*
+						 * if(self.page != 1 && self.total <= (self.page - 1) *
+						 * self.rows){ self.page = self.page - 1;
+						 * self.getList(); }
+						 */
 					});
 				});
 			},
-			//reset
+			// reset
 			reset: function(){
 				this.filters = {
 					sEquip_NO: '',
@@ -619,7 +639,7 @@ var myvue = new Vue({
 				};
 				this.getList();
 			},
-			//add
+			// add
 			handleAdd: function(){
 				if(!this.hasAuth('add')){
 					this.$message.error('没有权限！');
@@ -659,7 +679,7 @@ var myvue = new Vue({
 					}
 				});
 			},
-			//del
+			// del
 			handleDel: function(index, row){
 				if(!this.hasAuth('delete')){
 					this.$message.error('没有权限！');
@@ -680,7 +700,7 @@ var myvue = new Vue({
 				}).catch(() => {
 				});
 			},
-			//edit
+			// edit
 			handleEdit: function (index, row) {
 				if(!this.hasAuth('edit')){
 					this.$message.error('没有权限！');
@@ -701,17 +721,18 @@ var myvue = new Vue({
 						self.editForm.store.push(self.editForm.sEquip_StoreLv2); 
 						self.editForm.store.push(self.editForm.sEquip_StoreLv3); 
 						self.editForm.store.push(self.editForm.sEquip_StoreLv4); 
-						/*ajaxReq(oneUrl, params, function(res){
-							self.handleResQuery(res, function(){
-								self.editFormVisible = true;
-								self.editForm = Object.assign({}, self.editForm, res.data);
-								self.editForm.store = [];
-								self.editForm.store.push(self.editForm.sEquip_StoreLv1); 
-								self.editForm.store.push(self.editForm.sEquip_StoreLv2); 
-								self.editForm.store.push(self.editForm.sEquip_StoreLv3); 
-								self.editForm.store.push(self.editForm.sEquip_StoreLv4); 
-							});
-						});*/
+						/*
+						 * ajaxReq(oneUrl, params, function(res){
+						 * self.handleResQuery(res, function(){
+						 * self.editFormVisible = true; self.editForm =
+						 * Object.assign({}, self.editForm, res.data);
+						 * self.editForm.store = [];
+						 * self.editForm.store.push(self.editForm.sEquip_StoreLv1);
+						 * self.editForm.store.push(self.editForm.sEquip_StoreLv2);
+						 * self.editForm.store.push(self.editForm.sEquip_StoreLv3);
+						 * self.editForm.store.push(self.editForm.sEquip_StoreLv4);
+						 * }); });
+						 */
 					});
 				});
 			},
@@ -745,7 +766,7 @@ var myvue = new Vue({
 					}
 				});
 			},
-			//bind
+			// bind
 			handleDelBind: function(index, row){
 				this.$confirm('确定解除绑定吗? ', '提示', {
 					type: 'warning'
@@ -803,7 +824,7 @@ var myvue = new Vue({
 					}
 				});
 			},
-			//detail
+			// detail
 			handleView: function(index, row){
 				var params = {
 						sEquip_ID: row.sEquip_ID
@@ -819,27 +840,28 @@ var myvue = new Vue({
 						self.viewForm.store.push(self.viewForm.sEquip_StoreLv2); 
 						self.viewForm.store.push(self.viewForm.sEquip_StoreLv3); 
 						self.viewForm.store.push(self.viewForm.sEquip_StoreLv4); 
-						/*ajaxReq(oneUrl, params, function(res){
-							self.handleResQuery(res, function(){
-								self.viewFormVisible = true;
-								self.viewForm = Object.assign({}, self.viewForm, res.data);
-								self.viewForm.store = [];
-								self.viewForm.store.push(self.viewForm.sEquip_StoreLv1); 
-								self.viewForm.store.push(self.viewForm.sEquip_StoreLv2); 
-								self.viewForm.store.push(self.viewForm.sEquip_StoreLv3); 
-								self.viewForm.store.push(self.viewForm.sEquip_StoreLv4); 
-							});
-						});*/
+						/*
+						 * ajaxReq(oneUrl, params, function(res){
+						 * self.handleResQuery(res, function(){
+						 * self.viewFormVisible = true; self.viewForm =
+						 * Object.assign({}, self.viewForm, res.data);
+						 * self.viewForm.store = [];
+						 * self.viewForm.store.push(self.viewForm.sEquip_StoreLv1);
+						 * self.viewForm.store.push(self.viewForm.sEquip_StoreLv2);
+						 * self.viewForm.store.push(self.viewForm.sEquip_StoreLv3);
+						 * self.viewForm.store.push(self.viewForm.sEquip_StoreLv4);
+						 * }); });
+						 */
 					});
 				});
 				
 				ajaxReq(historyUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						console.log(res.data);
-						//显示
+						// 显示
 						self.viewFormVisible = true;
 						self.$nextTick(function(){
-							//chart
+							// chart
 							$('#chart').hide();
 							if(res.data.length > 1){
 								$('#chart').show();
@@ -885,7 +907,7 @@ var myvue = new Vue({
 						                        }
 						                    }
 						                });
-						                //baseTime += 3600;
+						                // baseTime += 3600;
 						            }
 						        });
 						        
@@ -935,7 +957,8 @@ var myvue = new Vue({
 						                bottom: 10,
 						                borderColor: 'transparent',
 						                backgroundColor: '#e2e2e2',
-						                handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
+						                handleIcon: 'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint
+																																																														// ignore:line
 						                handleSize: 20,
 						                handleStyle: {
 						                    shadowBlur: 6,
@@ -956,7 +979,9 @@ var myvue = new Vue({
 						                scale: true,
 						                axisLabel: {
 						                    formatter: function (val) {
-						                        //return Math.floor(Math.max(0, val - startTime)/3600) + ' h';
+						                        // return Math.floor(Math.max(0,
+												// val - startTime)/3600) + '
+												// h';
 						                    	return self.formatDate(val);
 						                    },
 						                    rotate: 50
@@ -983,7 +1008,7 @@ var myvue = new Vue({
 
 						        myChart.setOption($.extend(true, {}, option));
 							}
-							//time line
+							// time line
 							var str = '';
 							for (var i = res.data.length - 1; i >= 0 ; i--) {
 								var node = res.data[i];
@@ -1010,7 +1035,7 @@ var myvue = new Vue({
 			viewClose: function () {
 				this.viewFormVisible = false;
 			},
-			//has auth
+			// has auth
 			hasAuth: function(ref){
 				if(typeof this.authCache[ref] != "undefined"){
 					return this.authCache[ref];
@@ -1019,7 +1044,7 @@ var myvue = new Vue({
 				if(!this.$refs[ref]){
 					return flag;
 				}
-				let auth = this.$refs[ref].$el.getAttribute('auth'); //不能获取$attrs，会死循环
+				let auth = this.$refs[ref].$el.getAttribute('auth'); // 不能获取$attrs，会死循环
 				if(!auth){
 					return flag;
 				}
@@ -1032,7 +1057,7 @@ var myvue = new Vue({
 				this.authCache[ref] = flag;
 				return flag;
 			},
-			//excel
+			// excel
 			getExcel: function(){
 				var params = "";
 				for ( var key in this.filters) {
@@ -1045,7 +1070,7 @@ var myvue = new Vue({
 				}
 				parent.window.open(excelUrl + "?token=" + loginToken + params);
 			},
-			//import
+			// import
 			handleImportSuccess: function(res){
 				var self = this;
 				this.handleResOperate(res, function(){
@@ -1229,7 +1254,7 @@ var myvue = new Vue({
 			selsChange: function (sels) {
 				this.sels = sels;
 			},
-			//res
+			// res
 			toLoginHtml: function(){
                 localStorage.removeItem('loginUser');
                 parent.window.location.href = "login.html";

@@ -119,3 +119,25 @@ iframe {
 .tipColBorder{
    	border-right: solid 1px #fff;
 }
+
+.mytable table {
+	table-layout: fixed;
+}
+
+.mytable table th {
+	
+}
+
+.mytable table td {
+	word-wrap: break-word;
+	white-space: nowrap;
+	text-overflow: inherit !important;
+	overflow: inherit !important;
+}
+
+.el-table .cell {
+	white-space: nowrap !important;
+	text-overflow: inherit !important;
+	overflow: inherit !important;
+	display: inline-block;
+}
