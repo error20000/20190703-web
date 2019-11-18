@@ -110,7 +110,7 @@
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters">
-			    	<el-row>
+			    	<el-row style="float: right;margin-right: 329px;">
 			    	<el-form-item>
 					    <el-select v-model="filters.sEquip_StoreLv1" placeholder="一级仓库" @change="handleFiltersLV1Options(filters.sEquip_StoreLv1)">
 						    <el-option
@@ -214,18 +214,18 @@
 	    <el-tabs v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:equip:query" v-show="hasAuth('query')">
 				<!-- list -->
-				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sEquip_ID" width="120" >
+				<el-table :fit="true" size="mini" :data="list" highlight-current-row border  @selection-change="selsChange" style="width: 100%;" class="mytable" >
+					<el-table-column label="ID" prop="sEquip_ID"  fixed="left" :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="器材编码" prop="sEquip_NO" width="120" >
+					<el-table-column label="器材编码" prop="sEquip_NO"  fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
 					<!-- <el-table-column label="器材名称" prop="sEquip_Name" width="120" fixed="left">
 					</el-table-column> -->
-					<el-table-column label="器材种类" prop="sEquip_Type" :formatter="typeFormatter" >
+					<el-table-column label="器材种类" prop="sEquip_Type"  fixed="left" :formatter="typeFormatter" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter">
+					<el-table-column label="状态" prop="sEquip_Status" :formatter="statusFormatter" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 					</el-table-column>
-					<el-table-column label="NFC标签" prop="sEquip_NfcID" >
+					<el-table-column label="NFC标签" prop="sEquip_NfcID" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 						<template scope="scope">
 					        <el-popover trigger="hover" placement="top" v-for="item in nfcAllOptions" v-if="scope.row.sEquip_NfcID == item.sNfc_ID">
 					          <p>名称: {{ item.sNfc_Name }}</p>
@@ -235,17 +235,17 @@
 					        </el-popover>
 					     </template>
 					</el-table-column>
-					<el-table-column label="所属航标" prop="sEquip_AidID" :fit="true" :width="listWidth.sEquip_AidID" class-name="table-drugs-groupno"  :formatter="aidFormatter">
+					<el-table-column label="所属航标" prop="sEquip_AidID" :formatter="aidFormatter" :min-width="tableMaxWidth['6']" class-name="table-drugs-6">
 					</el-table-column>
-					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" :formatter="store1Formatter">
+					<el-table-column label="所属仓库一级" prop="sEquip_StoreLv1" :formatter="store1Formatter" :min-width="tableMaxWidth['7']" class-name="table-drugs-7">
 					</el-table-column>
-					<el-table-column label="所属仓库二级" prop="sEquip_StoreLv2" :formatter="store2Formatter">
+					<el-table-column label="所属仓库二级" prop="sEquip_StoreLv2" :formatter="store2Formatter" :min-width="tableMaxWidth['8']" class-name="table-drugs-8">
 					</el-table-column>
-					<el-table-column label="所属仓库三级" prop="sEquip_StoreLv3" :formatter="store3Formatter">
+					<el-table-column label="所属仓库三级" prop="sEquip_StoreLv3" :formatter="store3Formatter" :min-width="tableMaxWidth['9']" class-name="table-drugs-9">
 					</el-table-column>
-					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" :formatter="store4Formatter">
+					<el-table-column label="所属仓库四级" prop="sEquip_StoreLv4" :formatter="store4Formatter" :min-width="tableMaxWidth['10']" class-name="table-drugs-10">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dEquip_CreateDate" :formatter="function(r,c) {return formatDate(r.dEquip_CreateDate);}">
+					<el-table-column label="创建日期" prop="dEquip_CreateDate" :formatter="function(r,c) {return formatDate(r.dEquip_CreateDate);}" :min-width="tableMaxWidth['11']" class-name="table-drugs-11">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">

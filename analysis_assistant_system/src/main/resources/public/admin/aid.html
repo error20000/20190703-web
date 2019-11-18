@@ -150,13 +150,13 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column type="selection" width="55" align="center">
     				</el-table-column>
-					<el-table-column label="ID" prop="sAid_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sAid_ID" fixed="left"  :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="航标编码" prop="sAid_NO" fixed="left">
+					<el-table-column label="航标编码" prop="sAid_NO" fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="航标名称" prop="sAid_Name" fixed="left">
+					<el-table-column label="航标名称" prop="sAid_Name" fixed="left" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left">
+					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 						<template scope="scope">
 					        <el-popover trigger="hover" placement="top" v-for="item in nfcAllOptions" v-if="scope.row.sAid_NfcID == item.sNfc_ID">
 					          <p>名称: {{ item.sNfc_Name }}</p>
@@ -166,32 +166,32 @@
 					        </el-popover>
 					     </template>
 					</el-table-column>
-					<el-table-column label="航标状态" prop="sAid_Status" :formatter="statusFormatter">
+					<el-table-column label="航标状态" prop="sAid_Status" :formatter="statusFormatter" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 					</el-table-column>
-					<el-table-column label="纬度" prop="lAid_Lat" :formatter="latFormatter">
+					<el-table-column label="纬度" prop="lAid_Lat" :formatter="latFormatter" :min-width="tableMaxWidth['6']" class-name="table-drugs-6">
 					</el-table-column>
-					<el-table-column label="经度" prop="lAid_Lng" :formatter="lngFormatter">
+					<el-table-column label="经度" prop="lAid_Lng" :formatter="lngFormatter" :min-width="tableMaxWidth['7']" class-name="table-drugs-7">
 					</el-table-column>
-					<el-table-column label="归属航标站" prop="sAid_Station" :formatter="stationFormatter">
+					<el-table-column label="归属航标站" prop="sAid_Station" :formatter="stationFormatter" :min-width="tableMaxWidth['8']" class-name="table-drugs-8">
 					</el-table-column>
-					<el-table-column label="航标种类" prop="sAid_Type" :formatter="aidTypeFormatter">
+					<el-table-column label="航标种类" prop="sAid_Type" :formatter="aidTypeFormatter" :min-width="tableMaxWidth['9']" class-name="table-drugs-9">
 					</el-table-column>
-					<el-table-column label="航标图标" prop="sAid_Icon">
+					<el-table-column label="航标图标" prop="sAid_Icon" :min-width="tableMaxWidth['10']" class-name="table-drugs-10">
 						<template scope="scope">
 							<div style="width: 45px; height: 45px;" v-for="item in iconOptions" v-if="scope.row.sAid_Icon == item.sDict_NO">
 								<img v-if="item.sDict_Picture" :src="'/'+item.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="灯质" prop="sAid_Lighting" :formatter="lightFormatter">
+					<el-table-column label="灯质" prop="sAid_Lighting" :formatter="lightFormatter" :min-width="tableMaxWidth['11']" class-name="table-drugs-11">
 					</el-table-column>
-					<el-table-column label="航标属性" prop="sAid_Mark" :formatter="markFormatter">
+					<el-table-column label="航标属性" prop="sAid_Mark" :formatter="markFormatter" :min-width="tableMaxWidth['12']" class-name="table-drugs-12">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dAid_CreateDate" :formatter="(r,c) => {return formatDate(r.dAid_CreateDate);}">
+					<el-table-column label="创建日期" prop="dAid_CreateDate" :formatter="(r,c) => {return formatDate(r.dAid_CreateDate);}" :min-width="tableMaxWidth['13']" class-name="table-drugs-13">
 					</el-table-column>
-					<el-table-column label="始建时间" prop="dAid_BuildDate" :formatter="(r,c) => {return formatDate(r.dAid_BuildDate);}">
+					<el-table-column label="始建时间" prop="dAid_BuildDate" :formatter="(r,c) => {return formatDate(r.dAid_BuildDate);}" :min-width="tableMaxWidth['14']" class-name="table-drugs-14">
 					</el-table-column>
-					<el-table-column label="撤除时间" prop="dAid_DelDate" :formatter="(r,c) => {return formatDate(r.dAid_DelDate);}">
+					<el-table-column label="撤除时间" prop="dAid_DelDate" :formatter="(r,c) => {return formatDate(r.dAid_DelDate);}" :min-width="tableMaxWidth['15']" class-name="table-drugs-15">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="100" align="center">
 						<template scope="scope">

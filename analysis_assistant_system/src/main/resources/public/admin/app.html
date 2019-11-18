@@ -58,19 +58,19 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:app:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sApp_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sApp_ID" fixed="left" :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="应用编码" prop="sApp_NO" fixed="left">
+					<el-table-column label="应用编码" prop="sApp_NO" fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="应用名称" prop="sApp_Name" fixed="left">
+					<el-table-column label="应用名称" prop="sApp_Name" fixed="left" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="应用秘钥" prop="sApp_SecretKey">
+					<el-table-column label="应用秘钥" prop="sApp_SecretKey" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 					</el-table-column>
-					<el-table-column label="状态" prop="lApp_StatusFlag"  :formatter="(r,c) => {return r.lApp_StatusFlag ? '启用' : '禁用';}">
+					<el-table-column label="状态" prop="lApp_StatusFlag"  :formatter="(r,c) => {return r.lApp_StatusFlag ? '启用' : '禁用';}" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dApp_CreateDate" :formatter="(r,c) => {return formatDate(r.dApp_CreateDate);}">
+					<el-table-column label="创建日期" prop="dApp_CreateDate" :formatter="(r,c) => {return formatDate(r.dApp_CreateDate);}" :min-width="tableMaxWidth['6']" class-name="table-drugs-6">
 					</el-table-column>
-					<el-table-column label="创建者" prop="sApp_UserID" :formatter="userAddFormatter">
+					<el-table-column label="创建者" prop="sApp_UserID" :formatter="userAddFormatter" :min-width="tableMaxWidth['7']" class-name="table-drugs-7">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="220">
 						<template scope="scope">

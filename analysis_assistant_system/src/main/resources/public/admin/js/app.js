@@ -26,6 +26,15 @@ var myvue = new Vue({
 					sApp_Name: ''
 				},
 				list: [],
+				tableMaxWidth: {
+					'1': 0,
+					'2': 0,
+					'3': 0,
+					'4': 0,
+					'5': 0,
+					'6': 0,
+					'7': 0,
+				},
 				total: 0,
 				page: 1,
 				rows: 10,
@@ -77,9 +86,29 @@ var myvue = new Vue({
 				user: ''
 			}
 		},
+		watch:{
+
+			list: function(){
+				this.$nextTick(function () { 
+					for ( var key in this.tableMaxWidth) {
+						let tempMaxWidth = 0;
+						try {
+							for (let i = 0; i <  document.getElementsByClassName("table-drugs-"+key).length; i++){
+								let element =  document.getElementsByClassName("table-drugs-"+key)[i];
+								let width = element.querySelectorAll('div')[0].offsetWidth;
+								tempMaxWidth = tempMaxWidth < width ? width : tempMaxWidth;
+							}
+						} catch (error) {
+							console.error(error);
+						}
+						this.$set(this.tableMaxWidth, key, tempMaxWidth);
+					}
+	            });
+			}
+		},
 		methods: {
 			formatDate: function(date){
-				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm');
 			},
 			userAddFormatter: function(row){
 				var name = row.sApp_UserID;

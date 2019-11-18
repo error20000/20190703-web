@@ -66,15 +66,15 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:aidTypeMapIcon:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sAidTypeIcon_ID" >
+					<el-table-column label="ID" prop="sAidTypeIcon_ID"  :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="航标分类" prop="sAidTypeIcon_Type" :formatter="aidTypeFormatter">
+					<el-table-column label="航标分类" prop="sAidTypeIcon_Type" :formatter="aidTypeFormatter" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="分类状态" prop="sAidTypeIcon_Status" :formatter="statusFormatter">
+					<el-table-column label="分类状态" prop="sAidTypeIcon_Status" :formatter="statusFormatter" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="状态图标" prop="sAidTypeIcon_StatusIcon" :formatter="mapIconFormatter">
+					<el-table-column label="状态图标" prop="sAidTypeIcon_StatusIcon" :formatter="mapIconFormatter" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 					</el-table-column>
-					<el-table-column label="图标图片" prop="sAidTypeIcon_StatusIcon">
+					<el-table-column label="图标图片" prop="sAidTypeIcon_StatusIcon" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 						<template scope="scope">
 							<div style="width: 45px; height: 45px;" v-for="item in mapIconOptions" v-if="scope.row.sAidTypeIcon_StatusIcon == item.sDict_NO">
 								<img v-if="item.sDict_Picture" :src="'/'+item.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>

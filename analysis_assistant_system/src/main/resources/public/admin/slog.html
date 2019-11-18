@@ -85,33 +85,33 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:slog:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
-					<el-table-column label="ID" prop="sSLog_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sSLog_ID" fixed="left" :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="日志分类" prop="sSLog_Type" fixed="left">
+					<el-table-column label="日志分类" prop="sSLog_Type" fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="日志描述" prop="sSLog_Describe" width="150" fixed="left">
+					<el-table-column label="日志描述" prop="sSLog_Describe" fixed="left" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dSLog_CreateDate" width="150" :formatter="(r,c) => {return formatDate(r.dSLog_CreateDate);}">
+					<el-table-column label="创建日期" prop="dSLog_CreateDate" :formatter="(r,c) => {return formatDate(r.dSLog_CreateDate);}" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 					</el-table-column>
-					<el-table-column label="用户ID" prop="sSLog_UserID">
+					<el-table-column label="用户ID" prop="sSLog_UserID" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 					</el-table-column>
-					<el-table-column label="用户名" prop="sSLog_UserNick">
+					<el-table-column label="用户名" prop="sSLog_UserNick" :min-width="tableMaxWidth['6']" class-name="table-drugs-6">
 					</el-table-column>
-					<el-table-column label="访问IP" prop="sSLog_IP">
+					<el-table-column label="访问IP" prop="sSLog_IP" :min-width="tableMaxWidth['7']" class-name="table-drugs-7">
 					</el-table-column>
-					<el-table-column label="请求地址" prop="sSLog_Uri" width="200">
+					<el-table-column label="请求地址" prop="sSLog_Uri"  :min-width="tableMaxWidth['8']" class-name="table-drugs-8">
 					</el-table-column>
-					<el-table-column label="请求耗时(ms)" prop="lSLog_TimeConsume">
+					<el-table-column label="请求耗时(ms)" prop="lSLog_TimeConsume" :min-width="tableMaxWidth['9']" class-name="table-drugs-9">
 					</el-table-column>
-					<el-table-column label="模块" prop="sSLog_Module" width="150">
+					<el-table-column label="模块" prop="sSLog_Module"  :min-width="tableMaxWidth['10']" class-name="table-drugs-10">
 					</el-table-column>
-					<el-table-column label="方法名" prop="sSLog_Method">
+					<el-table-column label="方法名" prop="sSLog_Method" :min-width="tableMaxWidth['11']" class-name="table-drugs-11">
 					</el-table-column>
-					<el-table-column label="请求参数" prop="sSLog_Request" width="300">
+					<el-table-column label="请求参数" prop="sSLog_Request"  :min-width="tableMaxWidth['12']" class-name="table-drugs-12">
 					</el-table-column>
-					<el-table-column label="响应参数" prop="sSLog_Response" width="300">
+					<el-table-column label="响应参数" prop="sSLog_Response"  :min-width="tableMaxWidth['13']" class-name="table-drugs-13">
 					</el-table-column>
-					<el-table-column label="异常信息" prop="sSLog_Exception" width="300">
+					<el-table-column label="异常信息" prop="sSLog_Exception"  :min-width="tableMaxWidth['14']" class-name="table-drugs-14">
 					</el-table-column>
 
 					<!-- <el-table-column fixed="right" label="操作" width="180">

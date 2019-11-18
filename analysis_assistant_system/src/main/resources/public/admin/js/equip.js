@@ -39,7 +39,19 @@ var myvue = new Vue({
 					sEquip_StoreLv4: ''
 				},
 				list: [],
-				listWidth: {},
+				tableMaxWidth: {
+					'1': 0,
+					'2': 0,
+					'3': 0,
+					'4': 0,
+					'5': 0,
+					'6': 0,
+					'7': 0,
+					'8': 0,
+					'9': 0,
+					'10': 0,
+					'11': 0,
+				},
 				total: 0,
 				page: 1,
 				rows: 10,
@@ -171,27 +183,28 @@ var myvue = new Vue({
 		},
 		watch:{
 
-			"list": function(){
-				let drugColumnMaxWidth = {
-						groupNo: 29
-				};
-				try {
-					for (let i = 1; i <  document.getElementsByClassName("table-drugs-groupno").length; i++){
-						const element =  document.getElementsByClassName("table-drugs-groupno")[i];
-						console.log(element, element.querySelectorAll('div'));
-						drugColumnMaxWidth.groupNo = drugColumnMaxWidth.groupNo < element.querySelectorAll('div')[0].offsetWidth
-							? element.querySelectorAll('div')[0].offsetWidth : drugColumnMaxWidth.groupNo;
+			list: function(){
+				//return;
+				this.$nextTick(function () { 
+					for ( var key in this.tableMaxWidth) {
+						let tempMaxWidth = 0;//Number($("col[name='el-table_1_column_"+key+"']").eq(0).attr("width"));
+						try {
+							for (let i = 0; i <  document.getElementsByClassName("table-drugs-"+key).length; i++){
+								let element =  document.getElementsByClassName("table-drugs-"+key)[i];
+								let width = element.querySelectorAll('div')[0].offsetWidth;
+								tempMaxWidth = tempMaxWidth < width ? width : tempMaxWidth;
+							}
+						} catch (error) {
+							console.error(error);
+						}
+						this.$set(this.tableMaxWidth, key, tempMaxWidth);
 					}
-					// 避免宽度小数+1，计算变宽宽度+1，20是内边距；+5是为了容错
-					this.listWidth.sEquip_AidID = drugColumnMaxWidth.groupNo + 2 + 20;
-				} catch (error) {
-					console.error(error);
-				}
+	            });
 			}
 		},																																																																																																																														// } }}
 		methods: {
 			formatDate: function(date){
-				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm:ss');
+				return parent.window.formatDate(date, 'yyyy-MM-dd HH:mm');
 			},
 			formatDateStr: function(date, str){
 				return parent.window.formatDate(date, str);
@@ -602,10 +615,10 @@ var myvue = new Vue({
 				for ( var key in this.filters) {
 					if(this.filters[key]){
 						if(key == 'store'){
-// this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
-// this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
-// this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
-// this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
+							// this.filters.store[0] ? params.sEquip_StoreLv1 = this.filters.store[0] : "";
+							// this.filters.store[1] ? params.sEquip_StoreLv2 = this.filters.store[1] : "";
+							// this.filters.store[2] ? params.sEquip_StoreLv3 = this.filters.store[2] : "";
+							// this.filters.store[3] ? params.sEquip_StoreLv4 = this.filters.store[3] : "";
 						}else{
 							params[key] = this.filters[key];
 						}
@@ -622,6 +635,11 @@ var myvue = new Vue({
 						 * self.rows){ self.page = self.page - 1;
 						 * self.getList(); }
 						 */
+						/*self.$nextTick(function () {
+							setTimeout(() => {
+								self.changeTableWidth();
+							}, 1000);
+						});*/
 					});
 				});
 			},

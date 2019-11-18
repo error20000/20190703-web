@@ -58,11 +58,11 @@
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:group:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable">
-					<el-table-column label="ID" prop="sGroup_ID" width="120">
+					<el-table-column label="ID" prop="sGroup_ID"  :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="分组名称" prop="sGroup_Name">
+					<el-table-column label="分组名称" prop="sGroup_Name" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="系统默认" prop="lGroup_SysFlag" :formatter="(r,c) => {return r.lGroup_SysFlag ? '是' : '';}">
+					<el-table-column label="系统默认" prop="lGroup_SysFlag" :formatter="(r,c) => {return r.lGroup_SysFlag ? '是' : '';}" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="220">
 						<template scope="scope">

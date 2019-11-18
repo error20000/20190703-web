@@ -64,39 +64,39 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column type="selection" width="55" align="center">
     				</el-table-column>
-					<el-table-column label="ID" prop="sDict_ID" width="120" fixed="left">
+					<el-table-column label="ID" prop="sDict_ID" fixed="left" :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="字典编码" prop="sDict_NO" width="150" fixed="left">
+					<el-table-column label="字典编码" prop="sDict_NO" fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="字典名称" prop="sDict_Name" width="150" fixed="left">
+					<el-table-column label="字典名称" prop="sDict_Name" fixed="left" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="所属分类" prop="sDict_DictTypeNO" width="150" :formatter="dictTypeFormatter">
+					<el-table-column label="所属分类" prop="sDict_DictTypeNO" :formatter="dictTypeFormatter" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 					</el-table-column>
-					<el-table-column label="字典描述" prop="sDict_Describe">
+					<el-table-column label="字典描述" prop="sDict_Describe" :min-width="tableMaxWidth['5']" class-name="table-drugs-5">
 					</el-table-column>
-					<el-table-column label="字典图片" prop="sDict_Picture">
+					<el-table-column label="字典图片" prop="sDict_Picture" :min-width="tableMaxWidth['6']" class-name="table-drugs-6">
 						<template scope="scope">
 							<div style="width: 45px; height: 45px;">
 								<img v-if="scope.row.sDict_Picture" :src="'/'+scope.row.sDict_Picture" style="max-width: 100%;max-height: 100%;"/>
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column label="字典链接" prop="sDict_Link" width="100">
+					<el-table-column label="字典链接" prop="sDict_Link"  :min-width="tableMaxWidth['7']" class-name="table-drugs-7">
 					</el-table-column>
-					<el-table-column label="字典颜色" prop="sDict_Color" width="100">
+					<el-table-column label="字典颜色" prop="sDict_Color"  :min-width="tableMaxWidth['8']" class-name="table-drugs-8">
 						<template scope="scope">
 							<el-tag v-if="scope.row.sDict_Color" :color="scope.row.sDict_Color" :disable-transitions="true" style="color: #ffffff;">
 							{{scope.row.sDict_Color}}
 							</el-tag>
 						</template>
 					</el-table-column>
-					<el-table-column label="创建日期" prop="dDict_CreateDate" :formatter="(r,c) => {return formatDate(r.dDict_CreateDate);}">
+					<el-table-column label="创建日期" prop="dDict_CreateDate" :formatter="(r,c) => {return formatDate(r.dDict_CreateDate);}" :min-width="tableMaxWidth['9']" class-name="table-drugs-9">
 					</el-table-column>
-					<el-table-column label="创建者" prop="sDict_UserID" :formatter="userAddFormatter">
+					<el-table-column label="创建者" prop="sDict_UserID" :formatter="userAddFormatter" :min-width="tableMaxWidth['10']" class-name="table-drugs-10">
 					</el-table-column>
-					<el-table-column label="更新日期" prop="dDict_UpdateDate" :formatter="(r,c) => {return formatDate(r.dDict_UpdateDate);}">
+					<el-table-column label="更新日期" prop="dDict_UpdateDate" :formatter="(r,c) => {return formatDate(r.dDict_UpdateDate);}" :min-width="tableMaxWidth['11']" class-name="table-drugs-11">
 					</el-table-column>
-					<el-table-column label="更新者" prop="sDict_UpdateUserID" :formatter="userModFormatter">
+					<el-table-column label="更新者" prop="sDict_UpdateUserID" :formatter="userModFormatter" :min-width="tableMaxWidth['12']" class-name="table-drugs-12">
 					</el-table-column>
 					<el-table-column fixed="right" label="操作" width="180">
 						<template scope="scope">
