@@ -30,7 +30,8 @@ iframe {
   text-align: center;
   background: #20a0ff;
   color: #333;
-  z-index: 99;
+  z-index: 99;    
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 }
 .el-aside {
   background: #d3dce6;
@@ -147,4 +148,29 @@ iframe {
 
 .el-table th>.cell {
 	width: initial !important;
+}
+
+
+.el-dialog__header{
+    border-bottom: 1px solid #dcdfe6;
+}
+
+
+.body{
+	background: #f4f4f4;
+}
+.section{
+	padding: 20px 10px;
+}
+.filter{
+	background: #ffffff;
+    border-radius: 4px;
+    padding: 0px 10px;
+}
+
+.el-tabs{
+    background: #fff;
+    margin-top: 20px;
+    border-radius: 4px;
+    padding: 0px 10px 10px 10px;
 }

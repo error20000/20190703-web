@@ -92,7 +92,7 @@
 }
   </style>
 </head>
-<body class="animated fadeIn">
+<body class="animated fadeIn body">
   <div id="app">
   
   	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
@@ -102,9 +102,9 @@
 	   </div>
     </div>
     
-    <section style="padding: 20px;" v-show="preloading">
+    <section class="section" v-show="preloading">
 		<!-- filter -->
-		<el-row>
+		<el-row class="filter">
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-col :span="24">
 			<el-tabs value="filter" >
