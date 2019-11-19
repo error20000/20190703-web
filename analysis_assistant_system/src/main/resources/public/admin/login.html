@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>管理后台</title>
+  <title>航标作业智能分析与辅助系统</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" >
   <!-- 引入样式 -->
   <link rel="stylesheet" href="js/element-2.4.11/theme-chalk/index.css">
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/login.css">
 </head>
-<body>
+<body class="body">
   <div id="app">
   	
   	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
@@ -18,22 +18,41 @@
  	    <p class="el-loading-text">Loading...</p>
 	   </div>
     </div>
+    <el-container v-show="preloading">
+	    <el-header class="header">
+		    <div class="logo">
+		    	<a href="index.html" title="航标作业智能分析与辅助系统">
+		    		<img src="/admin/images/logo24.png" width="100%" height="100%" />
+		    	</a>
+		    	<span class="logo_text">航标作业智能分析与辅助系统</span>
+		    </div>
+	    </el-header>
+	    <el-main class="main">
+	    		<div class="login-img">
+		    		<img src="/admin/images/logo24.png" width="100%" height="100%" />
+	    		</div>
+	    		<div class="login-box">
+	    			<div class="login-container">
+					    <h3 class="title">账号登录</h3>
+				     	<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px" class="demo-ruleForm">
+						    <el-form-item prop="username">
+						      <el-input type="text" v-model="ruleForm.username" prefix-icon="fa fa-user" placeholder="用户名">
+						      </el-input>
+						    </el-form-item>
+						    <el-form-item prop="password">
+						      <el-input type="password" v-model="ruleForm.password" prefix-icon="fa fa-key" placeholder="密码" @keyup.native.enter="handleSubmit">
+						      </el-input>
+						    </el-form-item>
+						    <!-- <el-checkbox v-model="checked" checked class="remember">remember password </el-checkbox> -->
+						    <el-form-item style="width:100%;">
+						      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" :disabled="logining">登录</el-button>
+						    </el-form-item>
+					  	</el-form>
+	    			</div>
+	    		</div>
+	    </el-main>
+	</el-container>
   
-     <el-form v-show="preloading" :model="ruleForm" :rules="rules" ref="ruleForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-	    <h3 class="title">账号登录</h3>
-	    <el-form-item prop="username">
-	      <el-input type="text" v-model="ruleForm.username" prefix-icon="fa fa-user" placeholder="用户名">
-	      </el-input>
-	    </el-form-item>
-	    <el-form-item prop="password">
-	      <el-input type="password" v-model="ruleForm.password" prefix-icon="fa fa-key" placeholder="密码" @keyup.native.enter="handleSubmit">
-	      </el-input>
-	    </el-form-item>
-	    <!-- <el-checkbox v-model="checked" checked class="remember">remember password </el-checkbox> -->
-	    <el-form-item style="width:100%;">
-	      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" :disabled="logining">登录</el-button>
-	    </el-form-item>
-	  </el-form>
 	  
   </div>
   

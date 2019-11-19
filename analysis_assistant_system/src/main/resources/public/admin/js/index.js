@@ -16,6 +16,8 @@ new Vue({
           menus: [],
           menuFuns: [],
       	  preloading: false,
+      	  activeIndex: "",
+      	  activeSrc: "",
           //pwd
           pwdFormVisible: false,
           pwdLoading: false,
@@ -57,7 +59,8 @@ new Vue({
 					break;
 				}
 			}
-			$('.content-iframe').attr('src', url);
+			//$('.content-iframe').attr('src', url);
+			this.activeSrc = url;
 		},
         //update pwd
         handlepwdChange: function() {
@@ -159,6 +162,7 @@ new Vue({
 					self.menusOrigin = menus;  //menu array
 					self.menuFuns = res.data.funs;
 					gMenuFuns = self.menuFuns; //全局
+					//默认选中
 				}
 			});
         },

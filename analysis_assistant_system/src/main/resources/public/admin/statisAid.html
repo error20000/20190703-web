@@ -29,7 +29,7 @@
 	
   </style>
 </head>
-<body class="animated fadeIn">
+<body class="animated fadeIn body">
   <div id="app">
   	
   	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
@@ -39,9 +39,9 @@
 	   </div>
     </div>
     
-    <section style="padding: 20px;" v-show="preloading">
+    <section class="section" v-show="preloading">
     
-	    <el-tabs v-model="activeTab" >
+	    <el-tabs class="result" v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:map:query" v-show="hasAuth('query')">
 				
 				<el-card class="box-card">

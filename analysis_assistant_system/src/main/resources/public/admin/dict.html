@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/fontawesome5.6.3/css/all.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
-<body class="animated fadeIn">
+<body class="animated fadeIn body">
   <div id="app">
   
   	<div v-show="!preloading" class="el-loading-mask" style="background-color: rgba(255,255,255,1);">
@@ -17,9 +17,9 @@
 	   </div>
     </div>
     
-    <section style="padding: 20px;" v-show="preloading">
+    <section class="section" v-show="preloading">
 		<!-- filter -->
-		<el-row>
+		<el-row class="filter">
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
 			<el-col :span="24">
 			<el-tabs value="filter" >
@@ -58,7 +58,7 @@
 		</el-col>
 		</el-row>
 		
-	    <el-tabs v-model="activeTab" >
+	    <el-tabs class="result" v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:dict:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >

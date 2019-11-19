@@ -77,11 +77,15 @@
     font-weight: bold;
     text-shadow: 0px 4px 4px #000;
     transform: translate(-50%,-50%);
-    top: 50%;
+    /* top: 50%; */
     left: 50%;
     position: relative;
 }
-/* ���ص�ͼbmap���½�logo
-.anchorBL{ 
-	display:none; 
-}  */
+.clock{
+	margin-top: -10px;
+	max-width: 100%;
+    max-height: 100%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}

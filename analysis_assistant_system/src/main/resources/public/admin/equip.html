@@ -211,7 +211,7 @@
 		</el-col>
 		</el-row>
 		
-	    <el-tabs v-model="activeTab" >
+	    <el-tabs class="result" v-model="activeTab" >
 		    <el-tab-pane label="结果" name="table" disabled ref="query" auth="sys:equip:query" v-show="hasAuth('query')">
 				<!-- list -->
 				<el-table :fit="true" size="mini" :data="list" highlight-current-row border  @selection-change="selsChange" style="width: 100%;" class="mytable" >

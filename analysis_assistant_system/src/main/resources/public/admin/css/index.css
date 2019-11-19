@@ -26,12 +26,12 @@ iframe {
 }
 
 .el-header {
-  line-height: 60px;
   text-align: center;
-  background: #20a0ff;
+  background: #004b91;
   color: #333;
   z-index: 99;    
   box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+  box-sizing: border-box;
 }
 .el-aside {
   background: #d3dce6;
@@ -47,6 +47,7 @@ iframe {
   text-align: right;
   padding-right: 35px;
   float: right;
+  line-height: 60px;
 }
 .el-header .userinfo .userinfo-inner {
   cursor: pointer;
@@ -60,9 +61,12 @@ iframe {
   float: right;
 }
 .el-header .logo {
+  width: 280px;
   height: 60px;
   font-size: 16px;
   border-color: rgba(238, 241, 146, 0.3);
+  float: left;
+  line-height: 60px;
 }
 .el-header .logo a {
   width: 100%;
@@ -71,6 +75,20 @@ iframe {
   color: #fff;
   display: inline-block;
 }
+
+.el-header .logo_text{
+	text-align: left;
+    color: #f2f2f2;
+    float: right;
+}
+
+.el-header .menu{
+	display: inline-block;
+}
+.el-menu-demo{
+	border-bottom: none !important;
+}
+
 .main {
   width: 100%;
   display: flex;
@@ -79,6 +97,7 @@ iframe {
   bottom: 0px;
   padding: 0px;
   overflow: hidden;
+  background: #f4f4f4;
 }
 
 .grid-content{
@@ -155,6 +174,10 @@ iframe {
     border-bottom: 1px solid #dcdfe6;
 }
 
+.toolbar{
+	margin-top: 10px;
+}
+
 
 .body{
 	background: #f4f4f4;
@@ -168,7 +191,7 @@ iframe {
     padding: 0px 10px;
 }
 
-.el-tabs{
+.result{
     background: #fff;
     margin-top: 20px;
     border-radius: 4px;
