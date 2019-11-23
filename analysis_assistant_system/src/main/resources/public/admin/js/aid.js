@@ -1025,8 +1025,11 @@ var myvue = new Vue({
 			this.handleNfcAllOptions();
 			this.handleStatusOptions();
 			this.handleEquipTypeOptions();
-			this.getList();
 			this.handleUserOptions();
+			let self = this;
+			setTimeout(function() {
+				self.getList();
+			}, 1000);
 		}
 	  });
 	

@@ -150,13 +150,13 @@
 				<el-table size="mini" :data="list" highlight-current-row border v-loading="listLoading" @selection-change="selsChange" style="width: 100%;" class="mytable" >
 					<el-table-column type="selection" width="55" align="center">
     				</el-table-column>
-					<el-table-column label="ID" prop="sAid_ID" fixed="left"  :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
+					<el-table-column label="ID" prop="sAid_ID" :min-width="tableMaxWidth['1']" class-name="table-drugs-1">
 					</el-table-column>
-					<el-table-column label="航标编码" prop="sAid_NO" fixed="left" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
+					<el-table-column label="航标编码" prop="sAid_NO" :min-width="tableMaxWidth['2']" class-name="table-drugs-2">
 					</el-table-column>
-					<el-table-column label="航标名称" prop="sAid_Name" fixed="left" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
+					<el-table-column label="航标名称" prop="sAid_Name" :min-width="tableMaxWidth['3']" class-name="table-drugs-3">
 					</el-table-column>
-					<el-table-column label="NFC标签" prop="sAid_NfcID" fixed="left" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
+					<el-table-column label="NFC标签" prop="sAid_NfcID" :min-width="tableMaxWidth['4']" class-name="table-drugs-4">
 						<template scope="scope">
 					        <el-popover trigger="hover" placement="top" v-for="item in nfcAllOptions" v-if="scope.row.sAid_NfcID == item.sNfc_ID">
 					          <p>名称: {{ item.sNfc_Name }}</p>

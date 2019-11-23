@@ -17,7 +17,7 @@ new Vue({
           menuFuns: [],
       	  preloading: false,
       	  activeIndex: "",
-      	  activeSrc: "",
+      	  activeSrc: "welcome.html",
           //pwd
           pwdFormVisible: false,
           pwdLoading: false,

@@ -110,7 +110,7 @@
 			<el-tabs value="filter" >
 			    <el-tab-pane label="筛选" name="filter" disabled>
 			    <el-form size="mini" :inline="true" :model="filters">
-			    	<el-row style="float: right;margin-right: 329px;">
+			    	<el-row style="float: right;">
 			    	<el-form-item>
 					    <el-select v-model="filters.sEquip_StoreLv1" placeholder="一级仓库" @change="handleFiltersLV1Options(filters.sEquip_StoreLv1)">
 						    <el-option
@@ -151,8 +151,6 @@
 						    </el-option>
 					    </el-select>
 					</el-form-item>
-					</el-row>
-					<el-row style="float: right;">
 					<el-form-item>
 						  <el-input v-model="filters.sEquip_NO" placeholder="请输入器材编码" clearable></el-input>
 					</el-form-item>
@@ -193,6 +191,10 @@
 						    </el-option>
 					    </el-select>
 					</el-form-item>
+					
+					</el-row>
+					<el-row style="position: absolute;top: 47px; right: 0;">
+					
 					<el-form-item>
 						<el-button type="primary" title="查询" @click="query" icon="fa fa-search"></el-button>
 						<el-button @click="reset"  title="重置" icon="fas fa-redo"></el-button>

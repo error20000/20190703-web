@@ -99,7 +99,7 @@ body {
 	width: 600px;
     height: 100%;
     float: left;
-    padding: 0 50px;
+    /* padding: 0 50px; */
 }
 
 .login-box{
