@@ -4,7 +4,8 @@ var logoutUrl = baseUrl + "api/user/logout";
 var isLoginUrl = baseUrl + "api/user/isLogin";
 var authUrl = baseUrl + "api/user/authMenu";
 var gMenuFuns = [];
-var pwdReg = /^[0-9A-Za-z]{8,16}$/;
+var pwdReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+var pwdRegStr = "（密码至少包含 数字和英文，长度6-20）";
 
 new Vue({
     el: '#app',
@@ -19,17 +20,26 @@ new Vue({
       	  activeIndex: "",
       	  activeSrc: "welcome.html",
           //pwd
+		  pwdReg: pwdReg,
+		  pwdRegStr: pwdRegStr,
           pwdFormVisible: false,
           pwdLoading: false,
           pwdFormRules: {
             oldPwd: [
               { required: true, message: "请输入旧密码.", trigger: "blur" }
             ],
-            newPwd: [{ required: true, message: "请输入新密码.", trigger: "blur" }],
+            newPwd: [{ required: true, message: "请输入新密码.", trigger: "blur" },
+				{ validator: (rule, value, callback) => {
+			          if (this.pwdReg && !this.pwdReg.test(this.pwdForm.newPwd) ) {
+			            callback(new Error('密码格式不正确!'+this.pwdRegStr));
+			          } else {
+			            callback();
+			          }
+				}, trigger: 'blur' }],
             newPwd2: [
               { required: true, message: "再次输入新密码.", trigger: "blur" },
               {
-                validator: function(rule, value, callback) {
+                validator: (rule, value, callback) => {
                   if (value !== this.pwdForm.newPwd) {
                     callback(new Error("密码不一致!"));
                   } else {

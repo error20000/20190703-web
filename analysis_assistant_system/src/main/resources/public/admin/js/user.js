@@ -27,6 +27,7 @@ var userUpdateStationUserUrl = baseUrl + "api/user/updateStation";
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
 var pwdReg = parent.window.pwdReg || "";
+var pwdRegStr = parent.window.pwdRegStr || "";
 
 
 var myvue = new Vue({
@@ -65,6 +66,7 @@ var myvue = new Vue({
 				
 				groupOptions: [],
 				pwdReg: pwdReg,
+				pwdRegStr: pwdRegStr,
 				aidOptions: [],
 				stationDictNo: 'AidStation',
 				stationOptions: [],
@@ -87,8 +89,8 @@ var myvue = new Vue({
 					          }
 						}, trigger: 'blur' },
 						{ validator: (rule, value, callback) => {
-					          if (!this.pwdReg.test(this.addForm.sUser_PassWord) ) {
-					            callback(new Error('密码格式不正确!'));
+					          if (this.pwdReg && !this.pwdReg.test(this.addForm.sUser_PassWord) ) {
+					            callback(new Error('密码格式不正确!'+this.pwdRegStr));
 					          } else {
 					            callback();
 					          }
@@ -135,8 +137,8 @@ var myvue = new Vue({
 					          }
 						}, trigger: 'blur' },
 						{ validator: (rule, value, callback) => {
-					          if (!this.pwdReg.test(this.pwdForm.sUser_PassWord) ) {
-					            callback(new Error('密码格式不正确!'));
+					          if (this.pwdReg && !this.pwdReg.test(this.pwdForm.sUser_PassWord) ) {
+					            callback(new Error('密码格式不正确!'+this.pwdRegStr));
 					          } else {
 					            callback();
 					          }
