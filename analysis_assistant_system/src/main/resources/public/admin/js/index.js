@@ -4,7 +4,7 @@ var logoutUrl = baseUrl + "api/user/logout";
 var isLoginUrl = baseUrl + "api/user/isLogin";
 var authUrl = baseUrl + "api/user/authMenu";
 var gMenuFuns = [];
-var pwdReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+var pwdReg = '';///^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
 var pwdRegStr = "（密码至少包含 数字和英文，长度6-20）";
 
 new Vue({
@@ -87,9 +87,9 @@ new Vue({
           this.$refs.pwdForm.resetFields();
         },
         pwdChange: function() {
-          this.$refs.pwdForm.validate(function(valid){
+          this.$refs.pwdForm.validate((valid) => {
             if (valid) {
-              this.$confirm('确定提交吗?', '提示', {}).then(function() {
+              this.$confirm('确定提交吗?', '提示', {}).then(() =>{
                 var params = Object.assign({}, this.pwdForm);
                 delete params.newPwd2;
                 var self = this;
@@ -121,7 +121,7 @@ new Vue({
 						})
 					}else{
 						self.$message({
-							message: '失败',
+							message: '失败: '+res.msg,
 							type: 'warning'
 						})
 					}
@@ -134,7 +134,7 @@ new Vue({
         logout: function() {
           this.$confirm("确定退出系统吗？", "提示", {
             //type: 'warning'
-          }).then(function() {
+          }).then(() => {
               var self = this;
               var params = {};
               ajaxReq(logoutUrl, params, function(res) {
@@ -142,7 +142,7 @@ new Vue({
                 	parent.window.location.href = "login.html";
                 }else{
                 	self.$message({
-						message: '失败',
+						message: '失败: '+res.msg,
 						type: 'warning'
 					});
                 }

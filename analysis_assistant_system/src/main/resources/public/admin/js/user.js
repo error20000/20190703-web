@@ -81,13 +81,13 @@ var myvue = new Vue({
 		              ],
 		            sUser_PassWord: [
 		                { required: true, message: '请输入密码.', trigger: 'blur' },
-						{ validator: (rule, value, callback) => {
+						/*{ validator: (rule, value, callback) => {
 					          if (this.addForm.sUser_PassWord2 && value !== this.addForm.sUser_PassWord2 ) {
 					            callback(new Error('两次输入密码不匹配!'));
 					          } else {
 					            callback();
 					          }
-						}, trigger: 'blur' },
+						}, trigger: 'blur' },*/
 						{ validator: (rule, value, callback) => {
 					          if (this.pwdReg && !this.pwdReg.test(this.addForm.sUser_PassWord) ) {
 					            callback(new Error('密码格式不正确!'+this.pwdRegStr));
@@ -129,13 +129,13 @@ var myvue = new Vue({
 				pwdFormRules: {
 		            sUser_PassWord: [
 		                { required: true, message: '请输入密码.', trigger: 'blur' },
-						{ validator: (rule, value, callback) => {
+						/*{ validator: (rule, value, callback) => {
 					          if (this.pwdForm.sUser_PassWord2 && value !== this.pwdForm.sUser_PassWord2 ) {
 					            callback(new Error('两次输入密码不匹配!'));
 					          } else {
 					            callback();
 					          }
-						}, trigger: 'blur' },
+						}, trigger: 'blur' },*/
 						{ validator: (rule, value, callback) => {
 					          if (this.pwdReg && !this.pwdReg.test(this.pwdForm.sUser_PassWord) ) {
 					            callback(new Error('密码格式不正确!'+this.pwdRegStr));

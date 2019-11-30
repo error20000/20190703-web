@@ -43,6 +43,10 @@ public class Config {
 	
 	public String tokenSecretKey = "123456700"; //token密钥
 	
+
+	public String pwdReg = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$"; //密码正则表达式
+	public String pwdRegStr = "（密码至少包含 数字和英文，长度6-20）"; //密码格式提示
+	
 	//public String weathUrl = "http://123.57.38.38:8091/?action=single&lat=29.730078774781184&lng=122.14201354980071&productName={productName}&overlayName={overlayName}"; //天气抓取
 	public String weathUrl = "http://htzx.yunh.xyz:8080/enavis/windy/getWeatherData/{lng}/{lat}/{productName}/{overlayName}/{dataTime}";
 }
