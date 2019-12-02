@@ -733,6 +733,354 @@ var myvue = new Vue({
 				this.resizeChart(chartId);
 			},
 
+			//queryEquipLife 
+			chartEquipLife: function(filter){
+				var chartId = "chartEquipLife";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
+		        myChart.clear();
+
+				var data = {};
+				var allData = {};
+				var xAxisData = [];
+				var legendData = [];
+				var series = [];
+				
+				var indicator = [];
+				var radarMax = 0;
+				var seriesRadar = [];
+
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipLifeUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						if(res.data.length == 0){
+							return;
+						}
+						var temp = {}
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							node.sEquip_StationName = node.sEquip_StationName ? node.sEquip_StationName : '未知';
+							node.sEquip_MBrand = node.sEquip_MBrand ? node.sEquip_MBrand : '未知';
+							var key = node.sELog_EquipID;
+							if(node.sELog_Type == '9'){ //入库 取最小值
+								if(!temp[key]){
+									temp[key] = {
+										start: node.dELog_CreateDate
+									};
+								}else{
+									var start = temp[key].start ? temp[key].start : 0;
+									if(start == 0 || start > node.dELog_CreateDate){
+										temp[key].start = node.dELog_CreateDate;
+									}
+								}
+							}else if(node.sELog_Type == '8'){ //报废  取最大值 
+								if(!temp[key]){
+									temp[key] = {
+										end: node.dELog_CreateDate
+									};
+								}else{
+									var end = temp[key].end ? temp[key].end : 0;
+									if(end == 0 || end < node.dELog_CreateDate){
+										temp[key].end = node.dELog_CreateDate;
+									}
+								}
+							}
+							temp[key].node = node;
+						}
+						
+						var hash = {};
+						for (var okey in temp) {
+							var start = temp[okey].start;
+							var end = temp[okey].end;
+							var node = temp[okey].node;
+							var life = (end - start)/(365*24*3600*1000);
+							radarMax = radarMax < life ? life : radarMax;
+							//海区总平均寿命
+							var key = node.sEquip_StationName;
+							if(!hash[key]){
+								allData[key] = {
+									station: node.sEquip_StationName,
+									total: life,
+									count: 1,
+									avg: Number(Number(life / 1).toFixed(2))
+								};
+								hash[key] = 1;
+							}else{
+								allData[key].total = allData[key].total + life;
+								allData[key].count = allData[key].count + 1;
+								allData[key].avg = Number(Number(allData[key].total / allData[key].count).toFixed(2));
+							}
+							//海区某品牌平均寿命
+							var key2 = node.sEquip_StationName+"_"+node.sEquip_MBrand;
+							if(!hash[key2]){
+								data[key2] = {
+									station: node.sEquip_StationName,
+									brand: node.sEquip_MBrand,
+									total: life,
+									count: 1,
+									avg: Number(Number(life / 1).toFixed(2))
+								};
+								hash[key2] = 1;
+							}else{
+								data[key2].total = data[key2].total + life;
+								data[key2].count = data[key2].count + 1;
+								data[key2].avg = Number(Number(data[key2].total / data[key2].count).toFixed(2));
+							}
+						}
+						
+						//组装数据 
+						var sKey = {};
+						var bKey = {};
+						var tempHash = {};
+						var seriesAll = {
+								name: '全部平均',
+						        data: [],
+						        type: 'line',
+						        smooth: true
+						};
+						for (var okey in temp) {
+							var node = temp[okey].node;
+							sKey[node.sEquip_StationName] = 1;
+							bKey[node.sEquip_MBrand] = 1;
+						}
+						//全部平均
+						for ( var okey in sKey) {
+							xAxisData.push(okey);
+							seriesAll.data.push(allData[okey].avg);
+							indicator.push({
+								name: okey,
+								max: radarMax
+							});
+						}
+						//品牌平均
+						for ( var okey in bKey) {
+							var name = okey + ' 平均';
+							var node = {
+								name: name,
+						        data: [],
+						        type: 'line',
+						        smooth: true
+							};
+							for ( var okey2 in sKey) { 
+								node.data.push(data[okey2+"_"+okey] ? data[okey2+"_"+okey].avg : null );
+							}
+							series.push(node);
+							legendData.push(name);
+							
+							seriesRadar.push({
+								 value : node.data,
+					             name : name
+							});
+						}
+						series.push(seriesAll);
+						legendData.push(seriesAll.name);
+						seriesRadar.push({
+							 value : seriesAll.data,
+				             name : seriesAll.name
+						});
+						
+					});
+				});
+				
+		        
+				var option = {
+			        tooltip: {
+			            trigger: 'axis'
+			        },
+			        legend: {
+			        	type: 'scroll',
+			        	orient: 'vertical',
+			        	align: 'right',
+			        	right: 10,
+			            data: legendData
+			        },
+				    xAxis: {
+				        type: 'category',
+				        data: xAxisData
+				    },
+				    yAxis: {
+				        type: 'value',
+			            name: '寿命',
+			            axisLabel: {
+			                formatter: '{value} 年'
+			            }
+				    },
+				    series: series
+				};
+				myChart.setOption($.extend(true, {}, goption, option));
+
+				/*$("#"+chartId).resize(function() {
+					myChart.resize();
+				});*/
+				
+
+				var chartId2 = "chartEquipLife2";
+		        var myChart2 = echarts.init(document.getElementById(chartId2), 'walden');
+		        myChart2.clear();
+				var option2 = {
+					    tooltip: {},
+				        legend: {
+				        	type: 'scroll',
+				        	orient: 'vertical',
+				        	align: 'right',
+				        	right: 10,
+				            data: legendData
+				        },
+					    radar: {
+					        // shape: 'circle',
+					        name: {
+					            textStyle: {
+					                color: '#fff',
+					                backgroundColor: '#999',
+					                borderRadius: 3,
+					                padding: [3, 5]
+					           }
+					        },
+					        indicator: indicator
+					    },
+					    series: [{
+					        type: 'radar',
+					        // areaStyle: {normal: {}},
+					        data : seriesRadar
+					    }]
+					};
+
+				myChart2.setOption($.extend(true, {}, goption, option2));
+
+				/*$("#"+chartId2).resize(function() {
+					myChart2.resize();
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.chartBox[chartId2] = myChart2;
+				this.resizeChart(chartId);
+			},
+			queryEquipLife:function(){
+				this.chartEquipLife(this.filtersLife);
+			},
+			resetEquipLife: function(){
+				this.filtersLife = {
+					sEquip_MBrand: '',
+					sEquip_Type: ''
+				};
+				this.chartEquipLife();
+			},
+
+
+			//queryEquipBrand
+			chartEquipBrand: function(filter){
+				var chartId = "chartEquipBrand";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipBrandUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
+							if(!hash[key]){
+								var index = data.push({
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
+					            });
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index].value = data[index].value + 1;
+							}
+						}
+						var hash = {};
+						var temp = {};
+						for (var i = 0; i < data.length; i++) {
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
+						}
+					});
+				});
+				
+				var option = {
+					    tooltip: {
+					        trigger: 'axis',
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
+					    },
+					    toolbox: {
+					        feature: {
+					            dataView: {show: true, readOnly: false},
+					            magicType: {show: true, type: ['line', 'bar']},
+					            restore: {show: true},
+					            saveAsImage: {show: true}
+					        }
+					    },
+					    xAxis: [
+					        {
+					            type: 'category',
+					            data: xAxisData,
+					            axisPointer: {
+					                type: 'shadow'
+					            }
+					        }
+					    ],
+					    yAxis: [
+					        {
+					            type: 'value',
+					            name: '数量',
+					            minInterval: 1
+					        }
+					    ],
+					    series: [
+					        {
+					            name:'品牌',
+					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption($.extend(true, {}, goption, option));
+
+				/*$("#"+chartId).resize(function() {
+					myChart.resize();
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
+			},
+			queryEquipBrand:function(){
+				this.chartEquipBrand(this.filtersBrand);
+			},
+			resetEquipBrand: function(){
+				this.filtersBrand = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrand();
+			},
 
 
 			//queryEquipType
@@ -819,7 +1167,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '30%',
 					            data: yData
 					        }
 					    ]
@@ -832,6 +1180,15 @@ var myvue = new Vue({
 				
 				this.chartBox[chartId] = myChart;
 				this.resizeChart(chartId);
+			},
+			queryEquipBrandDump:function(){
+				this.chartEquipBrandDump(this.filtersBrandDump);
+			},
+			resetEquipBrandDump: function(){
+				this.filtersBrandDump = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandDump();
 			},
 
 
@@ -915,7 +1272,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '30%',
 					            data: yData
 					        }
 					    ]
@@ -930,8 +1287,132 @@ var myvue = new Vue({
 				this.chartBox[chartId] = myChart;
 				this.resizeChart(chartId);
 			},
+			queryEquipBrandUnusual:function(){
+				this.chartEquipBrandUnusual(this.filtersBrandUnusual);
+			},
+			resetEquipBrandUnusual: function(){
+				this.filtersBrandUnusual = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandUnusual();
+			},
 
 
+			//queryEquipBrandRepair
+			chartEquipBrandRepair: function(filter){
+				var chartId = "chartEquipBrandRepair";
+		        var myChart = echarts.init(document.getElementById(chartId), 'walden');
+		        myChart.clear();
+		        
+		        var data = [];
+				var legendData = [];
+				var xAxisData = [];
+				var yData = [];
+		        var self = this;
+				var params = filter || {};
+				ajaxReqSync(equipBrandRepairUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						var hash = {};
+						for (var i = 0; i < res.data.length; i++) {
+							var node = res.data[i];
+							var key = node.sEquip_MBrand+"_"+node.sEquip_MModel;
+							if(!hash[key]){
+								var index = data.push({
+				                       brand: node.sEquip_MBrand,
+				                       model: node.sEquip_MModel,
+				                       value: 1
+					            });
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								data[index].value = data[index].value + 1;
+							}
+						}
+						var hash = {};
+						var temp = {};
+						for (var i = 0; i < data.length; i++) {
+							var node = data[i];
+							var key = node.brand;
+							if(!hash[key]){
+								temp[key] = [];
+								temp[key].push(node);
+								var xIndex = xAxisData.push(node.brand);
+								var index = yData.push([xIndex-1, node.value, temp[key]]);
+								hash[key] = index;
+							}else{
+								var index = hash[key] - 1;
+								yData[index][1] = yData[index][1] + node.value;
+								temp[key].push(node);
+							}
+						}
+					});
+				});
+				
+				var option = {
+					    tooltip: {
+					        trigger: 'axis',
+			            	formatter: function (objs) {
+			            		var obj = objs[0];
+			            		var str = '<div style="border-bottom: 1px solid rgba(255,255,255,.3); font-size: 18px;padding-bottom: 7px;margin-bottom: 7px">'
+			                    + obj.name
+			                    + '</div>';
+			            		for (var i = 0; i < obj.value[2].length; i++) {
+				                    str += obj.value[2][i].model + '：' + obj.value[2][i].value + '<br>';
+								}
+			                    return str;
+			            	}
+					    },
+					    toolbox: {
+					        feature: {
+					            dataView: {show: true, readOnly: false},
+					            magicType: {show: true, type: ['line', 'bar']},
+					            restore: {show: true},
+					            saveAsImage: {show: true}
+					        }
+					    },
+					    xAxis: [
+					        {
+					            type: 'category',
+					            data: xAxisData,
+					            axisPointer: {
+					                type: 'shadow'
+					            }
+					        }
+					    ],
+					    yAxis: [
+					        {
+					            type: 'value',
+					            name: '数量',
+					            minInterval: 1
+					        }
+					    ],
+					    series: [
+					        {
+					            name:'品牌',
+					            type:'bar',
+					            data: yData
+					        }
+					    ]
+					};
+				myChart.setOption($.extend(true, {}, goption, option));
+
+				/*$("#"+chartId).resize(function() {
+					myChart.resize();
+				});*/
+				
+				this.chartBox[chartId] = myChart;
+				this.resizeChart(chartId);
+			},
+			queryEquipBrandRepair:function(){
+				this.chartEquipBrandRepair(this.filtersBrandRepair);
+			},
+			resetEquipBrandRepair: function(){
+				this.filtersBrandRepair = {
+					sAid_Station: ''
+				};
+				this.chartEquipBrandRepair();
+			},
+			
 			//msgList
 			msgList: function(){
 				var self = this;
@@ -1027,7 +1508,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '30%',
 					            data: yData
 					        }
 					    ]
@@ -1348,6 +1829,55 @@ var myvue = new Vue({
 			this.handleStoreLv1Options();
 			this.handleBrandOptions();
 			
+			/*this.chartEquipDistribution();
+			this.chartStoreTime();
+			this.chartEquipLife();
+			
+			this.chartEquipBrand();
+			this.chartEquipBrandDump();
+			this.chartEquipBrandUnusual();
+			this.chartEquipBrandRepair();*/
+			
+			/*window.onresize = function() {
+				if(this.fullScreenEnabled){
+					console.log("onresize");
+					if (!this.isFullScreen) {
+						$("section").css('padding', '0px');
+						$(".el-tabs__header").hide();
+						this.isFullScreen = true;
+						console.log("onresize true");
+					}else{
+						$("section").css('padding', '20px');
+						$(".el-tabs__header").show();
+						console.log("onresize false");
+			            this.fullScreenEnabled = false;
+					}
+				}
+		    }*/
+			
+			/*var self = this;
+			$(document).on('keydown', function (e) {
+				//e = e || event || window.event;
+				if(e && e.keyCode == 122){//捕捉F11键盘动作
+					console.log(e);
+					$(".el-header").hide();
+					$(".el-main").css('top', '0px');
+		            $(".el-tabs__header").hide();
+		            $("section").css('padding', '0px');
+		            e.preventDefault();  //阻止F11默认动作
+		            self.handleShowFull();
+				}
+	        });*/
+
+			/*let isFullScreen = localStorage.getItem('isFullScreen');
+			console.log("isFullScreen----->"+isFullScreen);
+			if(isFullScreen){
+				$("#fullscrean").hide();
+				$("#exitFullscrean").show();
+			}else{
+				$("#fullscrean").show();
+				$("#exitFullscrean").hide();
+			}*/
 			
 			let self = this;
 			this.handleDrag(function(){
@@ -1355,6 +1885,12 @@ var myvue = new Vue({
 				self.gridster = gridster;
 				
 				gridster.afterInitOk(function () {
+					
+					/*
+					self.chartEquipLife();
+					
+					self.chartEquipBrand();
+					self.chartEquipBrandRepair();*/
 					
 					self.weather();
 					

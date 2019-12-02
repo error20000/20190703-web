@@ -457,12 +457,9 @@ COMMENT ON COLUMN "tBase_Group"."lGroup_SysFlag" IS '系统默认  0：否，1�
 -- ----------------------------
 -- Records of tBase_Group
 -- ----------------------------
-INSERT INTO "tBase_Group" VALUES ('604790269384065024', 'test', '0');
 INSERT INTO "tBase_Group" VALUES ('1', '超级管理组', '1');
 INSERT INTO "tBase_Group" VALUES ('2', '管理员组', '1');
 INSERT INTO "tBase_Group" VALUES ('3', '普通用户组', '1');
-INSERT INTO "tBase_Group" VALUES ('623569632606814208', 'test2', '0');
-INSERT INTO "tBase_Group" VALUES ('623569632606814212', '超级管理组2', '0');
 
 -- ----------------------------
 -- Table structure for tBase_GroupMenu
@@ -479,28 +476,6 @@ COMMENT ON COLUMN "tBase_GroupMenu"."sGroupMenu_GroupID" IS '用户组ID';
 COMMENT ON COLUMN "tBase_GroupMenu"."sGroupMenu_MenuID" IS '菜单ID';
 COMMENT ON COLUMN "tBase_GroupMenu"."sGroupMenu_MenuFunID" IS '菜单功能ID 多个逗号分隔';
 
--- ----------------------------
--- Records of tBase_GroupMenu
--- ----------------------------
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612672', '604790269384065024', '100', '1001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612673', '604790269384065024', '200', '2001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612674', '604790269384065024', '300', '3001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612675', '604790269384065024', '630', '630001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612676', '604790269384065024', '641', '641001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612677', '604790269384065024', '400', '4001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612678', '604790269384065024', '620', '620001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612679', '604790269384065024', '642', '642001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612680', '604790269384065024', '500', '2');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612681', '604790269384065024', '611', '611001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612682', '604790269384065024', '612', '612001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606971062147612683', '604790269384065024', '700', '7001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955070528946176', '2', '641', '641001,641002,641003,641004,641005,641006,641007');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955070528946177', '2', '642', '642001,642002,642003,642004,642005,642006,642007');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955261797597184', '3', '100', '1001,1002,1003,1004');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955261797597185', '3', '200', '2001,2002,2003,2004');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955261797597186', '3', '300', '3001,3002,3003,3004');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955261797597187', '3', '400', '4001');
-INSERT INTO "tBase_GroupMenu" VALUES ('606955261797597188', '3', '700', '7001,7002,7003,7004');
 
 -- ----------------------------
 -- Table structure for tBase_Menu
@@ -665,20 +640,7 @@ CREATE TABLE "tBase_MenuInterface" (
   "sInterface_Name" NVARCHAR2(10) ,
   "sInterface_Url" NVARCHAR2(255) ,
   "sInterface_MenuID" NVARCHAR2(255) ,
-  "lInterface_StatusFlag" NUMBER DEFAULT 1  
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-                 ,
+  "lInterface_StatusFlag" NUMBER DEFAULT 1 ,
   "sInterface_MFunID" NVARCHAR2(255) 
 );
 COMMENT ON COLUMN "tBase_MenuInterface"."sInterface_ID" IS 'ID';
@@ -1001,12 +963,7 @@ COMMENT ON COLUMN "tBase_User"."sUser_UserID" IS '创建人ID';
 -- ----------------------------
 -- Records of tBase_User
 -- ----------------------------
-INSERT INTO "tBase_User" VALUES ('604797909992472576', '121', '25d55ad283aa400af464c76d713c07ad', '12', '1', '604790269384065024', '11', '11', '11', '11', TO_DATE('2019-07-27 22:10:58', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
-INSERT INTO "tBase_User" VALUES ('604802285633011712', '88', '25d55ad283aa400af464c76d713c07ad', '78', '0', NULL, NULL, NULL, NULL, NULL, TO_DATE('2019-07-27 22:28:21', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
-INSERT INTO "tBase_User" VALUES ('604799230179016704', '12', '13', '13', '0', NULL, '13', '13', '13', '13', TO_DATE('2019-07-27 22:16:13', 'SYYYY-MM-DD HH24:MI:SS'), NULL);
 INSERT INTO "tBase_User" VALUES ('1', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'admin', '1', '1', NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "tBase_User" VALUES ('22', '22', '21232f297a57a5a743894a0e4a801fc3', '2222', '0', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-INSERT INTO "tBase_User" VALUES ('606138587578105856', 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', '1', '604790269384065024', NULL, NULL, NULL, NULL, TO_DATE('2019-07-31 14:58:20', 'SYYYY-MM-DD HH24:MI:SS'), '22');
 
 -- ----------------------------
 -- Table structure for tBase_UserAid
@@ -1234,6 +1191,9 @@ CREATE TABLE "tEquip_ViceLamp" (
 COMMENT ON COLUMN "tEquip_ViceLamp"."sEquip_ID" IS '器材ID';
 COMMENT ON COLUMN "tEquip_ViceLamp"."lVLamp_Watt" IS '功率（W）';
 
+
+
+
 -- ----------------------------
 -- Primary Key structure for table tBase_Aid
 -- ----------------------------
@@ -1266,11 +1226,7 @@ ALTER TABLE "tBase_App" ADD CONSTRAINT "SYS_C0113800" PRIMARY KEY ("sApp_ID");
 -- ----------------------------
 ALTER TABLE "tBase_AppMenu" ADD CONSTRAINT "SYS_C0016114" PRIMARY KEY ("sAppMenu_ID");
 
--- ----------------------------
--- Indexes structure for table tBase_AppMenu
--- ----------------------------
-CREATE INDEX "AppMenu_AppID_Index"
-  ON "tBase_AppMenu" ("sAppMenu_AppID" ASC);
+
 
 -- ----------------------------
 -- Primary Key structure for table tBase_Dict
@@ -1309,11 +1265,6 @@ ALTER TABLE "tBase_Group" ADD CONSTRAINT "SYS_C0012844" PRIMARY KEY ("sGroup_ID"
 ALTER TABLE "tBase_GroupMenu" ADD CONSTRAINT "SYS_C0012845" PRIMARY KEY ("sGroupMenu_ID");
 
 
--- ----------------------------
--- Indexes structure for table tBase_GroupMenu
--- ----------------------------
-CREATE INDEX "GroupMenu_GroupID_Index"
-  ON "tBase_GroupMenu" ("sGroupMenu_GroupID" ASC);
 
 -- ----------------------------
 -- Primary Key structure for table tBase_Menu
@@ -1391,11 +1342,6 @@ ALTER TABLE "tBase_User" ADD CONSTRAINT "SYS_C0012849" PRIMARY KEY ("sUser_ID");
 ALTER TABLE "tBase_UserAid" ADD CONSTRAINT "SYS_C0012902" PRIMARY KEY ("sUserAid_ID");
 
 
--- ----------------------------
--- Indexes structure for table tBase_UserAid
--- ----------------------------
-CREATE INDEX "UserAid_UserID_Index"
-  ON "tBase_UserAid" ("sUserAid_UserID" ASC);
 
 -- ----------------------------
 -- Primary Key structure for table tBase_UserLog
@@ -1407,11 +1353,6 @@ ALTER TABLE "tBase_UserLog" ADD CONSTRAINT "SYS_C0012850" PRIMARY KEY ("sLog_ID"
 -- ----------------------------
 ALTER TABLE "tBase_UserMenu" ADD CONSTRAINT "SYS_C0012851" PRIMARY KEY ("sUserMenu_ID");
 
--- ----------------------------
--- Indexes structure for table tBase_UserMenu
--- ----------------------------
-CREATE INDEX "UserMenu_UserID_Index"
-  ON "tBase_UserMenu" ("sUserMenu_UserID" ASC);
 
 -- ----------------------------
 -- Primary Key structure for table tBase_UserPosition
@@ -1428,12 +1369,6 @@ ALTER TABLE "tBase_UserStation" ADD CONSTRAINT "SYS_C0022036" PRIMARY KEY ("sUse
 -- Primary Key structure for table tBase_UserStore
 -- ----------------------------
 ALTER TABLE "tBase_UserStore" ADD CONSTRAINT "SYS_C0021700" PRIMARY KEY ("sUserStore_ID");
-
--- ----------------------------
--- Indexes structure for table tBase_UserStore
--- ----------------------------
-CREATE INDEX "UserStore_UserID_Index"
-  ON "tBase_UserStore" ("sUserStore_UserID" ASC);
 
 -- ----------------------------
 -- Primary Key structure for table tEquip_Ais
@@ -1477,3 +1412,37 @@ ALTER TABLE "tEquip_Telemetry" ADD CONSTRAINT "SYS_C0018841" PRIMARY KEY ("sEqui
 -- Primary Key structure for table tEquip_ViceLamp
 -- ----------------------------
 ALTER TABLE "tEquip_ViceLamp" ADD CONSTRAINT "SYS_C0018854" PRIMARY KEY ("sEquip_ID");
+
+
+
+
+
+-- ----------------------------
+-- Indexes structure for table tBase_AppMenu
+-- ----------------------------
+CREATE INDEX "AppMenu_AppID_Index"
+  ON "tBase_AppMenu" ("sAppMenu_AppID" ASC);
+
+-- ----------------------------
+-- Indexes structure for table tBase_GroupMenu
+-- ----------------------------
+CREATE INDEX "GroupMenu_GroupID_Index"
+  ON "tBase_GroupMenu" ("sGroupMenu_GroupID" ASC);
+
+-- ----------------------------
+-- Indexes structure for table tBase_UserAid
+-- ----------------------------
+CREATE INDEX "UserAid_UserID_Index"
+  ON "tBase_UserAid" ("sUserAid_UserID" ASC);
+
+-- ----------------------------
+-- Indexes structure for table tBase_UserMenu
+-- ----------------------------
+CREATE INDEX "UserMenu_UserID_Index"
+  ON "tBase_UserMenu" ("sUserMenu_UserID" ASC);
+
+-- ----------------------------
+-- Indexes structure for table tBase_UserStore
+-- ----------------------------
+CREATE INDEX "UserStore_UserID_Index"
+  ON "tBase_UserStore" ("sUserStore_UserID" ASC);
