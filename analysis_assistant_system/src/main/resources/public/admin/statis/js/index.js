@@ -819,7 +819,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '58%',
 					            data: yData
 					        }
 					    ]
@@ -915,7 +915,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '58%',
 					            data: yData
 					        }
 					    ]
@@ -1027,7 +1027,7 @@ var myvue = new Vue({
 					        {
 					            name:'数量',
 					            type:'pie',
-					            radius : '50%',
+					            radius : '58%',
 					            data: yData
 					        }
 					    ]
@@ -1041,7 +1041,7 @@ var myvue = new Vue({
 			//weather
 			weather: function(){
 				//wind风向风速、gust阵风风速、visibility能见度、waves海浪方向，浪高，周期、swell1浪涌方向，浪高，周期,currents洋流
-				var self = this;
+				/*var self = this;
 				ajaxReq(weatherUrl, {productName: 'ecmwf', overlayName: 'wind'}, function(res){
 					self.handleResQuery(res, function(){
 						if(res.data && res.data != 'No data.'){
@@ -1105,6 +1105,47 @@ var myvue = new Vue({
 								return;
 							}
 							$('.currents font').html(str[2] + "、" + str[3] + str[4]);
+						}
+					});
+				});*/
+				var self = this;
+				ajaxReq(weatherUrl, {}, function(res){
+					self.handleResQuery(res, function(){
+						if(res.data){
+							let data = JSON.parse(res.data);
+							console.log(data);
+							for (var i = 0; i < data.length; i++) {
+								let node = data[i];
+								if(node){
+									let productName = node.productName;
+									let layerName = node.layerName;
+									//wind
+									if(productName == 'ecmwf' && layerName == 'wind'){
+										$('.wind font').html( node.direction + "、" + node.dataValue + node.dataUnit );
+										
+									//gust
+									}else if(productName == 'ecmwf' && layerName == 'gust'){
+										$('.gust font').html( node.dataValue + node.dataUnit );
+										
+									//visibility
+									}else if(productName == 'ecmwf' && layerName == 'visibility'){
+										$('.visibility font').html( node.dataValue + node.dataUnit );
+
+									//waves
+									}else if(productName == 'ecmwfWaves' && layerName == 'waves'){
+										$('.waves font').html( node.direction  + "、" + node.dataValue + node.dataUnit + "、" + node.period );
+
+									//swell1
+									}else if(productName == 'ecmwfWaves' && layerName == 'swell1'){
+										$('.swell1 font').html( node.direction  + "、" + node.dataValue + node.dataUnit + "、" + node.period );
+
+									//currents
+									}else if(productName == 'sea' && layerName == 'currents'){
+										$('.currents font').html( node.direction + "、" + node.dataValue + node.dataUnit );
+									}
+								}
+							}
+							
 						}
 					});
 				});
@@ -1400,7 +1441,7 @@ var myvue = new Vue({
 				$('.time').html(self.formatDate(new Date()));
 			}, 1000);*/
 
-			//天气
+			//天气计时器
 			setInterval(function(){
 				self.weather();
 			}, 30 * 60 * 1000);

@@ -478,35 +478,37 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		//删除日志
 		logService.delete(MapTools.custom().put("sELog_EquipID", old.getsEquip_ID()).build(), user);
 		//删除详情
-		Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", old.getsEquip_ID()).build();
-		switch (old.getsEquip_Type()) {
-		case Constant.EquipType_AIS:
-			aisService.delete(condetail, user);
-			break;
-		case Constant.EquipType_Battery:
-			batteryService.delete(condetail, user);
-			break;
-		case Constant.EquipType_Lamp:
-			lampService.delete(condetail, user);
-			break;
-		case Constant.EquipType_Radar:
-			radarService.delete(condetail, user);
-			break;
-		case Constant.EquipType_SolarEnergy:
-			solarEnergyService.delete(condetail, user);
-			break;
-		case Constant.EquipType_SpareLamp:
-			spareLampService.delete(condetail, user);
-			break;
-		case Constant.EquipType_Telemetry:
-			telemetryService.delete(condetail, user);
-			break;
-		case Constant.EquipType_ViceLamp:
-			viceLampService.delete(condetail, user);
-			break;
-
-		default:
-			break;
+		if(!Tools.isNullOrEmpty(old.getsEquip_Type())) {
+			Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", old.getsEquip_ID()).build();
+			switch (old.getsEquip_Type()) {
+			case Constant.EquipType_AIS:
+				aisService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Battery:
+				batteryService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Lamp:
+				lampService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Radar:
+				radarService.delete(condetail, user);
+				break;
+			case Constant.EquipType_SolarEnergy:
+				solarEnergyService.delete(condetail, user);
+				break;
+			case Constant.EquipType_SpareLamp:
+				spareLampService.delete(condetail, user);
+				break;
+			case Constant.EquipType_Telemetry:
+				telemetryService.delete(condetail, user);
+				break;
+			case Constant.EquipType_ViceLamp:
+				viceLampService.delete(condetail, user);
+				break;
+				
+			default:
+				break;
+			}
 		}
 		return baseMapper.delete(tableName, condition); //删除
 	}
@@ -523,42 +525,44 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test == null) {
 			throw new ServiceException(Tips.ERROR106, "器材");
 		}
-		if(Tools.isNullOrEmpty(test.getsEquip_Type())) {
+		/*if(Tools.isNullOrEmpty(test.getsEquip_Type())) {
 			throw new ServiceException(Tips.ERROR106, "器材分类");
-		}
+		}*/
 		Map<String, Object> res = new HashMap<String, Object>();
 		res.putAll(Tools.parseObjectToMap(test));
 		//查询详情
 		Object detail = null;
-		Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", test.getsEquip_ID()).build();
-		switch (test.getsEquip_Type()) {
-		case Constant.EquipType_AIS:
-			detail = aisService.selectOne(condetail);
-			break;
-		case Constant.EquipType_Battery:
-			detail = batteryService.selectOne(condetail);
-			break;
-		case Constant.EquipType_Lamp:
-			detail = lampService.selectOne(condetail);
-			break;
-		case Constant.EquipType_Radar:
-			detail = radarService.selectOne(condetail);
-			break;
-		case Constant.EquipType_SolarEnergy:
-			detail = solarEnergyService.selectOne(condetail);
-			break;
-		case Constant.EquipType_SpareLamp:
-			detail = spareLampService.selectOne(condetail);
-			break;
-		case Constant.EquipType_Telemetry:
-			detail = telemetryService.selectOne(condetail);
-			break;
-		case Constant.EquipType_ViceLamp:
-			detail = viceLampService.selectOne(condetail);
-			break;
-
-		default:
-			break;
+		if(!Tools.isNullOrEmpty(test.getsEquip_Type())) {
+			Map<String, Object> condetail = MapTools.custom().put("sEquip_ID", test.getsEquip_ID()).build();
+			switch (test.getsEquip_Type()) {
+			case Constant.EquipType_AIS:
+				detail = aisService.selectOne(condetail);
+				break;
+			case Constant.EquipType_Battery:
+				detail = batteryService.selectOne(condetail);
+				break;
+			case Constant.EquipType_Lamp:
+				detail = lampService.selectOne(condetail);
+				break;
+			case Constant.EquipType_Radar:
+				detail = radarService.selectOne(condetail);
+				break;
+			case Constant.EquipType_SolarEnergy:
+				detail = solarEnergyService.selectOne(condetail);
+				break;
+			case Constant.EquipType_SpareLamp:
+				detail = spareLampService.selectOne(condetail);
+				break;
+			case Constant.EquipType_Telemetry:
+				detail = telemetryService.selectOne(condetail);
+				break;
+			case Constant.EquipType_ViceLamp:
+				detail = viceLampService.selectOne(condetail);
+				break;
+				
+			default:
+				break;
+			}
 		}
 		if(detail != null) {
 			res.putAll(Tools.parseObjectToMap(detail));

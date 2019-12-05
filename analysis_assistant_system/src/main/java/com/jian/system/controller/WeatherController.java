@@ -35,15 +35,11 @@ public class WeatherController {
 	@VerifyLogin
 	@VerifyAuth
 	@SysLog(type=SystemLogType.Query, describe="查询天气")
-	public String statis(HttpServletRequest req) {
-		String productName = Tools.getReqParamSafe(req, "productName");
-		String overlayName = Tools.getReqParamSafe(req, "overlayName");
+	public String get(HttpServletRequest req) {
 				
 		String url = config.weathUrl
-				.replace("{lat}", "29.730078774781184")
-				.replace("{lng}", "122.14201354980071")
-				.replace("{productName}", productName)
-				.replace("{overlayName}", overlayName)
+				.replace("{lat}", config.weathLat)
+				.replace("{lng}", config.weathLng)
 				.replace("{dataTime}", new Date().getTime()+"");
 		
 		String res = HttpTools.getInstance().sendHttpGet(url);
