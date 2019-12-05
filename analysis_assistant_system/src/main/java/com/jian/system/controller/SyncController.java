@@ -68,7 +68,7 @@ import com.jian.tools.core.Tools;
 
 @Controller
 @RequestMapping("/api/sync")
-@API(name="通过管理")
+@API(name="同步管理")
 public class SyncController extends BaseController<Dict, DictService> {
 	
 	@Autowired
