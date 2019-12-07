@@ -56,6 +56,9 @@ public interface AidMapper extends BaseMapper<Aid> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( b.\"sUserAid_UserID\" = #{sUser_ID} or c.\"sUserStation_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
+    	" 	<if test=\" keywords != null \"> ",
+    	" 		and a.\"sAid_Name\" like concat(concat('%', #{keywords}), '%') ",
+    	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${(start/rows + 1) * rows}",
 		" minus  ",
 		" select a.* ",
@@ -74,10 +77,13 @@ public interface AidMapper extends BaseMapper<Aid> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( b.\"sUserAid_UserID\" = #{sUser_ID} or c.\"sUserStation_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
+    	" 	<if test=\" keywords != null \"> ",
+    	" 		and a.\"sAid_Name\" like concat(concat('%', #{keywords}), '%') ",
+    	"   </if>", 
 		"	 and rownum <![CDATA[<=]]> ${start}",
 		"</script>"
 	})
-	public List<Aid> selectPageByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID,  @Param("start") int start, @Param("rows") int rows);
+	public List<Aid> selectPageByUser(@Param("map") Map<String, Object> condition, @Param("keywords") String keywords, @Param("sUser_ID") String sUser_ID,  @Param("start") int start, @Param("rows") int rows);
 
 	@Select({
 		"<script>",
@@ -97,9 +103,12 @@ public interface AidMapper extends BaseMapper<Aid> {
     	" 	<if test=\" sUser_ID != null \"> ",
     	" 		and ( b.\"sUserAid_UserID\" = #{sUser_ID} or c.\"sUserStation_UserID\" = #{sUser_ID} ) ",	
     	"   </if>", 
+    	" 	<if test=\" keywords != null \"> ",
+    	" 		and a.\"sAid_Name\" like concat(concat('%', #{keywords}), '%') ",
+    	"   </if>", 
 		"</script>"
 	})
-	public long sizeByUser(@Param("map") Map<String, Object> condition, @Param("sUser_ID") String sUser_ID);
+	public long sizeByUser(@Param("map") Map<String, Object> condition, @Param("keywords") String keywords, @Param("sUser_ID") String sUser_ID);
 	
 
 	@Select({

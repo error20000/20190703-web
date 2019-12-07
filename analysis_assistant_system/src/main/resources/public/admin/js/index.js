@@ -4,7 +4,7 @@ var logoutUrl = baseUrl + "api/user/logout";
 var isLoginUrl = baseUrl + "api/user/isLogin";
 var authUrl = baseUrl + "api/user/authMenu";
 var gMenuFuns = [];
-var pwdReg = '';///^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
+var pwdReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;
 var pwdRegStr = "（密码至少包含 数字和英文，长度6-20）";
 
 new Vue({

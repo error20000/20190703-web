@@ -31,6 +31,7 @@ var myvue = new Vue({
 	    		activeTab: 'table',
 				filters: {
 					sAid_NO: '',
+					keywords: '',
 					sAid_Type: '',
 					sAid_Station: '',
 					sAid_Status: ''
@@ -524,6 +525,7 @@ var myvue = new Vue({
 			reset: function(){
 				this.filters = {
 					sAid_NO: '',
+					keywords: '',
 					sAid_Type: '',
 					sAid_Station: '',
 					sAid_Status: ''

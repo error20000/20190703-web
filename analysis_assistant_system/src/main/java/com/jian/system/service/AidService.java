@@ -154,27 +154,27 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	
 
 	@TargetDataSource
-	public List<Aid> selectPage(Map<String, Object> condition, User user, int start, int rows) {
+	public List<Aid> selectPage(Map<String, Object> condition, String keywords, User user, int start, int rows) {
 		if(user == null) {
 			return new ArrayList<Aid>();
 		}
 		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
-			return baseMapper.selectPageByUser(condition, null, start, rows);
+			return baseMapper.selectPageByUser(condition, keywords, null, start, rows);
 		}
-		return baseMapper.selectPageByUser(condition, user.getsUser_ID(), start, rows);
+		return baseMapper.selectPageByUser(condition, keywords, user.getsUser_ID(), start, rows);
 	}
 
 	@TargetDataSource
-	public long size(Map<String, Object> condition, User user) {
+	public long size(Map<String, Object> condition, String keywords, User user) {
 		if(user == null) {
 			return 0;
 		}
 		condition = condition != null && condition.isEmpty() ? null : condition;
 		if(config.superGroupId.equals(user.getsUser_GroupID()) || config.managerGroupId.equals(user.getsUser_GroupID())) { //超管组查询所有航标
-			return baseMapper.sizeByUser(condition, null);
+			return baseMapper.sizeByUser(condition, keywords, null);
 		}
-		return baseMapper.sizeByUser(condition, user.getsUser_ID());
+		return baseMapper.sizeByUser(condition, keywords, user.getsUser_ID());
 	}
 
 

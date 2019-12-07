@@ -229,22 +229,24 @@ public class UserService extends BaseService<User, UserMapper> {
 			List<Menu> resms = new ArrayList<>();
 			List<MenuFun> resmfs = new ArrayList<>();
 			//查询用户组菜单
-			List<GroupMenu> gms = groupMenuService.selectList(MapTools.custom().put("sGroupMenu_GroupID", groupId).build());
-			for (GroupMenu groupMenu : gms) {
-				//菜单
-				for (Menu menu : allms) {
-					if(groupMenu.getsGroupMenu_MenuID().equals(menu.getsMenu_ID())
-							&& temp.get("menu_" + menu.getsMenu_ID()) == null) {
-						resms.add(menu);
-						temp.put("menu_" + menu.getsMenu_ID(), 1);
+			if(!Tools.isNullOrEmpty(groupId)) {
+				List<GroupMenu> gms = groupMenuService.selectList(MapTools.custom().put("sGroupMenu_GroupID", groupId).build());
+				for (GroupMenu groupMenu : gms) {
+					//菜单
+					for (Menu menu : allms) {
+						if(groupMenu.getsGroupMenu_MenuID().equals(menu.getsMenu_ID())
+								&& temp.get("menu_" + menu.getsMenu_ID()) == null) {
+							resms.add(menu);
+							temp.put("menu_" + menu.getsMenu_ID(), 1);
+						}
 					}
-				}
-				//功能
-				for (MenuFun menuFun : allmfs) {
-					if((groupMenu.getsGroupMenu_MenuFunID()+",").contains(menuFun.getsMFun_ID()+",")
-							&& temp.get("menuFun_" + menuFun.getsMFun_ID()) == null) {
-						resmfs.add(menuFun);
-						temp.put("menuFun_" + menuFun.getsMFun_ID(), 1);
+					//功能
+					for (MenuFun menuFun : allmfs) {
+						if((groupMenu.getsGroupMenu_MenuFunID()+",").contains(menuFun.getsMFun_ID()+",")
+								&& temp.get("menuFun_" + menuFun.getsMFun_ID()) == null) {
+							resmfs.add(menuFun);
+							temp.put("menuFun_" + menuFun.getsMFun_ID(), 1);
+						}
 					}
 				}
 			}

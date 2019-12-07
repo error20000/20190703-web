@@ -140,6 +140,7 @@ public class AidController extends BaseController<Aid, AidService> {
 		//参数
 		String page = Tools.getReqParamSafe(req, "page");
 		String rows = Tools.getReqParamSafe(req, "rows");
+		String keywords = Tools.getReqParamSafe(req, "keywords");
 		vMap = Tools.verifyParam("page", page, 0, 0, true);
 		if(vMap != null){
 			return JsonTools.toJsonString(vMap);
@@ -152,8 +153,8 @@ public class AidController extends BaseController<Aid, AidService> {
 		//参数
 		Map<String, Object> condition = Utils.getReqParamsToMap(req, Aid.class);
 		
-		List<Aid> list = service.selectPage(condition, getLoginUser(req), start, Tools.parseInt(rows));
-		long total = service.size(condition, getLoginUser(req));
+		List<Aid> list = service.selectPage(condition, keywords, getLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.size(condition, keywords, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 
@@ -680,8 +681,8 @@ public class AidController extends BaseController<Aid, AidService> {
 		//参数
 		Map<String, Object> condition = Utils.getReqParamsToMap(req, Aid.class);
 		
-		List<Aid> list = service.selectPage(condition, getAppLoginUser(req), start, Tools.parseInt(rows));
-		long total = service.size(condition, getAppLoginUser(req));
+		List<Aid> list = service.selectPage(condition, null, getAppLoginUser(req), start, Tools.parseInt(rows));
+		long total = service.size(condition, null, getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
 	}
 

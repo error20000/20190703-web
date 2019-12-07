@@ -108,6 +108,9 @@ var myvue = new Vue({
 				      ],
 				    sUser_Nick: [
 		                { required: true, message: '请输入用户昵称.', trigger: 'blur' },
+		              ],
+		            sUser_GroupID: [
+		                { required: true, message: '请选择用户组.', trigger: 'blur' },
 		              ]
 				},
 				//edit
@@ -120,6 +123,9 @@ var myvue = new Vue({
 		              ],
 				    sUser_Nick: [
 		                { required: true, message: '请输入用户昵称.', trigger: 'blur' },
+		              ],
+		            sUser_GroupID: [
+		                { required: true, message: '请选择用户组.', trigger: 'blur' },
 		              ]
 				},
 				//reset
@@ -301,6 +307,16 @@ var myvue = new Vue({
 				ajaxReq(aidAllUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.aidOptions = res.data;
+						//排序--名称
+						for (var i = 0; i < self.aidOptions.length; i++) {
+							for (var j = i; j < self.aidOptions.length; j++) {
+								if(self.aidOptions[i].sAid_Name > self.aidOptions[j].sAid_Name){
+									let temp = self.aidOptions[i];
+									self.aidOptions[i] = self.aidOptions[j];
+									self.aidOptions[j] = temp;
+								}
+							}
+						}
 						if(typeof cb == 'function'){
 							cb();
 						}
@@ -325,6 +341,16 @@ var myvue = new Vue({
 				ajaxReq(dictUrl, params, function(res){
 					self.handleResQuery(res, function(){
 						self.stationOptions = res.data;
+						//排序--名称
+						for (var i = 0; i < self.stationOptions.length; i++) {
+							for (var j = i; j < self.stationOptions.length; j++) {
+								if(self.stationOptions[i].sDict_Name > self.stationOptions[j].sDict_Name){
+									let temp = self.stationOptions[i];
+									self.stationOptions[i] = self.stationOptions[j];
+									self.stationOptions[j] = temp;
+								}
+							}
+						}
 						if(typeof cb == 'function'){
 							cb();
 						}
