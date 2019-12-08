@@ -381,6 +381,29 @@ public class UserController extends BaseController<User, UserService> {
 	}
 	
 
+
+	@RequestMapping("/authStation")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询登录用户的航标站")
+	public String authStation(HttpServletRequest req) {
+
+		User loginUser = getLoginUser(req);
+		if(loginUser == null){
+			return ResultTools.custom(Tips.ERROR111).toJSONString();
+		}
+
+		if(config.superGroupId.equals(loginUser.getsUser_GroupID()) 
+				|| config.managerGroupId.equals(loginUser.getsUser_GroupID())) {
+	        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, "all").toJSONString();
+		}
+		
+		List<UserStation> list = service.station(loginUser.getsUser_ID());
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+
 	@RequestMapping("/station")
     @ResponseBody
 	@VerifyLogin

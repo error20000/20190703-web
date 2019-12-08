@@ -525,6 +525,7 @@ INSERT INTO "tBase_Menu" VALUES ('510', '首页', '500', 'statis/index.html', NU
 INSERT INTO "tBase_Menu" VALUES ('520', '器材统计分析', '500', 'statisEquip.html', NULL, '1', '62');
 INSERT INTO "tBase_Menu" VALUES ('530', '航标统计分析', '500', 'statisAid.html', NULL, '1', '63');
 INSERT INTO "tBase_Menu" VALUES ('540', '仓库统计分析', '500', 'statisStore.html', NULL, '1', '64');
+INSERT INTO "tBase_Menu" VALUES ('340', '航标站地图设置', '300', 'aidStation.html', NULL, '1', '34');
 
 -- ----------------------------
 -- Table structure for tBase_MenuFun
@@ -630,6 +631,11 @@ INSERT INTO "tBase_MenuFun" VALUES ('3203', '修改', '320', NULL, '1', NULL, 's
 INSERT INTO "tBase_MenuFun" VALUES ('3204', '删除', '320', NULL, '1', NULL, 'sys:aidTypeMapIcon:delete');
 INSERT INTO "tBase_MenuFun" VALUES ('3205', '导入', '320', NULL, '1', NULL, 'sys:aidTypeMapIcon:import');
 INSERT INTO "tBase_MenuFun" VALUES ('3206', '导出', '320', NULL, '1', NULL, 'sys:aidTypeMapIcon:export');
+INSERT INTO "tBase_MenuFun" VALUES ('3309', '批量删除', '330', NULL, '1', NULL, 'sys:aid:delBatch');
+INSERT INTO "tBase_MenuFun" VALUES ('3401', '查询', '340', NULL, '1', NULL, 'sys:aidStation:query');
+INSERT INTO "tBase_MenuFun" VALUES ('3402', '新增', '340', NULL, '1', NULL, 'sys:aidStation:add');
+INSERT INTO "tBase_MenuFun" VALUES ('3403', '修改', '340', NULL, '1', NULL, 'sys:aidStation:update');
+INSERT INTO "tBase_MenuFun" VALUES ('3404', '删除', '340', NULL, '1', NULL, 'sys:aidStation:delete');
 
 -- ----------------------------
 -- Table structure for tBase_MenuInterface
@@ -1446,3 +1452,29 @@ CREATE INDEX "UserMenu_UserID_Index"
 -- ----------------------------
 CREATE INDEX "UserStore_UserID_Index"
   ON "tBase_UserStore" ("sUserStore_UserID" ASC);
+
+
+
+  -- ----------------------------
+-- Table structure for tBase_AidStation
+-- ----------------------------
+DROP TABLE "tBase_AidStation";
+CREATE TABLE "tBase_AidStation" (
+  "sAidStation_ID" NVARCHAR2(32) NOT NULL ,
+  "lAidStation_MapLat" NUMBER ,
+  "lAidStation_MapLng" NUMBER ,
+  "lAidStation_MapLevel" NUMBER ,
+  "sAidStation_Station" NVARCHAR2(64) 
+);
+COMMENT ON COLUMN "tBase_AidStation"."sAidStation_ID" IS 'ID';
+COMMENT ON COLUMN "tBase_AidStation"."lAidStation_MapLat" IS '航标站纬度';
+COMMENT ON COLUMN "tBase_AidStation"."lAidStation_MapLng" IS '航标站经度';
+COMMENT ON COLUMN "tBase_AidStation"."lAidStation_MapLevel" IS '航标站默认级别';
+COMMENT ON COLUMN "tBase_AidStation"."sAidStation_Station" IS '航标站';
+
+-- ----------------------------
+-- Primary Key structure for table tBase_AidStation
+-- ----------------------------
+ALTER TABLE "tBase_AidStation" ADD CONSTRAINT "SYS_C0024794" PRIMARY KEY ("sAidStation_ID");
+
+

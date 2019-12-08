@@ -693,8 +693,6 @@ public class AidController extends BaseController<Aid, AidService> {
 	@VerifyAppAuth
 	@SysLog(type=SystemLogType.Query, describe="app查询单个航标")
 	public String appFindOne(HttpServletRequest req) {
-		System.out.println("=======================appFindOne=======================");
-		System.out.println(super.findOne(req));
 		return super.findOne(req);
 	}
 	
