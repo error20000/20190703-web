@@ -34,7 +34,7 @@ public class MapperTest {
 		condition.put("sAid_Station", "test2");
 		User user = new User();
 		user.setsUser_ID("606138587578105856");
-		List<Aid> res = service.selectPage(condition, user, 0, 10);
+		List<Aid> res = service.selectPage(condition, null, user, 0, 10);
 		System.out.println("------test1------"+res.size());
 	}
 
@@ -45,7 +45,7 @@ public class MapperTest {
 		condition.put("sAid_Station", "test2");
 		User user = new User();
 		user.setsUser_ID("606138587578105856");
-		long res = service.size(condition, user);
+		long res = service.size(condition, null, user);
 		System.out.println("------test2------"+res);
 	}
 }

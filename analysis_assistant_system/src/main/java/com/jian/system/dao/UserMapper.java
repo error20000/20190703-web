@@ -18,8 +18,9 @@ public interface UserMapper extends BaseMapper<User> {
 		" select ",
 		" 	a.\"sAid_ID\", a.\"sAid_Name\", a.\"sAid_NO\" ",
 		" from \"tBase_Aid\" a ",
-		" 	join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
-		" where b.\"sUserAid_UserID\" = #{sUser_ID} "
+		" 	left join \"tBase_UserAid\" b on a.\"sAid_ID\" = b.\"sUserAid_AidID\" ",
+		" 	left join \"tBase_UserStation\" c on a.\"sAid_Station\" = c.\"sUserStation_Station\" ",
+		" where b.\"sUserAid_UserID\" = #{sUser_ID} or c.\"sUserStation_UserID\" = #{sUser_ID}"
 	})
 	public List<Map<String, Object>> aid(String sUser_ID);
 	

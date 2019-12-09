@@ -70,7 +70,7 @@ public class SystemController extends BaseController<System, SystemService> {
 	public String findOne(HttpServletRequest req) {
 		//参数
 		Map<String, Object> condition = Utils.getReqParamsToMap(req, System.class);
-		System res = service.selectOne(condition);
+		System res = service.system(condition, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	
@@ -90,7 +90,7 @@ public class SystemController extends BaseController<System, SystemService> {
 	public String appFindOne(HttpServletRequest req) {
 		//参数
 		Map<String, Object> condition = Utils.getReqParamsToMap(req, System.class);
-		System res = service.selectOne(condition);
+		System res = service.system(condition, getAppLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 
