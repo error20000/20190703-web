@@ -326,6 +326,12 @@ public class Utils {
     	Map<Object,Boolean> seen = new ConcurrentHashMap<>();
     	return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
+	
+	public static boolean equals(String str1, String str2) {
+    	str1 = str1 == null ? "" : str1;
+    	str2 = str1 == null ? "" : str2;
+    	return str1.equals(str2);
+	}
 
 
 	public static String newUUId() {

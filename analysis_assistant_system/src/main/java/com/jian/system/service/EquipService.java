@@ -228,12 +228,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			return 0;
 		}
 		
-		if((Tools.isNullOrEmpty(old.getsEquip_StoreLv1())
-				&& !"".equals(value.get("sEquip_StoreLv1")))
-				|| (!old.getsEquip_StoreLv1().equals(value.get("sEquip_StoreLv1")) 
-						&& !old.getsEquip_StoreLv2().equals(value.get("sEquip_StoreLv2"))
-						&& !old.getsEquip_StoreLv3().equals(value.get("sEquip_StoreLv3"))
-						&& !old.getsEquip_StoreLv4().equals(value.get("sEquip_StoreLv4"))) ) {
+		if( !( Utils.equals(old.getsEquip_StoreLv1(), value.get("sEquip_StoreLv1") + "")
+				&& Utils.equals(old.getsEquip_StoreLv2(), value.get("sEquip_StoreLv2") + "")
+				&& Utils.equals(old.getsEquip_StoreLv3(), value.get("sEquip_StoreLv3") + "")
+				&& Utils.equals(old.getsEquip_StoreLv4(), value.get("sEquip_StoreLv4") + "")
+			) ) {
 			//器材仓库不为空,或者仓库信息不一致时,记录入库操作
 			value.put("sEquip_Status", Constant.EquipStatus_1); // 入库
 			if(old.getdEquip_StoreDate() == null) {
