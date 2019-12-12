@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,11 +20,16 @@ import com.jian.system.annotation.VerifyAppSign;
 import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Constant;
+import com.jian.system.entity.Dict;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.User;
+import com.jian.system.service.AidService;
+import com.jian.system.service.DictService;
+import com.jian.system.service.EquipService;
 import com.jian.system.service.MessageService;
 import com.jian.system.utils.Utils;
 import com.jian.tools.core.JsonTools;
+import com.jian.tools.core.MapTools;
 import com.jian.tools.core.ResultKey;
 import com.jian.tools.core.ResultTools;
 import com.jian.tools.core.Tips;
@@ -35,7 +41,12 @@ import com.jian.tools.core.Tools;
 @API(name="消息中心")
 public class MessageController extends BaseController<Message, MessageService> {
 
-	
+	@Autowired
+	private DictService dictService;
+	@Autowired
+	private AidService aidService;
+	@Autowired
+	private EquipService equipService;
 
 	//TODO -------------------------------------------------------------------------------- 后台管理
 	
@@ -203,15 +214,48 @@ public class MessageController extends BaseController<Message, MessageService> {
 		User loginUser = getAppLoginUser(req);
 		//String describe = Tools.getReqParamSafe(req, "describe");
 
+		Date date = new Date();
+		
 		obj.setsMsg_ID(Utils.newSnowflakeIdStr());
 		//obj.setsMsg_Type(Constant.MsgType_4);
 		//obj.setsMsg_Title(Constant.MsgType_4_Msg);
 		obj.setsMsg_Status(Constant.MsgStatus_3);
 		//obj.setsMsg_Describe(describe);
 		obj.setlMsg_Level(10);
-		obj.setdMsg_CreateDate(new Date());
+		obj.setdMsg_CreateDate(date);
 		obj.setsMsg_FromUserID(loginUser.getsUser_ID());
 		obj.setsMsg_ToUserID(loginUser.getsUser_ID());
+		
+		//描述
+		String remarks = "新增消息。";
+		if(!Tools.isNullOrEmpty(obj.getsMsg_Source())) {
+			Dict dictSource = dictService.selectOne(MapTools.custom()
+					.put("sDict_DictTypeNO", Constant.DictType_MsgSource)
+					.put("sDict_NO", obj.getsMsg_Source())
+					.build());
+			if(dictSource != null) {
+				remarks += " 来源：" + dictSource.getsDict_Name() + "。";
+			}
+		}
+		if(!Tools.isNullOrEmpty(obj.getsMsg_Reason())) {
+			Dict dictReason = dictService.selectOne(MapTools.custom()
+					.put("sDict_DictTypeNO", Constant.DictType_MsgReason)
+					.put("sDict_NO", obj.getsMsg_Reason())
+					.build());
+			if(dictReason != null) {
+				remarks += " 原因：" + dictReason.getsDict_Name() + "。";
+			}
+		}
+		if(!Tools.isNullOrEmpty(obj.getsMsg_Describe())) {
+			remarks += " 备注：" + obj.getsMsg_Describe() + "。";
+		}
+		
+		//异常消息-通知
+		if(Constant.MsgType_3.equals(obj.getsMsg_Type()) && !Tools.isNullOrEmpty(obj.getsMsg_EquipID())) {
+			equipService.unusual(obj.getsMsg_EquipID(), remarks, date, loginUser, Tools.getIp(req), true);
+		}else if(Constant.MsgType_2.equals(obj.getsMsg_Type()) && !Tools.isNullOrEmpty(obj.getsMsg_AidID())) {
+			aidService.unusual(obj.getsMsg_AidID(), remarks, loginUser, Tools.getIp(req), true);
+		}
 		
 		int res = service.insert(obj, loginUser);
 		if(res > 0){

@@ -732,7 +732,7 @@ public class AidController extends BaseController<Aid, AidService> {
 	public String appUnusual(HttpServletRequest req) {
 		String sAid_ID = Tools.getReqParamSafe(req, "sAid_ID");
 		String remarks = Tools.getReqParamSafe(req, "remarks");
-		int res = service.unusual(sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req));
+		int res = service.unusual(sAid_ID, remarks, getAppLoginUser(req), Tools.getIp(req), false);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	

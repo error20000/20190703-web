@@ -65,6 +65,7 @@ public class Constant {
 	public static final String DictType_MsgType = "MsgType"; //	消息类型	
 	public static final String DictType_MsgStatus = "MsgStatus"; //	消息状态	
 	public static final String DictType_MsgReason = "MsgReason"; //	消息原因	
+	public static final String DictType_MsgSource = "MsgSource"; //	消息来源	
 	
 	public static final String DictType_AidStation = "AidStation"; //	航标站	
 	public static final String DictType_AidType = "AidType"; //	航标种类	

@@ -318,13 +318,13 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			throw new ServiceException(Tips.ERROR203, "sign");
 		}
 		
-		return unusual(sAid_ID, remarks, user, ip);
+		return unusual(sAid_ID, remarks, user, ip, false);
 	}
 	
 
 	@Transactional
 	@TargetDataSource
-	public int unusual(String sAid_ID, String remarks, User user, String ip) {
+	public int unusual(String sAid_ID, String remarks, User user, String ip, boolean fromAdd) {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("sAid_ID", sAid_ID);
 		String tableName =  getTableName();
@@ -372,6 +372,9 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		}
 		if(userIds.size() > 0) {
 			for (String userId : userIds) {
+				if(fromAdd && userId.equals(user.getsUser_ID())) {  //如果消息来自新增，排除通知自己
+					continue;
+				}
 				Message node = message.clone();
 				node.setsMsg_ID(Utils.newSnowflakeIdStr());
 				node.setsMsg_ToUserID(userId);

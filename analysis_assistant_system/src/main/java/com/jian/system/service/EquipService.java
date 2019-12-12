@@ -1164,12 +1164,12 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 			throw new ServiceException(Tips.ERROR203, "sign");
 		}
 		
-		return unusual(sEquip_ID, remarks, date, user, ip);
+		return unusual(sEquip_ID, remarks, date, user, ip, false);
 	}
 
 	@TargetDataSource
 	@Transactional
-	public int unusual(String sEquip_ID, String remarks, Date date, User user, String ip){
+	public int unusual(String sEquip_ID, String remarks, Date date, User user, String ip, boolean fromAdd){
 		String tableName =  getTableName();
 		if(Tools.isNullOrEmpty(sEquip_ID)) {
 			throw new ServiceException(Tips.ERROR206, "sEquip_ID");
@@ -1253,6 +1253,9 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		}
 		if(userIds.size() > 0) {
 			for (String userId : userIds) {
+				if(fromAdd && userId.equals(user.getsUser_ID())) {  //如果消息来自新增，排除通知自己
+					continue;
+				}
 				Message node = message.clone();
 				node.setsMsg_ID(Utils.newSnowflakeIdStr());
 				node.setsMsg_ToUserID(userId);

@@ -1226,7 +1226,7 @@ public class EquipController extends BaseController<Equip, EquipService> {
 		String remarks = Tools.getReqParamSafe(req, "remarks");
 		String date = Tools.getReqParamSafe(req, "date");
 		Date cDate = Tools.isNullOrEmpty(date) ? null : new Date(Long.parseLong(date));
-		int res = service.unusual(sEquip_ID, remarks, cDate, getAppLoginUser(req), Tools.getIp(req));
+		int res = service.unusual(sEquip_ID, remarks, cDate, getAppLoginUser(req), Tools.getIp(req), false);
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
 	}
 	

@@ -158,9 +158,12 @@ new Vue({
 					self.menus = []; //menu tree
 					for (var i = 0; i < menus.length; i++) {
 						var node = menus[i];
-						/*if(node.sMenu_Parent != 500 && node.sMenu_ID != 500){
-							continue;
+						//默认显示 统计首页
+						/*if(node.sMenu_ID == 510){
+							self.activeIndex = node.sMenu_ID;
+							self.activeSrc = node.sMenu_Url;
 						}*/
+						
 						if(!node.sMenu_Parent){
 							var children = self.findChildren(node.sMenu_ID, menus);
 							if(children && children.length > 0){
