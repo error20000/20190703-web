@@ -158,11 +158,11 @@ new Vue({
 					self.menus = []; //menu tree
 					for (var i = 0; i < menus.length; i++) {
 						var node = menus[i];
-						//默认显示 统计首页
-						/*if(node.sMenu_ID == 510){
+						//如果有权限，默认显示 -- 统计首页
+						if(node.sMenu_ID == 510){
 							self.activeIndex = node.sMenu_ID;
 							self.activeSrc = node.sMenu_Url;
-						}*/
+						}
 						
 						if(!node.sMenu_Parent){
 							var children = self.findChildren(node.sMenu_ID, menus);

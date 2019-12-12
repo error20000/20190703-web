@@ -1411,7 +1411,10 @@ var myvue = new Vue({
 					window.onresize = function() {
 						var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
 						var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
-						window.location.reload();
+						
+						if(self.isFullScreen){
+							window.location.reload();
+						}
 						
 						if(!checkFullscreen()){
 							self.isFullScreen = false;
