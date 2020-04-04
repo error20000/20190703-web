@@ -42,6 +42,7 @@ import com.jian.system.annotation.VerifyAuth;
 import com.jian.system.annotation.VerifyLogin;
 import com.jian.system.config.Constant;
 import com.jian.system.entity.Aid;
+import com.jian.system.entity.AidImg;
 import com.jian.system.entity.Dict;
 import com.jian.system.entity.Message;
 import com.jian.system.entity.Nfc;
@@ -339,6 +340,52 @@ public class AidController extends BaseController<Aid, AidService> {
 		List<Message> list = service.msgPage(condition, getLoginUser(req), start, Tools.parseInt(rows));
 		long total = service.msgSize(condition, getLoginUser(req));
         return ResultTools.custom(Tips.ERROR1).put(ResultKey.TOTAL, total).put(ResultKey.DATA, list).toJSONString();
+	}
+	
+	@RequestMapping("/uploadImg")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Upload, describe="上传航标图片")
+	public String uploadImg(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		//参数
+		String sAidImg_AidID = Tools.getReqParamSafe(req, "sAidImg_AidID");
+		String sAidImg_Url = Tools.getReqParamSafe(req, "sAidImg_Url");
+		vMap = Tools.verifyParam("sAidImg_AidID", sAidImg_AidID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		vMap = Tools.verifyParam("sAidImg_Url", sAidImg_Url, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		int res = service.uploadImg(sAidImg_AidID, sAidImg_Url);
+		if(res == 0) {
+			return ResultTools.custom(Tips.ERROR0).put(ResultKey.DATA, res).toJSONString();
+		}else {
+			return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, res).toJSONString();
+		}
+	}
+	
+	@RequestMapping("/img")
+    @ResponseBody
+	@VerifyLogin
+	@VerifyAuth
+	@SysLog(type=SystemLogType.Query, describe="查询航标图片")
+	public String img(HttpServletRequest req) {
+		Map<String, Object> vMap = null;
+		
+		//参数
+		String sAidImg_AidID = Tools.getReqParamSafe(req, "sAidImg_AidID");
+		vMap = Tools.verifyParam("sAidImg_AidID", sAidImg_AidID, 0, 0);
+		if(vMap != null){
+			return JsonTools.toJsonString(vMap);
+		}
+		
+		List<AidImg> list = service.img(sAidImg_AidID);
+        return ResultTools.custom(Tips.ERROR1).put(ResultKey.DATA, list).toJSONString();
 	}
 	
 	@RequestMapping("/import")

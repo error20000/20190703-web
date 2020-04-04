@@ -18,6 +18,7 @@ import com.jian.system.dao.AidMapper;
 import com.jian.system.datasource.TargetDataSource;
 import com.jian.system.entity.Aid;
 import com.jian.system.entity.AidEquip;
+import com.jian.system.entity.AidImg;
 import com.jian.system.entity.App;
 import com.jian.system.entity.EquipLog;
 import com.jian.system.entity.Message;
@@ -54,6 +55,8 @@ public class AidService extends BaseService<Aid, AidMapper> {
 	private MessageService messageService;
 	@Autowired
 	private AppService appService;
+	@Autowired
+	private AidImgService aidImgService;
 	
 	@Transactional
 	@TargetDataSource
@@ -476,6 +479,25 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			return baseMapper.export(condition, null);
 		}
 		return baseMapper.export(condition, user.getsUser_ID());
+	}
+	
+
+	@TargetDataSource
+	public int uploadImg(String sAidImg_AidID, String sAidImg_Url){
+		
+		AidImg obj = new AidImg();
+		obj.setsAidImg_ID(Utils.newSnowflakeIdStr());
+		obj.setsAidImg_AidID(sAidImg_AidID);
+		obj.setsAidImg_Url(sAidImg_Url);
+		obj.setdAidImg_CreateDate(new Date());
+		
+		return aidImgService.insert(obj, null);
+	}
+
+	@TargetDataSource
+	public List<AidImg> img(String sAidImg_AidID){
+		
+		return aidImgService.list(MapTools.custom().put("sAidImg_AidID", sAidImg_AidID).build());
 	}
 
 

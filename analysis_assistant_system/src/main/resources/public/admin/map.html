@@ -66,6 +66,9 @@
 	  .storeItemEquipPage{
 	  	text-align: center;
 	  }
+	  .download{
+	  	float: right;
+	  }
   </style>
 </head>
 <body class="animated fadeIn body">
@@ -1612,16 +1615,44 @@
 					  <el-form-item label="航标属性" prop="sAid_MarkName">
 					    <el-input v-model="detailForm.sAid_MarkName" readonly></el-input>
 					  </el-form-item>
-					  <el-form-item label="航标图标" prop="sAid_IconName">
-					    <!-- <el-input v-model="detailForm.sAid_IconName" readonly></el-input> -->
+					  <!-- 2020.03 修改 -->
+					  <!-- <el-form-item label="航标图标" prop="sAid_IconName">
 					    <div style="width: 45px; height: 45px;">
 							<img v-if="detailForm.sAid_IconName" :src="'/'+detailForm.sAid_IconName" style="max-width: 100%;max-height: 100%;"/>
 						</div>
-					  </el-form-item>
+					  </el-form-item> -->
 					  <el-form-item label="状态" prop="sAid_StatusName">
 					    <el-input v-model="detailForm.sAid_StatusName" readonly></el-input>
 					  </el-form-item>
 					</el-form>
+					<div style="margin-bottom: 18px;">
+						<span>航标图片</span>
+						<el-upload class="download" 
+						  :action="uploadImgUrl"
+						  :data="uploadImgData"
+						  :on-success="handleUploadImg"
+						  :show-file-list="false">
+						  <el-button type="text" >上传</el-button>
+						</el-upload>
+					</div>
+					<template v-for="(item, index) in showImgList" >
+						<el-row :style="'margin-bottom: 10px;'" >
+						  <el-col >
+						    <el-card :shadow="'never'" :body-style="{ padding: '0px' }">
+						      <img width="100%" :src="'/'+item.sAidImg_Url" class="image">
+						      <div style="padding: 14px;">
+						        <span>{{detailForm.sAid_Name + '（'+formatDate(item.dAidImg_CreateDate)+'）'}}</span>
+						        <!-- <el-button type="text" class="download" @click="handleDownloadImg(item.sAidImg_Url)">下载</el-button> -->
+						    	<a class="download" style="color: #409EFF;text-decoration: none;"
+						    		:href="'/'+item.sAidImg_Url" 
+						    		:download="detailForm.sAid_Name + '（'+formatDate(item.dAidImg_CreateDate)+'）'+item.sAidImg_Url.substring(item.sAidImg_Url.lastIndexOf('.'))">下载</a>
+						    </el-card>
+						  </el-col>
+						</el-row>
+					</template>
+					<div style="text-align: center;" v-show="showMoreImg">
+						<el-button type="text" @click="handleShowMoreImg">加载更多</el-button>
+					</div>
 				</el-tab-pane>
 			    <el-tab-pane label="器材列表" name="2">
 			    	<el-table size="mini" :data="aidEquipData" highlight-current-row border style="width: 100%;" class="mytable">

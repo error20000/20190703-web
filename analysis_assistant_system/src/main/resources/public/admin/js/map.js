@@ -9,6 +9,9 @@ var msgAidUrl = baseUrl + "api/aid/msg";
 var msgStoreUrl = baseUrl + "api/store/msg";
 var storeAllUrl = baseUrl + "api/store/findAll";
 var msgDetailUrl = baseUrl + "api/msg/view";
+var uploadImgUrl = baseUrl + "api/file/uploadImg";
+var upImgAidUrl = baseUrl + "api/aid/uploadImg";
+var imgAidUrl = baseUrl + "api/aid/img";
 
 var ajaxReq = parent.window.ajaxReq || "";
 var gMenuFuns = parent.window.gMenuFuns || "";
@@ -143,6 +146,13 @@ var myvue = new Vue({
 				msgFormRules: {},
 				msgForm: {},
 				
+				//img
+				uploadImgUrl: uploadImgUrl,
+				uploadImgData: {},
+				showMoreImg: false,
+				imgList: [],
+				showImgList: [],
+				
 				user: ''
 			}
 		},
@@ -173,6 +183,29 @@ var myvue = new Vue({
 			},
 			lngFormatterStore: function(row){
 				return row.lStoreType_LngDu + '°' + row.lStoreType_LngFen + '\'' + row.lStoreType_LngMiao + '"' + " E";
+			},
+			handleUploadImg: function(res, file){
+				if(res.code != 1){
+					console.log("handleUploadImg failed",res, file);
+					return;
+				}
+				var self = this;
+				var params = {
+						sAidImg_Url: res.data.path,
+						sAidImg_AidID: this.aidId
+				};
+				ajaxReq(upImgAidUrl, params, function(res){
+					self.handleResOperate(res, function(){
+						self.imgAid();
+					});
+				});
+			},
+			handleDownloadImg: function(url){
+				window.open("/" + url);
+			},
+			handleShowMoreImg: function(){
+				this.showImgList = this.imgList;
+				this.showMoreImg = false;
 			},
 			/*handleAidStatusIconOptions: function(cb){
 				var self = this;
@@ -836,6 +869,7 @@ var myvue = new Vue({
 						this.aidId = id;
 						this.detailEquipAid(id, result);
 						this.msgAid(id, result);
+						this.imgAid(id);
 						this.detailIcon = node.sAid_Type;
 						break;
 					}
@@ -1177,6 +1211,29 @@ var myvue = new Vue({
 			},
 			msgClose:function(){
 				this.msgFormVisible = false;
+			},
+			
+			//aid img
+			imgAid: function(aid){
+				var self = this;
+				var params = {
+						sAidImg_AidID: this.aidId
+				};
+				this.uploadImgData = {
+						dir: this.aidId
+				};
+				ajaxReq(imgAidUrl, params, function(res){
+					self.handleResQuery(res, function(){
+						self.imgList = res.data;
+						self.showImgList = [];
+						if(res.data && res.data.length != 0){
+							self.showImgList.push(self.imgList[0]);
+						}
+						if(res.data && res.data.length > 1){
+							self.showMoreImg = true;
+						}
+					});
+				});
 			},
 			
 			//reset
