@@ -779,10 +779,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//出库
 		values.put("sEquip_Status", Constant.EquipStatus_2);
-		values.put("sEquip_StoreLv1", " ");
-		values.put("sEquip_StoreLv2", " ");
-		values.put("sEquip_StoreLv3", " ");
-		values.put("sEquip_StoreLv4", " ");
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -829,6 +829,11 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//拆除
 		values.put("sEquip_Status", Constant.EquipStatus_3);
+		values.put("sEquip_AidID", "");
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -872,6 +877,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//运输
 		values.put("sEquip_Status", Constant.EquipStatus_4);
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -914,6 +923,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//待检测
 		values.put("sEquip_Status", Constant.EquipStatus_5);
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -956,6 +969,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//检测
 		values.put("sEquip_Status", Constant.EquipStatus_6);
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -998,6 +1015,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		date = date == null ? new Date() : date;
 		//维修
 		values.put("sEquip_Status", Constant.EquipStatus_7);
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -1044,6 +1065,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test.getdEquip_DumpDate() == null) {
 			values.put("dEquip_DumpDate", date);
 		}
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());
@@ -1105,6 +1130,10 @@ public class EquipService extends BaseService<Equip, EquipMapper> {
 		if(test.getdEquip_UseDate() == null) {
 			values.put("dEquip_UseDate", date);
 		}
+		values.put("sEquip_StoreLv1", "");
+		values.put("sEquip_StoreLv2", "");
+		values.put("sEquip_StoreLv3", "");
+		values.put("sEquip_StoreLv4", "");
 		//日志
 		EquipLog log = new EquipLog();
 		log.setsELog_ID(Utils.newSnowflakeIdStr());

@@ -252,10 +252,10 @@ public class AidService extends BaseService<Aid, AidMapper> {
 		for (String sEquip_ID : tempUpdate) {
 			Date date = new Date();
 			condEquip.put("sEquip_ID", sEquip_ID);
-			valueEquip.put("sEquip_StoreLv1", " ");
-			valueEquip.put("sEquip_StoreLv2", " ");
-			valueEquip.put("sEquip_StoreLv3", " ");
-			valueEquip.put("sEquip_StoreLv4", " ");
+			valueEquip.put("sEquip_StoreLv1", "");
+			valueEquip.put("sEquip_StoreLv2", "");
+			valueEquip.put("sEquip_StoreLv3", "");
+			valueEquip.put("sEquip_StoreLv4", "");
 			valueEquip.put("sEquip_AidID", sAid_ID);
 			valueEquip.put("sEquip_Status", Constant.EquipStatus_9);
 			List<Map<String, Object>> test = old.stream()
@@ -281,6 +281,7 @@ public class AidService extends BaseService<Aid, AidMapper> {
 			log.setsELog_Type(Constant.EquipLogType_9); // 使用
 			log.setsELog_Describe("器材使用中");
 			log.setsELog_Remarks("");
+			log.setsELog_AidID(sAid_ID);
 			logs.add(log);
 		}
 		logService.batchInsert(logs, user);
